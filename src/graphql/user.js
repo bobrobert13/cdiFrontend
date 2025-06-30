@@ -161,6 +161,36 @@ fragment medicamento on Medicamento {
 }
 `;
 
+export const EMERGENCIA_DETALLES = gql`
+fragment emergenciaDetalles on Emergencia {
+    id_emergencia
+    motivo_emergencia
+    diagnostico_provisional
+    estado_paciente
+  	estado_emergencia
+    procesamiento_realizado
+    tiempo_atencion
+    notas_de_atencion
+    destino
+    createdAt
+    updatedAt
+}
+`;
+
+export const HOSPITALIZACION_DETALLES = gql`
+fragment hospitalizacionDetalles on Hospitalizacion {
+     id_hospitalizacion
+    fecha_ingreso
+    fecha_egreso
+    motivo_de_hospitalizacion
+    unidad_hospitalaria
+    estado
+    notas_medicas
+    createdAt
+    updatedAt
+}
+`;
+
 export const DOCTOR_DETALLES = gql`
   fragment doctorDetalles on Doctor {
     id_doctor
@@ -196,6 +226,12 @@ export const DOCTOR_DETALLES = gql`
     tratamientos {
       ...tratamientos
     }
+    emergencias {
+      ...emergenciaDetalles
+    }
+    hospitalizaciones {
+      ...hospitalizacionDetalles
+    }
     }
   }
   ${PERSONA_DETALLES}
@@ -204,6 +240,8 @@ export const DOCTOR_DETALLES = gql`
   ${EXAMENES_DETALLES}
   ${MEDICAMENTOS_DETALLES}
   ${TRATAMIENTOS_DETALLES}
+  ${EMERGENCIA_DETALLES}
+  ${HOSPITALIZACION_DETALLES}
 `;
 
 
@@ -318,34 +356,41 @@ mutation doCreatePaciente($input: CrearPacienteInput!) {
 }
 `;
 
+export const ADD_EMERGENCIA_MUTATION = gql`
+mutation doCreateEmergencia($input: EmergenciaInput!) {
+  crearEmergencia(input: $input) {
+    id_emergencia
+    motivo_emergencia
+    diagnostico_provisional
+    estado_paciente
+    procesamiento_realizado
+    tiempo_atencion
+    notas_de_atencion
+    destino
+    createdAt
+    updatedAt
+  }
+}
+`;
 
-// export const ADDCONSULTA_MUTATION = gql`
-//   mutation AddConsulta($id: ID!, $data: ConsultaInput!) {
-//     AddConsulta(id: $id, data: $data) {
-//       id
-//       name
-//       role
-//       nacionalidad
-//       dni
-//       telefono
-//       direccion {
-//       numero
-//       sector
-//       calle
-//     }
-//       sexo
-//       edad
-//       diagnostico
-//       consultas {
-//         diagnostico
-//         salida
-//         ingreso
-//       }
-//       createdAt
-//       fatherID
-//     }
-//   }
-// `;
+export const ADD_HOSPITALIZACION_MUTATION = gql`
+mutation doCreateHospitalizacion($input: HospitalizacionInput!) {
+  crearHospitalizacion(input: $input) {
+    id_hospitalizacion
+    fecha_ingreso
+    fecha_egreso
+    motivo_de_hospitalizacion
+    unidad_hospitalaria
+    estado
+    notas_medicas
+    createdAt
+    updatedAt
+  }
+}
+`;
+
+
+
 
 export const ADDCONSULTA_MUTATION = gql`
 mutation doCreateConsulta($input: ConsultaInput!){
@@ -396,6 +441,18 @@ mutation doUpdateEstadoMedicamento($id_medicamento: ID! $estado_tratamiento: Est
 export const UPDDATE_ESTADO_CONSULTA_MUTATION = gql`
 mutation doUpdateEstadoConsulta($id_consulta: ID! $estado_consulta: String!){
   actualizarEstadoConsulta(id_consulta: $id_consulta, estado_consulta: $estado_consulta)
+}
+`;
+
+export const UPDDATE_ESTADO_EMERGENCIA_MUTATION = gql`
+mutation doUpdateEstadoEmergencia($id_emergencia: ID! $estado_emergencia: String!){
+  actualizarEstadoEmergencia(id_emergencia: $id_emergencia, estado_emergencia: $estado_emergencia)
+}
+`;
+
+export const UPDDATE_ESTADO_HOSPITALIZACION_MUTATION = gql`
+mutation doUpdateEstadoHospitalizacion($id_hospitalizacion: ID! $estado: String!){
+  actualizarEstadoHospitalizacion(id_hospitalizacion: $id_hospitalizacion, estado: $estado)
 }
 `;
 

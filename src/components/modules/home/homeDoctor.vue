@@ -22,9 +22,9 @@
                 <p class=" text-subtitle text-medium">Tu lista de pacientes:</p>
               </div>
               <div class="col-12 q-mb-sm" v-for="(user, index) in users" :key="index">
-                <q-list class="rounded-borders bg-grey-2" style="border-radius: 15px">
+                <q-list class="rounded-borders bg-grey-1" style="border-radius: 15px">
                   <q-item v-if="user.persona">
-                    <q-item-section top class=" q-py-md" @click="userDetail(user)" style="cursor: pointer">
+                    <q-item-section top class=" q-py-md" style="cursor: pointer">
                       <q-item-label class="text-left q-mb-xs" lines="1">
                         <span class="text-weight-medium">Nombre de paciente: {{ user.persona.nombre1 }}</span>
                       </q-item-label>
@@ -35,12 +35,38 @@
                       <q-item-label class="text-left" lines="1">
                         <span class="text-weight-medium">Edad del paciente: {{ user.persona.edad }} años</span>
                       </q-item-label>
+                      <q-separator spaced color="blue-grey" />
+                      <q-item-label class="text-left" lines="1">
+                        <div class="row col-12 items-center self-center no-wrap ">
+
+                          <span v-if="!estadoEmergenciaPaciente(user.emergencias)"
+                            @click="seleccionarUrgencias(user.persona, user.id_paciente)" lines="2"
+                            class=" q-mr-lg cursor-pointer text-red-9 self-center text-bold" style="cursor: pointer">
+                            <q-icon name="mdi-alert" /> Enviar a emergencias
+                          </span>
+                          <span v-else @click="verDetallesDeEmergencia(user.emergencias)" lines="2"
+                            class=" q-mr-sm cursor-pointer text-red-9  self-center text-bold" style="cursor: pointer">
+                            <q-icon name="mdi-information" /> Paciente en emergencias
+                          </span>
+                          <span v-if="!estadoHospitalizadoPaciente(user.hospitalizaciones)"
+                            @click="seleccionarHospitalizacion(user.persona, user.id_paciente)" lines="2"
+                            class=" q-mr-sm cursor-pointer text-primary self-center text-bold" style="cursor: pointer">
+                            <q-icon name="mdi-hospital" /> Marcar como hospitalizado
+                          </span>
+                          <span v-else @click="verDetallesDeHospitalizacion(user.hospitalizaciones)" lines="2"
+                            class=" q-mr-sm cursor-pointer text-orange-9 self-center text-bold" style="cursor: pointer">
+                            <q-icon name="mdi-information" /> Paciente hospitalizado
+                          </span>
+                        </div>
+                      </q-item-label>
+                      <q-item-section side class="q-mt-md">
+                        <button type="button"
+                          class="no-outline no-border q-px-md q-py-xs rounded-borders bg-blue-grey text-white cursor-pointer"
+                          @click="userDetail(user)"><q-icon name="mdi-eye" class="q-mr-sm" /> Inspeccionar
+                          paciente</button>
+                      </q-item-section>
                     </q-item-section>
-                    <q-item-section side>
-                      <button type="button"
-                        class="no-outline no-border q-px-md q-py-xs rounded-borders bg-grey-8 text-white cursor-pointer"
-                        @click="userDetail(user)">Ver Detalles</button>
-                    </q-item-section>
+
                   </q-item>
                 </q-list>
               </div>
@@ -288,7 +314,7 @@
                     <q-icon size="xl" name="mdi-doctor"></q-icon>
                   </q-avatar>
                 </q-card-section>
-                <q-card-section v-if="dataUser.persona" class="q-pt-xs">
+                <q-card-section v-if="dataUser.persona" class="q-pt-xs q-pb-none no-margin">
                   <p class="text-subtitle text-bold text-grey-9">Detalles del paciente</p>
                   <div class="text-caption text-bold q-mt-sm q-mb-xs">Paciente: {{ dataUser.persona.nombre1 }}</div>
                   <div class="text-caption q-mt-sm q-mb-xs">Documento de identidad:
@@ -298,6 +324,7 @@
                   <!-- <div class="text-caption q-mt-sm q-mb-xs">Diagnostico: {{dataUser.diagnostico}}</div> -->
                 </q-card-section>
               </q-card-section>
+
               <q-card-section class="no-padding column items-center full-width justify-center q-mx-sm q-mb-md">
                 <q-avatar>
                   <q-icon size="xl" name="mdi-badge-account-alert"></q-icon>
@@ -305,13 +332,22 @@
                 <span class=" q-mt-xs">Más información respecto al estado del paciente:</span>
                 <div class=" row wrap q-px-md q-mt-sm ">
                   <button @click="openModals('diagnosticos', true)" type="button"
-                    class="no-outline q-mr-xs no-border q-px-md q-py-xs rounded-borders bg-grey-8 text-white cursor-pointer">Diagnosticos</button>
+                    class="no-outline q-mr-xs no-border q-px-md q-py-xs rounded-borders bg-blue-grey-9 text-white cursor-pointer">Diagnosticos</button>
                   <button @click="openModals('examenes', true)" type="button"
-                    class="no-outline q-mr-xs no-border q-px-md q-py-xs rounded-borders bg-grey-8 text-white cursor-pointer">Examenes</button>
+                    class="no-outline q-mr-xs no-border q-px-md q-py-xs rounded-borders bg-blue-grey-9 text-white cursor-pointer">Examenes</button>
                   <button @click="openModals('tratamientos', true)" type="button"
-                    class="no-outline no-border q-px-md q-py-xs q-mr-xs rounded-borders bg-grey-8 text-white cursor-pointer">Tratamientos</button>
+                    class="no-outline no-border q-px-md q-py-xs q-mr-xs rounded-borders bg-blue-grey-9 text-white cursor-pointer">Tratamientos</button>
                   <button @click="openModals('medicamentos', true)" type="button"
-                    class="no-outline no-border q-px-md q-py-xs rounded-borders bg-grey-8 text-white cursor-pointer">Medicamentos</button>
+                    class="no-outline no-border q-px-md q-py-xs rounded-borders bg-blue-grey-9 text-white cursor-pointer">Medicamentos</button>
+                </div>
+              </q-card-section>
+              <q-card-section class="no-padding column items-center full-width q-ml-md q-mb-md">
+                <span class=" q-mt-xs">Emergencias y Hospitalizaciones:</span>
+                <div class=" row wrap q-px-md q-mt-sm ">
+                  <button @click="verDetallesDeEmergencia(dataUser.emergencias)" type="button"
+                    class="no-outline q-mr-xs no-border q-px-md q-py-xs rounded-borders bg-blue-grey-9 text-white cursor-pointer">Emergencias</button>
+                  <button @click="verDetallesDeHospitalizacion(dataUser.hospitalizaciones)" type="button"
+                    class="no-outline q-mr-xs no-border q-px-md q-py-xs rounded-borders bg-blue-grey-9 text-white cursor-pointer">Hospitalizaciones</button>
                 </div>
               </q-card-section>
               <q-card-section class="q-pt-md">
@@ -336,7 +372,7 @@
                       <q-item style="cursor:pointer;">
                         <q-item-section>
                           <q-item-label caption>Paciente debe asistir el: <b>{{ entradaFecha(consulta.fecha_consulta)
-                          }}</b></q-item-label>
+                              }}</b></q-item-label>
                           <span class="q-my-sm"> <q-icon name="mdi-information" color="primary" /> Estado actual: <b>{{
                             consulta.estado_consulta }}</b></span>
                           <q-item-label>Tipo de consulta: <b>{{ consulta.tipo_consulta }}</b></q-item-label>
@@ -371,7 +407,7 @@
                 <q-btn flat v-close-popup>
                   Cerrar
                 </q-btn>
-                <q-btn @click="generatePDF()" flat v-close-popup> Descargar historial </q-btn>
+                <!-- <q-btn @click="generatePDF()" flat v-close-popup> Descargar historial </q-btn> -->
               </q-card-actions>
             </q-card>
           </q-dialog>
@@ -399,6 +435,276 @@
             </q-card>
           </q-dialog>
           <!-- FIN ELIMINAR USUARIO -->
+
+          <!-- PACIENTE A EMERGENCIAS -->
+          <q-dialog v-model="modalUrgencias">
+            <q-card class="my-card" flat bordered style="min-width: 350px">
+              <q-card-section>
+                Nueva emergencia
+              </q-card-section>
+              <q-card-section>
+                <div class="row">
+                  <div v-if="pacienteSeleccionado" class="col-12">
+                    <span class="text-bold">Paciente: {{ pacienteSeleccionado.nombre1 }}</span>
+                  </div>
+                  <div class="col-12 q-mt-xs">
+                    <q-input v-model="emergencia_motivoEmergencia" filled label="Motivo de emergencia" />
+                  </div>
+                  <div class="col-12 q-mt-xs">
+                    <q-input v-model="emergencia_diagnosticoProvisional" filled label="Diagnóstico provisional" />
+                  </div>
+                  <div class="col-12 q-mt-xs">
+                    <q-input v-model="emergencia_estadoPaciente" filled label="Estado del paciente" />
+                  </div>
+                  <div class="col-12 q-mt-xs">
+                    <q-input v-model="emergencia_procesamientoRealizado" filled label="Procesamiento realizado" />
+                  </div>
+                  <div class="col-12 q-mt-xs">
+                    <q-input v-model="emergencia_tiempoAtencion" type="number" filled label="Tiempo de atención" />
+                  </div>
+                  <div class="col-12 q-mt-xs">
+                    <q-input v-model="emergencia_destino" filled label="Destino" />
+                  </div>
+                  <div class="col-12 q-mt-xs">
+                    <q-input v-model="emergencia_notasDeAtencion" filled label="Notas de atención" />
+                  </div>
+                </div>
+              </q-card-section>
+              <q-separator />
+
+              <q-card-actions align="center">
+                <q-btn flat :disable="this.emergencia_motivoEmergencia === '' ||
+                  this.emergencia_diagnosticoProvisional === '' ||
+                  this.emergencia_estadoPaciente === '' ||
+                  this.emergencia_procesamientoRealizado === '' ||
+                  this.emergencia_tiempoAtencion === '' ||
+                  this.emergencia_destino === '' ||
+                  this.emergencia_notasDeAtencion === ''
+                  " @click="NuevaEmergencia()">
+                  Crear emergencia para paciente
+                </q-btn>
+                <q-btn flat v-close-popup>
+                  Cerrar
+                </q-btn>
+              </q-card-actions>
+            </q-card>
+          </q-dialog>
+          <!-- FIN DE PACIENTE A EMERGENCIAS -->
+
+                    <!-- DETALLES DE EMERGENCIAS -->
+                    <q-dialog v-model="modalDetallesEmergencias" position="right">
+            <q-card class="my-card" flat bordered style="min-width: 550px">
+              <q-card-section>
+                <q-card-section class="col-5 no-padding no-margin flex flex-center">
+                  <q-avatar>
+                    <q-icon size="lg" name="mdi-text-box-search"></q-icon>
+                  </q-avatar>
+                </q-card-section>
+                <q-card-section class="col-5 no-margin flex flex-center no-padding">
+                  <div class="text-overline text-h6 text-grey-9">Historial de emergencias</div>
+                </q-card-section>
+              </q-card-section>
+              <q-card-section class="q-pt-md">
+                <div class="row items-center q-px-sm justify-center">
+                  <div class="col-6">
+                    <span class="text-caption text-bold q-mt-sm q-mb-xs">Historial de emergencias</span>
+                  </div>
+                </div>
+                <q-item-section v-if="!emegenciasPaciente.length">
+                  <q-item-section class="row q-pa-sm justify-center">
+                    El paciente aún no tiene historia de emergencias
+                  </q-item-section>
+                </q-item-section>
+                <q-scroll-area style="height: 600px; max-width: 100%;">
+                  <div v-for="(emergencia, index) in emegenciasPaciente" :key="index" class="q-py-xs">
+                    <q-list>
+                      <q-item style="cursor:pointer;">
+                        <q-item-section>
+                          <q-item-label lines="2" class=" q-mt-sm"> <q-icon name="mdi-information" color="primary" />
+                            <b> Estado:</b> <b> {{
+                              emergencia.estado_emergencia }}</b></q-item-label>
+                          <q-item-label lines="2"><b>Motivo de emergencia:</b> {{
+                            emergencia.motivo_emergencia
+                            }}</q-item-label>
+
+                          <q-item-label ><b>Diagnóstico provisional:</b> {{ emergencia.diagnostico_provisional
+                          }}</q-item-label>
+                          <q-item-label ><b>Estado del paciente:</b> {{ emergencia.estado_paciente
+                          }}</q-item-label>
+                          <q-item-label ><b>Procesamiento realizado:</b> {{ emergencia.procesamiento_realizado
+                          }}</q-item-label>
+                          <q-item-label ><b>Destino:</b> {{ emergencia.destino
+                          }}</q-item-label>
+                          <q-item-label ><b>Notas de atención:</b> {{ emergencia.notas_de_atencion
+                          }}</q-item-label>
+                        </q-item-section>
+
+                      </q-item>
+                      <div class="q-ml-md row col-12 items-center self-center no-wrap ">
+                        <span v-if="emergencia.estado_emergencia === 'Activo'" @click="ActualizarEstadoEmergencia(emergencia, 'Finalizado')" lines="2"
+                          class=" q-mr-sm cursor-pointer text-primary self-center text-bold">
+                          Finalizar emergencia
+                        </span>
+                      </div>
+                      <q-separator spaced inset />
+                    </q-list>
+
+                  </div>
+                </q-scroll-area>
+              </q-card-section>
+              <q-card-actions align="center">
+                <q-btn flat label="Cerrar" color="primary" v-close-popup />
+              </q-card-actions>
+            </q-card>
+          </q-dialog>
+          <!-- FIN DETALLES DE EMERGENCIAS -->
+
+          <!-- PACIENTE A HOSPITALIZACION -->
+          <q-dialog v-model="modalHospitalizacion">
+            <q-card class="my-card" flat bordered style="min-width: 350px">
+              <q-card-section>
+                Nuevo hospitalización
+              </q-card-section>
+              <q-card-section>
+                <div class="row">
+                  <div v-if="this.pacienteSeleccionado" class="col-12">
+                    <span class="text-bold">Paciente: {{ pacienteSeleccionado.nombre1 }}</span>
+                  </div>
+                  <div class="col-12 q-mt-xs">
+                    <q-select disable v-model="hospitalizacion_estado" filled label="Estado" :options="['Activo']" />
+                  </div>
+                  <div class="col-12 q-mt-xs">
+                    <q-input v-model="hospitalizacion_motivoDeHospitalizacion" filled
+                      label="Motivo de hospitalización" />
+                  </div>
+
+                  <div class="col-12 q-mt-xs">
+                    <q-input v-model="hospitalizacion_unidadHospitalaria" filled label="Unidad hospitalaria" />
+                  </div>
+
+                  <div class="col-12 q-mt-xs">
+                    <q-input v-model="hospitalizacion_notasMedicas" filled label="Notas médicas" type="textarea" />
+                  </div>
+
+                  <div class="col-11 q-pa-xs">
+                    <span>Fecha de ingreso:</span>
+                    <q-input filled v-model="hospitalizacion_fechaIngreso" disable label="Fecha de ingreso "></q-input>
+                  </div>
+                  <div class="col-1 self-center q-pa-xs q-pt-md">
+                    <q-btn icon="event" round color="primary">
+                      <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                        <q-date v-model="hospitalizacion_fechaIngreso">
+                          <div class="row items-center justify-end">
+                            <q-btn v-close-popup label="Close" color="primary" flat />
+                          </div>
+                        </q-date>
+                      </q-popup-proxy>
+                    </q-btn>
+                  </div>
+
+                  <div class="col-11 q-pa-xs">
+                    <span>Fecha de egreso:</span>
+                    <q-input filled v-model="hospitalizacion_fechaEgreso" disable label="Fecha de egreso"></q-input>
+                  </div>
+                  <div class="col-1 self-center q-pa-xs q-pt-md">
+                    <q-btn icon="event" round color="primary">
+                      <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                        <q-date v-model="hospitalizacion_fechaEgreso">
+                          <div class="row items-center justify-end">
+                            <q-btn v-close-popup label="Close" color="primary" flat />
+                          </div>
+                        </q-date>
+                      </q-popup-proxy>
+                    </q-btn>
+                  </div>
+
+                </div>
+              </q-card-section>
+              <q-separator />
+
+              <q-card-actions align="center">
+                <q-btn flat :disable="this.hospitalizacion_fechaIngreso === '' ||
+                  this.hospitalizacion_fechaEgreso === '' ||
+                  this.hospitalizacion_motivoDeHospitalizacion === '' ||
+                  this.hospitalizacion_unidadHospitalaria === '' ||
+                  this.hospitalizacion_notasMedicas === ''
+
+                  " @click="NuevaHospitalizacion()">
+                  Crear hospitalización para paciente
+                </q-btn>
+                <q-btn flat v-close-popup>
+                  Cerrar
+                </q-btn>
+              </q-card-actions>
+            </q-card>
+          </q-dialog>
+          <!-- FIN PACIENTE A HOSPITALIZACION -->
+
+          <!-- DETALLES DE HOSPITALIZACION -->
+          <q-dialog v-model="modalDetallesHospitalizacion" position="right">
+            <q-card class="my-card" flat bordered style="min-width: 550px">
+              <q-card-section>
+                <q-card-section class="col-5 no-padding no-margin flex flex-center">
+                  <q-avatar>
+                    <q-icon size="lg" name="mdi-text-box-search"></q-icon>
+                  </q-avatar>
+                </q-card-section>
+                <q-card-section class="col-5 no-margin flex flex-center no-padding">
+                  <div class="text-overline text-h6 text-grey-9">Historial de hospitalización</div>
+                </q-card-section>
+              </q-card-section>
+              <q-card-section class="q-pt-md">
+                <div class="row items-center q-px-sm justify-center">
+                  <div class="col-6">
+                    <span class="text-caption text-bold q-mt-sm q-mb-xs">Historial de hospitalización</span>
+                  </div>
+                </div>
+                <q-item-section v-if="!hospitalizacionesPaciente.length">
+                  <q-item-section class="row q-pa-sm justify-center">
+                    El paciente aún no tiene historia de hospitalización
+                  </q-item-section>
+                </q-item-section>
+                <q-scroll-area style="height: 600px; max-width: 100%;">
+                  <div v-for="(hospitalizacion, index) in hospitalizacionesPaciente" :key="index" class="q-py-xs">
+                    <q-list>
+                      <q-item style="cursor:pointer;">
+                        <q-item-section>
+                          <q-item-label lines="2" class=" q-mt-sm"> <q-icon name="mdi-information" color="primary" />
+                            <b> Estado:</b> <b> {{
+                              hospitalizacion.estado }}</b></q-item-label>
+                          <q-item-label lines="2"><b>Motivo de hospitalización:</b> {{
+                            hospitalizacion.motivo_de_hospitalizacion
+                            }}</q-item-label>
+
+                          <q-item-label ><b>Unidad hospitalaria:</b> {{ hospitalizacion.unidad_hospitalaria
+                          }}</q-item-label>
+                          <q-item-label ><b>Fecha de ingreso:</b> {{ entradaFecha(hospitalizacion.fecha_ingreso)
+                          }}</q-item-label>
+                          <q-item-label ><b>Fecha de egreso:</b> {{ salidaFecha(hospitalizacion.fecha_egreso)
+                          }}</q-item-label>
+                          <q-item-label ><b>Notas médicas:</b> {{ hospitalizacion.notas_medicas
+                          }}</q-item-label>
+                        </q-item-section>
+
+                      </q-item>
+                      <div class="q-ml-md row col-12 items-center self-center no-wrap ">
+                        <span v-if="hospitalizacion.estado === 'Activo'" @click="ActualizarEstadoHospitalizacion(hospitalizacion, 'Finalizado')" lines="2"
+                          class=" q-mr-sm cursor-pointer text-primary self-center text-bold">
+                          Dar de alta
+                        </span>
+                      </div>
+                      <q-separator spaced inset />
+                    </q-list>
+
+                  </div>
+                </q-scroll-area>
+              </q-card-section>
+              <q-card-actions align="center">
+                <q-btn flat label="Cerrar" color="primary" v-close-popup />
+              </q-card-actions>
+            </q-card>
+          </q-dialog>
+          <!-- FIN DETALLES DE HOSPITALIZACION -->
 
           <!-- AGREGAR CONSULTA -->
           <q-dialog v-model="modalAddConsulta">
@@ -1100,7 +1406,7 @@
                             <span class=" q-mt-xs"><b>Descripción:</b> {{ examen.descripcion }}</span>
                           </q-item-section>
                           <q-item-label lines="2" class=" q-mt-sm"><b>Valores de referencia:</b> {{
-                              examen.valores_referencia }}</q-item-label>
+                            examen.valores_referencia }}</q-item-label>
                           <q-item-section class=" q-mt-sm">
                             <q-item-label lines="2" class=" q-mt-sm"> <q-icon name="mdi-information" color="primary" />
                               <b> Estado del examen:</b> <b> {{
@@ -1167,8 +1473,8 @@
                       <q-item style="cursor:pointer;">
                         <q-item-section>
                           <q-item-label lines="2" class=" q-mt-sm"> <q-icon name="mdi-information" color="primary" />
-                              <b> Estado del tratamiento:</b> <b> {{
-                                tratamiento.estado }}</b></q-item-label>
+                            <b> Estado del tratamiento:</b> <b> {{
+                              tratamiento.estado }}</b></q-item-label>
                           <q-item-label lines="2"><b>Tipo de tratamiento:</b> {{ tratamiento.tipo_de_tratamiento
                           }}</q-item-label>
                           <small class=" q-mt-xs"><b>Detalles:</b> {{ tratamiento.detalles }}</small>
@@ -1240,7 +1546,7 @@
                         <q-item-section>
 
                           <q-item-label lines="2" class=" text-h6 text-medium text-primary"><b>{{ medicamento.nombre
-                          }}</b> </q-item-label>
+                              }}</b> </q-item-label>
                           <q-item-label class="q-my-sm" lines="2"> <q-icon color="primary" name="mdi-information" />
                             Estado actual: <b>{{ medicamento.estado_tratamiento }}</b> </q-item-label>
                           <q-item-label lines="2"><b>Dosis recomentada:</b> {{ medicamento.dosis
@@ -1324,7 +1630,11 @@ import {
   UPDDATE_EXAMEN_MUTATION,
   UPDDATE_DIAGNOSTICO_MUTATION,
   UPDDATE_ESTADO_TRATAMIENTO_MUTATION,
-  UPDDATE_ESTADO_MEDICAMENTO_MUTATION
+  UPDDATE_ESTADO_MEDICAMENTO_MUTATION,
+  ADD_EMERGENCIA_MUTATION,
+  ADD_HOSPITALIZACION_MUTATION,
+  UPDDATE_ESTADO_HOSPITALIZACION_MUTATION,
+  UPDDATE_ESTADO_EMERGENCIA_MUTATION
 } from "../../../graphql/user";
 export default {
   name: "homeDoctor",
@@ -1342,6 +1652,10 @@ export default {
       modalAddExamen: false,
       modalAddTratamiento: false,
       modalAddMedicamento: false,
+      modalUrgencias: false,
+      modalHospitalizacion: false,
+      modalDetallesEmergencias: false,
+      modalDetallesHospitalizacion: false,
 
       modalDiagnosticos: false,
       modalExamenes: false,
@@ -1421,6 +1735,11 @@ export default {
       telefono: "",
       sexo: "Masculino",
 
+      // PACIENTE EN URGENCIAS
+      pacienteSeleccionado: {},
+      emegenciasPaciente: [],
+      hospitalizacionesPaciente: [],
+
       //CONSULTA
       tipo_consulta: "",
       motivo_consulta: "",
@@ -1468,6 +1787,26 @@ export default {
       medicamento_tipoMedicamento: "",
       medicamento_contraindicaciones: "",
       medicamento_efectosSecundarios: "",
+
+      // EMERGENCIAS
+
+      emergencia_motivoEmergencia: "",
+      emergencia_diagnosticoProvisional: "",
+      emergencia_estadoPaciente: "",
+      emergencia_procesamientoRealizado: "",
+      emergencia_tiempoAtencion: null,
+      emergencia_notasDeAtencion: "",
+      emergencia_destino: "",
+
+
+      // HOSPITALIZACION
+
+      hospitalizacion_fechaIngreso: "",
+      hospitalizacion_fechaEgreso: null,
+      hospitalizacion_motivoDeHospitalizacion: "",
+      hospitalizacion_unidadHospitalaria: "",
+      hospitalizacion_estado: "Activo",
+      hospitalizacion_notasMedicas: "",
 
 
       edad: 0,
@@ -1667,12 +2006,28 @@ export default {
     seleccionarTratamiento(tratamiento) {
       this.tratamientoSeleccionado = tratamiento;
       this.modalUpdateTratamiento = true;
-
     },
     seleccionarMedicamento(medicamento) {
       this.medicamentoSeleccionado = medicamento;
       this.modalUpdateMedicamento = true;
-
+    },
+    seleccionarUrgencias(paciente, id_paciente) {
+      this.pacienteSeleccionado = { ...paciente, id_paciente };
+      console.log('paciente seleccionado:', this.pacienteSeleccionado);
+      this.modalUrgencias = true;
+    },
+    seleccionarHospitalizacion(paciente, id_paciente) {
+      this.pacienteSeleccionado = { ...paciente, id_paciente };
+      console.log('paciente seleccionado:', this.pacienteSeleccionado);
+      this.modalHospitalizacion = true;
+    },
+    verDetallesDeEmergencia(emergencia) {
+      this.emegenciasPaciente = emergencia;
+      this.modalDetallesEmergencias = true;
+    },
+    verDetallesDeHospitalizacion(hospitalizacion) {
+      this.hospitalizacionesPaciente = hospitalizacion;
+      this.modalDetallesHospitalizacion = true;
     },
     openModals(modalType, value) {
       console.log(modalType, value);
@@ -1684,6 +2039,20 @@ export default {
         this.modalTratamientos = value;
       } else if (modalType === 'medicamentos') {
         this.modalMedicamentos = value;
+      }
+    },
+    estadoHospitalizadoPaciente(hospitalizaciones) {
+      if (hospitalizaciones && hospitalizaciones.length === 0) return false;
+      if (hospitalizaciones && hospitalizaciones.length > 0) {
+        const estaHospitalizado = hospitalizaciones.some(hospitalizacion => hospitalizacion.estado === 'Activo');
+        return estaHospitalizado
+      }
+    },
+    estadoEmergenciaPaciente(emergencias) {
+      if (emergencias && emergencias.length === 0) return false;
+      if (emergencias && emergencias.length > 0) {
+        const estaEmergencia = emergencias.some(emergencias => emergencias.estado_emergencia === 'Activo');
+        return estaEmergencia
       }
     },
     generatePDF() {
@@ -1950,6 +2319,59 @@ export default {
           console.log("error: ", err);
         });
     },
+    ActualizarEstadoEmergencia(emergencia, estado) {
+      this.loader = true;
+      return this.$apollo
+        .mutate({
+          mutation: UPDDATE_ESTADO_EMERGENCIA_MUTATION,
+          variables: {
+            id_emergencia: emergencia.id_emergencia,
+            estado_emergencia: estado
+          },
+        })
+        .then((response) => {
+          this.loader = false;
+          this.modalDetailUser = false;
+          this.modalDetallesEmergencias = false;
+          this.emegenciasPaciente = [];
+
+          this.AllPacientes()
+          this.$q.notify({
+            message: "Paciente en emergencia actualizado",
+            color: "positive",
+          });
+        })
+        .catch((err) => {
+          this.loader = false;
+          console.log("error: ", err);
+        });
+    },
+    ActualizarEstadoHospitalizacion(hospitalizacion, estado) {
+      this.loader = true;
+      return this.$apollo
+        .mutate({
+          mutation: UPDDATE_ESTADO_HOSPITALIZACION_MUTATION,
+          variables: {
+            id_hospitalizacion: hospitalizacion.id_hospitalizacion,
+            estado: estado
+          },
+        })
+        .then((response) => {
+          this.loader = false;
+          this.modalDetailUser = false;
+          this.modalDetallesHospitalizacion = false;
+          this.hospitalizacionesPaciente = [];
+          this.AllPacientes()
+          this.$q.notify({
+            message: "Paciente dado de alta",
+            color: "positive",
+          });
+        })
+        .catch((err) => {
+          this.loader = false;
+          console.log("error: ", err);
+        });
+    },
     ActualizarEstadoMedicamento(medicamento, estado) {
       this.loader = true;
       return this.$apollo
@@ -1993,6 +2415,130 @@ export default {
           this.AllPacientes()
           this.$q.notify({
             message: "Tratamiento actualizado",
+            color: "positive",
+          });
+        })
+        .catch((err) => {
+          this.loader = false;
+          console.log("error: ", err);
+        });
+    },
+    NuevaEmergencia() {
+      this.loader = true;
+      return this.$apollo
+        .mutate({
+          mutation: ADD_EMERGENCIA_MUTATION,
+          variables: {
+            input: {
+              motivo_emergencia: this.emergencia_motivoEmergencia,
+              diagnostico_provisional: this.emergencia_diagnosticoProvisional,
+              estado_paciente: this.emergencia_estadoPaciente,
+              procesamiento_realizado: this.emergencia_procesamientoRealizado,
+              tiempo_atencion: parseInt(this.emergencia_tiempoAtencion),
+              notas_de_atencion: this.emergencia_notasDeAtencion,
+              destino: this.emergencia_destino,
+              estado_emergencia: 'Activo',
+              fk_doctor_id: this.$store.state.user.doctor_id,
+              fk_cdi_id: this.$store.state.user.cdi_id,
+              fk_paciente_id: this.pacienteSeleccionado.id_paciente
+            },
+          }
+        })
+        .then((response) => {
+          this.loader = false;
+          this.modalDetailUser = false;
+          this.modalUrgencias = false;
+          this.pacienteSeleccionado = {};
+          this.emergencia_destino = '';
+          this.emergencia_diagnosticoProvisional = '';
+          this.emergencia_estadoPaciente = '';
+          this.emergencia_procesamientoRealizado = '';
+          this.emergencia_tiempoAtencion = null;
+          this.emergencia_notasDeAtencion = '';
+          this.emergencia_motivoEmergencia = '';
+          this.AllPacientes()
+          this.$q.notify({
+            message: "Paciente enviado a emergencias",
+            color: "positive",
+          });
+        })
+        .catch((err) => {
+          this.loader = false;
+          console.log("error: ", err);
+        });
+    },
+    NuevaHospitalizacion() {
+      this.loader = true;
+
+
+      // validar que la fecha de ingreso no sea menor a la fecha actual
+      const fechaIngreso = moment(this.hospitalizacion_fechaIngreso);
+      const fechaActual = moment();
+
+      if (fechaIngreso.isBefore(fechaActual)) {
+        this.$q.notify({
+          message: "La fecha de ingreso no puede ser menor a la fecha actual",
+          color: "negative",
+        });
+        return
+      }
+      // validar que la fecha de ingreso y egreso no sean iguales
+      if (this.hospitalizacion_fechaIngreso === this.hospitalizacion_fechaEgreso) {
+        this.$q.notify({
+          message: "La fecha de ingreso y egreso no pueden ser iguales",
+          color: "negative",
+        });
+        return
+      }
+
+      if (!this.hospitalizacion_fechaIngreso || !this.hospitalizacion_fechaEgreso) {
+        this.$q.notify({
+          message: "Debes ingresar una fecha de ingreso y egreso",
+          color: "negative",
+        });
+        return
+      }
+
+      // validar que la fecha de ingreso sea menor a la fecha de egreso
+      if (this.hospitalizacion_fechaIngreso > this.hospitalizacion_fechaEgreso) {
+        this.$q.notify({
+          message: "La fecha de ingreso no puede ser mayor a la fecha de egreso",
+          color: "negative",
+        });
+        return
+      }
+
+      return this.$apollo
+        .mutate({
+          mutation: ADD_HOSPITALIZACION_MUTATION,
+          variables: {
+            input: {
+              fecha_ingreso: this.hospitalizacion_fechaIngreso,
+              fecha_egreso: this.hospitalizacion_fechaEgreso,
+              motivo_de_hospitalizacion: this.hospitalizacion_motivoDeHospitalizacion,
+              unidad_hospitalaria: this.hospitalizacion_unidadHospitalaria,
+              estado: 'Activo',
+              notas_medicas: this.hospitalizacion_notasMedicas,
+              fk_doctor_id: this.$store.state.user.doctor_id,
+              fk_cdi_id: this.$store.state.user.cdi_id,
+              fk_paciente_id: this.pacienteSeleccionado.id_paciente
+            }
+          },
+        })
+        .then((response) => {
+          this.loader = false;
+          this.modalDetailUser = false;
+          this.pacienteSeleccionado = {};
+          this.modalHospitalizacion = false;
+          this.hospitalizacion_fechaIngreso = '';
+          this.hospitalizacion_fechaEgreso = '';
+          this.hospitalizacion_motivoDeHospitalizacion = '';
+          this.hospitalizacion_unidadHospitalaria = '';
+          this.hospitalizacion_estado = '';
+          this.hospitalizacion_notasMedicas = '';
+          this.AllPacientes()
+          this.$q.notify({
+            message: "Paciente marcado a hospitalizado",
             color: "positive",
           });
         })
