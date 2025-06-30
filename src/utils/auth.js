@@ -17,21 +17,33 @@ function setRole(data) {
 
 function saveToken(data) {
   console.log("data de save token:", data);
-  window.localStorage.setItem("user", data.user.fullName);
-  window.localStorage.setItem("user_id", data.user.id);
+  window.localStorage.setItem("user", data.usuario.nombre_usuario);
+  window.localStorage.setItem("status", data.usuario.status);
+  window.localStorage.setItem("user_id", data.usuario.id_usuario);
+  window.localStorage.setItem("doctor_id", data.usuario.fk_doctor_id);
+  window.localStorage.setItem("cdi_id", data.usuario.fk_cdi_id);
   window.localStorage.setItem("isAuthenticated", true);
-  window.localStorage.setItem("role", data.user.role);
-  window.localStorage.setItem("token", data.token.code);
-  window.localStorage.setItem("expire", data.token.expire);
-  window.localStorage.setItem("status", data.user.status);
+  window.localStorage.setItem("role", data.usuario.rol);
+  window.localStorage.setItem("token", data.token);
+  window.localStorage.setItem("expire", '');
+  const user = window.localStorage.getItem("user");
+  const userId = window.localStorage.getItem("user_id");
+  const doctorId = window.localStorage.getItem("doctor_id");
+  const cdiid = window.localStorage.getItem("cdi_id");
+  const role = window.localStorage.getItem("role");
+  const auth = window.localStorage.getItem("isAuthenticated");
+  console.log('user:', user, userId, role, auth);
   store.commit("setUser", {
-    fullName: data.user.fullName,
-    id: data.user.id,
-    profileImage: data.user.profileImage,
-    isAuthenticated: true,
-    email: data.user.email,
-    role: data.user.role,
-    status: data.user.status,
+    fullName: '',
+    nombre_usuario: user,
+    id: userId,
+    profileImage: '',
+    isAuthenticated: auth,
+    email: '',
+    role: role,
+    doctor_id: doctorId,
+    cdi_id: cdiid,
+    // status: data.user.status,
   });
 }
 
@@ -63,16 +75,10 @@ function getToken() {
 }
 
 function isAuthenticated() {
-  const expire = window.localStorage.getItem("expire");
-  const status = store.state.user.status;
+  const token = window.localStorage.getItem("token");
   const auth = store.state.user.isAuthenticated;
-  // si el token esta vencido, se remueve el token
-  if (expire < moment().unix()) {
-    removeToken();
-    return false;
-  }
-
-  return true;
+  if(token) return true;
+  return false;
 }
 
 function isAuthorized(meta) {
@@ -94,12 +100,17 @@ function refreshUser() {
     const userId = window.localStorage.getItem("user_id");
     const role = window.localStorage.getItem("role");
     const auth = window.localStorage.getItem("isAuthenticated");
+    const doctorId = window.localStorage.getItem("doctor_id");
+    const cdiid = window.localStorage.getItem("cdi_id");
+
     store.commit("setUser", {
       fullName: user,
       id: userId,
       profileImage: data.store.profileImage,
       isAuthenticated: auth === "true",
-      role: role
+      role: role,
+      doctor_id: doctorId,
+      cdi_id: cdiid,
     });
   }
 }

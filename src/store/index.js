@@ -27,6 +27,7 @@ export default new Vuex.Store({
       isAuthenticated: false,
       role: "",
       email: "",
+      nombre_usuario: ''
     },
     url_base: config.api.url
   },

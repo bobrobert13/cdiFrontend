@@ -61,35 +61,162 @@ export const PACIENTES_QUERY = gql`
   }
 `;
 
-export const MIS_PACIENTES_QUERY = gql`
-  query MisPacientes {
-    MisPacientes {
-    id
-    name
-    role
-    nacionalidad
-    dni
-    telefono
-    direccion {
-      numero
-      sector
-      calle
-    }
-    sexo
+
+
+export const PERSONA_DETALLES = gql`
+  fragment personaDetalles on Persona {
+    nombre1
+    nombre2
+    apellido1
+    apellido2
     edad
-    diagnostico
-    consultas {
-      id
-      diagnostico
-      salida
-      ingreso
-      createdAt
+    estado_civil
+    id_persona
+    sexo
+    cedula_identidad
+    telefono {
+      codigo
+      numero
+      id_telefono
     }
-    createdAt
-    fatherID
+    correo {
+      id_correo
+      correo
+    }
+    direccion {
+      codigo_postal
+      id_direccion
+      parroquia
+      numero_casa
+      calle
+      punto_referencia
+      sector
     }
   }
 `;
+
+export const CONSULTAS_DETALLES = gql`
+fragment consultasDetalles on Consulta {
+  id_consulta, fecha_consulta, tipo_consulta, motivo_consulta, sintomas, notas_medicas, createdAt 
+}
+`;
+
+export const DIAGNOSTICO_DETALLES = gql`
+fragment diagnosticoDetalles on Diagnostico {
+    id_diagnostico
+    fecha_diagnostico
+    condicion
+    descripcion
+    gravedad
+    createdAt
+    updatedAt
+}
+`;
+
+export const EXAMENES_DETALLES = gql`
+fragment examenes on ExamenesResultados {
+  id_examenes
+	tipo_de_examen
+  descripcion
+  resultados
+  estado_examen
+  medico_solicitante
+  laboratorio_centro
+  valores_referencia
+  observaciones
+  createdAt
+}
+`;
+
+export const TRATAMIENTOS_DETALLES = gql`
+fragment tratamientos on Tratamiento {
+  id_tratamiento
+  tipo_de_tratamiento
+  fecha_inicio
+  fecha_culminacion
+  estado
+  detalles
+  createdAt
+}
+`;
+
+export const MEDICAMENTOS_DETALLES = gql`
+fragment medicamento on Medicamento {
+  id_medicamento
+  nombre
+  dosis
+  via_administracion
+  frecuencia
+  duracion
+  observaciones
+  principio_activo
+  laboratorio
+  fecha_inicio
+  fecha_fin
+  estado_tratamiento
+  tipo_medicamento
+  contraindicaciones
+  efectos_secundarios
+  createdAt
+}
+`;
+
+export const DOCTOR_DETALLES = gql`
+  fragment doctorDetalles on Doctor {
+    id_doctor
+    anos_experiencia
+    numero_carnet
+    area_de_trabajo
+    horario
+    persona {
+      ...personaDetalles
+    }
+    pacientes {
+      id_paciente
+      vacunas
+      antecedentes_familiares
+      tipo_de_sangre
+      alergias
+      discapacidad
+      persona {
+        ...personaDetalles
+      }
+       consultas {
+      ...consultasDetalles
+    }
+          diagnosticos {
+      ...diagnosticoDetalles
+    }
+          examenes {
+      ...examenes
+    }
+    medicamentos {
+      ...medicamento
+    }
+    tratamientos {
+      ...tratamientos
+    }
+    }
+  }
+  ${PERSONA_DETALLES}
+  ${CONSULTAS_DETALLES}
+  ${DIAGNOSTICO_DETALLES}
+  ${EXAMENES_DETALLES}
+  ${MEDICAMENTOS_DETALLES}
+  ${TRATAMIENTOS_DETALLES}
+`;
+
+
+
+export const MIS_PACIENTES_QUERY = gql`
+  query getDoctorPacientes($id_doctor: ID!) {
+    doctorPacientes(id_doctor: $id_doctor) {
+      ...doctorDetalles
+    }
+  }
+  ${DOCTOR_DETALLES}
+`;
+
 
 // export const MIS_CONSULTAS_QUERY = gql`
 //   query MisConsultas {
@@ -152,59 +279,173 @@ export const ADDUSER_MUTATION = gql`
   }
 `;
 
+// export const ADDPACIENTE_MUTATION = gql`
+//   mutation AddPaciente($data: PacienteInput) {
+//     AddPaciente(data: $data) {
+//       id
+//       name
+//       role
+//       nacionalidad
+//       dni
+//       telefono
+//       direccion {
+//       numero
+//       sector
+//       calle
+//     }
+//       sexo
+//       edad
+//       diagnostico
+//       consultas {
+//         diagnostico
+//         salida
+//         ingreso
+//       }
+//       createdAt
+//       fatherID
+//     }
+//   }
+// `;
+
 export const ADDPACIENTE_MUTATION = gql`
-  mutation AddPaciente($data: PacienteInput) {
-    AddPaciente(data: $data) {
-      id
-      name
-      role
-      nacionalidad
-      dni
-      telefono
-      direccion {
-      numero
-      sector
-      calle
-    }
-      sexo
-      edad
-      diagnostico
-      consultas {
-        diagnostico
-        salida
-        ingreso
-      }
-      createdAt
-      fatherID
+mutation doCreatePaciente($input: CrearPacienteInput!) {
+  crearPaciente(input: $input) {
+    id_paciente
+    persona {
+      nombre1
     }
   }
+}
 `;
+
+
+// export const ADDCONSULTA_MUTATION = gql`
+//   mutation AddConsulta($id: ID!, $data: ConsultaInput!) {
+//     AddConsulta(id: $id, data: $data) {
+//       id
+//       name
+//       role
+//       nacionalidad
+//       dni
+//       telefono
+//       direccion {
+//       numero
+//       sector
+//       calle
+//     }
+//       sexo
+//       edad
+//       diagnostico
+//       consultas {
+//         diagnostico
+//         salida
+//         ingreso
+//       }
+//       createdAt
+//       fatherID
+//     }
+//   }
+// `;
+
 export const ADDCONSULTA_MUTATION = gql`
-  mutation AddConsulta($id: ID!, $data: ConsultaInput!) {
-    AddConsulta(id: $id, data: $data) {
-      id
-      name
-      role
-      nacionalidad
-      dni
-      telefono
-      direccion {
-      numero
-      sector
-      calle
-    }
-      sexo
-      edad
-      diagnostico
-      consultas {
-        diagnostico
-        salida
-        ingreso
-      }
-      createdAt
-      fatherID
-    }
+mutation doCreateConsulta($input: ConsultaInput!){
+  	crearConsulta(input: $input) {
+    id_consulta,
+    tipo_consulta,motivo_consulta,sintomas,notas_medicas,createdAt,updatedAt
   }
+}
+`;
+
+export const UPDDATE_CONSULTA_MUTATION = gql`
+mutation doCreateConsulta($input: ConsultaInput!){
+  	crearConsulta(input: $input) {
+    id_consulta,
+    tipo_consulta,motivo_consulta,sintomas,notas_medicas,createdAt,updatedAt
+  }
+}
+`;
+
+export const ADDDIAGNOSTICO_MUTATION = gql`
+mutation doCreateDiagnostico($input: DiagnosticoInput!) {
+  crearDiagnostico(input: $input) {
+    id_diagnostico
+    condicion
+    descripcion
+    gravedad
+    createdAt
+    updatedAt
+  }
+}
+`;
+
+export const ADDEXAMEN_MUTATION = gql`
+mutation doCreateExamen($input: ExamenesResultadosInput!) {
+  crearExamenResultado(input: $input) {
+    id_examenes
+    tipo_de_examen
+    resultados
+    estado_examen
+    medico_solicitante
+    createdAt
+    updatedAt
+  }
+}
+`;
+
+export const UPDATE_EXAMEN_MUTATION = gql`
+mutation doCreateExamen($input: ExamenesResultadosInput!) {
+  crearExamenResultado(input: $input) {
+    id_examenes
+    tipo_de_examen
+    resultados
+    estado_examen
+    medico_solicitante
+    createdAt
+    updatedAt
+  }
+}
+`;
+
+export const ADDTRATAMIENTO_MUTATION = gql`
+mutation doCreateTratamiento($input: TratamientoInput!) {
+  crearTratamiento(input: $input) {
+    id_tratamiento
+    tipo_de_tratamiento
+    estado
+    fecha_inicio
+    fecha_culminacion
+    detalles
+    createdAt
+    updatedAt
+  }
+}
+`;
+
+export const ADDMEDICAMENTO_MUTATION = gql`
+mutation doCreateMedicamento($input: MedicamentoInput!) {
+  crearMedicamento(input: $input) {
+    id_medicamento
+    nombre
+    dosis
+    via_administracion
+    frecuencia
+    duracion
+    observaciones
+    principio_activo
+    laboratorio
+    fecha_inicio
+    fecha_fin
+    medico_prescriptor
+    estado_tratamiento
+    tipo_medicamento
+    contraindicaciones
+    efectos_secundarios
+    fk_doctor_id
+    fk_paciente_id
+    createdAt
+    updatedAt
+  }
+}
 `;
 
 // export const ADDCONSULTA_MUTATION = gql`
@@ -341,7 +582,7 @@ export const CREAR_SEGURIDAD = gql`
 }
 `
 
-export const GET_SEGURIDAD = gql `
+export const GET_SEGURIDAD = gql`
 query getSeguridad($UserId: ID) {
 	getSeguridad(UserId: $UserId) {
 		id
@@ -367,7 +608,7 @@ query recuperarContrasena($data: respuestasSeguridadInput) {
 }
 `
 
-export const ACTUALIZAR_CONTRASEÑA = gql `
+export const ACTUALIZAR_CONTRASEÑA = gql`
 mutation setNewPassword($UserId: ID, $password: String) {
 	setNewPassword(UserId: $UserId, password: $password)
 }

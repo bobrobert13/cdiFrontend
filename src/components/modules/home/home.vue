@@ -17,13 +17,14 @@
             >Volver</span
           >
         </div>
+        
         <div
-          class="col-xl-9 col-lg-9 col-md-9 col-sm-11 col-xs-11 self-end"
+          class="col-xl-9 col-lg-9 col-md-9 col-sm-11 col-xs-11  q-mt-xl"
           v-if="workersView === false"
         >
           <homeAdmin v-if="this.$store.state.user.role === 'admin'"></homeAdmin>
           <homeEncargado v-if="this.$store.state.user.role === 'Encargado'"></homeEncargado>
-          <homeDoctor v-if="this.$store.state.user.role === 'Doctor'"></homeDoctor>
+          <homeDoctor v-if="this.$store.state.user.role === 'doctor'"></homeDoctor>
         </div>
         <!-- <div
           class="col-xl-9 col-lg-9 col-md-9 col-sm-12 col-xs-12 self-end"
@@ -212,7 +213,7 @@ export default {
     };
   },
   created() {
-    this.infoUser();
+    // this.infoUser();
     // this.myWorkers();
     // moment.updateLocale("es", {
     //   relativeTime: {
@@ -255,55 +256,6 @@ export default {
     updateUsers(event) {
       if (event.users === true) this.myWorkers();
     },
-    // myWorkers() {
-    //   this.$apollo
-    //     .query({
-    //       query: MY_WORKERS_QUERY,
-    //       fetchPolicy: "network-only",
-    //     })
-    //     .then((response) => {
-    //       this.loaderUser = false;
-    //       this.allWorkers = Object.assign([], response.data.MyWorkers);
-    //     })
-    //     .catch((err) => {
-    //       this.loaderUser = false;
-    //       this.$q.notify({
-    //         message: err.message.split("GraphQL error:"),
-    //         color: "negative",
-    //       });
-    //     });
-    // },
-    // workerView(viewType, worker) {
-    //   this.dataWorker = worker;
-    //   this.viewType = viewType;
-    //   this.workersView = true;
-    //   if (worker.role === "afiliado") {
-    //     this.WalletCredit(worker);
-    //   }
-    // },
-    // WalletCredit(worker) {
-    //   this.loaderBalance = true;
-    //   this.$apollo
-    //     .query({
-    //       query: USER_WALLET_QUERY,
-    //       fetchPolicy: "network-only",
-    //       variables: {
-    //         id: worker.id,
-    //       },
-    //     })
-    //     .then((response) => {
-    //       this.loaderBalance = false;
-    //       this.myWallet = response.data.MyWallet;
-    //       console.log("wallet user:", this.myWallet);
-    //     })
-    //     .catch((err) => {
-    //       this.loaderBalance = false;
-    //       this.$q.notify({
-    //         message: err.message.split("GraphQL error:"),
-    //         color: "negative",
-    //       });
-    //     });
-    // },
     infoUser() {
       this.$apollo
         .query({

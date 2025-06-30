@@ -7,7 +7,7 @@ export default [
     components: { default: lazyLoad("/modules/home/home") },
     meta: {
       requiresAuth: true,
-      roles: ["Paciente", "admin", "Encargado", "Doctor"]
+      roles: ["Paciente", "admin", "Encargado", "doctor"]
     },
     props: true
   },

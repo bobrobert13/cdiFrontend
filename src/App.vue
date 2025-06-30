@@ -78,7 +78,7 @@
                 <q-btn
                   flat
                   to="/home"
-                  icon="mdi-view-dashboard"
+                  icon="mdi-badge-account"
                   :color="$route.name === 'home' ? 'white' : 'accent'"
                 >
                 </q-btn>
@@ -260,7 +260,7 @@
               />
             </q-avatar>
           </q-route-tab>
-          <q-route-tab icon="mdi-view-dashboard" to="/home" exact />
+          <q-route-tab icon="mdi-badge-account" to="/home" exact />
           <!-- <q-route-tab
             v-if="this.$store.state.user.role !== 'operador'"
             icon="mdi-reorder-horizontal"
@@ -620,7 +620,7 @@ export default {
     };
   },
   created() {
-    this.infoUser();
+    // this.infoUser();
     console.log("uusuario", this.$store.state.user);
     // this.myCorreos();
     // moment.updateLocale("es", {
@@ -796,7 +796,6 @@ export default {
           }
         })
         .catch((err) => {
-          console.log("LOCOOO");
           this.updateSeguridad = false;
           if (this.$isDev) console.log("hubo un error: ", err);
         });

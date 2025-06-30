@@ -24,16 +24,11 @@
             filled
             v-model="email"
             color="amber-8"
-            type="email"
-            label="Correo"
+            type="text"
+            label="Usuario"
             :rules="[
               (val) => !!val || 'Este campo es obligatorio',
-              (val) => val.length <= 40 || 'Máximo 40 caracteres',
-              (val) =>
-                /^([a-zA-Z0-9._-]{3,}[@][a-zA-Z0-9.]{3,}[.][a-zA-Z0-9.]{2,5})*$/.test(
-                  val
-                ) || 'Formato de correo inválido',
-            ]"
+]"
           />
           <br />
           <q-input
@@ -121,7 +116,7 @@
             ]"
           />
               </div>
-              <q-btn color="primary" :disable="!emailRecovery || emailRecovery.length < 6 || emailRecovery == ''" class=" q-my-md" label="Continuar" @click="checkUser()" />
+              <q-btn color="primary" :disable="!emailRecovery || emailRecovery.length < 6 || emailRecovery == ''" class=" q-my-md" label="Continuar"  />
             </div>
           </div>
     </q-card>
@@ -254,9 +249,10 @@
 
 </template>
 <script>
-import { LOGIN_QUERY } from "../../../graphql/seguridad";
+import { LOGIN_QUERY, DO_LOGIN_QUERY } from "../../../graphql/seguridad";
 import { CHECK_USER_SEGURIDAD, COMPROBAR_PREGUNTAS } from '../../../graphql/user'
 import { saveToken, saveInfo, removeToken } from "../../../utils/auth";
+import store from "../../../store";
 import { ACTUALIZAR_CONTRASEÑA } from "src/graphql/user";
 export default {
   name: "login",
@@ -287,10 +283,6 @@ export default {
     email(newValue) {
       if (
         newValue !== "" &&
-        newValue.length <= 40 &&
-        /^([a-zA-Z0-9._-]{3,}[@][a-zA-Z0-9.]{3,}[.][a-zA-Z0-9.]{2,5})*$/.test(
-          newValue
-        ) &&
         this.password !== ""
       ) {
         return (this.valid = false);
@@ -310,20 +302,22 @@ export default {
     login() {
       this.loader = true;
       this.$apollo
-        .query({
-          query: LOGIN_QUERY,
-          fetchPolicy: "network-only",
+        .mutate({
+          mutation: DO_LOGIN_QUERY,
           variables: {
-            data: {
-              email: this.email,
-              password: this.password,
+            input: {
+              nombre_usuario: this.email,
+              contrasena: this.password,
             },
           },
         })
-        .then((response) => {
+        .then( async (response) =>  {
+          console.log('response-login', response.data.login);
+          
           this.loader = false;
-          if (response.data.Login.user) {
-            saveToken({ ...response.data.Login });
+          if (response.data.login.usuario) {
+             await saveToken({ ...response.data.login });
+            console.log('allstore:', store.state.user);
             this.$router.push({ name: "home" });
           } else {
             this.email = "";

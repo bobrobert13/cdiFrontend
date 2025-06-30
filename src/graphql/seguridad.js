@@ -31,6 +31,23 @@ export const LOGIN_QUERY = gql`
   }
 `;
 
+export const DO_LOGIN_QUERY = gql`
+mutation doLogin($input: LoginInput!){
+  	login(input: $input){
+   	 token,
+    usuario {
+      id_usuario,
+      nombre_usuario,
+      estado,
+      rol,
+      fk_doctor_id,
+      fk_cdi_id
+    }
+  }
+}
+
+`;
+
 // Solicitud para recuperar contraseña, el emil es de la tienda solicitante
 export const RECUPERAR_MUTATION = gql`
   mutation RecoveryPasswordMutation($email: String!) {

@@ -49,25 +49,43 @@ Router.beforeEach((to, from, next) => {
   }
 
   const authorized = isAuthorized(meta);
-
-  if (meta.requiresAuth && !authenticated) {
-    next({
-      path: "/login",
-      query: { redirect: to.fullPath }
-    });
-  } else
-  if (authenticated && ["/login"].indexOf(to.path) >= 0) {
-    next("/home");
-  } else if (authenticated && ["/"].indexOf(to.path) >= 0) {
-    next({
-      path: "/home"
-    });
-  } else if (to.matched.length === 0 || !authorized) {
-    next({ name: "Error404" });
-  } else {
-    next();
-  }
+  next();
+  // if (meta.requiresAuth && !authenticated) {
+  //   console.log('No autorizado', authorized, to.path);
+    
+  //   if (to.path !== '/login') {
+  //     next({
+  //       path: "/login",
+  //       query: { redirect: to.fullPath }
+  //     });
+  //   } else {
+  //     next(); // Permitir la navegación a la página de login
+  //   }
+  // } else {
+  //   next(); // Permitir la navegación
+  // }
 });
+
+//   if (meta.requiresAuth && !authenticated) {
+//     console.log('autorizado', authorized, to.path);
+    
+//     next({
+//       path: "/login",
+//       query: { redirect: to.fullPath }
+//     });
+//   } else
+//   if (authenticated && ["/login"].indexOf(to.path) >= 0) {
+//     next("/home");
+//   } else if (authenticated && ["/"].indexOf(to.path) >= 0) {
+//     next({
+//       path: "/home"
+//     });
+//   } else if (to.matched.length === 0 || !authorized) {
+//     next({ name: "Error404" });
+//   } else {
+//     next();
+//   }
+// });
 
 Router.beforeResolve((to, from, next) => {
   if (to.name) {
