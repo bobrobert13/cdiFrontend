@@ -335,25 +335,31 @@
                     <q-list @click="updateConsulModal(consulta)">
                       <q-item style="cursor:pointer;">
                         <q-item-section>
-                          <q-item-label caption>Asistir el: {{ entradaFecha(consulta.fecha_consulta) }}</q-item-label>
+                          <q-item-label caption>Paciente debe asistir el: <b>{{ entradaFecha(consulta.fecha_consulta)
+                          }}</b></q-item-label>
+                          <span class="q-my-sm"> <q-icon name="mdi-information" color="primary" /> Estado actual: <b>{{
+                            consulta.estado_consulta }}</b></span>
                           <q-item-label>Tipo de consulta: <b>{{ consulta.tipo_consulta }}</b></q-item-label>
                           <q-item-label><b>Motivo:</b> {{ consulta.motivo_consulta }}</q-item-label>
                           <q-item-label><b>Síntomas:</b> {{ consulta.sintomas }}</q-item-label>
 
-                          <q-item-label v-if="!dataUser.diagnosticos || !dataUser.diagnosticos.length"
-                            lines="2"><b>Diagnosticos</b>: Sín diagnosticos </q-item-label>
-                          <q-item-label v-else lines="2"><b>Diagnosticos</b>: <span class=" q-mr-xs"
-                              v-for="(diagnostico, index) in dataUser.diagnosticos" :key="index"> {{
-                                diagnostico.condicion }} </span> </q-item-label>
-
                         </q-item-section>
 
                       </q-item>
-                      <div class="q-ml-md row col-12 items-center self-center no-wrap ">
-                            <span @click="ActualizarEstadoConsulta(tratamiento, 'Suspendido')" lines="2" class=" q-mr-sm cursor-pointer text-primary self-center text-bold">
-                             Suspender consulta
-                            </span>
-                          </div>
+                      <div v-if="consulta.estado_consulta === 'Activo'"
+                        class="q-ml-md row col-12 items-center self-center no-wrap ">
+                        <span @click="ActualizarEstadoConsulta(consulta, 'Suspendido')" lines="2"
+                          class=" q-mr-sm cursor-pointer text-primary self-center text-bold">
+                          Suspender consulta
+                        </span>
+                      </div>
+                      <div v-if="consulta.estado_consulta === 'Suspendido'"
+                        class="q-ml-md row col-12 items-center self-center no-wrap ">
+                        <span @click="ActualizarEstadoConsulta(consulta, 'Activo')" lines="2"
+                          class=" q-mr-sm cursor-pointer text-primary self-center text-bold">
+                          Activar consulta
+                        </span>
+                      </div>
                       <q-separator spaced inset />
                     </q-list>
                   </div>
@@ -499,6 +505,47 @@
           </q-dialog>
           <!-- FIN AGREGAR NUEVO DIAGNOSTICO -->
 
+          <!-- ACTUALIZAR Diagnostico -->
+          <q-dialog v-model="modalUpdateDiagnostico">
+            <q-card class="my-card" flat bordered style="min-width: 350px">
+              <q-card-section>
+                Actualizar diagnostico
+              </q-card-section>
+              <q-card-section>
+                <div class="row">
+                  <div v-if="dataUser.persona" class="col-12">
+                    <span class="text-bold">Paciente: {{ dataUser.persona.nombre1 }}</span>
+                  </div>
+                  <div class="col-12 q-mt-xs">
+                    <q-select v-model="diagnostico_nivel_gravedad" filled label="Nivel de gravedad"
+                      :options="['Leve', 'Moderada', 'Grave', 'Crítica']" />
+                  </div>
+                  <div class="col-12 q-mt-xs">
+                    <q-input v-model="diagnostico_condicion" filled label="Condición de paciente" />
+                  </div>
+                  <div class="col-12 q-mt-xs">
+                    <q-input v-model="diagnostico_descripcion" filled label="Descripción" type="textarea" />
+                  </div>
+
+                </div>
+              </q-card-section>
+              <q-separator />
+
+              <q-card-actions align="center">
+                <q-btn flat :disable="this.diagnostico_nivel_gravedad === '' ||
+                  this.diagnostico_condicion === '' ||
+                  this.diagnostico_descripcion === ''
+                  " @click="actualizarDiagnostico()">
+                  Actualizar diagnostico actual
+                </q-btn>
+                <q-btn flat v-close-popup>
+                  Cerrar
+                </q-btn>
+              </q-card-actions>
+            </q-card>
+          </q-dialog>
+          <!-- FIN ACTUALIZAR  DIAGNOSTICO -->
+
           <!-- AGREGAR NUEVO EXAMEN -->
           <q-dialog v-model="modalAddExamen">
             <q-card class="my-card" flat bordered style="min-width: 350px">
@@ -568,8 +615,8 @@
           </q-dialog>
           <!-- FIN AGREGAR NUEVO examen -->
 
-                    <!-- ACTUALIZAR EXAMEN -->
-                    <q-dialog v-model="modalUpdateExamen">
+          <!-- ACTUALIZAR EXAMEN -->
+          <q-dialog v-model="modalUpdateExamen">
             <q-card class="my-card" flat bordered style="min-width: 350px">
               <q-card-section class="text-bold text-primary">
                 Actualización de estado del examen
@@ -579,9 +626,27 @@
                   <div v-if="dataUser.persona" class="col-12">
                     <span class="text-bold">Paciente: {{ dataUser.persona.nombre1 }}</span>
                   </div>
+
                   <div class="col-12 q-mt-xs">
-                    <q-select  v-model="examen_estadoExamen" filled label="Estado del examen"
-                      :options="['Completado', 'Cancelado']" />
+                    <q-select v-model="examen_tipoDeExamen" filled label="Tipo de examen" :options="['Sangre',
+                      'Orina',
+                      'Radiografía',
+                      'Tomografía',
+                      'Resonancia Magnética',
+                      'Ecografía',
+                      'Electrocardiograma',
+                      'Endoscopia',
+                      'Biopsia',
+                      'Cultivo',
+                      'Análisis Genético',
+                      'Prueba de Esfuerzo',
+                      'Mamografía',
+                      'Densitometría',
+                      'Otros']" />
+                  </div>
+                  <div class="col-12 q-mt-xs">
+                    <q-select v-model="examen_estadoExamen" filled label="Estado del examen"
+                      :options="['Completado', 'Pendiente']" />
                   </div>
                   <div class="col-12 q-mt-xs">
                     <q-input v-model="examen_resultados" filled label="Resultatos" />
@@ -597,9 +662,9 @@
               <q-separator />
 
               <q-card-actions align="center">
-                <q-btn flat :disable="
-                  this.examen_estadoExamen === '' ||
+                <q-btn flat :disable="this.examen_estadoExamen === '' ||
                   this.examen_resultados === '' ||
+                  this.examen_tipoDeExamen === '' ||
                   this.examen_valoresReferencia === '' ||
                   this.examen_observaciones === ''
                   " @click="actualizarExamen()">
@@ -705,7 +770,7 @@
                   <div class="col-12 q-mt-xs">
                     <q-input v-model="medicamento_nombre" filled label="Nombre del medicamento" />
                   </div>
-                  
+
                   <div class="col-12 q-mt-xs">
                     <q-input v-model="medicamento_principioActivo" filled label="Principio activo del medicamento" />
                   </div>
@@ -801,7 +866,7 @@
                   </div>
 
                   <div class="col-11 q-pa-xs">
-                    <span>Inicio  de toma del medicamento </span>
+                    <span>Inicio de toma del medicamento </span>
                     <q-input filled v-model="medicamento_fechaInicio" disable label="Ingrese fecha de inicio"></q-input>
                   </div>
                   <div class="col-1 self-center q-pa-xs q-pt-md">
@@ -818,7 +883,8 @@
 
                   <div class="col-11 q-pa-xs">
                     <span>Fin de toma del medicamento </span>
-                    <q-input filled v-model="medicamento_fechaFin" disable label="Ingrese fecha de finalización"></q-input>
+                    <q-input filled v-model="medicamento_fechaFin" disable
+                      label="Ingrese fecha de finalización"></q-input>
                   </div>
                   <div class="col-1 self-center q-pa-xs q-pt-md">
                     <q-btn icon="event" round color="primary">
@@ -836,21 +902,20 @@
               <q-separator />
 
               <q-card-actions align="center">
-                <q-btn flat :disable="
-                this.medicamento_nombre === '' ||
-                this.medicamento_dosis === '' ||
-                this.medicamento_viaAdministracion === '' ||
-                this.medicamento_frecuencia === '' ||
-                this.medicamento_duracion === '' ||
-                this.medicamento_principioActivo === '' ||
-                this.medicamento_estadoTratamiento === '' ||
-                this.medicamento_tipoMedicamento === '' ||
-                this.medicamento_contraindicaciones === '' ||
-                this.medicamento_efectosSecundarios === '' ||
-                this.medicamento_observaciones === '' ||
-                this.medicamento_fechaInicio === '' ||
-                this.medicamento_fechaFin === ''
-                " @click="añadirMedicamento()">
+                <q-btn flat :disable="this.medicamento_nombre === '' ||
+                  this.medicamento_dosis === '' ||
+                  this.medicamento_viaAdministracion === '' ||
+                  this.medicamento_frecuencia === '' ||
+                  this.medicamento_duracion === '' ||
+                  this.medicamento_principioActivo === '' ||
+                  this.medicamento_estadoTratamiento === '' ||
+                  this.medicamento_tipoMedicamento === '' ||
+                  this.medicamento_contraindicaciones === '' ||
+                  this.medicamento_efectosSecundarios === '' ||
+                  this.medicamento_observaciones === '' ||
+                  this.medicamento_fechaInicio === '' ||
+                  this.medicamento_fechaFin === ''
+                  " @click="añadirMedicamento()">
                   Añadir medicamento para el paciente
                 </q-btn>
                 <q-btn flat v-close-popup>
@@ -906,9 +971,14 @@
               <q-separator />
 
               <q-card-actions align="center">
-                <q-btn flat
-                  :disable="this.diagnostico === '' || this.ingreso === '' || this.salida === '' || this.canEdit === false"
-                  @click="updateConsulta()">
+                <q-btn flat :disable="this.ingreso === ''
+                  || this.salida === '' ||
+                  this.tipo_consulta === '' ||
+                  this.motivo_consulta === '' ||
+                  this.sintomas_consulta === '' ||
+                  this.notas_medicas === '' ||
+                  this.ingresoSalida === ''
+                  " @click="updateConsulta()">
                   Actualizar
                 </q-btn>
                 <q-btn flat v-close-popup @click="clearData()">
@@ -963,6 +1033,13 @@
                           <small class=" q-mt-xs"><b>Descripción:</b> {{ diagnostico.descripcion }}</small>
                         </q-item-section>
                       </q-item>
+
+                      <div class="q-ml-md row col-12 items-center self-center no-wrap ">
+                        <span @click="seleccionarDiagnostico(diagnostico)" lines="2"
+                          class=" q-mr-sm cursor-pointer text-primary self-center text-bold">
+                          Corregir Diagnostico
+                        </span>
+                      </div>
                       <q-separator spaced inset />
                     </q-list>
                   </div>
@@ -1017,21 +1094,23 @@
 
                           <q-item-section class=" q-mt-sm">
                             <q-item-label caption>Laboratorio: {{ examen.laboratorio_centro }}</q-item-label>
-                            <q-item-label lines="2" class=" q-mt-sm"><b>Valores de referencia:</b> {{
-                              examen.valores_referencia }}</q-item-label>
+
                             <q-item-label lines="2" class=" q-mt-sm"><b>Observaciones:</b> {{ examen.observaciones
                             }}</q-item-label>
                             <span class=" q-mt-xs"><b>Descripción:</b> {{ examen.descripcion }}</span>
                           </q-item-section>
-
+                          <q-item-label lines="2" class=" q-mt-sm"><b>Valores de referencia:</b> {{
+                              examen.valores_referencia }}</q-item-label>
                           <q-item-section class=" q-mt-sm">
-                            <q-item-label lines="2" class=" q-mt-sm"><b>Estado del examen:</b> <b> {{
-                              examen.estado_examen }}</b></q-item-label>
+                            <q-item-label lines="2" class=" q-mt-sm"> <q-icon name="mdi-information" color="primary" />
+                              <b> Estado del examen:</b> <b> {{
+                                examen.estado_examen }}</b></q-item-label>
                             <small class=" q-mt-xs"><b>Resultados:</b> {{ examen.resultados }}</small>
                           </q-item-section>
                           <q-item-section class=" q-mt-sm">
-                            <q-item-label @click="seleccionarExamen(examen)" lines="2" class=" text-primary text-bold q-mt-sm">
-                             Actualizar estado del examen
+                            <q-item-label @click="seleccionarExamen(examen)" lines="2"
+                              class=" text-primary text-bold q-mt-sm">
+                              Actualizar estado del examen
                             </q-item-label>
                           </q-item-section>
                         </q-item-section>
@@ -1087,6 +1166,9 @@
                     <q-list>
                       <q-item style="cursor:pointer;">
                         <q-item-section>
+                          <q-item-label lines="2" class=" q-mt-sm"> <q-icon name="mdi-information" color="primary" />
+                              <b> Estado del tratamiento:</b> <b> {{
+                                tratamiento.estado }}</b></q-item-label>
                           <q-item-label lines="2"><b>Tipo de tratamiento:</b> {{ tratamiento.tipo_de_tratamiento
                           }}</q-item-label>
                           <small class=" q-mt-xs"><b>Detalles:</b> {{ tratamiento.detalles }}</small>
@@ -1095,19 +1177,21 @@
                           <q-item-label caption>Fecha de culminación: {{ entradaFecha(tratamiento.fecha_culminacion)
                           }}</q-item-label>
                         </q-item-section>
-                        
+
                       </q-item>
                       <div class="q-ml-md row col-12 items-center self-center no-wrap ">
-                            <span @click="ActualizarEstadoTratamiento(tratamiento, 'Suspendido')" lines="2" class=" q-mr-sm cursor-pointer text-primary self-center text-bold">
-                             Suspender Tratamiento
-                            </span>
-                            <span @click="ActualizarEstadoTratamiento(tratamiento, 'Finalizado')" lines="2" class=" text-primary cursor-pointer self-center text-bold ">
-                             Finalizar Tratamiento
-                            </span>
-                          </div>
+                        <span @click="ActualizarEstadoTratamiento(tratamiento, 'Suspendido')" lines="2"
+                          class=" q-mr-sm cursor-pointer text-primary self-center text-bold">
+                          Suspender Tratamiento
+                        </span>
+                        <span @click="ActualizarEstadoTratamiento(tratamiento, 'Finalizado')" lines="2"
+                          class=" text-primary cursor-pointer self-center text-bold ">
+                          Finalizar Tratamiento
+                        </span>
+                      </div>
                       <q-separator spaced inset />
                     </q-list>
-                    
+
                   </div>
                 </q-scroll-area>
               </q-card-section>
@@ -1154,10 +1238,11 @@
                     <q-list>
                       <q-item style="cursor:pointer;">
                         <q-item-section>
-                          
+
                           <q-item-label lines="2" class=" text-h6 text-medium text-primary"><b>{{ medicamento.nombre
                           }}</b> </q-item-label>
-                            <q-item-label class="q-my-sm" lines="2"> <q-icon color="primary" name="mdi-information" /> Estado actual: <b>{{ medicamento.estado_tratamiento }}</b> </q-item-label>
+                          <q-item-label class="q-my-sm" lines="2"> <q-icon color="primary" name="mdi-information" />
+                            Estado actual: <b>{{ medicamento.estado_tratamiento }}</b> </q-item-label>
                           <q-item-label lines="2"><b>Dosis recomentada:</b> {{ medicamento.dosis
                           }}</q-item-label>
                           <q-item-label lines="2"><b>Administración:</b> {{ medicamento.via_administracion
@@ -1178,13 +1263,15 @@
                         </q-item-section>
                       </q-item>
                       <div class="q-ml-md row col-12 items-center self-center no-wrap ">
-                            <span @click="ActualizarEstadoMedicamento(medicamento, 'Suspendido')" lines="2" class=" q-mr-sm cursor-pointer text-primary self-center text-bold">
-                             Suspender Medicamento
-                            </span>
-                            <span @click="ActualizarEstadoMedicamento(medicamento, 'Completado')" lines="2" class=" text-primary cursor-pointer self-center text-bold ">
-                             Completar Medicamento
-                            </span>
-                          </div>
+                        <span @click="ActualizarEstadoMedicamento(medicamento, 'Suspendido')" lines="2"
+                          class=" q-mr-sm cursor-pointer text-primary self-center text-bold">
+                          Suspender Medicamento
+                        </span>
+                        <span @click="ActualizarEstadoMedicamento(medicamento, 'Completado')" lines="2"
+                          class=" text-primary cursor-pointer self-center text-bold ">
+                          Completar Medicamento
+                        </span>
+                      </div>
                       <q-separator spaced inset />
                     </q-list>
                   </div>
@@ -1231,7 +1318,13 @@ import {
   ADDEXAMEN_MUTATION,
   ADDTRATAMIENTO_MUTATION,
   ADDMEDICAMENTO_MUTATION,
-  UPDATE_EXAMEN_MUTATION
+  UPDATE_EXAMEN_MUTATION,
+  UPDDATE_CONSULTA_MUTATION,
+  UPDDATE_ESTADO_CONSULTA_MUTATION,
+  UPDDATE_EXAMEN_MUTATION,
+  UPDDATE_DIAGNOSTICO_MUTATION,
+  UPDDATE_ESTADO_TRATAMIENTO_MUTATION,
+  UPDDATE_ESTADO_MEDICAMENTO_MUTATION
 } from "../../../graphql/user";
 export default {
   name: "homeDoctor",
@@ -1244,6 +1337,7 @@ export default {
 
       // MODALES
       modalUpdateExamen: false,
+      modalUpdateDiagnostico: false,
       modalAddDiagnostico: false,
       modalAddExamen: false,
       modalAddTratamiento: false,
@@ -1553,20 +1647,28 @@ export default {
   methods: {
     seleccionarExamen(examen) {
       this.examenSeleccionado = examen;
-      console.log('examen', this.examenSeleccionado);
-      
+      this.examen_estadoExamen = 'Completado';
+      this.examen_tipoDeExamen = examen.tipo_de_examen;
+      this.examen_resultados = examen.resultados;
+      this.examen_observaciones = examen.observaciones;
+      this.examen_laboratorioCentro = examen.laboratorio_centro;
+      this.examen_valoresReferencia = examen.valores_referencia;
       this.modalUpdateExamen = true;
+
     },
     seleccionarDiagnostico(diagnostico) {
       this.diagnosticoSeleccionado = diagnostico;
+      this.diagnostico_nivel_gravedad = diagnostico.gravedad;
+      this.diagnostico_condicion = diagnostico.condicion;
+      this.diagnostico_descripcion = diagnostico.descripcion;
       this.modalUpdateDiagnostico = true;
 
-    },    
+    },
     seleccionarTratamiento(tratamiento) {
       this.tratamientoSeleccionado = tratamiento;
       this.modalUpdateTratamiento = true;
 
-    },    
+    },
     seleccionarMedicamento(medicamento) {
       this.medicamentoSeleccionado = medicamento;
       this.modalUpdateMedicamento = true;
@@ -1823,8 +1925,83 @@ export default {
     //       });
     //     });
     // },
+    ActualizarEstadoConsulta(consulta, estado) {
+      this.loader = true;
+      return this.$apollo
+        .mutate({
+          mutation: UPDDATE_ESTADO_CONSULTA_MUTATION,
+          variables: {
+            id_consulta: consulta.id_consulta,
+            estado_consulta: estado
+          },
+        })
+        .then((response) => {
+          this.loader = false;
+          this.modalDetailUser = false;
+          this.modalUpdateConsulta = false;
+          this.AllPacientes()
+          this.$q.notify({
+            message: "Consulta actualizada",
+            color: "positive",
+          });
+        })
+        .catch((err) => {
+          this.loader = false;
+          console.log("error: ", err);
+        });
+    },
+    ActualizarEstadoMedicamento(medicamento, estado) {
+      this.loader = true;
+      return this.$apollo
+        .mutate({
+          mutation: UPDDATE_ESTADO_MEDICAMENTO_MUTATION,
+          variables: {
+            id_medicamento: medicamento.id_medicamento,
+            estado_tratamiento: estado
+          },
+        })
+        .then((response) => {
+          this.loader = false;
+          this.modalDetailUser = false;
+          this.modalMedicamentos = false;
+          this.AllPacientes()
+          this.$q.notify({
+            message: "Medicamento actualizado",
+            color: "positive",
+          });
+        })
+        .catch((err) => {
+          this.loader = false;
+          console.log("error: ", err);
+        });
+    },
+    ActualizarEstadoTratamiento(tratamiento, estado) {
+      this.loader = true;
+      return this.$apollo
+        .mutate({
+          mutation: UPDDATE_ESTADO_TRATAMIENTO_MUTATION,
+          variables: {
+            id_tratamiento: tratamiento.id_tratamiento,
+            estado: estado
+          },
+        })
+        .then((response) => {
+          this.loader = false;
+          this.modalDetailUser = false;
+          this.modalTratamientos = false;
+          this.modalUpdateTratamiento = false;
+          this.AllPacientes()
+          this.$q.notify({
+            message: "Tratamiento actualizado",
+            color: "positive",
+          });
+        })
+        .catch((err) => {
+          this.loader = false;
+          console.log("error: ", err);
+        });
+    },
     ActualizarConsulta() {
-
       this.$apollo
         .mutate({
           mutation: UPDATE_CONSULTA_MUTATION,
@@ -1869,63 +2046,103 @@ export default {
           });
         });
     },
+    actualizarDiagnostico() {
+      this.$apollo
+        .mutate({
+          mutation: UPDDATE_DIAGNOSTICO_MUTATION,
+          variables: {
+            id_diagnostico: this.diagnosticoSeleccionado.id_diagnostico,
+            input: {
+              condicion: this.diagnostico_condicion,
+              descripcion: this.diagnostico_descripcion,
+              gravedad: this.diagnostico_nivel_gravedad,
+              fk_doctor_id: this.$store.state.user.doctor_id,
+              fk_cdi_id: this.$store.state.user.cdi_id,
+              fk_paciente_id: this.dataUser.id_paciente
+            },
+
+          },
+        })
+        .then((response) => {
+          this.loader = false;
+          this.modalAddDiagnostico = false;
+          this.modalDetailUser = false;
+          this.modalDiagnosticos = false;
+          this.modalUpdateDiagnostico = false;
+          this.diagnostico_condicion = '';
+          this.diagnostico_nivel_gravedad = '';
+          this.diagnostico_descripcion = '';
+          this.AllPacientes()
+          this.$q.notify({
+            message: "Nueva consulta añadida",
+            color: "positive",
+          });
+        })
+        .catch((err) => {
+          this.loader = false;
+          this.$q.notify({
+            message: err.message.split("GraphQL error:"),
+            color: "negative",
+          });
+        });
+    },
     añadirConsul() {
 
-// validar que la fecha de inicio sea mayor a la fecha actual
-const fechaInicio = moment(this.ingresoSalida);
-const fechaActual = moment();
+      // validar que la fecha de inicio sea mayor a la fecha actual
+      const fechaInicio = moment(this.ingresoSalida);
+      const fechaActual = moment();
 
-if (fechaInicio.isBefore(fechaActual)) {
-  this.$q.notify({
-    message: "La fecha de inicio no puede ser menor a la fecha actual",
-    color: "negative",
-  });
-  return;
-}
-this.$apollo
-  .mutate({
-    mutation: ADDCONSULTA_MUTATION,
-    variables: {
-      input: {
-        tipo_consulta: this.tipo_consulta.value || 'General',
-        motivo_consulta: this.motivo_consulta,
-        sintomas: this.sintomas_consulta,
-        notas_medicas: this.notas_medicas,
-        fecha_consulta: this.ingresoSalida,
-        fk_doctor_id: this.$store.state.user.doctor_id,
-        fk_cdi_id: this.$store.state.user.cdi_id,
-        fk_paciente_id: this.dataUser.id_paciente
-      },
+      if (fechaInicio.isBefore(fechaActual)) {
+        this.$q.notify({
+          message: "La fecha de inicio no puede ser menor a la fecha actual",
+          color: "negative",
+        });
+        return;
+      }
+      this.$apollo
+        .mutate({
+          mutation: ADDCONSULTA_MUTATION,
+          variables: {
+            input: {
+              tipo_consulta: this.tipo_consulta.value || 'General',
+              motivo_consulta: this.motivo_consulta,
+              sintomas: this.sintomas_consulta,
+              notas_medicas: this.notas_medicas,
+              fecha_consulta: this.ingresoSalida,
+              fk_doctor_id: this.$store.state.user.doctor_id,
+              fk_cdi_id: this.$store.state.user.cdi_id,
+              fk_paciente_id: this.dataUser.id_paciente
+            },
 
+          },
+        })
+        .then((response) => {
+          this.loader = false;
+          this.salida = "";
+          this.ingreso = "";
+          this.diagnostico = "";
+          this.tipo_consulta = '';
+          this.motivo_consulta = '';
+          this.sintomas_consulta = '';
+          this.notas_medicas = '';
+          this.modalAddConsulta = false;
+          this.modalDetailUser = false;
+          this.ingresoSalida = {};
+          this.fecha = "";
+          this.AllPacientes()
+          this.$q.notify({
+            message: "Nueva consulta añadida",
+            color: "positive",
+          });
+        })
+        .catch((err) => {
+          this.loader = false;
+          this.$q.notify({
+            message: err.message.split("GraphQL error:"),
+            color: "negative",
+          });
+        });
     },
-  })
-  .then((response) => {
-    this.loader = false;
-    this.salida = "";
-    this.ingreso = "";
-    this.diagnostico = "";
-    this.tipo_consulta = '';
-    this.motivo_consulta = '';
-    this.sintomas_consulta = '';
-    this.notas_medicas = '';
-    this.modalAddConsulta = false;
-    this.modalDetailUser = false;
-    this.ingresoSalida = {};
-    this.fecha = "";
-    this.AllPacientes()
-    this.$q.notify({
-      message: "Nueva consulta añadida",
-      color: "positive",
-    });
-  })
-  .catch((err) => {
-    this.loader = false;
-    this.$q.notify({
-      message: err.message.split("GraphQL error:"),
-      color: "negative",
-    });
-  });
-},
     añadirDiagnostico() {
       this.loader = true;
       this.$apollo
@@ -2014,14 +2231,17 @@ this.$apollo
       this.loader = true;
       this.$apollo
         .mutate({
-          mutation: UPDATE_EXAMEN_MUTATION,
+          mutation: UPDDATE_EXAMEN_MUTATION,
           variables: {
+            id_examenes: this.examenSeleccionado.id_examenes,
             input: {
-              examen_id: this.examenSeleccionado.id_examenes,
               resultados: this.examen_resultados,
               valores_referencia: this.examen_valoresReferencia,
               estado_examen: this.examen_estadoExamen,
               observaciones: this.examen_observaciones,
+              tipo_de_examen: this.examen_tipoDeExamen,
+              fk_doctor_id: this.$store.state.user.doctor_id,
+              fk_paciente_id: this.dataUser.id_paciente
             },
           },
         })
@@ -2032,6 +2252,11 @@ this.$apollo
           this.examen_resultados = '';
           this.examen_estadoExamen = '';
           this.examen_observaciones = '';
+          this.examen_tipoDeExamen = '';
+          this.examen_laboratorioCentro = '';
+          this.modalExamenes = false;
+          this.examen_valoresReferencia = '';
+          this.modalUpdateExamen = false;
           this.AllPacientes()
           this.$q.notify({
             message: "Examen en curso actualizado",
@@ -2174,7 +2399,7 @@ this.$apollo
           this.medicamento_observaciones = '';
           this.medicamento_fechaInicio = '';
           this.medicamento_fechaFin = '';
-          
+
           this.AllPacientes()
           this.$q.notify({
             message: "Medicamento asignado",
@@ -2202,7 +2427,7 @@ this.$apollo
       this.sintomas_consulta = data.sintomas;
       this.notas_medicas = data.notas_medicas;
       this.ingresoSalida = moment(data.ingreso).format('YYYY/MM/DD  ');
-      this.idConsulta = data.id
+      this.idConsulta = data.id_consulta
       this.modalUpdateConsulta = true;
     },
     updateConsulta() {
@@ -2215,10 +2440,20 @@ this.$apollo
       };
       return this.$apollo
         .mutate({
-          mutation: UPDATE_CONSULTA_MUTATION,
+          mutation: UPDDATE_CONSULTA_MUTATION,
           variables: {
-            id: this.dataUser.id,
-            data,
+            id_consulta: this.idConsulta,
+            input: {
+              tipo_consulta: this.tipo_consulta,
+              motivo_consulta: this.motivo_consulta,
+              sintomas: this.sintomas_consulta,
+              notas_medicas: this.notas_medicas,
+              estado_consulta: this.estado_consulta,
+              fecha_consulta: this.ingresoSalida,
+              fk_doctor_id: this.$store.state.user.doctor_id,
+              fk_cdi_id: this.$store.state.user.cdi_id,
+              fk_paciente_id: this.dataUser.id_paciente
+            },
           },
         })
         .then((response) => {
@@ -2226,6 +2461,11 @@ this.$apollo
           this.salida = "";
           this.ingreso = "";
           this.diagnostico = "";
+          this.tipo_consulta = '';
+          this.motivo_consulta = '';
+          this.sintomas_consulta = '';
+          this.notas_medicas = '';
+          this.modalAddConsulta = false;
           this.modalUpdateConsulta = false;
           this.modalDetailUser = false;
           this.ingresoSalida = {};

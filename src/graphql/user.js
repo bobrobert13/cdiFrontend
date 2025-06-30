@@ -97,7 +97,7 @@ export const PERSONA_DETALLES = gql`
 
 export const CONSULTAS_DETALLES = gql`
 fragment consultasDetalles on Consulta {
-  id_consulta, fecha_consulta, tipo_consulta, motivo_consulta, sintomas, notas_medicas, createdAt 
+  id_consulta, fecha_consulta, estado_consulta, tipo_consulta, motivo_consulta, sintomas, notas_medicas, createdAt 
 }
 `;
 
@@ -357,11 +357,45 @@ mutation doCreateConsulta($input: ConsultaInput!){
 `;
 
 export const UPDDATE_CONSULTA_MUTATION = gql`
-mutation doCreateConsulta($input: ConsultaInput!){
-  	crearConsulta(input: $input) {
-    id_consulta,
-    tipo_consulta,motivo_consulta,sintomas,notas_medicas,createdAt,updatedAt
+mutation doUpdateConsulta($id_consulta: ID! $input: ConsultaInput!){
+  actualizarConsulta(id_consulta: $id_consulta, input: $input) {
+    id_consulta
+    updatedAt
   }
+}
+`;
+
+export const UPDDATE_DIAGNOSTICO_MUTATION = gql`
+mutation doUpdateDiagnostico($id_diagnostico: ID! $input: DiagnosticoInput!){
+  actualizarDiagnostico(id_diagnostico: $id_diagnostico, input: $input) {
+    updatedAt
+  }
+}
+`;
+
+export const UPDDATE_EXAMEN_MUTATION = gql`
+mutation doUpdateExamen($id_examenes: ID! $input: ExamenesResultadosInput!){
+  actualizarExamenResultado(id_examenes: $id_examenes, input: $input) {
+    updatedAt
+  }
+}
+`;
+
+export const UPDDATE_ESTADO_TRATAMIENTO_MUTATION = gql`
+mutation doUpdateEstadoTratamiento($id_tratamiento: ID! $estado: EstadoTratamiento!){
+  actualizarEstadoTratamiento(id_tratamiento: $id_tratamiento, estado: $estado)
+}
+`;
+
+export const UPDDATE_ESTADO_MEDICAMENTO_MUTATION = gql`
+mutation doUpdateEstadoMedicamento($id_medicamento: ID! $estado_tratamiento: EstadoTratamientoMedicamento!){
+  actualizarEstadoMedicamento(id_medicamento: $id_medicamento, estado_tratamiento: $estado_tratamiento)
+}
+`;
+
+export const UPDDATE_ESTADO_CONSULTA_MUTATION = gql`
+mutation doUpdateEstadoConsulta($id_consulta: ID! $estado_consulta: String!){
+  actualizarEstadoConsulta(id_consulta: $id_consulta, estado_consulta: $estado_consulta)
 }
 `;
 
