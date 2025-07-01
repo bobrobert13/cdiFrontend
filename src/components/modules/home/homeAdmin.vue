@@ -1,7 +1,7 @@
 <template>
   <div class="row justify-center">
     <div class="col-12 self-end">
-      <span class="text-bold text-h6 text-accent">Control de super administrador</span>
+      <span class="text-bold text-h6 text-accent">Panel de administrador</span>
     </div>
     <div
       class="col-12 self-end bg-white"
@@ -15,7 +15,7 @@
       >
         <div class="row q-ma-md justify-center" v-if="controlLista === true">
           <div class="col-9">
-            <div class="row justify-center">
+            <div class="row justify-center full-width no-wrap">
               <div
                 class="col-xl-5 col-lg-5 col-md-5 col-sm-6 col-xs-10 text-white q-pa-md"
               >
@@ -31,7 +31,7 @@
                       size="xl"
                     ></q-icon>
                     <br />
-                    <span class="text-center">Control de pacientes (historia clinica)</span>
+                    <span class="text-center">Control de pacientes</span>
                   </div>
                 </div>
               </div>
@@ -50,7 +50,7 @@
                       size="xl"
                     ></q-icon>
                     <br />
-                    <span class="text-center">Control de encargados</span>
+                    <span class="text-center">Control de CDIs</span>
                   </div>
                 </div>
               </div>

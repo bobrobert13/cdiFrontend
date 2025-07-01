@@ -2,7 +2,7 @@
   <div class="row justify-center">
     <div class="col-12" v-if="viewType === 'userList'">
       <div class="col-12">
-        <span class="text-accent text-h6 text-bold">Control de encargados</span>
+        <span class="text-accent text-h6 text-bold">Listado de CDIs</span>
       </div>
       <div class="row justify-center">
         <div class="col self-center text-right"></div>
@@ -28,24 +28,22 @@
           <q-list class="rounded-borders bg-secondary" style="border-radius: 15px">
             <q-item>
               <q-item-section avatar @click="userDetail(user)" style="cursor: pointer">
-                <q-avatar color="primary" text-color="white">
-                  <img
-                    v-if="user.profileImage !== ''"
-                    :src="config.api.url + user.profileImage"
-                  />
-                  <img
-                    v-if="user.profileImage === ''"
-                    src="../../../statics/img/account-circle.png"
-                  />
+                <q-avatar color="primary" icon="mdi-hospital-building" text-color="white">
                 </q-avatar>
               </q-item-section>
 
               <q-item-section top @click="userDetail(user)" style="cursor: pointer">
                 <q-item-label class="text-left" lines="1">
-                  <span class="text-weight-medium">{{ user.name }}</span>
+                  <span class="text-weight-medium">Nombre de CDI: {{ user.nombre }}</span>
                 </q-item-label>
                 <q-item-label class="text-left" lines="1">
-                  <span class="text-weight-medium">{{ user.email }}</span>
+                  <span class="text-weight-medium">Número de CDI: {{ user.numero_cdi }}</span>
+                </q-item-label>
+                <q-item-label class="text-left" lines="1">
+                  <span class="text-weight-medium">Encargado: {{ user.encargado }}</span>
+                </q-item-label>
+                <q-item-label class="text-left" lines="1">
+                  <span class="text-weight-medium">Cuadrante: {{ user.cuadrante }}</span>
                 </q-item-label>
                 <!-- <q-item-label class="text-left" lines="1">
                   <span class="text-weight-medium">{{ user.role }}</span>
@@ -397,7 +395,7 @@
       <q-card class="my-card" flat bordered style="min-width: 350px">
         <q-card-section>
           <q-card-section class="col-5 flex flex-center">
-            <div class="text-overline">Detalle del encargado</div>
+            <div class="text-overline">Detalle del CDI</div>
           </q-card-section>
           <q-card-section class="col-5 flex flex-center">
             <q-avatar color="primary" text-color="white">
@@ -432,7 +430,7 @@
 
         <q-card-actions align="center">
           <q-btn flat v-close-popup> Cerrar </q-btn>
-          <q-btn @click="generatePDF(user)" flat v-close-popup> Descargar historial </q-btn>
+          <!-- <q-btn @click="generatePDF(user)" flat v-close-popup> Descargar historial </q-btn> -->
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -489,7 +487,7 @@
 </template>
 <script>
 import config from "../../../config";
-import { ADDUSER_MUTATION, USER_DELETE, BUSCAR_USER_QUERY } from "../../../graphql/user";
+import { ADDUSER_MUTATION, USER_DELETE, BUSCAR_USER_QUERY, ADMIN_CDIS_QUERY } from "../../../graphql/user";
 import { ADMIN_ENCARGADO_QUERY } from "../../../graphql/admin";
 import VueHtml2pdf from "vue-html2pdf";
 import historialEncVue from "./historialEnc.vue";
@@ -716,13 +714,13 @@ export default {
     AllEncargados() {
       this.$apollo
         .query({
-          query: ADMIN_ENCARGADO_QUERY,
+          query: ADMIN_CDIS_QUERY,
           fetchPolicy: "network-only",
         })
         .then((response) => {
           this.loaderUser = false;
-          console.log(response.data.allEncargados);
-          this.users = Object.assign([], response.data.allEncargados);
+          console.log(response.data.cdis);
+          this.users = Object.assign([], response.data.cdis);
         })
         .catch((err) => {
           this.loaderUser = false;

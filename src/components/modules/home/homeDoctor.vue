@@ -197,10 +197,6 @@
               <div class=" col-5" style="border-left: 3px solid white;">
                 <div class="column justify-center">
                   <div class="row ">
-                    <!-- <div class="col-12">
-                      <q-select filled label="Enfermedades cronicas" v-model="estado" :options="estados"
-                        option-label="label" option-value="value" />
-                    </div> -->
 
                   </div>
                   <div class="row q-pb-xs">
@@ -2134,46 +2130,7 @@ export default {
     addPaciente() {
       this.loader = true;
       let telConcat = '0' + this.codigo + this.telefono
-      console.log('input, :',
-        {
-          //faltan
-          enfermedades_cronicas: this.enfermedades_cronicas,
-          peso: this.peso,
-          vacunas: this.vacunasSeleccionadas.value,
-          discapacidad: this.discapacidad,
-          antecedentes_familiares: this.antecedentes_familiares,
-          tipo_de_sangre: this.sangreSeleccionada.value,
-          alergias: this.alergias,
-
-          personaInput: {
-            //faltan
-            estado_civil: this.estadoCivilSeleccionado.value,
-            ocupacion: this.ocupacion,
-
-            nombre1: this.fullName,
-            sexo: this.sexo,
-            edad: this.edad,
-            cedula_identidad: this.dni,
-            telefonoInput: {
-              codigo: this.codigo.toString(), // Ejemplo: "0414"
-              numero: this.telefono.toString() // Ejemplo: "9876543"
-            },
-            correoInput: {
-              correo: this.correo || ''
-            },
-            direccionInput: {
-              //faltan
-              codigo_postal: this.codigo_postal,
-              punto_referencia: this.punto_referencia,
-
-              parroquia: this.ciudad,
-              numero_casa: this.numero,
-              calle: this.calle,
-              sector: this.sector
-            }
-          }
-        }
-      );
+      console.log('input, :',);
 
       this.$apollo
         .mutate({
@@ -2217,27 +2174,6 @@ export default {
                 }
               }
             }
-            // data: {
-            //   name: this.fullName,
-            //   fatherID: this.$store.state.user.id,
-            //   role: this.role,
-            //   dni: this.dni,
-            //   nacionalidad: this.nacionalidad,
-            //   sexo: this.sexo,
-            //   edad: this.edad,
-            //   telefono: this.telefono.toString(),
-            //   codigoArea: this.codigo.toString(),
-            //   direccion: {
-            //     calle: this.calle,
-            //     numero: this.numero,
-            //     sector: this.sector
-            //   },
-            //   ciudad: {
-            //     nombre: this.ciudad,
-            //     EstadoId: this.estado.value
-            //   },
-            //   diagnostico: this.diagnostico
-            // },
           },
         })
         .then((response) => {
@@ -3061,12 +2997,6 @@ export default {
         });
     },
     buscarUsuario(dni) {
-      this.loaderOrders = true;
-      let data = {
-        dni: dni,
-        role: "Paciente"
-      };
-      this.loaderOrders = false;
       const paciente = this.users.filter((paciente) => paciente.persona.cedula_identidad === dni)
       if (paciente.length !== 0) {
         this.dataUser = paciente[0];

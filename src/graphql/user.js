@@ -63,6 +63,7 @@ export const PACIENTES_QUERY = gql`
 
 
 
+
 export const PERSONA_DETALLES = gql`
   fragment personaDetalles on Persona {
     nombre1
@@ -74,6 +75,7 @@ export const PERSONA_DETALLES = gql`
     id_persona
     sexo
     cedula_identidad
+    ocupacion
     telefono {
       codigo
       numero
@@ -198,6 +200,12 @@ export const DOCTOR_DETALLES = gql`
     numero_carnet
     area_de_trabajo
     horario
+          usuarios {
+        id_usuario
+        nombre_usuario
+        rol
+        estado
+      }
     persona {
       ...personaDetalles
     }
@@ -208,6 +216,7 @@ export const DOCTOR_DETALLES = gql`
       tipo_de_sangre
       alergias
       discapacidad
+      createdAt
       persona {
         ...personaDetalles
       }
@@ -232,7 +241,9 @@ export const DOCTOR_DETALLES = gql`
     hospitalizaciones {
       ...hospitalizacionDetalles
     }
+
     }
+
   }
   ${PERSONA_DETALLES}
   ${CONSULTAS_DETALLES}
@@ -243,6 +254,89 @@ export const DOCTOR_DETALLES = gql`
   ${EMERGENCIA_DETALLES}
   ${HOSPITALIZACION_DETALLES}
 `;
+
+
+export const CDI_DOCTORES_QUERY = gql`
+  query doCdiDoctores($id_cdi: ID!) {
+    doctoresCDI(id_cdi: $id_cdi) {
+  	id_doctor
+    anos_experiencia
+    numero_carnet
+    area_de_trabajo
+    horario
+        persona {
+      ...personaDetalles
+    }
+      usuarios {
+        id_usuario
+        nombre_usuario
+        rol
+        estado
+      }
+    }
+  }
+  ${PERSONA_DETALLES}
+`;
+
+export const ADMIN_DOCTORES_QUERY = gql`
+  query doGetDoctores{
+    doctores {
+  	id_doctor
+    anos_experiencia
+    numero_carnet
+    area_de_trabajo
+    horario
+        persona {
+      ...personaDetalles
+    }
+      usuarios {
+        id_usuario
+        nombre_usuario
+        rol
+        estado
+      }
+    }
+  }
+  ${PERSONA_DETALLES}
+`;
+
+export const ADMIN_CDIS_QUERY = gql`
+  query doGetCDIs{
+    cdis {
+    id_cdi
+    numero_cdi
+    nombre
+    encargado
+    cuadrante
+    usuarios {
+      id_usuario
+      nombre_usuario
+      rol
+      estado
+    }
+    }
+  }
+`;
+
+
+
+export const CDI_PACIENTES_QUERY = gql`
+  query doCdiPacientes($id_cdi: ID!) {
+    pacientesCDI(id_cdi: $id_cdi) {
+  	id_paciente
+    vacunas
+    antecedentes_familiares
+    tipo_de_sangre
+    alergias
+    discapacidad
+        persona {
+      ...personaDetalles
+    }
+    }
+  }
+  ${PERSONA_DETALLES}
+`;
+
 
 
 
@@ -317,33 +411,68 @@ export const ADDUSER_MUTATION = gql`
   }
 `;
 
-// export const ADDPACIENTE_MUTATION = gql`
-//   mutation AddPaciente($data: PacienteInput) {
-//     AddPaciente(data: $data) {
-//       id
-//       name
-//       role
-//       nacionalidad
-//       dni
-//       telefono
-//       direccion {
-//       numero
-//       sector
-//       calle
-//     }
-//       sexo
-//       edad
-//       diagnostico
-//       consultas {
-//         diagnostico
-//         salida
-//         ingreso
-//       }
-//       createdAt
-//       fatherID
-//     }
-//   }
-// `;
+
+export const ADD_DOCTOR_USER_MUTATION = gql`
+mutation doCreateDoctor($input: CrearDoctorInput!){
+  	crearDoctor(input: $input) {
+			id_doctor,
+    anos_experiencia,
+    numero_carnet,
+    area_de_trabajo,
+    horario,
+    persona  {
+      nombre1
+    }
+  }
+}
+
+`;
+
+
+export const ADMIN_PACIENTES_QUERY = gql`
+  query doGetPacientes{
+    pacientes {
+    id_paciente
+    vacunas
+    antecedentes_familiares
+    tipo_de_sangre
+    alergias
+    discapacidad
+    persona {
+      ...personaDetalles
+    }
+    consultas {
+      ...consultasDetalles
+    }
+    diagnosticos {
+      ...diagnosticoDetalles
+    }
+    examenes {
+      ...examenes
+    }
+    medicamentos {
+      ...medicamento
+    }
+    tratamientos {
+      ...tratamientos
+    }
+    emergencias {
+      ...emergenciaDetalles
+    }
+    hospitalizaciones {
+      ...hospitalizacionDetalles
+    }
+    }
+  }
+  ${PERSONA_DETALLES}
+  ${CONSULTAS_DETALLES}
+  ${DIAGNOSTICO_DETALLES}
+  ${EXAMENES_DETALLES}
+  ${MEDICAMENTOS_DETALLES}
+  ${TRATAMIENTOS_DETALLES}
+  ${EMERGENCIA_DETALLES}
+  ${HOSPITALIZACION_DETALLES}
+`;
 
 export const ADDPACIENTE_MUTATION = gql`
 mutation doCreatePaciente($input: CrearPacienteInput!) {
@@ -388,8 +517,6 @@ mutation doCreateHospitalizacion($input: HospitalizacionInput!) {
   }
 }
 `;
-
-
 
 
 export const ADDCONSULTA_MUTATION = gql`
@@ -496,6 +623,37 @@ mutation doCreateExamen($input: ExamenesResultadosInput!) {
   }
 }
 `;
+
+export const UPDATE_USUARIO_MUTATION = gql`
+mutation doUpdateUsuario($id_usuario: ID! $input: ActualizarUsuarioInput!) {
+  actualizarUsuario(id_usuario: $id_usuario, input: $input) {
+    id_usuario
+    nombre_usuario
+    estado
+    rol
+  }
+}
+`;
+
+
+export const INFORMACION_CDI_QUERY = gql`
+  query doGetCDIProfile($id_cdi: ID!) {
+    cdi(id_cdi: $id_cdi) {
+    id_cdi
+    numero_cdi
+    nombre
+    encargado
+    cuadrante
+    usuarios {
+      id_usuario
+      nombre_usuario
+      rol
+      estado
+    }
+    }
+  }
+`;
+
 
 export const ADDTRATAMIENTO_MUTATION = gql`
 mutation doCreateTratamiento($input: TratamientoInput!) {

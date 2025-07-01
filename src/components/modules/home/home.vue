@@ -23,7 +23,7 @@
           v-if="workersView === false"
         >
           <homeAdmin v-if="this.$store.state.user.role === 'admin'"></homeAdmin>
-          <homeEncargado v-if="this.$store.state.user.role === 'Encargado'"></homeEncargado>
+          <homeEncargado v-if="this.$store.state.user.role === 'cdi'"></homeEncargado>
           <homeDoctor v-if="this.$store.state.user.role === 'doctor'"></homeDoctor>
         </div>
         <!-- <div

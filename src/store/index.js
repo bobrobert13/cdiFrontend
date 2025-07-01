@@ -16,6 +16,10 @@ let userVoid = {
   isAuthenticated: false,
   role: "",
   email: "",
+  user: '',
+  user_id: '',
+  cdi_id: '',
+  doctor_id: '',
 };
 
 export default new Vuex.Store({
@@ -27,7 +31,10 @@ export default new Vuex.Store({
       isAuthenticated: false,
       role: "",
       email: "",
-      nombre_usuario: ''
+      user: '',
+      user_id: '',
+      cdi_id: '',
+      doctor_id: '',
     },
     url_base: config.api.url
   },

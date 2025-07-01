@@ -2,6 +2,7 @@
 .q-drawer-container:not(.q-drawer--mini-animate) .q-drawer--mini {
   width: 75px !important;
 }
+
 .sidenav {
   height: 100vh;
   position: fixed;
@@ -9,14 +10,17 @@
   right: 0;
   overflow-x: hidden;
 }
+
 @media screen and (max-height: 450px) {
   .sidenav {
     padding-top: 15px;
   }
+
   .sidenav a {
     font-size: 18px;
   }
 }
+
 .q-tab-panel {
   padding: 0px !important;
 }
@@ -32,55 +36,27 @@
 <template>
   <div id="q-app">
     <q-layout view="hHh Lpr lff" container style="min-height: 100vh">
-      <q-drawer
-        v-if="
-          $store.state.user.isAuthenticated &&
-          $route.name !== 'login' &&
-          $route.name !== 'registro' &&
-          $route.name !== 'recuperar' &&
-          $route.name !== 'pedido'
-        "
-        v-model="drawer"
-        show-if-above
-        :mini="true"
-        :width="70"
-        class="sm-hide xs-hide"
-        content-class="bg-white"
-      >
+      <q-drawer v-if="
+        $store.state.user.isAuthenticated &&
+        $route.name !== 'login' &&
+        $route.name !== 'registro' &&
+        $route.name !== 'recuperar' &&
+        $route.name !== 'pedido'
+      " v-model="drawer" show-if-above :mini="true" :width="70" class="sm-hide xs-hide" content-class="bg-white">
         <q-scroll-area class="fit">
           <q-list padding>
             <q-item clickable v-ripple class="q-mb-xl">
               <q-item-section avatar>
-                <q-avatar
-                  color="primary"
-                  style="cursor: pointer"
-                  @click="myInfo()"
-                >
-                  <img
-                    v-if="this.user.profileImage !== ''"
-                    :src="config.api.url + this.user.profileImage"
-                  />
-                  <img
-                    v-if="this.user.profileImage === ''"
-                    src="./statics/img/account-circle.png"
-                  />
+                <q-avatar color="primary" style="cursor: pointer" icon="mdi-hospital-box-outline" text-color="white"
+                  @click="myInfo()">
                 </q-avatar>
               </q-item-section>
             </q-item>
 
-            <q-item
-              :class="$route.name === 'home' ? 'bg-primary q-ma-sm' : ''"
-              :style="$route.name === 'home' ? 'border-radius: 10px' : ''"
-              clickable
-              v-ripple
-            >
+            <q-item :class="$route.name === 'home' ? 'bg-primary q-ma-sm' : ''"
+              :style="$route.name === 'home' ? 'border-radius: 10px' : ''" clickable v-ripple>
               <q-item-section avatar>
-                <q-btn
-                  flat
-                  to="/home"
-                  icon="mdi-badge-account"
-                  :color="$route.name === 'home' ? 'white' : 'accent'"
-                >
+                <q-btn flat to="/home" icon="mdi-badge-account" :color="$route.name === 'home' ? 'white' : 'accent'">
                 </q-btn>
               </q-item-section>
               <q-tooltip> Incio </q-tooltip>
@@ -218,46 +194,23 @@
               <q-tooltip> Cuentas bancarias </q-tooltip>
             </q-item> -->
 
-            <q-item
-              clickable
-              v-ripple
-              style="position: fixed; bottom: 0; margin-left: 7.5px"
-            >
+            <q-item clickable v-ripple style="position: fixed; bottom: 0; margin-left: 7.5px">
               <q-item-section avatar>
-                <q-btn
-                  flat
-                  icon="mdi-logout"
-                  color="accent"
-                  v-on:click="confirm = true"
-                ></q-btn>
+                <q-btn flat icon="mdi-logout" color="accent" v-on:click="confirm = true"></q-btn>
               </q-item-section>
             </q-item>
           </q-list>
         </q-scroll-area>
       </q-drawer>
 
-      <div
-        class="menu-bottom md-hide lg-hide xl-hide bg-white text-primary"
-        elevated
-        v-if="$store.state.user.isAuthenticated"
-      >
+      <div class="menu-bottom md-hide lg-hide xl-hide bg-white text-primary" elevated
+        v-if="$store.state.user.isAuthenticated">
         <q-separator />
         <q-tabs>
           <q-route-tab to="" exact>
-            <q-avatar
-              size="md"
-              color="primary"
-              style="cursor: pointer"
-              @click="myInfo()"
-            >
-              <img
-                v-if="this.user.profileImage !== ''"
-                :src="config.api.url + this.user.profileImage"
-              />
-              <img
-                v-if="this.user.profileImage === ''"
-                src="./statics/img/account-circle.png"
-              />
+            <q-avatar size="md" color="primary" style="cursor: pointer" @click="myInfo()">
+              <img v-if="this.user.profileImage !== ''" :src="config.api.url + this.user.profileImage" />
+              <img v-if="this.user.profileImage === ''" src="./statics/img/account-circle.png" />
             </q-avatar>
           </q-route-tab>
           <q-route-tab icon="mdi-badge-account" to="/home" exact />
@@ -297,26 +250,18 @@
             exact
             v-if="this.$store.state.user.role !== 'operador'"
           /> -->
-          <q-route-tab
-            icon="mdi-logout"
-            v-on:click="confirm = true"
-            to=""
-            exact
-          />
+          <q-route-tab icon="mdi-logout" v-on:click="confirm = true" to="" exact />
         </q-tabs>
       </div>
 
       <!-- CONTENIDO -->
       <q-page-container class="bg-secondary">
-        <q-page
-          :style="
-            this.$q.screen.lt.sm
-              ? 'margin-left: 0px; border-radius: 0px 0px 0px 0px'
-              : $store.state.user.isAuthenticated
-              ? 'margin-left: 15px; border-radius: 30px 0px 0px 30px'
-              : ''
-          "
-        >
+        <q-page :style="this.$q.screen.lt.sm
+          ? 'margin-left: 0px; border-radius: 0px 0px 0px 0px'
+          : $store.state.user.isAuthenticated
+            ? 'margin-left: 15px; border-radius: 30px 0px 0px 30px'
+            : ''
+          ">
           <Index></Index>
         </q-page>
       </q-page-container>
@@ -327,64 +272,157 @@
     <q-dialog v-model="myInfoD" persistent>
       <q-card style="width: 500px">
         <q-card-section>
-          <div class="text-h6">Datos personales</div>
+          <div v-if="this.$store.state.user.role === 'cdi'" class="text-h6 text-grey-8">Cuenta CDI</div>
+          <div v-if="this.$store.state.user.role === 'doctor'" class="text-h6 text-grey-8">Cuenta doctor</div>
+          <div v-if="this.$store.state.user.role === 'admin'" class="text-h6 text-grey-8">Cuenta Administrador</div>
         </q-card-section>
-
         <q-separator />
 
-        <q-card-section class="scroll text-center">
-          <q-scroll-area
-            :thumb-style="thumbStyle"
-            :bar-style="barStyle"
-            style="height: 60vh"
-          >
+
+        <!-- INFORMACION DE CDI -->
+        <q-card-section v-if="this.$store.state.user.role === 'cdi'" class="scroll text-center">
+          <p>Información general de la cuenta</p>
+          <q-scroll-area v-if="userCDIProfile" :thumb-style="thumbStyle" :bar-style="barStyle" style="height: 60vh">
             <div class="row justify-center">
-              <upload
-                :info="this.user"
-                @removeFile="removeFile($event)"
-                @setImage="setImage"
-              ></upload>
               <div class="col-12">
                 <div class="row">
-                  <div
-                    class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 q-pa-sm"
-                  >
-                    <q-input
-                      filled
-                      color="deep-purple-6"
-                      v-model="name"
-                      label="Nombre completo"
-                    />
+                  <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 q-pa-sm">
+                    <q-input disable filled color="deep-purple-6" v-model="userCDIProfile.nombre"
+                      label="Nombre de CDI" />
                   </div>
-                  <div
-                    class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 q-pa-sm"
-                  >
-                    <q-input
-                      filled
-                      disable
-                      color="deep-purple-6"
-                      v-model="email"
-                      label="Correo"
-                    />
+                  <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 q-pa-sm">
+                    <q-input filled disable color="deep-purple-6" v-model="userCDIProfile.numero_cdi"
+                      label="Número del CDI" />
+                  </div>
+
+                  <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 q-pa-sm">
+                    <q-input filled disable color="deep-purple-6" v-model="userCDIProfile.encargado"
+                      label="Encargado" />
+                  </div>
+
+                  <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 q-pa-sm">
+                    <q-input filled disable color="deep-purple-6" v-model="userCDIProfile.cuadrante"
+                      label="Cuadrante" />
                   </div>
                 </div>
-                <q-btn color="primary" class=" q-mt-md" label="Establecer preguntas de seguridad" @click="seguridadModal = true" />
+
               </div>
-              <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-xs-12" v-if="this.user.role !== 'admin'">
-                <q-btn
-                  unelevated
-                  :loading="loader"
-                  @click="modificarDatos()"
-                  class="fullwidth text-white q-mt-xs bg-primary"
-                  label="Modificar datos"
-                  v-on:keyup.enter="modificarDatos()"
-                />
+
+            </div>
+
+            <div class="row q-mt-lg justify-center">
+              <p>Credenciales de acceso</p>
+              <div class="col-12">
+                <div class="row">
+                  <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 q-pa-sm">
+                    <q-input disable filled color="deep-purple-6" v-model="userCDIProfile.usuarios.nombre_usuario" @blur="validateCDICredentialsInputs"
+                      label="Nombre de usuario" :rules="[val => val.length >= 3 || 'El nombre de usuario debe tener al menos 3 caracteres']" />
+                  </div>
+                  <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 q-pa-sm">
+                    <q-input filled  color="deep-purple-6" v-model="cdi_contrasena" @blur="validateCDICredentialsInputs"
+                      label="Contraseña" :rules="[val => val.length >= 6 || 'La contraseña debe tener al menos 6 caracteres']" />
+                  </div>
+                </div>
+
+              </div>
+              <div class="col-xl-8 column col-lg-8 col-md-8 col-sm-12 col-xs-12" v-if="this.user.role !== 'admin'">
+                <q-btn unelevated :loading="loader" @click="actualizarUsuario(userCDIProfile.usuarios)" class="fullwidth text-white q-mt-xs bg-primary"
+                  label="Modificar credenciales" :disable="!isValidCredencialesCDI" />
+
+                  <q-btn color="primary" class=" q-mt-xs q-mb-sm" label="Establecer preguntas de seguridad" 
+                  @click="seguridadModal = true" />
               </div>
             </div>
           </q-scroll-area>
         </q-card-section>
-        <q-separator />
 
+
+        <!-- INFORMACION DE DOCTOR -->
+        <q-card-section v-if="this.$store.state.user.role === 'doctor'" class="scroll text-center">
+          <p>Información básica de la cuenta</p>
+          <q-scroll-area v-if="userDoctorProfile.persona" :thumb-style="thumbStyle" :bar-style="barStyle" style="height: 60vh">
+            <div class="row justify-center">
+              <div class="col-12">
+                <div class="row">
+                  <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 q-pa-sm">
+                    <q-input filled color="deep-purple-6" disable v-model="userDoctorProfile.persona.nombre1" label="Nombre de doctor" />
+                  </div>
+                  <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 q-pa-sm">
+                    <q-input filled color="deep-purple-6" disable v-model="userDoctorProfile.persona.cedula_identidad" label="Documento de identidad" />
+                  </div>
+                  <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 q-pa-sm">
+                    <q-input filled color="deep-purple-6" disable v-model="userDoctorProfile.numero_carnet" label="Número de carnet" />
+                  </div>
+                  <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 q-pa-sm">
+                    <q-input filled color="deep-purple-6" disable v-model="userDoctorProfile.area_de_trabajo" label="Especialidad" />
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="row q-mt-lg justify-center">
+              <p>Credenciales de acceso</p>
+              <div class="col-12">
+                <div class="row">
+                  <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 q-pa-sm">
+                    <q-input disable filled color="deep-purple-6" v-model="userDoctorProfile.usuarios.nombre_usuario" @blur="validateDoctorCredentialsInputs"
+                      label="Nombre de usuario" :rules="[val => val.length >= 3 || 'El nombre de usuario debe tener al menos 3 caracteres']" />
+                  </div>
+                  <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 q-pa-sm">
+                    <q-input filled  color="deep-purple-6" v-model="doctor_contrasena" @blur="validateDoctorCredentialsInputs"
+                      label="Contraseña" :rules="[val => val.length >= 6 || 'La contraseña debe tener al menos 6 caracteres']" />
+                  </div>
+                </div>
+
+              </div>
+              <div class="col-xl-8 column col-lg-8 col-md-8 col-sm-12 col-xs-12" v-if="this.$store.state.user.role === 'doctor'">
+                <q-btn unelevated :loading="loader" @click="actualizarUsuario(userDoctorProfile.usuarios)" class="fullwidth text-white q-mt-xs bg-primary"
+                  label="Modificar credenciales" :disable="!isValidCredencialesDoctor" />
+
+                  <q-btn color="primary" class=" q-mt-xs q-mb-sm" label="Establecer preguntas de seguridad" 
+                  @click="seguridadModal = true" />
+              </div>
+            </div>
+          </q-scroll-area>
+        </q-card-section>
+
+
+        <!-- INFORMACION DE ADMIN -->
+        <q-card-section v-if="this.$store.state.user.role === 'admin'" class="scroll text-center">
+          <p>Información general de la cuenta</p>
+          <q-scroll-area :thumb-style="thumbStyle" :bar-style="barStyle" style="height: 60vh">
+            <div class="row justify-center">
+              <div class="col-12">
+                <div class="row">
+                  <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 q-pa-sm">
+                    <q-input filled color="deep-purple-6" v-model="name" label="Nombre completo" />
+                  </div>
+                  <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 q-pa-sm">
+                    <q-input filled disable color="deep-purple-6" v-model="email" label="Correo" />
+                  </div>
+                </div>
+                <q-btn color="primary" class=" q-mt-md" label="Establecer preguntas de seguridad"
+                  @click="seguridadModal = true" />
+              </div>
+              <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-xs-12" v-if="this.user.role !== 'admin'">
+                <q-btn unelevated :loading="loader" @click="modificarDatos()"
+                  class="fullwidth text-white q-mt-xs bg-primary" label="Modificar datos"
+                  v-on:keyup.enter="modificarDatos()" />
+              </div>
+            </div>
+          </q-scroll-area>
+        </q-card-section>
+
+
+
+
+
+
+
+
+
+        <q-separator />
         <q-card-actions align="right">
           <q-btn flat label="Cerrar" color="primary" v-close-popup />
         </q-card-actions>
@@ -399,20 +437,12 @@
           <div class="text-h6">confirmar</div>
         </q-card-section>
         <q-card-section class="row items-center text-center">
-          <span class="q-ml-sm text-white"
-            >¿Estas seguro que deseas salir?</span
-          >
+          <span class="q-ml-sm text-white">¿Estas seguro que deseas salir?</span>
         </q-card-section>
 
         <q-card-actions align="right">
           <q-btn flat label="Cancelar" color="white" v-close-popup />
-          <q-btn
-            v-close-popup
-            flat
-            label="Cerrar sesion"
-            color="white"
-            v-on:click="destroy()"
-          />
+          <q-btn v-close-popup flat label="Cerrar sesion" color="white" v-on:click="destroy()" />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -427,48 +457,32 @@
         <q-card-section class="row items-center text-center">
           <div class="row">
             <div class="col-12">
-              <q-input
-                filled
-                v-model="nameA"
-                label="Nombre"
-                :rules="[
-                  (val) => !!val || 'Este campo es obligatorio',
-                  (val) => val.length >= 3 || 'Mínimo 3 caracteres',
-                  (val) => val.length <= 40 || 'Máximo 40 caracteres',
-                  (val) =>
-                    /^([\sa-zA-ZñÑáéíóúÁÉÍÓÚ]{3,40})*$/.test(val) ||
-                    'Solo se permiten caracteres',
-                ]"
-              />
+              <q-input filled v-model="nameA" label="Nombre" :rules="[
+                (val) => !!val || 'Este campo es obligatorio',
+                (val) => val.length >= 3 || 'Mínimo 3 caracteres',
+                (val) => val.length <= 40 || 'Máximo 40 caracteres',
+                (val) =>
+                  /^([\sa-zA-ZñÑáéíóúÁÉÍÓÚ]{3,40})*$/.test(val) ||
+                  'Solo se permiten caracteres',
+              ]" />
             </div>
             <div class="col-12">
-              <q-input
-                filled
-                v-model="emailA"
-                label="Correo"
-                :rules="[
-                  (val) => !!val || 'Este campo es obligatorio',
-                  (val) => val.length <= 40 || 'Máximo 40 caracteres',
-                  (val) =>
-                    /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,4})+$/.test(
-                      emailA
-                    ) || 'Formato de correo inválido',
-                ]"
-              />
+              <q-input filled v-model="emailA" label="Correo" :rules="[
+                (val) => !!val || 'Este campo es obligatorio',
+                (val) => val.length <= 40 || 'Máximo 40 caracteres',
+                (val) =>
+                  /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,4})+$/.test(
+                    emailA
+                  ) || 'Formato de correo inválido',
+              ]" />
             </div>
           </div>
         </q-card-section>
 
         <q-card-actions align="right">
           <q-btn flat label="Cancelar" color="accent" v-close-popup />
-          <q-btn
-            v-close-popup
-            flat
-            label="Agregar"
-            color="primary"
-            :disable="emailA === '' || nameA === '' || valid === false"
-            v-on:click="createCorreo()"
-          />
+          <q-btn v-close-popup flat label="Agregar" color="primary"
+            :disable="emailA === '' || nameA === '' || valid === false" v-on:click="createCorreo()" />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -479,71 +493,39 @@
 
     <q-dialog v-model="seguridadModal">
       <q-card class=" q-pa-md">
-      <span class=" text-center q-my-sm text-bold">Es conveniente activar las preguntas de seguridad para recuperar tu contraseña en casos de olvido o extravíos.</span>
+        <span class=" text-center q-my-sm text-bold">Es conveniente activar las preguntas de seguridad para recuperar tu
+          contraseña en casos de olvido o extravíos.</span>
         <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-pa-xs">
-            <div class="row q-mt-xs">
-              <div class="col-12 q-mb-xs">
-                <q-input
-                  filled
-                  color="deep-purple-6"
-                  v-model="pregunta1"
-                  label="Establece la primera pregunta"
-                  type="text"
-                />
-              </div>
-              <div class="col-12 q-mb-xs">
-                <q-input
-                  filled
-                  color="deep-purple-6"
-                  v-model="respuesta1"
-                  label="Respuesta"
-                  type="password"
-                />
-              </div>
-              <div class="col-12 q-mb-xs">
-                <q-input
-                  filled
-                  color="deep-purple-6"
-                  v-model="pregunta2"
-                  label="Establece la segunda pregunta"
-                  type="text"
-                />
-              </div>
-              <div class="col-12 q-mb-xs">
-                <q-input
-                  filled
-                  color="deep-purple-6"
-                  v-model="respuesta2"
-                  label="Respuesta"
-                  type="password"
-                />
-              </div>
-              <div class="col-12 q-mb-xs">
-                <q-input
-                  filled
-                  color="deep-purple-6"
-                  v-model="pregunta3"
-                  label="Establece la tercera pregunta"
-                  type="text"
-                />
-              </div>
-              <div class="col-12 q-mb-xs">
-                <q-input
-                  filled
-                  color="deep-purple-6"
-                  v-model="respuesta3"
-                  label="Respuesta"
-                  type="password"
-                />
-              </div>
-              <q-btn v-if="!updateSeguridad"
-                :disable="pregunta1 == '' || pregunta2 == '' || pregunta3 == '' || respuesta1 == '' || respuesta2 == '' || respuesta3 == ''"
-               color="primary" class=" q-my-md" label="Guardar preguntas de seguridad" @click="guardarSeguridad" />
-              <q-btn
-              :disable="pregunta1 == '' || pregunta2 == '' || pregunta3 == '' || respuesta1 == '' || respuesta2 == '' || respuesta3 == ''"
-               v-else color="primary" class=" q-my-md" label="Modificar" @click="editarSeguridad" />
+          <div class="row q-mt-xs">
+            <div class="col-12 q-mb-xs">
+              <q-input filled color="deep-purple-6" v-model="pregunta1" label="Establece la primera pregunta"
+                type="text" />
             </div>
+            <div class="col-12 q-mb-xs">
+              <q-input filled color="deep-purple-6" v-model="respuesta1" label="Respuesta" type="password" />
+            </div>
+            <div class="col-12 q-mb-xs">
+              <q-input filled color="deep-purple-6" v-model="pregunta2" label="Establece la segunda pregunta"
+                type="text" />
+            </div>
+            <div class="col-12 q-mb-xs">
+              <q-input filled color="deep-purple-6" v-model="respuesta2" label="Respuesta" type="password" />
+            </div>
+            <div class="col-12 q-mb-xs">
+              <q-input filled color="deep-purple-6" v-model="pregunta3" label="Establece la tercera pregunta"
+                type="text" />
+            </div>
+            <div class="col-12 q-mb-xs">
+              <q-input filled color="deep-purple-6" v-model="respuesta3" label="Respuesta" type="password" />
+            </div>
+            <q-btn v-if="!updateSeguridad"
+              :disable="pregunta1 == '' || pregunta2 == '' || pregunta3 == '' || respuesta1 == '' || respuesta2 == '' || respuesta3 == ''"
+              color="primary" class=" q-my-md" label="Guardar preguntas de seguridad" @click="guardarSeguridad" />
+            <q-btn
+              :disable="pregunta1 == '' || pregunta2 == '' || pregunta3 == '' || respuesta1 == '' || respuesta2 == '' || respuesta3 == ''"
+              v-else color="primary" class=" q-my-md" label="Modificar" @click="editarSeguridad" />
           </div>
+        </div>
       </q-card>
     </q-dialog>
   </div>
@@ -560,9 +542,12 @@ import {
   MY_CORREOS_QUERY,
   CREATECORREO_MUTATION,
   DELETE_CORREO_MUTATION,
-CREAR_SEGURIDAD,
-GET_SEGURIDAD,
-ACTUALIZAR_SEGURIDAD,
+  CREAR_SEGURIDAD,
+  GET_SEGURIDAD,
+  ACTUALIZAR_SEGURIDAD,
+  INFORMACION_CDI_QUERY,
+  UPDATE_USUARIO_MUTATION,
+  MIS_PACIENTES_QUERY,
 } from "./graphql/user";
 import config from "./config";
 import moment from "moment";
@@ -599,6 +584,18 @@ export default {
       email: "",
       name: "",
       user: {},
+      userCDIProfile: {},
+      userDoctorProfile: {},
+      userAdminProfile: {},
+
+      cdi_contrasena: '',
+      doctor_contrasena: '',
+      admin_contrasena: '',
+
+      isValidCredencialesCDI: false,
+      isValidCredencialesDoctor: false,
+      isValidCredencialesAdmin: false,
+
       seguridadModal: false,
       thumbStyle: {
         right: "4px",
@@ -619,8 +616,8 @@ export default {
       totalTime: "",
     };
   },
-  created() {
-    // this.infoUser();
+ async created() {
+   await this.infoUser();
     console.log("uusuario", this.$store.state.user);
     // this.myCorreos();
     // moment.updateLocale("es", {
@@ -643,8 +640,8 @@ export default {
     // });
   },
   watch: {
-    myInfoD(newVal){
-      if(newVal){
+    myInfoD(newVal) {
+      if (newVal) {
         this.getSeguridad();
       }
     },
@@ -679,7 +676,7 @@ export default {
     },
   },
   methods: {
-    guardarSeguridad(){
+    guardarSeguridad() {
       this.$apollo
         .mutate({
           mutation: CREAR_SEGURIDAD,
@@ -726,7 +723,7 @@ export default {
           });
         });
     },
-    editarSeguridad(){
+    editarSeguridad() {
       this.$apollo
         .mutate({
           mutation: ACTUALIZAR_SEGURIDAD,
@@ -784,15 +781,15 @@ export default {
         })
         .then((response) => {
           console.log(response.data);
-          if(response.data){
-          this.updateSeguridad = true;
-          const seguridad = response.data.getSeguridad;
-          this.pregunta1 = seguridad.pregunta1;
-          this.pregunta2 = seguridad.pregunta2;
-          this.pregunta3 = seguridad.pregunta3;
-          // this.respuesta1 = seguridad.respuesta1;
-          // this.respuesta2 = seguridad.respuesta2;
-          // this.respuesta3 = seguridad.respuesta3;
+          if (response.data) {
+            this.updateSeguridad = true;
+            const seguridad = response.data.getSeguridad;
+            this.pregunta1 = seguridad.pregunta1;
+            this.pregunta2 = seguridad.pregunta2;
+            this.pregunta3 = seguridad.pregunta3;
+            // this.respuesta1 = seguridad.respuesta1;
+            // this.respuesta2 = seguridad.respuesta2;
+            // this.respuesta3 = seguridad.respuesta3;
           }
         })
         .catch((err) => {
@@ -800,7 +797,57 @@ export default {
           if (this.$isDev) console.log("hubo un error: ", err);
         });
     },
-    infoUser() {
+    async infoUser() {
+      if (this.$store.state.user.role === 'cdi') {
+        console.log('solicitando info de CDI');
+
+        await this.obtenerInformacionCDI();
+      } else if (this.$store.state.user.role === 'doctor') {
+        await this.obtenerInformacionDoctor();
+      } else if (this.$store.state.user.role === 'admin') {
+        await this.obtenerInformacionAdmin();
+      }
+    },
+
+    obtenerInformacionCDI() {
+      this.$apollo
+        .query({
+          query: INFORMACION_CDI_QUERY,
+          fetchPolicy: "network-only",
+          variables: {
+            id_cdi: this.$store.state.user.cdi_id
+          }
+        })
+        .then((response) => {
+          this.response = true;
+          console.log("infoUserCDI", response.data.cdi)
+          this.userCDIProfile = Object.assign({}, response.data.cdi);
+        })
+        .catch((err) => {
+          console.log("errpr looc", err);
+          if (this.$isDev) console.log("hubo un error: ", err);
+        });
+    },
+    obtenerInformacionDoctor() {
+      this.$apollo
+        .query({
+          query: MIS_PACIENTES_QUERY,
+          fetchPolicy: "network-only",
+          variables: {
+            id_doctor: this.$store.state.user.doctor_id
+          }
+        })
+        .then((response) => {
+          this.response = true;
+          this.userDoctorProfile = Object.assign({}, response.data.doctorPacientes);
+          console.log("infoUserDoctor", this.userDoctorProfile)
+        })
+        .catch((err) => {
+          console.log("errpr looc", err);
+          if (this.$isDev) console.log("hubo un error: ", err);
+        });
+    },
+    obtenerInformacionAdmin() {
       this.$apollo
         .query({
           query: DATOS_PERSONALES_QUERY,
@@ -810,21 +857,53 @@ export default {
           this.response = true;
           console.log("infoUser", response.data.oneUser)
           this.user = Object.assign({}, response.data.oneUser);
-          // let timeNow = moment();
-          // let createdAt = moment(this.user.createdAt).add(15, "days").toDate();
-          // let difference = Math.floor((createdAt - timeNow) / 1000);
-          // this.totalTime = difference;
-          // var openingDate = moment(createdAt);
-          // var fromNow = openingDate.fromNow();
-          // if (this.totalTime < 0) {
-          //   this.expireDate = "(Cuenta expirada)";
-          // } else {
-          //   this.expireDate = "y se vence " + fromNow;
-          // }
         })
         .catch((err) => {
           console.log("errpr looc", err);
           if (this.$isDev) console.log("hubo un error: ", err);
+        });
+    },
+    validateCDICredentialsInputs() {
+      const passwordValid = this.cdi_contrasena.length >= 6;
+      const nameValid = this.userCDIProfile.usuarios.nombre_usuario.length >= 3;
+      this.isValidCredencialesCDI = passwordValid && nameValid;
+    },
+    validateDoctorCredentialsInputs() {
+      const passwordValid = this.doctor_contrasena.length >= 6;
+      const nameValid = this.userDoctorProfile.usuarios.nombre_usuario.length >= 3;
+      this.isValidCredencialesDoctor = passwordValid && nameValid;
+    },
+    actualizarUsuario(usuario) {
+      this.loader = true;
+      this.$apollo
+        .mutate({
+          mutation: UPDATE_USUARIO_MUTATION,
+          variables: {
+            id_usuario: usuario.id_usuario,
+            input: {
+              contrasena: this.$store.state.user.role === 'cdi' ? this.cdi_contrasena : this.doctor_contrasena || this.admin_contrasena,
+              nombre_usuario: usuario.nombre_usuario,
+            },
+          },
+        })
+        .then((response) => {
+          this.loader = false;
+          this.viewType = "userList"
+          this.cdi_contrasena = "";
+          this.doctor_contrasena = "";
+          this.admin_contrasena = "";
+          this.infoUser();
+          this.$q.notify({
+            message: "Usuario del CDI actualizado",
+            color: "positive",
+          });
+        })
+        .catch((err) => {
+          this.loader = false;
+          this.$q.notify({
+            message: err.message.split("GraphQL error:"),
+            color: "negative",
+          });
         });
     },
     myInfo() {
@@ -842,8 +921,6 @@ export default {
     modificarDatos() {
       this.loader = true;
       const data = {
-        profileImage:
-          this.profileImage.length === 0 ? undefined : this.profileImage,
         name: this.name,
         email: this.email,
       };

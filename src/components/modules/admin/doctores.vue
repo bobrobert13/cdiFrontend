@@ -2,13 +2,11 @@
   <div class="row justify-center">
     <div class="col-12" v-if="viewType === 'userList'">
       <div class="col-12">
-        <span class="text-accent text-h6 text-bold"
-          >Control de Doctores</span
-        >
+        <span class="text-accent text-h6 text-bold">Control de Doctores</span>
       </div>
       <div class="row justify-center">
         <div class="col-4 self-center text-right">
-          <q-select
+          <!-- <q-select
             filled
             dense
             v-model="especialidadDoctor"
@@ -26,73 +24,39 @@
                 @click.stop="especialidadDoctor = 'null'"
                 />
             </template>
-          </q-select>
+</q-select> -->
         </div>
         <div class="col self-center text-right">
           <!-- <span class="text-bold text-primary" style="cursor: pointer" @click="workerView('addWorker')">Añadir doctor</span> -->
-          <q-icon
-            style="cursor: pointer"
-            @click="workerView('searchUser')"
-            name="mdi-account-search"
-            class="text-primary"
-            size="md"
-          ></q-icon>
-          <q-icon
-            style="cursor: pointer"
-            @click="workerView('addWorker')"
-            name="mdi-plus"
-            class="text-primary"
-            size="md"
-          ></q-icon>
+          <q-icon style="cursor: pointer" @click="workerView('searchUser')" name="mdi-account-search"
+            class="text-primary" size="md"></q-icon>
+          <q-icon style="cursor: pointer" @click="workerView('addWorker')" name="mdi-plus" class="text-primary"
+            size="md"></q-icon>
         </div>
       </div>
       <div class="row justify-center q-mt-xl" v-if="this.users.length !== 0">
         <div class="col-12 q-mb-sm" v-for="(user, index) in users" :key="index">
-          <q-list
-            class="rounded-borders bg-secondary"
-            style="border-radius: 15px"
-          >
+          <q-list class="rounded-borders bg-secondary" style="border-radius: 15px">
             <q-item>
-              <q-item-section
-                avatar
-                @click="userDetail(user)"
-                style="cursor: pointer"
-              >
-                <q-avatar color="primary" text-color="white">
-                  <img
-                    v-if="user.profileImage !== ''"
-                    :src="config.api.url + user.profileImage"
-                  />
-                  <img
-                    v-if="user.profileImage === ''"
-                    src="../../../statics/img/account-circle.png"
-                  />
+              <q-item-section avatar @click="userDetail(user)" style="cursor: pointer">
+                <q-avatar color="primary" icon="mdi-doctor" text-color="white">
                 </q-avatar>
               </q-item-section>
 
-              <q-item-section
-                top
-                @click="userDetail(user)"
-                style="cursor: pointer"
-              >
-                <q-item-label class="text-left" lines="1">
-                  <span class="text-weight-medium">{{ user.name }}</span>
+              <q-item-section top @click="userDetail(user)" style="cursor: pointer">
+                <q-item-label class="text-left q-mb-xs" lines="1">
+                  <span class="text-weight-medium">Nombre de usuario: <b>{{ user.usuarios.nombre_usuario
+                  }}</b></span>
                 </q-item-label>
-                <q-item-label class="text-left" lines="1">
-                  <span class="text-weight-medium">{{ user.email }}</span>
-                </q-item-label>
+                <small class="text-weight-medium text-left">Rol: {{ user.usuarios.rol }}</small>
+                <small class="text-weight-medium text-left">Documento de identidad: {{ user.persona.cedula_identidad }}</small>
+                <small class="text-weight-medium text-left">Estatus de usuario: <b>{{ user.usuarios.estado
+                }}</b></small>
               </q-item-section>
               <q-item-section side>
                 <div class="text-grey-8 q-gutter-xs">
-                  <q-btn
-                    @click="deleteWorker(user.id)"
-                    class="gt-xs text-negative"
-                    size="12px"
-                    flat
-                    dense
-                    round
-                    icon="delete"
-                  />
+                  <q-btn @click="deleteWorker(user.id)" class="gt-xs text-negative" size="12px" flat dense round
+                    icon="delete" />
                 </div>
               </q-item-section>
             </q-item>
@@ -108,371 +72,196 @@
     <div class="row justify-center" v-if="viewType === 'searchUser'">
       <div class="col-12">
         <div>
-            <div class="col-12 text-left">
-              <q-icon
-                  style="cursor: pointer"
-                  @click="workerView('userList')"
-                  name="mdi-arrow-left"
-                  class="text-primary"
-                  size="md"
-                ></q-icon>
+          <div class="col-12 text-left">
+            <q-icon style="cursor: pointer" @click="workerView('userList')" name="mdi-arrow-left" class="text-primary"
+              size="md"></q-icon>
+          </div>
+          <div class="row justify-center">
+            <div class="col-12 text-bold text-accent text-center text-h6">
+              <span>Buscar doctor</span>
             </div>
-            <div class="row justify-center">
-              <div class="col-12 text-bold text-accent text-center text-h6">
-                <span>Buscar doctor</span>
-              </div>
-              <q-icon
-                name="mdi-account-search"
-                size="200px"
-                class="text-secondary"
-              ></q-icon>
-              <div class="col-10 q-mt-md">
-                <q-input
-                  outlined
-                  filled
-                  type="number"
-                  color="deep-purple-6"
-                  v-model="dni"
-                  label="Cédula"
-                />
-              </div>
+            <q-icon name="mdi-account-search" size="200px" class="text-secondary"></q-icon>
+            <div class="col-10 q-mt-md">
+              <q-input outlined filled type="number" color="deep-purple-6" v-model="dni" label="Cédula" />
             </div>
-            <div class="row justify-center">
-              <div class="col-4 q-mt-md">
-                <q-btn
-                  label="Buscar"
-                  class="full-width"
-                  color="primary"
-                  :disable="dni === ''"
-                  @click="buscarUsuario(dni)"
-                />
-              </div>
+          </div>
+          <div class="row justify-center">
+            <div class="col-4 q-mt-md">
+              <q-btn label="Buscar" class="full-width" color="primary" :disable="dni === ''"
+                @click="buscarUsuario(dni)" />
             </div>
+          </div>
         </div>
       </div>
     </div>
     <div class="row justify-center" v-if="viewType === 'addWorker'">
       <div class="col-12 text-left">
-        <q-icon
-            style="cursor: pointer"
-            @click="workerView('userList')"
-            name="mdi-arrow-left"
-            class="text-primary"
-            size="md"
-          ></q-icon>
-          <span class="text-bold text-accent text-h6" style="cursor: pointer"
-            @click="workerView('userList')">Añadir Doctor</span
-        >
+        <q-icon style="cursor: pointer" @click="workerView('userList')" name="mdi-arrow-left" class="text-primary"
+          size="md"></q-icon>
+        <span class="text-bold text-accent text-h6" style="cursor: pointer" @click="workerView('userList')">Añadir
+          Doctor</span>
       </div>
       <div class="col-12">
         <div class="row justify-center">
           <div class="col-12 text-center q-mt-md">
             <q-slide-transition v-if="imghightlight">
-              <img
-                v-show="imghightlight"
-                class="rounded-borders q-px-sm"
-                :src="imghightlight"
-                style="max-width: 200px; height: 180px"
-                contain
-              />
+              <img v-show="imghightlight" class="rounded-borders q-px-sm" :src="imghightlight"
+                style="max-width: 200px; height: 180px" contain />
             </q-slide-transition>
           </div>
-          <q-file
-            v-model="highlight"
-            label="Selecciona la imagen destacada"
-            accept=".jpg, .png, .svg"
-            clearable
-            filled
-            class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-pa-xs"
-          />
-          <div
-            class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-pa-xs"
-          >
-            <q-input
-              filled
-              color="deep-purple-6"
-              v-model="fullName"
-              label="Nombre completo"
-              :rules="[
+          <q-file v-model="highlight" label="Selecciona la imagen destacada" accept=".jpg, .png, .svg" clearable filled
+            class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-pa-xs" />
+          <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-pa-xs">
+            <q-input filled color="deep-purple-6" v-model="fullName" label="Nombre completo" :rules="[
               (val) => !!val || 'Este campo es obligatorio',
               (val) => val.length >= 3 || 'Mínimo 3 caracteres',
               (val) => val.length <= 200 || 'Máximo 200 caracteres',
               (val) =>
                 /^([\sa-zA-ZñÑáéíóúÁÉÍÓÚ]{3,40})*$/.test(val) ||
                 'Solo se permiten caracteres',
-            ]"
-            />
+            ]" />
           </div>
-          <div
-            class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-pa-xs"
-          >
+          <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-pa-xs">
             <div class="row">
               <div class="col-4">
-                <q-select
-                  filled
-                  v-model="nacionalidad"
-                  :options="nacionalidades"
-                  option-label="label"
-                  option-value="value"
-                  emit-value
-                />
+                <q-select filled v-model="nacionalidad" :options="nacionalidades" option-label="label"
+                  option-value="value" emit-value />
               </div>
               <div class="col-8">
-                <q-input
-                  filled
-                  color="deep-purple-6"
-                  v-model="dni"
-                  type="number"
-                  label="Cédula"
-                />
+                <q-input filled color="deep-purple-6" v-model="dni" type="number" label="Cédula" />
               </div>
             </div>
             <div class="row q-mt-sm">
               <div class="col-8">
-                <q-select
-                  filled
-                  label="Estado"
-                  v-model="estado"
-                  :options="estados"
-                  option-label="label"
-                  option-value="value"
-                />
+                <q-select filled label="Estado" v-model="estado" :options="estados" option-label="label"
+                  option-value="value" />
               </div>
               <div class="col-4">
-                <q-select
-                  filled
-                  label="Ciudad"
-                  v-model="ciudad"
-                  :options="ciudades[estado.value]"
-                  option-label="label"
-                  option-value="value"
-                  emit-value
-                />
+                <q-select filled label="Ciudad" v-model="ciudad" :options="ciudades[estado.value]" option-label="label"
+                  option-value="value" emit-value />
               </div>
             </div>
           </div>
 
-          <div
-            class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-pa-xs"
-          >
-          <div class="row q-mt-xs">
+          <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-pa-xs">
+            <div class="row q-mt-xs">
               <div class="col-8">
-                <q-input
-              filled
-              color="deep-purple-6"
-              v-model="calle"
-              label="Calle"
-            />
+                <q-input filled color="deep-purple-6" v-model="calle" label="Calle" />
               </div>
               <div class="col-4">
-                <q-input
-              filled
-              color="deep-purple-6"
-              v-model="numero"
-              label="Número de casa"
-              type="number"
-            />
+                <q-input filled color="deep-purple-6" v-model="numero" label="Número de casa" type="number" />
               </div>
             </div>
-            <div
-            class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-pa-xs"
-          >
-            <q-input
-              filled
-              color="deep-purple-6"
-              v-model="sector"
-              label="Sector"
-            />
-          </div>
+            <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-pa-xs">
+              <q-input filled color="deep-purple-6" v-model="sector" label="Sector" />
+            </div>
 
           </div>
 
-          <div
-            class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-pa-xs"
-          >
-          <div class="row">
-            <div class="col-4">
-              <q-select
-                filled
-                v-model="codigo"
-                :options="codigoTel"
-                label="Codigo"
-                option-label="label"
-                option-value="value"
-                emit-value
-              />
-            </div>
-            <div class="col-8">
-              <q-input
-                filled
-                color="deep-purple-6"
-                v-model="telefono"
-                type="number"
-                label="Número de telefono"
-              />
+          <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-pa-xs">
+            <div class="row">
+              <div class="col-4">
+                <q-select filled v-model="codigo" :options="codigoTel" label="Codigo" option-label="label"
+                  option-value="value" emit-value />
+              </div>
+              <div class="col-8">
+                <q-input filled color="deep-purple-6" v-model="telefono" type="number" label="Número de telefono" />
+              </div>
             </div>
           </div>
+          <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-pa-xs q-pa-xs">
+            <q-input filled color="deep-purple-6" v-model="email" label="Email" type="email" :rules="[
+              (val) => !!val || 'Este campo es obligatorio',
+              (val) => val.length <= 40 || 'Máximo 40 caracteres',
+              (val) =>
+                /^([a-zA-Z0-9._-]{3,}[@][a-zA-Z0-9.]{3,}[.][a-zA-Z0-9.]{2,5})*$/.test(
+                  val
+                ) || 'Formato de correo inválido',
+            ]" />
           </div>
-          <div
-            class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-pa-xs q-pa-xs"
-          >
-            <q-input
-              filled
-              color="deep-purple-6"
-              v-model="email"
-              label="Email"
-              type="email"
-                  :rules="[
-                    (val) => !!val || 'Este campo es obligatorio',
-                    (val) => val.length <= 40 || 'Máximo 40 caracteres',
-                    (val) =>
-                      /^([a-zA-Z0-9._-]{3,}[@][a-zA-Z0-9.]{3,}[.][a-zA-Z0-9.]{2,5})*$/.test(
-                        val
-                      ) || 'Formato de correo inválido',
-                  ]"
-            />
-          </div>
-          <div
-            class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-pa-xs q-pa-xs"
-          >
-            <q-input
-              filled
-              :type="isPwd ? 'password' : 'text'"
-              color="deep-purple-6"
-              v-model="password"
-              label="Password"
-              :rules="[
+          <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-pa-xs q-pa-xs">
+            <q-input filled :type="isPwd ? 'password' : 'text'" color="deep-purple-6" v-model="password"
+              label="Password" :rules="[
                 (val) => val.length >= 6 || 'Mínimo 6 caracteres',
                 (val) => val.length <= 20 || 'Máximo 20 caracteres',
-              ]"
-            >
+              ]">
               <template v-slot:append>
-                <q-icon
-                  :name="isPwd ? 'visibility_off' : 'visibility'"
-                  class="cursor-pointer"
-                  @click="isPwd = !isPwd"
-                />
+                <q-icon :name="isPwd ? 'visibility_off' : 'visibility'" class="cursor-pointer"
+                  @click="isPwd = !isPwd" />
               </template>
             </q-input>
-            <q-input
-                  square
-                  :disable="loader"
-                  filled
-                  color="amber-8"
-                  clearable
-                  v-model="password2"
-                  :type="isPwd ? 'password' : 'text'"
-                  label="Repite la contraseña"
-                  :rules="[
-                    (val) => !!val || 'Este campo es obligatorio',
-                    (val) => val.length >= 6 || 'Mínimo 6 caracteres',
-                    (val) => val.length <= 20 || 'Máximo 20 caracteres',
-                    (val) => val === password || 'Las contraseñas no coinciden',
-                  ]"
-                >
-                  <template v-slot:append>
-                    <q-icon
-                      :name="isPwd ? 'visibility_off' : 'visibility'"
-                      class="cursor-pointer"
-                      @click="isPwd = !isPwd"
-                    />
-                  </template>
-                </q-input>
+            <q-input square :disable="loader" filled color="amber-8" clearable v-model="password2"
+              :type="isPwd ? 'password' : 'text'" label="Repite la contraseña" :rules="[
+                (val) => !!val || 'Este campo es obligatorio',
+                (val) => val.length >= 6 || 'Mínimo 6 caracteres',
+                (val) => val.length <= 20 || 'Máximo 20 caracteres',
+                (val) => val === password || 'Las contraseñas no coinciden',
+              ]">
+              <template v-slot:append>
+                <q-icon :name="isPwd ? 'visibility_off' : 'visibility'" class="cursor-pointer"
+                  @click="isPwd = !isPwd" />
+              </template>
+            </q-input>
           </div>
-          <div
-            class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-pa-xs q-pa-xs"
-            style="margin-top: -20px"
-          >
-            <q-select
-              filled
-              v-model="role"
-              :options="roleUser"
-              label="Tipo de usuario"
-              option-label="label"
-              option-value="value"
-              emit-value
-              disable
-            />
+          <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-pa-xs q-pa-xs" style="margin-top: -20px">
+            <q-select filled v-model="role" :options="roleUser" label="Tipo de usuario" option-label="label"
+              option-value="value" emit-value disable />
           </div>
-          <div
-            class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-pa-xs q-pa-xs"
-            style=""
-          >
-            <q-select
-              filled
-              v-model="roleEspecialidad"
-              :options="roleUserEspecialidad"
-              label="Especialidad"
-              option-label="label"
-              option-value="id"
-            />
+          <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-pa-xs q-pa-xs" style="">
+            <q-select filled v-model="roleEspecialidad" :options="roleUserEspecialidad" label="Especialidad"
+              option-label="label" option-value="id" />
           </div>
-          <div
-            class="col-xl-5 col-lg-5 col-md-5 col-sm-12 col-xs-12 q-pa-xs q-pa-xs"
-          >
-            <q-btn
-              unelevated
-              :loading="loader"
-              @click="addDoctor()"
-              :disable="
-                !valid ||
-                dni === '' ||
-                dni.length > 30 ||
-                telefono === '' ||
-                telefono.length > 12 ||
-                !estado ||
-                !ciudad ||
-                !calle ||
-                calle.length > 200 ||
-                !numero ||
-                numero.length > 16 ||
-                !sector ||
-                sector.length > 100 ||
-                email === '' ||
-                password === '' ||
-                password.length > 6 ||
-                !password ||
-                password2 !== password ||
-                !password2 ||
-                password2.length > 6 ||
-                highlight.length === 0
-              "
-              class="full-width text-white bg-primary"
-              label="Añadir doctor"
-            />
+          <div class="col-xl-5 col-lg-5 col-md-5 col-sm-12 col-xs-12 q-pa-xs q-pa-xs">
+            <q-btn unelevated :loading="loader" @click="addDoctor()" :disable="!valid ||
+              dni === '' ||
+              dni.length > 30 ||
+              telefono === '' ||
+              telefono.length > 12 ||
+              !estado ||
+              !ciudad ||
+              !calle ||
+              calle.length > 200 ||
+              !numero ||
+              numero.length > 16 ||
+              !sector ||
+              sector.length > 100 ||
+              email === '' ||
+              password === '' ||
+              password.length > 6 ||
+              !password ||
+              password2 !== password ||
+              !password2 ||
+              password2.length > 6 ||
+              highlight.length === 0
+              " class="full-width text-white bg-primary" label="Añadir doctor" />
           </div>
         </div>
       </div>
     </div>
     <q-dialog v-model="modalDetailUser">
       <q-card class="my-card" flat bordered style="min-width: 350px">
-        <q-card-section>
+        <q-card-section v-if="dataUser">
           <q-card-section class="col-5 flex flex-center">
             <div class="text-overline">Detalle del doctor</div>
           </q-card-section>
           <q-card-section class="col-5 flex flex-center">
-            <q-avatar color="primary" text-color="white">
-              <img
-                v-if="dataUser.profileImage !== ''"
-                :src="config.api.url + dataUser.profileImage"
-              />
-              <img
-                v-if="dataUser.profileImage === ''"
-                src="../../../statics/img/account-circle.png"
-              />
+            <q-avatar color="primary" icon="mdi-doctor" text-color="white">
             </q-avatar>
           </q-card-section>
           <q-card-section class="q-pt-xs">
-            <div class="text-caption text-bold q-mt-sm q-mb-xs">Doctor: {{dataUser.name}} | {{ dataUser.roleEspecialidad }}</div>
-            <div class="text-caption q-mt-sm q-mb-xs">Nacionalidad: {{nacionalidadUser}}</div>
-            <div class="text-caption q-mt-sm q-mb-xs">CI: {{dataUser.dni}}</div>
-            <div class="text-caption q-mt-sm q-mb-xs">Télefono: {{dataUser.telefono}}</div>
+            <div class="text-caption text-bold q-mt-sm q-mb-xs">Doctor: {{ dataUser.persona.nombre1 }} | {{ dataUser.area_de_trabajo
+              }}
+            </div>
+            <div class="text-caption q-mt-sm q-mb-xs">CI: {{ dataUser.persona.cedula_identidad }}</div>
+            <div class="text-caption q-mt-sm q-mb-xs">Número de carnet: {{ dataUser.numero_carnet }}</div>
+            <div class="text-caption q-mt-sm q-mb-xs">Área de trabajo: {{ dataUser.area_de_trabajo }}</div>
+            <div class="text-caption q-mt-sm q-mb-xs">Años de experiencia: {{ dataUser.anos_experiencia }}</div>
+            <div class="text-caption q-mt-sm q-mb-xs">Horario: {{ dataUser.horario }}</div>
 
-            <div class="text-caption q-mt-sm q-mb-xs">Calle: {{detailCalle}}</div>
-            <div class="text-caption q-mt-sm q-mb-xs">Sector: {{detailSector}}</div>
 
-            <!-- <div class="text-caption q-mt-sm q-mb-xs">Calle: {{dataUser.direccion.calle}}</div>
-            <div class="text-caption q-mt-sm q-mb-xs">Sector: {{dataUser.direccion.sector}}</div> -->
+
+            <!-- <div class="text-caption q-mt-sm q-mb-xs">Télefono: {{ dataUser.persona.telefono.codigo }}{{ dataUser.persona.telefono.numero }}</div> -->
+
 
           </q-card-section>
         </q-card-section>
@@ -483,7 +272,7 @@
           <q-btn flat v-close-popup>
             Cerrar
           </q-btn>
-          <q-btn @click="generatePDF(user)" flat v-close-popup> Descargar historial </q-btn>
+          <!-- <q-btn @click="generatePDF(user)" flat v-close-popup> Descargar historial </q-btn> -->
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -513,26 +302,14 @@
     <!-- FIN ELIMINAR USUARIO -->
 
     <div>
-      <vue-html2pdf
-      :show-layout="false"
-      :float-layout="true"
-      :enable-download="true"
-      :preview-modal="true"
-      :paginate-elements-by-height="1400"
-      filename="historialDoctor"
-      :pdf-quality="2"
-      :manual-pagination="false"
-      pdf-format="a4"
-      :pdf-margin="10"
-      pdf-orientation="portrait"
-      pdf-content-width="800px"
-      @progress="onProgress($event)"
-      ref="html2Pdf"
-    >
-      <section slot="pdf-content">
-        <!-- <historiaPdf :data="dataUser" /> -->
-        <HistoriaDrPdf :data="dataUser" />
-      </section>
+      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="true" :preview-modal="true"
+        :paginate-elements-by-height="1400" filename="historialDoctor" :pdf-quality="2" :manual-pagination="false"
+        pdf-format="a4" :pdf-margin="10" pdf-orientation="portrait" pdf-content-width="800px"
+        @progress="onProgress($event)" ref="html2Pdf">
+        <section slot="pdf-content">
+          <!-- <historiaPdf :data="dataUser" /> -->
+          <HistoriaDrPdf :data="dataUser" />
+        </section>
       </vue-html2pdf>
     </div>
   </div>
@@ -546,10 +323,10 @@ import {
 } from "../../../graphql/user";
 import VueHtml2pdf from "vue-html2pdf";
 import HistoriaDrPdf from "./historiaDrPdf.vue";
-import { ADMIN_DOCTORES_QUERY } from "../../../graphql/admin";
+import { ADMIN_DOCTORES_QUERY } from "../../../graphql/user";
 export default {
   name: "doctores",
-  components: {HistoriaDrPdf, VueHtml2pdf},
+  components: { HistoriaDrPdf, VueHtml2pdf },
   data() {
     return {
       config: config,
@@ -575,9 +352,9 @@ export default {
       detailSector: "",
       detailCalle: "",
       estado: { label: 'Anzoátegui', value: 2 },
-      ciudad:"",
+      ciudad: "",
       especialidadDoctor: "",
-      roleEspecialidad: { label: "Enfermería", value: "Enfermeria", id: 1},
+      roleEspecialidad: { label: "Enfermería", value: "Enfermeria", id: 1 },
       credAdd: false,
       isPwd: true,
       fullName: "",
@@ -599,42 +376,42 @@ export default {
       valid: false,
       buscador: true,
       roleUserEspecialidad: [
-        { label: "Enfermería", value: "Enfermeria", id: 1},
-        { label: "Oftalmología", value: "Oftalmologia", id: 2},
-        { label: "Rayos x", value: "Rayosx", id: 3},
-        { label: "Hospitalización", value: "Hospitalizacion", id: 4},
-        { label: "Emergencias", value: "Emergencias", id: 5},
-        { label: "Laboratorio", value: "Laboratorio", id: 6},
-        { label: "Farmacia", value: "Farmacia", id: 7},
-        { label: "Terapias intensivas", value: "TerapiasIntensivas", id: 8},
-        { label: "Recepción", value: "Recepcion", id: 9}
+        { label: "Enfermería", value: "Enfermeria", id: 1 },
+        { label: "Oftalmología", value: "Oftalmologia", id: 2 },
+        { label: "Rayos x", value: "Rayosx", id: 3 },
+        { label: "Hospitalización", value: "Hospitalizacion", id: 4 },
+        { label: "Emergencias", value: "Emergencias", id: 5 },
+        { label: "Laboratorio", value: "Laboratorio", id: 6 },
+        { label: "Farmacia", value: "Farmacia", id: 7 },
+        { label: "Terapias intensivas", value: "TerapiasIntensivas", id: 8 },
+        { label: "Recepción", value: "Recepcion", id: 9 }
       ],
       estados: [
-      { label: 'Amazonas', value: 1 },
-      { label: 'Anzoátegui', value: 2 },
-      { label: 'Apure', value: 3 },
-      { label: 'Aragua', value: 4 },
-      { label: 'Barinas', value: 5 },
-      { label: 'Bolívar', value: 6 },
-      { label: 'Carabobo', value: 7 },
-      { label: 'Cojedes', value: 8 },
-      { label: 'Delta Amacuro', value: 9 },
-      { label: 'Falcón', value: 10 },
-      { label: 'Guárico', value: 11 },
-      { label: 'Lara', value: 12 },
-      { label: 'Mérida', value: 13 },
-      { label: 'Miranda', value: 14 },
-      { label: 'Monagas', value: 15 },
-      { label: 'Nueva Esparta', value: 16 },
-      { label: 'Portuguesa', value: 17 },
-      { label: 'Sucre', value: 18 },
-      { label: 'Táchira', value: 19 },
-      { label: 'Trujillo', value: 20 },
-      { label: 'Vargas', value: 21 },
-      { label: 'Yaracuy', value: 22 },
-      { label: 'Zulia', value: 23 },
-      { label: 'Distrito Capital', value: 24 },
-      { label: 'Dependencias Federales', value: 25 }
+        { label: 'Amazonas', value: 1 },
+        { label: 'Anzoátegui', value: 2 },
+        { label: 'Apure', value: 3 },
+        { label: 'Aragua', value: 4 },
+        { label: 'Barinas', value: 5 },
+        { label: 'Bolívar', value: 6 },
+        { label: 'Carabobo', value: 7 },
+        { label: 'Cojedes', value: 8 },
+        { label: 'Delta Amacuro', value: 9 },
+        { label: 'Falcón', value: 10 },
+        { label: 'Guárico', value: 11 },
+        { label: 'Lara', value: 12 },
+        { label: 'Mérida', value: 13 },
+        { label: 'Miranda', value: 14 },
+        { label: 'Monagas', value: 15 },
+        { label: 'Nueva Esparta', value: 16 },
+        { label: 'Portuguesa', value: 17 },
+        { label: 'Sucre', value: 18 },
+        { label: 'Táchira', value: 19 },
+        { label: 'Trujillo', value: 20 },
+        { label: 'Vargas', value: 21 },
+        { label: 'Yaracuy', value: 22 },
+        { label: 'Zulia', value: 23 },
+        { label: 'Distrito Capital', value: 24 },
+        { label: 'Dependencias Federales', value: 25 }
       ],
       ciudades: {
         1: ['Puerto Ayacucho', 'San Fernando de Atabapo', 'Maroa'],
@@ -679,8 +456,8 @@ export default {
         { label: "0426", value: 426 }
       ],
       nacionalidades: [
-      { label: "V", value: "V" },
-      { label: "E", value: "E" }
+        { label: "V", value: "V" },
+        { label: "E", value: "E" }
       ],
       thumbStyle: {
         right: "4px",
@@ -750,20 +527,20 @@ export default {
     //     }
     // },
     fullName(newValue) {
-    if (
+      if (
         newValue === '' ||
         newValue.length < 3 || newValue.length > 200 ||
         !/^([a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+)$/.test(newValue)
-    ) {
+      ) {
         this.valid = false;
-    } else {
+      } else {
         this.valid = true;
-    }
-    console.log("¿Es válido?", this.valid);
-},
+      }
+      console.log("¿Es válido?", this.valid);
+    },
   },
   methods: {
-    workerView(typeView){
+    workerView(typeView) {
       this.viewType = typeView
     },
     generatePDF() {
@@ -773,15 +550,8 @@ export default {
     userDetail(user) {
       this.modalDetailUser = true;
       this.dataUser = user;
-      this.detailSector = user.direccion.sector;
-      this.detailCalle = user.direccion.calle;
-      if(this.dataUser.nacionalidad === 'V') {
-        this.nacionalidadUser = "Venezolano/a"
-      } else if(this.dataUser.nacionalidad === 'J') {
-        this.nacionalidadUser = "Jurídico"
-      } else {
-        this.nacionalidadUser = "Extranjero/a"
-      }
+      this.detailSector = user.persona.direccion.sector;
+      this.detailCalle = user.persona.direccion.calle;
     },
     readFileAsync(file) {
       return new Promise((resolve, reject) => {
@@ -801,16 +571,11 @@ export default {
         .query({
           query: ADMIN_DOCTORES_QUERY,
           fetchPolicy: "network-only",
-          variables:{
-            data: {
-              roleEspecialidad: this.filter.roleEspecialidad
-            }
-          }
         })
         .then((response) => {
           this.loaderUser = false;
-          console.log(response.data.allDoctores);
-          this.users = Object.assign([], response.data.allDoctores);
+          console.log(response.data.doctores);
+          this.users = Object.assign([], response.data.doctores);
         })
         .catch((err) => {
           this.loaderUser = false;
@@ -916,40 +681,17 @@ export default {
         });
     },
     buscarUsuario(dni) {
-      this.loaderOrders = true;
-      let data = {
-        dni: dni,
-        role: "Doctor"
-      };
-      this.$apollo
-        .query({
-          query: BUSCAR_USER_QUERY,
-          variables: {
-            data: data,
-          },
-          fetchPolicy: "network-only",
-        })
-        .then((response) => {
-          this.loaderOrders = false;
-          this.dni = "";
-          if (response.data.BuscarUser.length !== 0) {
-            this.dataUser = response.data.BuscarUser[0];
-            this.modalDetailUser = true;
-            // this.buscador = false;
-          } else {
-            this.$q.notify({
-              message: "Este doctor no existe",
-              color: "negative",
-            });
-          }
-        })
-        .catch((err) => {
-          this.loaderOrders = false;
-          this.$q.notify({
-            message: err.message.split("GraphQL error === true:"),
-            color: "negative",
-          });
+      const usuario = this.users.filter((usuario) => usuario.persona.cedula_identidad === dni)
+      if (usuario.length !== 0) {
+        this.dataUser = usuario[0];
+        this.modalDetailUser = true;
+      } else {
+        this.$q.notify({
+          message: "Este doctor no existe",
+          color: "negative",
         });
+      };
+      this.dni = "";
     },
   },
 };
