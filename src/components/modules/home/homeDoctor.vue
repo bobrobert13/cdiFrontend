@@ -567,9 +567,6 @@
                     <span class="text-bold">Paciente: {{ pacienteSeleccionado.nombre1 }}</span>
                   </div>
                   <div class="col-12 q-mt-xs">
-                    <q-select disable v-model="hospitalizacion_estado" filled label="Estado" :options="['Activo']" />
-                  </div>
-                  <div class="col-12 q-mt-xs">
                     <q-input v-model="hospitalizacion_motivoDeHospitalizacion" filled
                       label="Motivo de hospitalización" />
                   </div>
