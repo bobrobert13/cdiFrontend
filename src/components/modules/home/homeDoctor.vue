@@ -2104,7 +2104,7 @@ export default {
       });
     },
     AllPacientes() {
-      console.log('id doctoez;', this.$store.state.user);
+      // console.log('id doctoez;',   this.$store.state.user);
 
       this.$apollo
         .query({
@@ -2116,7 +2116,7 @@ export default {
         })
         .then((response) => {
           this.loaderUser = false;
-          console.log(response.data.doctorPacientes);
+          // console.log(response.data.doctorPacientes);
           this.users = Object.assign([], response.data.doctorPacientes.pacientes);
         })
         .catch((err) => {

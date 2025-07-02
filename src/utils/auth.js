@@ -15,10 +15,10 @@ function setRole(data) {
   store.commit("setRole", data.user.role);
 }
 
-function saveToken(data) {
-  console.log("data de save token:", data);
+async function saveToken(data) {
+  // console.log("data de save token:", data);
   window.localStorage.setItem("user", data.usuario.nombre_usuario);
-  window.localStorage.setItem("status", data.usuario.status);
+  window.localStorage.setItem("status", data.usuario.status || '');
   window.localStorage.setItem("user_id", data.usuario.id_usuario);
   window.localStorage.setItem("doctor_id", data.usuario.fk_doctor_id);
   window.localStorage.setItem("cdi_id", data.usuario.fk_cdi_id);
@@ -33,7 +33,7 @@ function saveToken(data) {
   const role = window.localStorage.getItem("role");
   const auth = window.localStorage.getItem("isAuthenticated");
   console.log('user:', user, userId, role, auth);
-  store.commit("setUser", {
+  await store.commit("setUser", {
     fullName: '',
     nombre_usuario: user,
     id: userId,
@@ -102,7 +102,7 @@ function refreshUser() {
     const auth = window.localStorage.getItem("isAuthenticated");
     const doctorId = window.localStorage.getItem("doctor_id");
     const cdiid = window.localStorage.getItem("cdi_id");
-
+    
     store.commit("setUser", {
       fullName: user,
       id: userId,

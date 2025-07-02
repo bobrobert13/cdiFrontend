@@ -42,9 +42,9 @@
       </thead>
       <tbody :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-3'">
         <tr>
-          <td class="text-left"> {{ data.direccion.calle }}</td>
+          <!-- <td class="text-left"> {{ data.direccion.calle }}</td>
           <td class="text-left">{{data.direccion.sector}} </td>
-          <td class="text-left">{{data.direccion.numero }} </td>
+          <td class="text-left">{{data.direccion.numero }} </td> -->
         </tr>
       </tbody>
 

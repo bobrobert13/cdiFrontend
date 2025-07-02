@@ -48,7 +48,7 @@
                 <div class="text-h6"><span v-if="users && users.length !== 0">{{ users.length }}</span> Doctores del CDI
                 </div>
                 Listado de usuarios doctores pertenecientes al CDI
-                <div class="row justify-center q-mt-xl" v-if="this.users.length !== 0">
+                <div class="row justify-center q-mt-xl" v-if="this.users && this.users.length !== 0">
                   <div class="col-12 q-mb-sm" v-for="(user, index) in users" :key="index">
                     <q-list class="rounded-borders bg-secondary" style="border-radius: 15px">
                       <q-item>
@@ -60,17 +60,19 @@
                         <q-item-section top @click="userDetailC('userDetail', user)" style="cursor: pointer">
                           <q-item-label class="text-left q-mb-xs" lines="1">
                             <span class="text-weight-medium">Nombre de usuario: <b>{{ user.usuarios.nombre_usuario
-                            }}</b></span>
+                                }}</b></span>
                           </q-item-label>
                           <small class="text-weight-medium">Rol: {{ user.usuarios.rol }}</small>
                           <small class="text-weight-medium">Estatus de usuario: <b>{{ user.usuarios.estado
-                          }}</b></small>
+                              }}</b></small>
                         </q-item-section>
                         <q-item-section side>
                           <div class="text-grey-8 q-gutter-xs">
                             <!-- <q-btn @click="generatePDF(user)" class="gt-xs text-blue" size="12px" flat dense round
                           icon="mdi-file-download-outline" /> -->
-                            <q-btn @click="actualizarUsuario({ ...user.usuarios, estado: user.usuarios.estado === 'activo' ? 'inactivo' : 'activo' })" class="gt-xs text-negative" size="12px" flat dense
+                            <q-btn
+                              @click="actualizarUsuario({ ...user.usuarios, estado: user.usuarios.estado === 'activo' ? 'inactivo' : 'activo' })"
+                              class="gt-xs text-negative" size="12px" flat dense
                               :label="user.usuarios.estado === 'activo' ? 'Inhabilitar' : 'Habilitar'" />
                           </div>
                         </q-item-section>
@@ -86,7 +88,7 @@
               </q-tab-panel>
               <q-tab-panel name="pacientesCDI">
                 <div class="text-h6"><span v-if="usersPacientes && usersPacientes.length !== 0">{{ usersPacientes.length
-                    }}</span>
+                }}</span>
                   Pacientes del CDI</div>
                 Listado de pacientes administrados por los doctores del CDI
                 <div class="row justify-center q-mt-xl" v-if="usersPacientes && this.usersPacientes.length !== 0">
@@ -104,19 +106,19 @@
                               </b></span>
                           </q-item-label>
                           <small class="text-weight-medium">Correo electrónico: {{ userPaciente.persona.correo.correo
-                            }}</small>
+                          }}</small>
                           <small class="text-weight-medium">Número de contacto: {{ userPaciente.persona.telefono.codigo
-                            }}{{
+                          }}{{
                               userPaciente.persona.telefono.numero }}</small>
                           <small class="text-weight-medium">Documento de Identidad: {{
                             userPaciente.persona.cedula_identidad
-                            }}</small>
+                          }}</small>
                         </q-item-section>
 
                         <q-item-section side style="cursor: pointer">
                           <q-item-label class="text-left q-mb-xs" lines="1">
                             <small class="text-weight-medium">Fecha de creación: <b>{{
-                                entradaCracion(userPaciente.createdAt) }}
+                              entradaCracion(userPaciente.createdAt) }}
                               </b></small>
                           </q-item-label>
 
@@ -184,24 +186,29 @@
 
                   <div class="col-12 q-mt-xl">
                     <p class="text-subtitle text-medium no-padding">Información de credenciales</p>
-                    <small>Puedes actualizar la contraseña del usuario del doctor desde esta sección; Asegurate de informar la nueva credencial a tu Doctor</small>
+                    <small>Puedes actualizar la contraseña del usuario del doctor desde esta sección; Asegurate de
+                      informar la
+                      nueva credencial a tu Doctor</small>
                     <div class="row jusitify-center">
                       <div class="col-6 q-pa-sm">
-                          <q-input filled  color="deep-purple-6" v-model="dataUser.usuarios.nombre_usuario" @blur="validateUserCredentialsInputs"
-                            label="Nombre de usuario" :rules="[val => val.length >= 3 || 'El nombre de usuario debe tener al menos 3 caracteres']" />
+                        <q-input filled color="deep-purple-6" v-model="dataUser.usuarios.nombre_usuario"
+                          @blur="validateUserCredentialsInputs" label="Nombre de usuario"
+                          :rules="[val => val.length >= 3 || 'El nombre de usuario debe tener al menos 3 caracteres']" />
                       </div>
 
                       <div class="col-6 q-pa-sm">
-                        <q-input filled  color="deep-purple-6" v-model="dataUser.usuarios.contrasena"  @blur="validateUserCredentialsInputs"
-                         :rules="[val => val.length >= 6 || 'La contraseña debe tener al menos 6 caracteres']"
+                        <q-input filled color="deep-purple-6" v-model="dataUser.usuarios.contrasena"
+                          @blur="validateUserCredentialsInputs"
+                          :rules="[val => val.length >= 6 || 'La contraseña debe tener al menos 6 caracteres']"
                           label="Contraseña" />
                       </div>
-                      
+
                     </div>
                   </div>
                   <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 q-mt-md">
-                    <q-btn unelevated :disabled="!isValid" :loading="loader" @click="actualizarUsuario(dataUser.usuarios)"
-                      class="fullwidth text-white bg-primary" label="Actualizar credenciales" />
+                    <q-btn unelevated :disabled="!isValid" :loading="loader"
+                      @click="actualizarUsuario(dataUser.usuarios)" class="fullwidth text-white bg-primary"
+                      label="Actualizar credenciales" />
                   </div>
                 </div>
               </div>
@@ -299,7 +306,7 @@
                   <div class="col-xl-8 col-lg-8 col-md-8 q-pb-xs col-sm-12 col-xs-12 ">
                     <q-input filled color="deep-purple-6" v-model="punto_referencia" label="Punto de referencia" />
                   </div>
-                  <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 ">
+                  <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-mb-xs">
                     <q-input filled color="deep-purple-6" v-model="codigo_postal" label="Código postal" />
                   </div>
                   <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-mb-xs">
@@ -332,6 +339,8 @@
                   <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 ">
                     <q-input filled color="deep-purple-6" class="q-mb-xs" v-model="doctor_numero_carnet"
                       label="Número de carnet" />
+                    <q-input filled color="deep-purple-6" class="q-mb-xs" v-model="doctor_ocupacion"
+                      label="Ocupación" />
                     <q-select filled color="deep-purple-6" class="q-mb-xs" v-model="doctor_horario" label="Horario"
                       :options="[
                         'Lunes a Viernes 8:00 am - 6:00 pm',
@@ -491,6 +500,7 @@ export default {
 
       // DATOS DE DOCTOR:
       doctor_numero_carnet: '',
+      doctor_ocupacion: "Doctor",
       doctor_horario: '',
       doctor_anos_experiencia: '',
       doctor_nombre_usuario: '',
@@ -730,7 +740,7 @@ export default {
         })
         .then((response) => {
           this.loaderUser = false;
-          console.log(response.data.doctoresCDI);
+          // console.log(response.data.doctoresCDI);
           this.users = Object.assign([], response.data.doctoresCDI);
         })
         .catch((err) => {
@@ -753,9 +763,9 @@ export default {
         })
         .then((response) => {
           this.loaderUser = false;
-          console.log(response.data.pacientesCDI);
+          // console.log(response.data.pacientesCDI);
           this.usersPacientes = Object.assign([], response.data.pacientesCDI);
-          console.log('pacientes CDI:', this.usersPacientes);
+          // console.log('pacientes CDI:', this.usersPacientes);
         })
         .catch((err) => {
           this.loaderUser = false;
@@ -768,14 +778,6 @@ export default {
     addDoctor() {
       this.loader = true;
       let telConcat = '0' + this.codigo + this.telefono
-      console.log('datos doctor:', {
-        anos_experiencia: parseInt(this.doctor_anos_experiencia),
-        numero_carnet: this.doctor_numero_carnet,
-        area_de_trabajo: this.roleEspecialidad.value,
-        horario: this.doctor_horario,
-        fk_cdi_id: this.$store.state.user.cdi_id,
-      });
-
       this.$apollo
         .mutate({
           mutation: ADD_DOCTOR_USER_MUTATION,
@@ -791,6 +793,7 @@ export default {
               personaInput: {
                 nombre1: this.fullName,
                 cedula_identidad: this.dni,
+                ocupacion: this.doctor_ocupacion,
                 telefonoInput: {
                   codigo: this.codigo.toString(),
                   numero: this.telefono.toString()

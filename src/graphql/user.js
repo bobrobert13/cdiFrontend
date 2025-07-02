@@ -63,13 +63,9 @@ export const PACIENTES_QUERY = gql`
 
 
 
-
 export const PERSONA_DETALLES = gql`
   fragment personaDetalles on Persona {
     nombre1
-    nombre2
-    apellido1
-    apellido2
     edad
     estado_civil
     id_persona
@@ -294,6 +290,13 @@ export const ADMIN_DOCTORES_QUERY = gql`
         nombre_usuario
         rol
         estado
+        cdi {
+          id_cdi
+          numero_cdi
+          nombre
+          encargado
+          cuadrante
+          estado}
       }
     }
   }
@@ -308,6 +311,7 @@ export const ADMIN_CDIS_QUERY = gql`
     nombre
     encargado
     cuadrante
+    estado
     usuarios {
       id_usuario
       nombre_usuario
@@ -318,6 +322,28 @@ export const ADMIN_CDIS_QUERY = gql`
   }
 `;
 
+export const ADMIN_ALL_CDIS_QUERY = gql`
+  query doGetALLCDIs{
+    todosCdis {
+    id_cdi
+    numero_cdi
+    nombre
+    encargado
+    cuadrante
+    }
+  }
+`;
+
+export const ADMIN_PROFILE_QUERY = gql`
+  query doGetAdminProfile($id_usuario: ID!) {
+    usuario(id_usuario: $id_usuario) {
+      id_usuario
+      nombre_usuario
+      rol
+      estado
+    }
+  }
+`;
 
 
 export const CDI_PACIENTES_QUERY = gql`
@@ -427,6 +453,20 @@ mutation doCreateDoctor($input: CrearDoctorInput!){
 }
 
 `;
+
+
+export const ADD_CDI_USER_MUTATION = gql`
+mutation doCreateCDI($input: CrearCDIInput!){
+  	crearCDI(input: $input) {
+		id_cdi
+    numero_cdi
+    nombre
+    encargado
+    cuadrante
+  }
+}
+`;
+
 
 
 export const ADMIN_PACIENTES_QUERY = gql`
@@ -636,6 +676,14 @@ mutation doUpdateUsuario($id_usuario: ID! $input: ActualizarUsuarioInput!) {
 `;
 
 
+export const UPDATE_CDI_STATUS_MUTATION = gql`
+mutation doUpdateCDIStatus($id_cdi: ID! $estado: String!) {
+  inhabilitarCDI(id_cdi: $id_cdi, estado: $estado)
+}
+`;
+
+
+
 export const INFORMACION_CDI_QUERY = gql`
   query doGetCDIProfile($id_cdi: ID!) {
     cdi(id_cdi: $id_cdi) {
@@ -644,6 +692,7 @@ export const INFORMACION_CDI_QUERY = gql`
     nombre
     encargado
     cuadrante
+    estado
     usuarios {
       id_usuario
       nombre_usuario

@@ -92,6 +92,7 @@ Router.beforeResolve((to, from, next) => {
     NProgress.start();
   }
   next();
+  
 });
 Router.afterEach((to, from) => {
   NProgress.done();

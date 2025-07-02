@@ -245,7 +245,7 @@ export default {
         })
         .then((response) => {
           this.loaderUser = false;
-          console.log("all paciene", response.data.pacientes);
+          // console.log("all paciene", response.data.pacientes);
           this.users = Object.assign([], response.data.pacientes);
         })
         .catch((err) => {
