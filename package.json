@@ -3,12 +3,11 @@
   "version": "0.0.1",
   "description": "cdi",
   "productName": "cdi",
-  "author": "jonathan <yyps1995@gmail.com>",
+  "author": "jonathan <jhonatansalazar968@gmail.com>",
   "private": true,
   "scripts": {
     "dev": "quasar dev",
-    "build": "quasar build",
-    "test": "echo \"No test specified\" && exit 0"
+    "build": "quasar build"
   },
   "dependencies": {
     "@quasar/extras": "^1.0.0",
