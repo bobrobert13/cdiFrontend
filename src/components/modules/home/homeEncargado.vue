@@ -159,38 +159,68 @@
 
                     <div class="row jusitify-center">
                       <div class="col-6 q-pa-sm">
-                        <q-input filled disable color="deep-purple-6" v-model="dataUser.persona.nombre1"
+                        <q-input filled  color="deep-purple-6" v-model="dataUser.persona.nombre1"
                           label="Nomobre completo" />
                       </div>
                       <div class="col-6 q-pa-sm">
-                        <q-input filled disable color="deep-purple-6" v-model="dataUser.numero_carnet"
-                          label="Número de carnet" />
-                      </div>
-                      <div class="col-6 q-pa-sm">
-                        <q-input filled disable color="deep-purple-6" v-model="dataUser.anos_experiencia"
-                          label="Años de experiencia" />
-                      </div>
-                      <div class="col-6 q-pa-sm">
-                        <q-input filled disable color="deep-purple-6" v-model="dataUser.persona.cedula_identidad"
+                        <q-input filled  color="deep-purple-6" v-model="dataUser.persona.cedula_identidad"
                           label="Cédula" />
                       </div>
                       <div class="col-6 q-pa-sm">
-                        <q-input filled disable color="deep-purple-6" v-model="dataUser.area_de_trabajo"
-                          label="Especialidad" />
+                        <q-input filled  color="deep-purple-6" v-model="dataUser.numero_carnet"
+                          label="Número de carnet" />
                       </div>
                       <div class="col-6 q-pa-sm">
-                        <q-input filled disable color="deep-purple-6" v-if="dataUser.persona.correo"
-                          v-model="dataUser.persona.correo.correo" label="Email" />
+                        <q-input filled  color="deep-purple-6" v-model="dataUser.anos_experiencia"
+                          label="Años de experiencia" />
+                      </div>
+                      <div class="col-6 q-pa-sm">
+                        <q-input filled  color="deep-purple-6" v-model="dataUser.area_de_trabajo"
+                          label="Area de trabajo" />
+                      </div>
+                      <div class="col-6 q-pa-sm">
+                        <q-select filled  color="deep-purple-6" v-model="dataUser.horario"
+                          label="Horario de trabajo" :options="[
+                        'Lunes a Viernes 8:00 am - 6:00 pm',
+                        'Lunes a Viernes 9:00 am - 5:00 pm',
+                        'Lunes a Viernes 10:00 am - 4:00 pm',
+                        'Sábados 9:00 am - 1:00 pm',
+                        'Sábados 10:00 am - 2:00 pm',
+                        'Domingos 10:00 am - 2:00 pm',
+                        'Lunes, Miércoles y Viernes 8:00 am - 5:00 pm',
+                        'Martes y Jueves 10:00 am - 6:00 pm',
+                        'Lunes a Viernes 8:00 am - 12:00 pm y 1:00 pm - 5:00 pm'
+                      ]"/>
+                      </div>
+                      <div class="col-6 q-pa-sm">
+                        <q-input filled  color="deep-purple-6" v-model="dataUser.persona.cedula_identidad"
+                          label="Cédula" />
+                      </div>
+                      <div class="col-6 q-pa-sm">
+                        <q-input filled  color="deep-purple-6" v-model="dataUser.area_de_trabajo"
+                          label="Especialidad" />
+                      </div>
+
+
+                      <div class="col-6 q-pa-sm">
+                        <q-select filled v-if="dataUser.persona.telefono" v-model="dataUser.persona.telefono.codigo" :options="codigoTel" label="Codigo" option-label="label"
+                          option-value="value" emit-value />
                       </div>
 
                       <div class="col-6 q-pa-sm">
-                        <q-input filled disable color="deep-purple-6" v-if="dataUser.persona.telefono"
+                        <q-input filled  color="deep-purple-6" v-if="dataUser.persona.telefono"
                           v-model="dataUser.persona.telefono.numero" label="Teléfono">
-                          <template v-slot:append>
-                            <small class="text-grey-6">({{ dataUser.persona.telefono.codigo }})</small>
-                          </template>
                         </q-input>
                       </div>
+
+                      <div class="col-6 q-pa-sm">
+                        <q-input filled  color="deep-purple-6" v-if="dataUser.persona.correo"
+                          v-model="dataUser.persona.correo.correo" label="Email" />
+                      </div>
+
+                      <q-btn unelevated :disabled="!isValid" :loading="loader"
+                      @click="actualizarDoctor(dataUser)" class="full-width mx-auto text-white bg-primary"
+                      label="Actualizar información" />
                     </div>
                   </div>
 
@@ -470,6 +500,7 @@ import {
   CDI_DOCTORES_QUERY,
   CDI_PACIENTES_QUERY,
   UPDATE_USUARIO_MUTATION,
+  UPDDATE_DOCTOR_MUTATION,
 } from "../../../graphql/user";
 import VueHtml2pdf from "vue-html2pdf";
 import historiaDrPdf from "../admin/historiaDrPdf.vue";
@@ -904,7 +935,70 @@ export default {
           });
         });
     },
-
+		actualizarDoctor(doctorUpdate) {
+      const {personaProps, ...doctor} = doctor;
+      console.log('editando la informacion del doctor:' , personaProps, ...doctor);
+      
+			this.loader = true;
+			this.$apollo
+				.mutate({
+					mutation: UPDDATE_DOCTOR_MUTATION,
+					variables: {
+						input: {
+							doctorInput: {
+								anos_experiencia: parseInt(this.doctor_anos_experiencia),
+								numero_carnet: this.doctor_numero_carnet,
+								area_de_trabajo: this.roleEspecialidad.value,
+								horario: this.doctor_horario,
+								fk_cdi_id: this.cdiSeleccionado.value,
+							},
+							personaInput: {
+								nombre1: this.fullName,
+								cedula_identidad: this.dni,
+								telefonoInput: {
+									codigo: this.codigo.toString(),
+									numero: this.telefono.toString()
+								},
+								correoInput: {
+									correo: this.email || ''
+								},
+							},
+						},
+					},
+				})
+				.then((response) => {
+					this.loader = false;
+					this.fullName = "";
+					this.calle = "";
+					this.numero = "";
+					this.dataUser = null;
+					this.sector = "";
+					this.estado = { label: 'Anzoátegui', value: 2 }
+					this.ciudad = ""
+					this.email = "";
+					this.password = "";
+					this.dni = "";
+					this.telefono = "";
+					this.direccion = "";
+					this.highlight = "";
+					this.viewType = "userList"
+					this.AllDoctores();
+					this.$q.notify({
+						message: "Doctor añadido",
+						color: "positive",
+					});
+					this.$emit("updateUsers", {
+						users: true,
+					});
+				})
+				.catch((err) => {
+					this.loader = false;
+					this.$q.notify({
+						message: err.message.split("GraphQL error:"),
+						color: "negative",
+					});
+				});
+		},
     AllPacientes() {
       this.$apollo
         .query({

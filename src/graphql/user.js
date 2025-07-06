@@ -578,6 +578,15 @@ mutation doUpdateConsulta($id_consulta: ID! $input: ConsultaInput!){
 }
 `;
 
+
+export const UPDDATE_DOCTOR_MUTATION = gql`
+mutation doUpdateDoctor($id_doctor: ID! $input: DoctorInput!){
+  actualizarDoctor(id_doctor: $id_doctor, input: $input) {
+    id_doctor
+  }
+}
+`;
+
 export const UPDDATE_DIAGNOSTICO_MUTATION = gql`
 mutation doUpdateDiagnostico($id_diagnostico: ID! $input: DiagnosticoInput!){
   actualizarDiagnostico(id_diagnostico: $id_diagnostico, input: $input) {

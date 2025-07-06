@@ -720,6 +720,7 @@ export default {
 					});
 				});
 		},
+
 		actualizarUsuario(usuario) {
 			this.loader = true;
 			this.$apollo
