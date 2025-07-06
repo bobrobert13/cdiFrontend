@@ -29,7 +29,7 @@
                         <span class="text-weight-medium">Nombre de paciente: {{ user.persona.nombre1 }}</span>
                       </q-item-label>
                       <q-item-label class="text-left q-mb-xs" lines="1">
-                        <span class="text-weight-medium">Documento de identidad: {{ user.persona.cedula_identidad
+                        <span class="text-weight-medium">Documento de identidad: {{ user.persona.nacionalidad }} - {{ user.persona.cedula_identidad
                         }}</span>
                       </q-item-label>
                       <q-item-label class="text-left" lines="1">
@@ -139,7 +139,12 @@
                           option-value="value" emit-value />
                       </div>
                       <div class="col-8">
-                        <q-input filled color="deep-purple-6" v-model="dni" type="number" label="Cédula" />
+                        <q-input filled color="deep-purple-6" type="number" v-model="dni" 
+                        :rules="[
+                      val => /^\d+$/.test(val) || 'Solo se permiten números',
+                      val => val.length <= 10 || 'Máximo 10 caracteres'
+                    ]" 
+                        label="Cédula" />
                       </div>
                     </div>
                     <div class="row q-mt-sm">
@@ -192,7 +197,12 @@
                           option-value="value" emit-value />
                       </div>
                       <div class="col-8">
-                        <q-input filled color="deep-purple-6" v-model="telefono" type="number"
+                        <q-input filled color="deep-purple-6"
+                        :rules="[
+                      val => /^\d+$/.test(val) || 'Solo se permiten números',
+                      val => val.length <= 12 || 'Máximo 12 caracteres'
+                    ]"
+                        v-model="telefono" type="number"
                           label="Número de telefono" />
                       </div>
                     </div>
@@ -352,11 +362,11 @@
                   <p class="text-subtitle text-bold text-grey-9">Detalles del paciente</p>
                   <div class="text-caption text-bold q-mt-sm q-mb-xs">Paciente: {{ dataUser.persona.nombre1 }}</div>
                   <div class="text-caption q-mt-sm q-mb-xs">Documento de identidad:
-                    {{ dataUser.persona.cedula_identidad }}</div>
+                    {{ dataUser.persona.nacionalidad }} - {{ dataUser.persona.cedula_identidad }}</div>
                   <div class="text-caption q-mt-sm q-mb-xs">Edad del paciente: {{ dataUser.persona.edad }}</div>
                   <div class="text-caption q-mt-sm q-mb-xs">Sexo: {{ dataUser.persona.sexo }}</div>
                   <!-- <div class="text-caption q-mt-sm q-mb-xs">Diagnostico: {{dataUser.diagnostico}}</div> -->
-                </q-card-section>
+                </q-card-section> 
               </q-card-section>
 
               <q-card-section class="no-padding column items-center full-width justify-center q-mx-sm q-mb-md">
@@ -2003,11 +2013,17 @@ export default {
     alergias(newValue) {
       this.validarCampoAlergias(newValue);
     },
+    dni(newValue) {
+      this.validarDNI(newValue);
+    },
     ocupacion(newValue) {
       this.validarCampoOcupacion(newValue);
     },
     peso(newValue) {
       this.validarCampoPeso(newValue);
+    },
+    telefono(newValue) {
+      this.validarCampoTelefono(newValue);
     },
     email(newValue) {
       if (
@@ -2109,6 +2125,19 @@ export default {
       return this.valid;
     },
 
+    validarDNI(value) {
+      let isValid = true;
+      if (!/^\d+$/.test(value)) {
+        isValid = false;
+      } 
+      else if (value <= 0 ) isValid = false;
+      else if (value.length > 10) {
+        isValid = false; 
+      }
+      this.valid = isValid;
+      return this.valid;
+    },
+
     validarCampoPeso(value) {
       let isValid = true;
       if (!/^\d+$/.test(value)) {
@@ -2121,6 +2150,20 @@ export default {
       this.valid = isValid;
       return this.valid;
     },
+
+    validarCampoTelefono(value) {
+      let isValid = true;
+      if (!/^\d+$/.test(value)) {
+        isValid = false;
+      } 
+      else if (value <= 0 ) isValid = false;
+      else if (value.length > 12) {
+        isValid = false; 
+      }
+      this.valid = isValid;
+      return this.valid;
+    },
+
 
     seleccionarExamen(examen) {
       this.examenSeleccionado = examen;
@@ -2288,17 +2331,19 @@ export default {
               tipo_de_sangre: this.sangreSeleccionada.value,
               alergias: this.alergias,
               fk_doctor_id: this.$store.state.user.doctor_id,
+              fk_cdi_id: this.$store.state.user.cdi_id,
               personaInput: {
+                fk_cdi_id: this.$store.state.user.cdi_id,
                 estado_civil: this.estadoCivilSeleccionado.value,
                 ocupacion: this.ocupacion,
                 nacionalidad: this.nacionalidadUser,
                 nombre1: this.fullName,
                 sexo: this.sexo,
                 edad: parseInt(this.edad),
-                cedula_identidad: this.dni,
+                cedula_identidad: parseInt(this.dni),
                 telefonoInput: {
-                  codigo: '0' + this.codigo.toString(), // Ejemplo: "0414"
-                  numero: this.telefono.toString() // Ejemplo: "9876543"
+                  codigo: this.codigo,
+                  numero: this.telefono
                 },
                 correoInput: {
                   correo: this.correo || ''

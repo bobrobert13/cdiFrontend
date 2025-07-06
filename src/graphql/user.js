@@ -70,6 +70,7 @@ export const PERSONA_DETALLES = gql`
     estado_civil
     id_persona
     sexo
+    nacionalidad
     cedula_identidad
     ocupacion
     telefono {
