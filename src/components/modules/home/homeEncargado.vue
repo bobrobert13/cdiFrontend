@@ -60,11 +60,11 @@
                         <q-item-section top @click="userDetailC('userDetail', user)" style="cursor: pointer">
                           <q-item-label class="text-left q-mb-xs" lines="1">
                             <span class="text-weight-medium">Nombre de usuario: <b>{{ user.usuarios.nombre_usuario
-                                }}</b></span>
+                            }}</b></span>
                           </q-item-label>
                           <small class="text-weight-medium">Rol: {{ user.usuarios.rol }}</small>
                           <small class="text-weight-medium">Estatus de usuario: <b>{{ user.usuarios.estado
-                              }}</b></small>
+                          }}</b></small>
                         </q-item-section>
                         <q-item-section side>
                           <div class="text-grey-8 q-gutter-xs">
@@ -88,7 +88,7 @@
               </q-tab-panel>
               <q-tab-panel name="pacientesCDI">
                 <div class="text-h6"><span v-if="usersPacientes && usersPacientes.length !== 0">{{ usersPacientes.length
-                }}</span>
+                    }}</span>
                   Pacientes del CDI</div>
                 Listado de pacientes administrados por los doctores del CDI
                 <div class="row justify-center q-mt-xl" v-if="usersPacientes && this.usersPacientes.length !== 0">
@@ -179,7 +179,17 @@
                           label="Especialidad" />
                       </div>
                       <div class="col-6 q-pa-sm">
-                        <q-input filled disable color="deep-purple-6" v-model="dataUser.usuarios.rol" label="Email" />
+                        <q-input filled disable color="deep-purple-6" v-if="dataUser.persona.correo"
+                          v-model="dataUser.persona.correo.correo" label="Email" />
+                      </div>
+
+                      <div class="col-6 q-pa-sm">
+                        <q-input filled disable color="deep-purple-6" v-if="dataUser.persona.telefono"
+                          v-model="dataUser.persona.telefono.numero" label="Teléfono">
+                          <template v-slot:append>
+                            <small class="text-grey-6">({{ dataUser.persona.telefono.codigo }})</small>
+                          </template>
+                        </q-input>
                       </div>
                     </div>
                   </div>
@@ -192,15 +202,16 @@
                     <div class="row jusitify-center">
                       <div class="col-6 q-pa-sm">
                         <q-input filled color="deep-purple-6" v-model="dataUser.usuarios.nombre_usuario"
-                          @blur="validateUserCredentialsInputs" label="Nombre de usuario"
-                          :rules="[val => val.length >= 3 || 'El nombre de usuario debe tener al menos 3 caracteres']" />
+                          @blur="validateUserCredentialsInputs" label="Nombre de usuario" :rules="[
+                            (val) => val.length >= 5 || 'Mínimo 5 caracteres',
+                            (val) => val.length <= 20 || 'Máximo 20 caracteres',
+                            (val) => /^[a-zA-ZñÑáéíóúÁÉÍÓÚ]+$/.test(val) || 'Solo se permiten letras (sin números ni caracteres especiales)',
+                          ]" />
                       </div>
 
                       <div class="col-6 q-pa-sm">
                         <q-input filled color="deep-purple-6" v-model="dataUser.usuarios.contrasena"
-                          @blur="validateUserCredentialsInputs"
-                          :rules="[val => val.length >= 6 || 'La contraseña debe tener al menos 6 caracteres']"
-                          label="Contraseña" />
+                          @blur="validateUserCredentialsInputs" :rules="passwordRules" label="Contraseña" />
                       </div>
 
                     </div>
@@ -270,17 +281,26 @@
                 <div class="column justify-center">
                   <p class="text-subtitle text-medium">Información general</p>
                   <q-input filled color="deep-purple-6" v-model="fullName" label="Nombre completo" :rules="[
-                    (val) => !!val || 'Este campo es obligatorio',
                     (val) => val.length >= 3 || 'Mínimo 3 caracteres',
                     (val) => val.length <= 200 || 'Máximo 200 caracteres',
                     (val) =>
                       /^([\sa-zA-ZñÑáéíóúÁÉÍÓÚ]{3,40})*$/.test(val) ||
                       'Solo se permiten caracteres',
                   ]" />
+
                   <q-select filled class="q-mb-xs" v-model="nacionalidad" :options="nacionalidades" option-label="label"
                     option-value="value" emit-value />
-                  <q-input filled color="deep-purple-6" class="q-mb-xs" v-model="dni" type="number" label="Cédula" />
 
+                  <q-input filled color="deep-purple-6" type="number" v-model="dni" :rules="[
+                    val => /^\d+$/.test(val) || 'Solo se permiten números',
+                    val => val.length <= 10 || 'Máximo 10 caracteres'
+                  ]" label="Cédula" />
+                  <q-input type="email" filled v-model="email" label="Correo electrónico" :rules="[
+                    (val) => !!val || 'Este campo es obligatorio',
+                    (val) => val.length >= 3 || 'Mínimo 3 caracteres',
+                    (val) => val.length <= 200 || 'Máximo 200 caracteres',
+                    (val) => /.+@.+\..+/.test(val) || 'Formato de correo electrónico inválido'
+                  ]" />
 
                   <div class="row q-mb-xs">
                     <div class="col-8">
@@ -307,7 +327,10 @@
                     <q-input filled color="deep-purple-6" v-model="punto_referencia" label="Punto de referencia" />
                   </div>
                   <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-mb-xs">
-                    <q-input filled color="deep-purple-6" v-model="codigo_postal" label="Código postal" />
+                    <q-input filled color="deep-purple-6" type="number" :rules="[
+                      val => /^\d+$/.test(val) || 'Solo se permiten números',
+                      val => val.length <= 8 || 'Máximo 8 caracteres'
+                    ]" v-model="codigo_postal" label="Código postal" />
                   </div>
                   <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-mb-xs">
                     <div class="row">
@@ -316,33 +339,26 @@
                           option-value="value" emit-value />
                       </div>
                       <div class="col-8">
-                        <q-input filled color="deep-purple-6" v-model="telefono" type="number"
-                          label="Número de telefono" />
+                        <q-input filled color="deep-purple-6" :rules="[
+                          val => /^\d+$/.test(val) || 'Solo se permiten números',
+                          val => val.length <= 12 || 'Máximo 12 caracteres'
+                        ]" v-model="telefono" type="number" label="Número de telefono" />
                       </div>
                     </div>
                   </div>
-                  <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-mb-xs ">
-                    <q-input filled color="deep-purple-6" v-model="email" label="Email" type="email" :rules="[
-                      (val) => !!val || 'Este campo es obligatorio',
-                      (val) => val.length <= 40 || 'Máximo 40 caracteres',
-                      (val) =>
-                        /^([a-zA-Z0-9._-]{3,}[@][a-zA-Z0-9.]{3,}[.][a-zA-Z0-9.]{2,5})*$/.test(
-                          val
-                        ) || 'Formato de correo inválido',
-                    ]" />
-                  </div>
+
                 </div>
               </div>
               <div class="col-6" style="border-left: 10px solid white;">
                 <div class="column justify-center">
                   <p class="text-subtitle text-medium">Información del doctor</p>
                   <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 ">
-                    <q-input filled color="deep-purple-6" class="q-mb-xs" v-model="doctor_numero_carnet"
+                    <q-input filled color="deep-purple-6" type="text" class="q-mb-xs" v-model="doctor_numero_carnet"
                       label="Número de carnet" />
-                    <q-input filled color="deep-purple-6" class="q-mb-xs" v-model="doctor_ocupacion"
+                    <q-input filled color="deep-purple-6" type="text" class="q-mb-xs" v-model="doctor_ocupacion"
                       label="Ocupación" />
-                    <q-select filled color="deep-purple-6" class="q-mb-xs" v-model="doctor_horario" label="Horario"
-                      :options="[
+                    <q-select filled color="deep-purple-6" type="text" class="q-mb-xs" v-model="doctor_horario"
+                      label="Horario" :options="[
                         'Lunes a Viernes 8:00 am - 6:00 pm',
                         'Lunes a Viernes 9:00 am - 5:00 pm',
                         'Lunes a Viernes 10:00 am - 4:00 pm',
@@ -365,14 +381,15 @@
 
                     <q-select filled v-model="role" :options="roleUser" class="q-mb-xs" label="Tipo de usuario"
                       option-label="label" option-value="value" emit-value disable />
-                    <q-input filled color="deep-purple-6" class="q-mb-xs" v-model="doctor_nombre_usuario"
-                      label="Nombre de usuario" />
-
-                    <q-input filled :type="isPwd ? 'password' : 'text'" color="deep-purple-6" v-model="password"
-                      label="Password" :rules="[
-                        (val) => val.length >= 6 || 'Mínimo 6 caracteres',
+                    <q-input filled color="deep-purple-6" class="q-mb-xs" type="text" autocomplete="off"
+                      v-model="doctor_nombre_usuario" label="Nombre de usuario" :rules="[
+                        (val) => val.length >= 5 || 'Mínimo 5 caracteres',
                         (val) => val.length <= 20 || 'Máximo 20 caracteres',
-                      ]">
+                        (val) => /^[a-zA-ZñÑáéíóúÁÉÍÓÚ]+$/.test(val) || 'Solo se permiten letras (sin números ni caracteres especiales)',
+                      ]" />
+
+                    <q-input filled class="q-mt-md" autocomplete="off" :type="isPwd ? 'password' : 'text'"
+                      color="deep-purple-6" v-model="password" label="Password" :rules="passwordRules">
                       <template v-slot:append>
                         <q-icon :name="isPwd ? 'visibility_off' : 'visibility'" class="cursor-pointer"
                           @click="isPwd = !isPwd" />
@@ -384,10 +401,23 @@
                 </div>
               </div>
             </div>
+
             <div v-if="viewType === 'addWorker'" class="col-xl-5 col-lg-5 col-md-5 col-sm-12 col-xs-12 q-mb-xs ">
-              <q-btn unelevated :loading="loader" @click="addDoctor()"
-                :disable="!valid || fullName === '' || numero === '' || nacionalidad === '' || dni === '' || telefono === '' || email === '' || password === '' || doctor_nombre_usuario === '' || doctor_numero_carnet === '' || doctor_horario === '' || doctor_anos_experiencia === '' || roleEspecialidad === '' || role === '' || codigo_postal === '' || punto_referencia === '' || sector === '' || calle === '' || ciudad === '' || estado === ''"
-                class="full-width text-white bg-primary" label="Añadir doctor" />
+              <q-btn unelevated type='submit' :loading="loader" @click="addDoctor()" :disable="!valid ||
+                numero === '' ||
+                nacionalidad === '' || email === '' ||
+                password === '' ||
+                !dni || !telefono ||
+                doctor_numero_carnet === '' ||
+                doctor_horario === '' ||
+                roleEspecialidad === '' ||
+                role === '' ||
+                codigo_postal === '' ||
+                punto_referencia === '' ||
+                sector === '' ||
+                calle === '' ||
+                ciudad === '' ||
+                estado === ''" class="full-width text-white bg-primary" label="Añadir doctor" />
             </div>
           </div>
           <!-- ELIMINAR USUARIO -->
@@ -459,8 +489,8 @@ export default {
       imagePreview: [],
       tab: "users",
       role: "Doctor",
-      dni: 0,
-      telefono: 0,
+      dni: "",
+      telefono: "",
       ciudad: "",
       estado: "",
       direccion: {
@@ -490,6 +520,13 @@ export default {
       userName: "",
       password: "",
       password2: "",
+      passwordRules: [
+        (val) => val.length >= 8 || 'Mínimo 8 caracteres',
+        (val) => val.length <= 20 || 'Máximo 20 caracteres',
+        (val) => /[0-9]/.test(val) || 'Debes incluir al menos 1 número',
+        (val) => /[!@#$%^&*(),.?" :{}|<>]/.test(val) || 'Debes incluir al menos 1 carácter especial',
+        (val) => /[A-Z]/.test(val) || 'Debes incluir al menos 1 letra mayúscula',
+      ],
       userId: "",
       dataUser: "",
       user: "",
@@ -630,6 +667,24 @@ export default {
     estado(newVal) {
       this.ciudad = ""
     },
+    dni(newValue) {
+      this.validarDNI(newValue);
+    },
+    doctor_ocupacion(newValue) {
+      this.validarCampoOcupacion(newValue);
+    },
+    doctor_anos_experiencia(newValue) {
+      this.validarCampoAnosExperiencia(newValue);
+    },
+    doctor_nombre_usuario(newValue) {
+      this.validarCampoNombreUsuario(newValue);
+    },
+    password(newValue) {
+      this.validarCampoContrasena(newValue);
+    },
+    telefono(newValue) {
+      this.validarCampoTelefono(newValue);
+    },
     email(newValue) {
       if (newValue !== "" && /^([a-zA-Z0-9._-]{3,}[@][a-zA-Z0-9.]{3,}[.][a-zA-Z0-9.]{3,3})*$/.test(newValue)) {
         return this.valid = true;
@@ -639,13 +694,6 @@ export default {
     },
     password(newValue) {
       if (newValue !== "" && newValue.length < 6 && newValue === this.password2) {
-        return this.valid = true;
-      } else {
-        return this.valid = false;
-      }
-    },
-    password2(newValue) {
-      if (newValue === this.password) {
         return this.valid = true;
       } else {
         return this.valid = false;
@@ -674,10 +722,115 @@ export default {
       } else {
         this.valid = true;
       }
-      console.log("¿Es válido?", this.valid);
     },
   },
   methods: {
+
+    validarCampoNombreUsuario(value) {
+      let isValid = true;
+      if (!value) isValid = false;
+      else if (value.length < 5) {
+        isValid = false;
+      }
+      else if (value.length > 20) {
+        isValid = false;
+      }
+      else if (!/^[a-zA-ZñÑáéíóúÁÉÍÓÚ]+$/.test(value)) {
+        isValid = false;
+      }
+      else {
+        isValid = true;
+      }
+      this.valid = isValid;
+      return this.valid;
+    },
+
+    validarCampoContrasena(value) {
+      let isValid = true;
+      if (!value || value === '' || value === null) {
+        isValid = false;
+      }
+      else if (value.length < 8) {
+        isValid = false;
+      }
+      else if (value.length > 20) {
+        isValid = false;
+      }
+      else if (!/^(?=.*[0-9])(?=.*[!@#$%^&*(),.?" :{}|<>])(?=.*[A-Z]).{8,20}$/.test(value)) {
+        isValid = false;
+      } else {
+        isValid = true;
+      }
+      this.valid = isValid;
+      return this.valid;
+    },
+
+    validarCampoOcupacion(value) {
+      let isValid = true;
+      if (!value) {
+        isValid = false;
+      } else if (value.length < 3) {
+        isValid = false;
+      } else if (value.length > 200) {
+        isValid = false;
+      } else if (!/^([\sa-zA-ZñÑáéíóúÁÉÍÓÚ]{3,200})*$/.test(value)) {
+        isValid = false;
+      } else {
+        isValid = true;
+      }
+      this.valid = isValid;
+      return this.valid;
+    },
+
+    validarCampoAnosExperiencia(value) {
+      let isValid = true;
+      if (!/^\d+$/.test(value)) {
+        isValid = false;
+      }
+      else if (value <= 0) isValid = false;
+      else if (value.length > 3) {
+        isValid = false;
+      } else {
+        isValid = true;
+      }
+      this.valid = isValid;
+      return this.valid;
+    },
+
+    validarDNI(value) {
+      let isValid = true;
+      if (!/^\d+$/.test(value)) {
+        isValid = false;
+      }
+      else if (value <= 0) {
+        isValid = false;
+      }
+      else if (value.length > 10) {
+        isValid = false;
+      } else {
+        isValid = true;
+      }
+      this.valid = isValid;
+      return this.valid;
+    },
+
+    validarCampoTelefono(value) {
+      let isValid = true;
+      if (!/^\d+$/.test(value)) {
+        isValid = false;
+      }
+      else if (value <= 0) isValid = false;
+      else if (value.length > 12) {
+        isValid = false;
+      } else {
+        isValid = true;
+      }
+      this.valid = isValid;
+      return this.valid;
+    },
+
+
+
     entradaCracion(createdAt) {
       return moment(createdAt).format('DD-MM-YYYY')
     },
@@ -777,7 +930,9 @@ export default {
     },
     addDoctor() {
       this.loader = true;
-      let telConcat = '0' + this.codigo + this.telefono
+      if (this.nacionalidad === 'V') this.nacionalidad = 'Venezolano/a';
+      else if (this.nacionalidad === 'J') this.nacionalidad = 'Jurídico';
+      else this.nacionalidad = 'Extranjero/a';
       this.$apollo
         .mutate({
           mutation: ADD_DOCTOR_USER_MUTATION,
@@ -791,12 +946,14 @@ export default {
                 fk_cdi_id: this.$store.state.user.cdi_id,
               },
               personaInput: {
+                fk_cdi_id: this.$store.state.user.cdi_id,
                 nombre1: this.fullName,
-                cedula_identidad: this.dni,
+                cedula_identidad: parseInt(this.dni),
+                nacionalidad: this.nacionalidad,
                 ocupacion: this.doctor_ocupacion,
                 telefonoInput: {
-                  codigo: this.codigo.toString(),
-                  numero: this.telefono.toString()
+                  codigo: this.codigo,
+                  numero: this.telefono
                 },
                 correoInput: {
                   correo: this.email || ''
@@ -887,10 +1044,21 @@ export default {
         });
     },
     validateUserCredentialsInputs() {
-      // Verifica la validez de cada campo
-      const passwordValid = this.dataUser.usuarios.contrasena.length >= 6;
-      const nameValid = this.dataUser.usuarios.nombre_usuario.length >= 3;
-      // Actualiza isValid según la validez de los inputs
+      const password = this.dataUser.usuarios.contrasena;
+      const username = this.dataUser.usuarios.nombre_usuario;
+
+      const passwordValid =
+        password.length >= 8 &&
+        password.length <= 20 &&
+        /[0-9]/.test(password) &&
+        /[!@#$%^&*(),.?"{}|<>]/.test(password) &&
+        /[A-Z]/.test(password);
+
+      const nameValid =
+        username.length >= 5 &&
+        username.length <= 15 && 
+        /^[a-zA-Z0-9_]+$/.test(username); 
+
       this.isValid = passwordValid && nameValid;
     },
     deleteWorker(workerID) {
