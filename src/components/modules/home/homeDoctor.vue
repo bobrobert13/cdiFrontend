@@ -115,7 +115,6 @@
                 <div class="column justify-center">
                   <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 ">
                     <q-input filled color="deep-purple-6" v-model="fullName" label="Nombre completo" :rules="[
-                      (val) => !!val || 'Este campo es obligatorio',
                       (val) => val.length >= 3 || 'Mínimo 3 caracteres',
                       (val) => val.length <= 200 || 'Máximo 200 caracteres',
                       (val) =>
@@ -169,7 +168,10 @@
                         <q-input filled color="deep-purple-6" v-model="punto_referencia" label="Punto de referencia" />
                       </div>
                       <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 ">
-                        <q-input filled color="deep-purple-6" v-model="codigo_postal" label="Código postal" />
+                        <q-input filled color="deep-purple-6" type="number" :rules="[
+                          val => /^\d+$/.test(val) || 'Solo se permiten números',
+                          val => val.length <= 8 || 'Máximo 8 caracteres'
+                        ]" v-model="codigo_postal" label="Código postal" />
                       </div>
                     </div>
                   </div>
@@ -177,8 +179,11 @@
                     <q-select filled v-model="sexo" :options="sexoPaciente" label="Sexo" option-label="label"
                       option-value="value" emit-value />
                   </div>
-                  <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-pb-xs">
-                    <q-input filled color="deep-purple-6" v-model="edad" label="Edad" type="number" />
+                  <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 ">
+                    <q-input filled color="deep-purple-6" :rules="[
+                      val => /^\d+$/.test(val) || 'Solo se permiten números',
+                      val => val.length <= 3 || 'Máximo 3 caracteres'
+                    ]" v-model="edad" label="Edad" type="number" />
                   </div>
                   <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-pb-xs">
                     <div class="row">
@@ -214,42 +219,77 @@
 
                   </div>
 
-                  <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-pb-xs">
-                    <div class="row q-pb-xs ">
+                  <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 ">
+                    <div class="row  ">
                       <div class="col-12">
-                        <q-input filled label="Enfermedades cronicas" v-model="enfermedades_cronicas" />
+                        <q-input filled label="Enfermedades cronicas" :rules="[
+                          (val) => !!val || 'Este campo es obligatorio',
+                          (val) => val.length >= 3 || 'Mínimo 3 caracteres',
+                          (val) => val.length <= 200 || 'Máximo 200 caracteres',
+                          (val) =>
+                            /^([\sa-zA-ZñÑáéíóúÁÉÍÓÚ]{3,40})*$/.test(val) ||
+                            'Solo se permiten caracteres',
+                        ]" v-model="enfermedades_cronicas" />
                       </div>
 
                     </div>
-                    <div class="row q-pb-xs">
+                    <div class="row ">
                       <div class="col-12">
-                        <q-input filled label="Discapacidad" v-model="discapacidad" />
-                      </div>
-
-                    </div>
-
-                    <div class="row q-pb-xs">
-                      <div class="col-12">
-                        <q-input filled label="Antecedentes familiares" v-model="antecedentes_familiares" />
-                      </div>
-
-                    </div>
-
-                    <div class="row q-pb-xs">
-                      <div class="col-12">
-                        <q-input filled label="Alergias" v-model="alergias" />
-                      </div>
-
-                    </div>
-
-                    <div class="row q-pb-xs">
-                      <div class="col-12">
-                        <q-input filled label="Ocupación" v-model="ocupacion" />
+                        <q-input filled :rules="[
+                          (val) => !!val || 'Este campo es obligatorio',
+                          (val) => val.length >= 3 || 'Mínimo 3 caracteres',
+                          (val) => val.length <= 200 || 'Máximo 200 caracteres',
+                          (val) =>
+                            /^([\sa-zA-ZñÑáéíóúÁÉÍÓÚ]{3,40})*$/.test(val) ||
+                            'Solo se permiten caracteres',
+                        ]" label="Discapacidad" v-model="discapacidad" />
                       </div>
 
                     </div>
 
-                    <div class="row q-pb-xs">
+                    <div class="row ">
+                      <div class="col-12">
+                        <q-input :rules="[
+                          (val) => !!val || 'Este campo es obligatorio',
+                          (val) => val.length >= 3 || 'Mínimo 3 caracteres',
+                          (val) => val.length <= 200 || 'Máximo 200 caracteres',
+                          (val) =>
+                            /^([\sa-zA-ZñÑáéíóúÁÉÍÓÚ]{3,40})*$/.test(val) ||
+                            'Solo se permiten caracteres',
+                        ]" filled label="Antecedentes familiares" v-model="antecedentes_familiares" />
+                      </div>
+
+                    </div>
+
+                    <div class="row ">
+                      <div class="col-12">
+                        <q-input :rules="[
+                          (val) => !!val || 'Este campo es obligatorio',
+                          (val) => val.length >= 3 || 'Mínimo 3 caracteres',
+                          (val) => val.length <= 200 || 'Máximo 200 caracteres',
+                          (val) =>
+                            /^([\sa-zA-ZñÑáéíóúÁÉÍÓÚ]{3,40})*$/.test(val) ||
+                            'Solo se permiten caracteres',
+                        ]" filled label="Alergias" v-model="alergias" />
+                      </div>
+
+                    </div>
+
+                    <div class="row ">
+                      <div class="col-12">
+                        <q-input :rules="[
+                          (val) => !!val || 'Este campo es obligatorio',
+                          (val) => val.length >= 3 || 'Mínimo 3 caracteres',
+                          (val) => val.length <= 200 || 'Máximo 200 caracteres',
+                          (val) =>
+                            /^([\sa-zA-ZñÑáéíóúÁÉÍÓÚ]{3,40})*$/.test(val) ||
+                            'Solo se permiten caracteres',
+                        ]" filled label="Ocupación" v-model="ocupacion" />
+                      </div>
+
+                    </div>
+
+                    <div class="row ">
                       <div class="col-12">
                         <q-select filled label="Estado civil" v-model="estadoCivilSeleccionado"
                           :options="estado_civil" />
@@ -257,9 +297,12 @@
 
                     </div>
                     <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 ">
-                      <div class="row q-pb-xs">
+                      <div class="row ">
                         <div class="col-12">
-                          <q-input type="number" filled color="deep-purple-6" v-model="peso" label="Peso" />
+                          <q-input type="number" :rules="[
+                            val => /^\d+$/.test(val) || 'Solo se permiten números',
+                            val => val.length <= 3 || 'Máximo 3 caracteres'
+                          ]" filled color="deep-purple-6" v-model="peso" label="Peso" />
                         </div>
                       </div>
                     </div>
@@ -268,7 +311,7 @@
               </div>
             </div>
             <div v-if="viewType === 'addWorker'" class="col-xl-5 col-lg-5 col-md-5 col-sm-12 col-xs-12 q-pa-xs q-pa-xs">
-              <q-btn unelevated :loading="loader" @click="addPaciente()" :disable="!valid ||
+              <q-btn unelevated :loading="loader" type="submit" @click="addPaciente()" :disable="!valid ||
                 dni === '' ||
                 dni.length > 30 ||
                 !sexo ||
@@ -290,12 +333,7 @@
                 !estadoCivilSeleccionado ||
                 !peso ||
                 !vacunasSeleccionadas ||
-                !sangreSeleccionada ||
-                !enfermedades_cronicas ||
-                !discapacidad ||
-                !antecedentes_familiares ||
-                !alergias ||
-                !ocupacion
+                !sangreSeleccionada
                 " class="full-width text-white bg-primary" label="Añadir paciente" />
             </div>
           </div>
@@ -487,8 +525,8 @@
           </q-dialog>
           <!-- FIN DE PACIENTE A EMERGENCIAS -->
 
-                    <!-- DETALLES DE EMERGENCIAS -->
-                    <q-dialog v-model="modalDetallesEmergencias" position="right">
+          <!-- DETALLES DE EMERGENCIAS -->
+          <q-dialog v-model="modalDetallesEmergencias" position="right">
             <q-card class="my-card" flat bordered style="min-width: 550px">
               <q-card-section>
                 <q-card-section class="col-5 no-padding no-margin flex flex-center">
@@ -521,23 +559,24 @@
                               emergencia.estado_emergencia }}</b></q-item-label>
                           <q-item-label lines="2"><b>Motivo de emergencia:</b> {{
                             emergencia.motivo_emergencia
-                            }}</q-item-label>
+                          }}</q-item-label>
 
-                          <q-item-label ><b>Diagnóstico provisional:</b> {{ emergencia.diagnostico_provisional
+                          <q-item-label><b>Diagnóstico provisional:</b> {{ emergencia.diagnostico_provisional
                           }}</q-item-label>
-                          <q-item-label ><b>Estado del paciente:</b> {{ emergencia.estado_paciente
+                          <q-item-label><b>Estado del paciente:</b> {{ emergencia.estado_paciente
                           }}</q-item-label>
-                          <q-item-label ><b>Procesamiento realizado:</b> {{ emergencia.procesamiento_realizado
+                          <q-item-label><b>Procesamiento realizado:</b> {{ emergencia.procesamiento_realizado
                           }}</q-item-label>
-                          <q-item-label ><b>Destino:</b> {{ emergencia.destino
+                          <q-item-label><b>Destino:</b> {{ emergencia.destino
                           }}</q-item-label>
-                          <q-item-label ><b>Notas de atención:</b> {{ emergencia.notas_de_atencion
+                          <q-item-label><b>Notas de atención:</b> {{ emergencia.notas_de_atencion
                           }}</q-item-label>
                         </q-item-section>
 
                       </q-item>
                       <div class="q-ml-md row col-12 items-center self-center no-wrap ">
-                        <span v-if="emergencia.estado_emergencia === 'Activo'" @click="ActualizarEstadoEmergencia(emergencia, 'Finalizado')" lines="2"
+                        <span v-if="emergencia.estado_emergencia === 'Activo'"
+                          @click="ActualizarEstadoEmergencia(emergencia, 'Finalizado')" lines="2"
                           class=" q-mr-sm cursor-pointer text-primary self-center text-bold">
                           Finalizar emergencia
                         </span>
@@ -667,21 +706,22 @@
                               hospitalizacion.estado }}</b></q-item-label>
                           <q-item-label lines="2"><b>Motivo de hospitalización:</b> {{
                             hospitalizacion.motivo_de_hospitalizacion
-                            }}</q-item-label>
+                          }}</q-item-label>
 
-                          <q-item-label ><b>Unidad hospitalaria:</b> {{ hospitalizacion.unidad_hospitalaria
+                          <q-item-label><b>Unidad hospitalaria:</b> {{ hospitalizacion.unidad_hospitalaria
                           }}</q-item-label>
-                          <q-item-label ><b>Fecha de ingreso:</b> {{ entradaFecha(hospitalizacion.fecha_ingreso)
+                          <q-item-label><b>Fecha de ingreso:</b> {{ entradaFecha(hospitalizacion.fecha_ingreso)
                           }}</q-item-label>
-                          <q-item-label ><b>Fecha de egreso:</b> {{ salidaFecha(hospitalizacion.fecha_egreso)
+                          <q-item-label><b>Fecha de egreso:</b> {{ salidaFecha(hospitalizacion.fecha_egreso)
                           }}</q-item-label>
-                          <q-item-label ><b>Notas médicas:</b> {{ hospitalizacion.notas_medicas
+                          <q-item-label><b>Notas médicas:</b> {{ hospitalizacion.notas_medicas
                           }}</q-item-label>
                         </q-item-section>
 
                       </q-item>
                       <div class="q-ml-md row col-12 items-center self-center no-wrap ">
-                        <span v-if="hospitalizacion.estado === 'Activo'" @click="ActualizarEstadoHospitalizacion(hospitalizacion, 'Finalizado')" lines="2"
+                        <span v-if="hospitalizacion.estado === 'Activo'"
+                          @click="ActualizarEstadoHospitalizacion(hospitalizacion, 'Finalizado')" lines="2"
                           class=" q-mr-sm cursor-pointer text-primary self-center text-bold">
                           Dar de alta
                         </span>
@@ -1951,6 +1991,24 @@ export default {
       let image = await this.readFileAsync(newValue);
       this.imghightlight = image;
     },
+    enfermedades_cronicas(newValue) {
+      this.validarCampoEnfermedadesCronicas(newValue);
+    },
+    discapacidad(newValue) {
+      this.validarCampoDiscapacidad(newValue);
+    },
+    antecedentes_familiares(newValue) {
+      this.validarCampoAntecedentesFamiliares(newValue);
+    },
+    alergias(newValue) {
+      this.validarCampoAlergias(newValue);
+    },
+    ocupacion(newValue) {
+      this.validarCampoOcupacion(newValue);
+    },
+    peso(newValue) {
+      this.validarCampoPeso(newValue);
+    },
     email(newValue) {
       if (
         newValue !== "" &&
@@ -1977,6 +2035,93 @@ export default {
     },
   },
   methods: {
+
+    validarCampoEnfermedadesCronicas(value) {
+      let isValid = true;
+      if (!value) {
+        isValid = false;
+      } else if (value.length < 3) {
+        isValid = false;
+      } else if (value.length > 200) {
+        isValid = false; 
+      } else if (!/^([\sa-zA-ZñÑáéíóúÁÉÍÓÚ]{3,200})*$/.test(value)) {
+        isValid = false;
+      }
+      this.valid = isValid;
+      return this.valid;
+    },
+
+    validarCampoDiscapacidad(value) {
+      let isValid = true;
+      if (!value) {
+        isValid = false;
+      } else if (value.length < 3) {
+        isValid = false;
+      } else if (value.length > 200) {
+        isValid = false; 
+      } else if (!/^([\sa-zA-ZñÑáéíóúÁÉÍÓÚ]{3,200})*$/.test(value)) {
+        isValid = false;
+      }
+      this.valid = isValid;
+      return this.valid;
+    },
+
+    validarCampoAntecedentesFamiliares(value) {
+      let isValid = true;
+      if (!value) {
+        isValid = false;
+      } else if (value.length < 3) {
+        isValid = false;
+      } else if (value.length > 200) {
+        isValid = false; 
+      } else if (!/^([\sa-zA-ZñÑáéíóúÁÉÍÓÚ]{3,200})*$/.test(value)) {
+        isValid = false;
+      }
+      this.valid = isValid;
+      return this.valid;
+    },
+    validarCampoAlergias(value) {
+      let isValid = true;
+      if (!value) {
+        isValid = false;
+      } else if (value.length < 3) {
+        isValid = false;
+      } else if (value.length > 200) {
+        isValid = false; 
+      } else if (!/^([\sa-zA-ZñÑáéíóúÁÉÍÓÚ]{3,200})*$/.test(value)) {
+        isValid = false;
+      }
+      this.valid = isValid;
+      return this.valid;
+    },
+    validarCampoOcupacion(value) {
+      let isValid = true;
+      if (!value) {
+        isValid = false;
+      } else if (value.length < 3) {
+        isValid = false;
+      } else if (value.length > 200) {
+        isValid = false; 
+      } else if (!/^([\sa-zA-ZñÑáéíóúÁÉÍÓÚ]{3,200})*$/.test(value)) {
+        isValid = false;
+      }
+      this.valid = isValid;
+      return this.valid;
+    },
+
+    validarCampoPeso(value) {
+      let isValid = true;
+      if (!/^\d+$/.test(value)) {
+        isValid = false;
+      } 
+      else if (value <= 0 ) isValid = false;
+      else if (value.length > 3) {
+        isValid = false; 
+      }
+      this.valid = isValid;
+      return this.valid;
+    },
+
     seleccionarExamen(examen) {
       this.examenSeleccionado = examen;
       this.examen_estadoExamen = 'Completado';
@@ -2126,15 +2271,15 @@ export default {
     },
     addPaciente() {
       this.loader = true;
-      let telConcat = '0' + this.codigo + this.telefono
-      console.log('input, :',);
+      if(this.nacionalidad === 'V') this.nacionalidadUser = 'Venezolano/a';
+      else if(this.nacionalidad === 'J') this.nacionalidadUser = 'Jurídico';
+      else this.nacionalidadUser = 'Extranjero/a';
 
       this.$apollo
         .mutate({
           mutation: ADDPACIENTE_MUTATION,
           variables: {
             input: {
-              //faltan
               enfermedades_cronicas: this.enfermedades_cronicas,
               peso: parseInt(this.peso),
               vacunas: this.vacunasSeleccionadas.value,
@@ -2144,23 +2289,21 @@ export default {
               alergias: this.alergias,
               fk_doctor_id: this.$store.state.user.doctor_id,
               personaInput: {
-                //faltan
                 estado_civil: this.estadoCivilSeleccionado.value,
                 ocupacion: this.ocupacion,
-
+                nacionalidad: this.nacionalidadUser,
                 nombre1: this.fullName,
                 sexo: this.sexo,
                 edad: parseInt(this.edad),
                 cedula_identidad: this.dni,
                 telefonoInput: {
-                  codigo: this.codigo.toString(), // Ejemplo: "0414"
+                  codigo: '0' + this.codigo.toString(), // Ejemplo: "0414"
                   numero: this.telefono.toString() // Ejemplo: "9876543"
                 },
                 correoInput: {
                   correo: this.correo || ''
                 },
                 direccionInput: {
-                  //faltan
                   codigo_postal: this.codigo_postal,
                   punto_referencia: this.punto_referencia,
 
