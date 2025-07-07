@@ -587,6 +587,14 @@ mutation doUpdateDoctor($id_doctor: ID! $input: ActualizarDoctorInput!){
 }
 `;
 
+export const UPDDATE_CDI_MUTATION = gql`
+mutation doUpdateCDI($id_cdi: ID! $input: ActualizarCDIInput!){
+  actualizarCDI(id_cdi: $id_cdi, input: $input) {
+    id_cdi
+  }
+}
+`;
+
 export const UPDDATE_DIAGNOSTICO_MUTATION = gql`
 mutation doUpdateDiagnostico($id_diagnostico: ID! $input: DiagnosticoInput!){
   actualizarDiagnostico(id_diagnostico: $id_diagnostico, input: $input) {

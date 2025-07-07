@@ -141,7 +141,7 @@
                 </div>
                 <div class="row" v-else>
                   <div class="col-12 q-mt-xl">
-                    <span class="text-caption">No hay Doctores registrados</span>
+                    <span class="text-caption">No hay pacientes registrados</span>
                   </div>
                 </div>
               </q-tab-panel>

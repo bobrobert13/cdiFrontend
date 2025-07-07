@@ -14,7 +14,7 @@
 				</div>
 			</div>
 			<div class="row justify-center q-mt-xl" v-if="this.users.length !== 0">
-				<div class="col-12 q-mb-sm" v-for="(user, index) in users" :key="index">
+				<div class="col-12 q-mb-sm" v-for="(user, index) in users" @click="cdiDetails(user)" :key="index">
 					<q-list class="rounded-borders bg-secondary" style="border-radius: 15px">
 						<q-item>
 							<q-item-section avatar style="cursor: pointer">
@@ -150,6 +150,96 @@
 
 
 		</div>
+
+
+		<div class="row justify-center" v-if="viewType === 'userDetail'">
+              <div class="col-12 text-left">
+                <q-icon style="cursor: pointer" @click="workerView('userList')" name="mdi-arrow-left"
+                  class="text-primary" size="md"></q-icon>
+              </div>
+              <div class="col-12 text-center q-mb-lg">
+                <q-avatar color="primary" icon="mdi-account-circle" text-color="white">
+                </q-avatar>
+              </div>
+              <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="row text-center justify-center">
+                  <div class="col-12 q-mt-xs">
+                    <p class="text-subtitle text-medium">Información del CDI</p>
+
+                    <div class="row jusitify-center">
+                      <div class="col-6 q-pa-sm">
+                        <q-input filled color="deep-purple-6" v-model="dataUser.nombre"
+                           label="Nombre de CDI" :rules="[
+                            (val) => !!val || 'Este campo es obligatorio',
+                            (val) => val.length >= 3 || 'Mínimo 3 caracteres',
+                            (val) => val.length <= 200 || 'Máximo 200 caracteres',
+                            (val) => /^[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+$/.test(val) || 'Solo se permiten letras y espacios (sin números ni símbolos)'
+                          ]" />
+                      </div>
+                      <div class="col-6 q-pa-sm">
+                        <q-input filled color="deep-purple-6" v-model="dataUser.numero_cdi"
+                           label="Número de CDI" :rules="[
+                            (val) => !!val || 'Este campo es obligatorio',
+                            (val) => /^\d+$/.test(val) || 'Solo se permiten números',
+                            (val) => val.length <= 10 || 'Máximo 10 dígitos'
+                          ]" />
+                      </div>
+                      <div class="col-6 q-pa-sm">
+                        <q-input filled color="deep-purple-6" v-model="dataUser.encargado"
+                           label="Encargado" :rules="[
+                            (val) => !!val || 'Este campo es obligatorio',
+                            (val) => /^[a-zA-Z0-9]+$/.test(val) || 'Solo se permiten letras y números (sin espacios ni símbolos)'
+                          ]" />
+                      </div>
+                      <div class="col-6 q-pa-sm">
+                        <q-input filled color="deep-purple-6" v-model="dataUser.cuadrante"
+                           label="Cuadrante" :rules="[
+                            (val) => !!val || 'Este campo es obligatorio',
+                            (val) => /^\d+$/.test(val) || 'Solo se permiten números',
+                            (val) => val.length <= 3 || 'Máximo 3 dígitos',
+                            (val) => parseInt(val) > 0 || 'Debe ser mayor a 0'
+                          ]" />
+                      </div>
+
+
+                      <q-btn unelevated  :loading="loader"
+                        @click="actualizarCDI(dataUser)" class="full-width mx-auto text-white bg-primary"
+                        label="Actualizar información" />
+                    </div>
+                  </div>
+
+                  <div class="col-12 q-mt-xl">
+                    <p class="text-subtitle text-medium no-padding">Información de credenciales</p>
+                    <small>Puedes actualizar la contraseña del usuario del doctor desde esta sección; Asegurate de
+                      informar la
+                      nueva credencial a tu Doctor</small>
+                    <div class="row jusitify-center">
+                      <div class="col-6 q-pa-sm">
+                        <q-input filled color="deep-purple-6" v-model="dataUser.usuarios.nombre_usuario"
+                          @blur="validateUserCredentialsInputs" label="Nombre de usuario" :rules="[
+                            (val) => val.length >= 5 || 'Mínimo 5 caracteres',
+                            (val) => val.length <= 20 || 'Máximo 20 caracteres',
+                            (val) => /^[a-zA-ZñÑáéíóúÁÉÍÓÚ]+$/.test(val) || 'Solo se permiten letras (sin números ni caracteres especiales)',
+                          ]" />
+                      </div>
+
+                      <div class="col-6 q-pa-sm">
+                        <q-input filled color="deep-purple-6" v-model="dataUser.usuarios.contrasena"
+                          @blur="validateUserCredentialsInputs" :rules="passwordRules" label="Contraseña" />
+                      </div>
+
+                    </div>
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 q-mt-md">
+                    <q-btn unelevated :disabled="!isValid" :loading="loader"
+                      @click="actualizarUsuario(dataUser.usuarios)" class="fullwidth text-white bg-primary"
+                      label="Actualizar credenciales" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
 		<q-dialog v-model="modalDetailUser">
 			<q-card class="my-card" flat bordered style="min-width: 350px">
 				<q-card-section>
@@ -225,7 +315,7 @@
 </template>
 <script>
 import config from "../../../config";
-import { ADDUSER_MUTATION, USER_DELETE, BUSCAR_USER_QUERY, ADMIN_CDIS_QUERY, ADD_CDI_USER_MUTATION, UPDATE_CDI_STATUS_MUTATION } from "../../../graphql/user";
+import { ADDUSER_MUTATION, USER_DELETE, BUSCAR_USER_QUERY, ADMIN_CDIS_QUERY, ADD_CDI_USER_MUTATION, UPDATE_CDI_STATUS_MUTATION, UPDDATE_CDI_MUTATION } from "../../../graphql/user";
 import { ADMIN_ENCARGADO_QUERY } from "../../../graphql/admin";
 import VueHtml2pdf from "vue-html2pdf";
 import historialEncVue from "./historialEnc.vue";
@@ -234,6 +324,14 @@ export default {
 	components: { VueHtml2pdf, historialEncVue },
 	data() {
 		return {
+			isValid: false,
+			passwordRules:  [
+        (val) => val.length >= 8 || 'Mínimo 8 caracteres',
+        (val) => val.length <= 20 || 'Máximo 20 caracteres',
+        (val) => /[0-9]/.test(val) || 'Debes incluir al menos 1 número',
+        (val) => /[!@#$%^&*(),.?" :{}|<>]/.test(val) || 'Debes incluir al menos 1 carácter especial',
+        (val) => /[A-Z]/.test(val) || 'Debes incluir al menos 1 letra mayúscula',
+      ],
 			modalDetailUser: false,
 			config: config,
 			previewImgs: "",
@@ -427,6 +525,28 @@ export default {
 		},
 	},
 	methods: {
+		cdiDetails(user) {
+			this.dataUser = user;
+			this.workerView("userDetail") ;
+		},
+		validateUserCredentialsInputs() {
+      const password = this.dataUser.usuarios.contrasena;
+      const username = this.dataUser.usuarios.nombre_usuario;
+
+      const passwordValid =
+        password.length >= 8 &&
+        password.length <= 20 &&
+        /[0-9]/.test(password) &&
+        /[!@#$%^&*(),.?"{}|<>]/.test(password) &&
+        /[A-Z]/.test(password);
+
+      const nameValid =
+        username.length >= 5 &&
+        username.length <= 15 &&
+        /^[a-zA-Z0-9_]+$/.test(username);
+
+      this.isValid = passwordValid && nameValid;
+    },
 		workerView(typeView) {
 			this.viewType = typeView;
 		},
@@ -536,6 +656,42 @@ export default {
 					this.AllEncargados();
 					this.$q.notify({
 						message: "CDI añadido",
+						color: "positive",
+					});
+					this.$emit("updateUsers", {
+						users: true,
+					});
+				})
+				.catch((err) => {
+					this.loader = false;
+					this.$q.notify({
+						message: err.message.split("GraphQL error:"),
+						color: "negative",
+					});
+				});
+		},
+		actualizarCDI(cdiInfo) {
+			this.loader = true;
+			this.$apollo
+				.mutate({
+					mutation: UPDDATE_CDI_MUTATION,
+					variables: {
+						id_cdi: cdiInfo.id_cdi,
+						input: {
+							nombre: cdiInfo.nombre,
+							numero_cdi: cdiInfo.numero_cdi,
+							encargado: cdiInfo.encargado,
+							cuadrante: cdiInfo.cuadrante,
+						},
+					}
+				})
+				.then((response) => {
+					this.loader = false;
+					this.dataUser = "";
+					this.viewType = "userList";
+					this.AllEncargados();
+					this.$q.notify({
+						message: "CDI actualizado",
 						color: "positive",
 					});
 					this.$emit("updateUsers", {
