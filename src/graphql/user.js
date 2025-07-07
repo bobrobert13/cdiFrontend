@@ -479,6 +479,16 @@ export const ADMIN_PACIENTES_QUERY = gql`
     tipo_de_sangre
     alergias
     discapacidad
+    doctor {
+    id_doctor
+    anos_experiencia
+    numero_carnet
+    area_de_trabajo
+    horario
+      persona {
+        ...personaDetalles
+      }
+    }
     persona {
       ...personaDetalles
     }

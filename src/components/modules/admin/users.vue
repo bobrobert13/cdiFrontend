@@ -86,7 +86,7 @@
       </vue-html2pdf>
     </div>
     <q-dialog v-model="modalDetailUser">
-      <q-card class="my-card" flat bordered style="min-width: 480px">
+      <q-card class="my-card" flat bordered style="min-width: 540px">
         <q-card-section>
           <q-card-section class="col-5 flex flex-center">
             <div class="text-overline">Historia clinica</div>
@@ -110,7 +110,26 @@
                   <div class="text-caption q-mt-sm q-mb-xs">Dirección: {{ dataUser.persona.direccion.sector }} - {{ dataUser.persona.direccion.calle }}  - {{ dataUser.persona.direccion.parroquia }} - {{ dataUser.persona.direccion.municipio }} - {{ dataUser.persona.direccion.codigo_postal }}</div>
                   <div class="text-caption q-mt-sm q-mb-xs">Correo electrónico: {{ dataUser.persona.correo.correo }}</div>
                
-                </q-card-section>
+           </q-card-section>
+
+           
+          <q-card-section v-if="dataUser.doctor" class="q-pt-md q-pb-none no-margin">
+                  <p class="text-subtitle text-bold text-grey-9">Registrado por doctor: </p>
+              <div class=" row full-width no-wrap">
+                <div class=" column col-6">
+                  <div class="text-caption text-bold  q-mb-xs">Nombre de doctor: {{ dataUser.doctor.persona.nombre1 }}</div>
+                  <div class="text-caption q-mt-sm q-mb-xs">Documento de identidad:
+                    {{ dataUser.doctor.persona.cedula_identidad }}</div>
+                  <div class="text-caption q-mt-sm q-mb-xs">Especialidad: {{ dataUser.doctor.area_de_trabajo}}</div>
+                  <div class="text-caption q-mt-sm q-mb-xs">Número de carnet: {{ dataUser.doctor.numero_carnet}}</div>
+                </div>
+                   <div v-if="dataUser.doctor.persona.telefono || dataUser.doctor.persona.correo" class=" column col-6">
+                  <div class="text-caption text-bold q-mb-xs">Teléfono: {{ dataUser.doctor.persona.telefono.codigo }}{{ dataUser.doctor.persona.telefono.numero }}</div>
+                  <div class="text-caption q-mt-sm q-mb-xs">Correo: {{ dataUser.doctor.persona.correo.correo }}</div>
+                </div>
+              </div>
+               
+           </q-card-section>
 
                 <q-card-section class="q-pt-md">
                 <div class="row items-center q-px-sm justify-center">
