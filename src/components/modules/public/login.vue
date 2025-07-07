@@ -18,11 +18,7 @@
           ]" />
           <br />
           <q-input v-model="password" filled color="amber-8" :type="isPwd ? 'password' : 'text'" label="Contraseña"
-            :rules="[
-              (val) => !!val || 'Este campo es obligatorio',
-              (val) => val.length >= 6 || 'Mínimo 6 caracteres',
-              (val) => val.length <= 20 || 'Máximo 20 caracteres',
-            ]">
+            :rules="passwordRules">
             <template v-slot:append>
               <q-icon :name="isPwd ? 'visibility_off' : 'visibility'" class="cursor-pointer" @click="isPwd = !isPwd" />
             </template>
@@ -86,10 +82,11 @@
 
 
 
-    <q-dialog v-model="recuperarContrasenaModal" >
+    <q-dialog v-model="recuperarContrasenaModal">
       <q-card class=" q-pa-md">
         <q-card-section class="row justify-center items-center">
-          <span class="q-ml-sm q-my-sm">Debe responder correctamentes sus preguntas de seguridad ó PIN para reestablecer su
+          <span class="q-ml-sm q-my-sm">Debe responder correctamentes sus preguntas de seguridad ó PIN para reestablecer
+            su
             contraseña y acceder al sistema nuevamente.</span>
         </q-card-section>
         <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-pa-xs">
@@ -110,16 +107,15 @@
                 ]" />
             </div>
 
-            <q-btn color="primary" :disable="respuesta1 == '' || passwordRecovery == '' || passwordRecovery.length < 6" class=" q-my-md" label="Comprobar por preguntas de recuperación"
-              @click="comprobarPreguntas()" />
+            <q-btn color="primary" :disable="respuesta1 == '' || passwordRecovery == '' || passwordRecovery.length < 6"
+              class=" q-my-md" label="Comprobar por preguntas de recuperación" @click="comprobarPreguntas()" />
           </div>
         </div>
 
-                <div v-if="tienePin" class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-pa-xs">
+        <div v-if="tienePin" class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-pa-xs">
           <div class="row ">
             <div class="col-12 q-mb-xs">
-              <q-input filled color="deep-purple-6" v-model="pin" label="PIN de seguridad" type="text"
-                 />
+              <q-input filled color="deep-purple-6" v-model="pin" label="PIN de seguridad" type="text" />
             </div>
 
             <div class="col-12 q-mb-xs">
@@ -130,8 +126,9 @@
                 ]" />
             </div>
 
-            <q-btn color="primary" :disable="pin === '' || pin.length < 4 || passwordRecovery === '' || passwordRecovery.length < 6" class=" q-my-md" label="Comprobar por PIN de recuperación"
-              @click="comprobarPin()" />
+            <q-btn color="primary"
+              :disable="pin === '' || pin.length < 4 || passwordRecovery === '' || passwordRecovery.length < 6"
+              class=" q-my-md" label="Comprobar por PIN de recuperación" @click="comprobarPin()" />
           </div>
         </div>
       </q-card>
@@ -185,6 +182,13 @@ export default {
   data() {
     return {
       isPwd: true,
+      passwordRules: [
+        (val) => val.length >= 8 || 'Mínimo 8 caracteres',
+        (val) => val.length <= 20 || 'Máximo 20 caracteres',
+        (val) => /[0-9]/.test(val) || 'Debes incluir al menos 1 número',
+        (val) => /[!@#$%^&*(),.?" :{}|<>]/.test(val) || 'Debes incluir al menos 1 carácter especial',
+        (val) => /[A-Z]/.test(val) || 'Debes incluir al menos 1 letra mayúscula',
+      ],
       loader: false,
       email: "",
       emailRecovery: "",
@@ -223,11 +227,15 @@ export default {
       }
     },
     password(newValue) {
-      if (newValue !== "" && newValue.length >= 6 && this.email !== "") {
-        return (this.valid = false);
-      } else {
-        return (this.valid = true);
-      }
+      const errors = this.passwordRules
+        .map(rule => rule(newValue))
+        .filter(result => result !== true);
+        if (errors.length === 0) {
+          this.valid = false;
+        } else {
+          this.valid = true ;
+        }
+      
     },
   },
   methods: {
@@ -245,7 +253,6 @@ export default {
         })
         .then(async (response) => {
           // console.log('response-login', response.data.login);
-
           this.loader = false;
           if (response.data.login.usuario) {
             await saveToken({ ...response.data.login });
@@ -346,7 +353,7 @@ export default {
           });
         });
     },
-      comprobarPin() {
+    comprobarPin() {
       this.$apollo
         .mutate({
           mutation: VALIDAR_RECUPERACION_PIN,
@@ -415,10 +422,10 @@ export default {
           this.checkUserModal = false;
           this.userRecovery = "";
           if (this.$isDev) console.log("hubo un error: ", err);
-                      this.$q.notify({
-              message: "No tienes seguridad registrada",
-              color: "negative",
-            });
+          this.$q.notify({
+            message: "No tienes seguridad registrada",
+            color: "negative",
+          });
         });
     },
     setPassword() {
