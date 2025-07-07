@@ -2755,9 +2755,9 @@ export default {
     },
     añadirConsul() {
 
-      // validar que la fecha de inicio sea mayor a la fecha actual
-      const fechaInicio = moment(this.ingresoSalida);
-      const fechaActual = moment();
+      // validar que la fecha de inicio sea apartir de la fecha actual, no es valido el dia anterior
+      const fechaInicio = moment(this.ingresoSalida).startOf("day");
+      const fechaActual = moment().startOf("day");
 
       if (fechaInicio.isBefore(fechaActual)) {
         this.$q.notify({
@@ -2794,7 +2794,7 @@ export default {
           this.notas_medicas = '';
           this.modalAddConsulta = false;
           this.modalDetailUser = false;
-          this.ingresoSalida = {};
+          this.ingresoSalida = "";
           this.fecha = "";
           this.AllPacientes()
           this.$q.notify({
@@ -3135,7 +3135,7 @@ export default {
           this.modalAddConsulta = false;
           this.modalUpdateConsulta = false;
           this.modalDetailUser = false;
-          this.ingresoSalida = {};
+          this.ingresoSalida = "";
           this.fecha = "";
           this.AllPacientes()
           this.$q.notify({
