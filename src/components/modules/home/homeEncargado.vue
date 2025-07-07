@@ -58,12 +58,18 @@
                         </q-item-section>
 
                         <q-item-section top @click="userDetailC('userDetail', user)" style="cursor: pointer">
+                          <q-item-label class="text-left " lines="1">
+                            <span class="text-weight-medium">Nombre: <b>{{ user.persona.nombre1
+                            }}</b></span>
+                          </q-item-label>
                           <q-item-label class="text-left q-mb-xs" lines="1">
                             <span class="text-weight-medium">Nombre de usuario: <b>{{ user.usuarios.nombre_usuario
                             }}</b></span>
                           </q-item-label>
                           <small class="text-weight-medium">Rol: {{ user.usuarios.rol }}</small>
                           <small class="text-weight-medium">Estatus de usuario: <b>{{ user.usuarios.estado
+                          }}</b></small>
+                          <small class="text-weight-medium text-primary">Especialidad: <b>{{ user.area_de_trabajo
                           }}</b></small>
                         </q-item-section>
                         <q-item-section side>
@@ -159,68 +165,98 @@
 
                     <div class="row jusitify-center">
                       <div class="col-6 q-pa-sm">
-                        <q-input filled  color="deep-purple-6" v-model="dataUser.persona.nombre1"
-                          label="Nomobre completo" />
+                        <q-input filled color="deep-purple-6" v-model="dataUser.persona.nombre1"
+                          @blur="validateDoctorInfoInputs" label="Nombre completo" :rules="[
+                            (val) => !!val || 'Este campo es obligatorio',
+                            (val) => val.length >= 3 || 'Mínimo 3 caracteres',
+                            (val) => val.length <= 200 || 'Máximo 200 caracteres',
+                            (val) => /^[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+$/.test(val) || 'Solo se permiten letras y espacios (sin números ni símbolos)'
+                          ]" />
                       </div>
                       <div class="col-6 q-pa-sm">
-                        <q-input filled  color="deep-purple-6" v-model="dataUser.persona.cedula_identidad"
-                          label="Cédula" />
+                        <q-input filled color="deep-purple-6" v-model="dataUser.persona.cedula_identidad"
+                          @blur="validateDoctorInfoInputs" label="Cédula" :rules="[
+                            (val) => !!val || 'Este campo es obligatorio',
+                            (val) => /^\d+$/.test(val) || 'Solo se permiten números',
+                            (val) => val.length <= 10 || 'Máximo 10 dígitos'
+                          ]" />
                       </div>
                       <div class="col-6 q-pa-sm">
-                        <q-input filled  color="deep-purple-6" v-model="dataUser.numero_carnet"
-                          label="Número de carnet" />
+                        <q-input filled color="deep-purple-6" v-model="dataUser.numero_carnet"
+                          @blur="validateDoctorInfoInputs" label="Número de carnet" :rules="[
+                            (val) => !!val || 'Este campo es obligatorio',
+                            (val) => /^[a-zA-Z0-9]+$/.test(val) || 'Solo se permiten letras y números (sin espacios ni símbolos)'
+                          ]" />
                       </div>
                       <div class="col-6 q-pa-sm">
-                        <q-input filled  color="deep-purple-6" v-model="dataUser.anos_experiencia"
-                          label="Años de experiencia" />
+                        <q-input filled color="deep-purple-6" v-model="dataUser.anos_experiencia"
+                          @blur="validateDoctorInfoInputs" label="Años de experiencia" :rules="[
+                            (val) => !!val || 'Este campo es obligatorio',
+                            (val) => /^\d+$/.test(val) || 'Solo se permiten números',
+                            (val) => val.length <= 3 || 'Máximo 3 dígitos',
+                            (val) => parseInt(val) > 0 || 'Debe ser mayor a 0'
+                          ]" />
                       </div>
                       <div class="col-6 q-pa-sm">
-                        <q-input filled  color="deep-purple-6" v-model="dataUser.area_de_trabajo"
-                          label="Area de trabajo" />
+                        <q-input filled color="deep-purple-6" v-model="dataUser.area_de_trabajo"
+                          @blur="validateDoctorInfoInputs" label="Area de trabajo" :rules="[
+                            (val) => !!val || 'Este campo es obligatorio'
+                          ]" />
                       </div>
                       <div class="col-6 q-pa-sm">
-                        <q-select filled  color="deep-purple-6" v-model="dataUser.horario"
-                          label="Horario de trabajo" :options="[
-                        'Lunes a Viernes 8:00 am - 6:00 pm',
-                        'Lunes a Viernes 9:00 am - 5:00 pm',
-                        'Lunes a Viernes 10:00 am - 4:00 pm',
-                        'Sábados 9:00 am - 1:00 pm',
-                        'Sábados 10:00 am - 2:00 pm',
-                        'Domingos 10:00 am - 2:00 pm',
-                        'Lunes, Miércoles y Viernes 8:00 am - 5:00 pm',
-                        'Martes y Jueves 10:00 am - 6:00 pm',
-                        'Lunes a Viernes 8:00 am - 12:00 pm y 1:00 pm - 5:00 pm'
-                      ]"/>
+                        <q-select filled color="deep-purple-6" v-model="dataUser.horario"
+                          @blur="validateDoctorInfoInputs" label="Horario de trabajo" :rules="[
+                            (val) => !!val || 'Este campo es obligatorio'
+                          ]" :options="[
+                            'Lunes a Viernes 8:00 am - 6:00 pm',
+                            'Lunes a Viernes 9:00 am - 5:00 pm',
+                            'Lunes a Viernes 10:00 am - 4:00 pm',
+                            'Sábados 9:00 am - 1:00 pm',
+                            'Sábados 10:00 am - 2:00 pm',
+                            'Domingos 10:00 am - 2:00 pm',
+                            'Lunes, Miércoles y Viernes 8:00 am - 5:00 pm',
+                            'Martes y Jueves 10:00 am - 6:00 pm',
+                            'Lunes a Viernes 8:00 am - 12:00 pm y 1:00 pm - 5:00 pm'
+                          ]" />
                       </div>
+
                       <div class="col-6 q-pa-sm">
-                        <q-input filled  color="deep-purple-6" v-model="dataUser.persona.cedula_identidad"
-                          label="Cédula" />
-                      </div>
-                      <div class="col-6 q-pa-sm">
-                        <q-input filled  color="deep-purple-6" v-model="dataUser.area_de_trabajo"
-                          label="Especialidad" />
+                        <q-input filled color="deep-purple-6" v-model="dataUser.area_de_trabajo"
+                          @blur="validateDoctorInfoInputs" label="Especialidad" :rules="[
+                            (val) => !!val || 'Este campo es obligatorio'
+                          ]" />
                       </div>
 
 
                       <div class="col-6 q-pa-sm">
-                        <q-select filled v-if="dataUser.persona.telefono" v-model="dataUser.persona.telefono.codigo" :options="codigoTel" label="Codigo" option-label="label"
-                          option-value="value" emit-value />
+                        <q-select filled v-if="dataUser.persona.telefono" v-model="dataUser.persona.telefono.codigo"
+                          @blur="validateDoctorInfoInputs" :options="codigoTel" label="Código" :rules="[
+                            (val) => !!val || 'Este campo es obligatorio'
+                          ]" option-label="label" option-value="value" emit-value />
                       </div>
 
                       <div class="col-6 q-pa-sm">
-                        <q-input filled  color="deep-purple-6" v-if="dataUser.persona.telefono"
-                          v-model="dataUser.persona.telefono.numero" label="Teléfono">
+                        <q-input filled color="deep-purple-6" v-if="dataUser.persona.telefono"
+                          v-model="dataUser.persona.telefono.numero" @blur="validateDoctorInfoInputs" label="Teléfono"
+                          :rules="[
+                            (val) => !!val || 'Este campo es obligatorio',
+                            (val) => /^\d+$/.test(val) || 'Solo se permiten números',
+                            (val) => val.length <= 12 || 'Máximo 12 dígitos'
+                          ]">
                         </q-input>
                       </div>
 
                       <div class="col-6 q-pa-sm">
-                        <q-input filled  color="deep-purple-6" v-if="dataUser.persona.correo"
-                          v-model="dataUser.persona.correo.correo" label="Email" />
+                        <q-input filled color="deep-purple-6" v-if="dataUser.persona.correo"
+                          v-model="dataUser.persona.correo.correo" @blur="validateDoctorInfoInputs" label="Email"
+                          :rules="[
+                            (val) => !!val || 'Este campo es obligatorio',
+                            (val) => /.+@.+\..+/.test(val) || 'Formato de correo electrónico inválido'
+                          ]" />
                       </div>
-
-                      <q-btn unelevated :disabled="!isValid" :loading="loader"
-                      @click="actualizarDoctor(dataUser)" class="full-width mx-auto text-white bg-primary"
-                      label="Actualizar información" />
+                      <q-btn unelevated :disabled="!isDoctorInfoValid" :loading="loader"
+                        @click="actualizarDoctor(dataUser)" class="full-width mx-auto text-white bg-primary"
+                        label="Actualizar información" />
                     </div>
                   </div>
 
@@ -577,6 +613,7 @@ export default {
 
       doctor_contrasena: '',
       isValid: false,
+      isDoctorInfoValid: false,
 
       // DATOS DE USUARIO:
       deshabilitarUsuario: false,
@@ -935,70 +972,70 @@ export default {
           });
         });
     },
-		actualizarDoctor(doctorUpdate) {
-      const {personaProps, ...doctor} = doctor;
-      console.log('editando la informacion del doctor:' , personaProps, ...doctor);
-      
-			this.loader = true;
-			this.$apollo
-				.mutate({
-					mutation: UPDDATE_DOCTOR_MUTATION,
-					variables: {
-						input: {
-							doctorInput: {
-								anos_experiencia: parseInt(this.doctor_anos_experiencia),
-								numero_carnet: this.doctor_numero_carnet,
-								area_de_trabajo: this.roleEspecialidad.value,
-								horario: this.doctor_horario,
-								fk_cdi_id: this.cdiSeleccionado.value,
-							},
-							personaInput: {
-								nombre1: this.fullName,
-								cedula_identidad: this.dni,
-								telefonoInput: {
-									codigo: this.codigo.toString(),
-									numero: this.telefono.toString()
-								},
-								correoInput: {
-									correo: this.email || ''
-								},
-							},
-						},
-					},
-				})
-				.then((response) => {
-					this.loader = false;
-					this.fullName = "";
-					this.calle = "";
-					this.numero = "";
-					this.dataUser = null;
-					this.sector = "";
-					this.estado = { label: 'Anzoátegui', value: 2 }
-					this.ciudad = ""
-					this.email = "";
-					this.password = "";
-					this.dni = "";
-					this.telefono = "";
-					this.direccion = "";
-					this.highlight = "";
-					this.viewType = "userList"
-					this.AllDoctores();
-					this.$q.notify({
-						message: "Doctor añadido",
-						color: "positive",
-					});
-					this.$emit("updateUsers", {
-						users: true,
-					});
-				})
-				.catch((err) => {
-					this.loader = false;
-					this.$q.notify({
-						message: err.message.split("GraphQL error:"),
-						color: "negative",
-					});
-				});
-		},
+    actualizarDoctor(doctorUpdate) {
+      console.log('editando la informacion del doctor:', doctorUpdate);
+
+      this.loader = true;
+      this.$apollo
+        .mutate({
+          mutation: UPDDATE_DOCTOR_MUTATION,
+          variables: {
+            id_doctor: doctorUpdate.id_doctor,
+            input: {
+              doctorInput: {
+                anos_experiencia: parseInt(doctorUpdate.anos_experiencia),
+                numero_carnet: doctorUpdate.numero_carnet,
+                area_de_trabajo: doctorUpdate.area_de_trabajo,
+                horario: doctorUpdate.horario,
+                fk_cdi_id: this.$store.state.user.cdi_id,
+              },
+              personaInput: {
+                nombre1: doctorUpdate.persona.nombre1,
+                cedula_identidad: doctorUpdate.persona.cedula_identidad,
+                telefonoInput: {
+                  codigo: doctorUpdate.persona.telefono.codigo,
+                  numero: doctorUpdate.persona.telefono.numero
+                },
+                correoInput: {
+                  correo: doctorUpdate.persona.correo.correo
+                },
+              },
+            },
+          },
+        })
+        .then((response) => {
+          this.loader = false;
+          this.fullName = "";
+          this.calle = "";
+          this.numero = "";
+          this.dataUser = null;
+          this.sector = "";
+          this.estado = { label: 'Anzoátegui', value: 2 }
+          this.ciudad = ""
+          this.email = "";
+          this.password = "";
+          this.dni = "";
+          this.telefono = "";
+          this.direccion = "";
+          this.highlight = "";
+          this.viewType = "userList"
+          this.AllDoctores();
+          this.$q.notify({
+            message: "Doctor actualizado",
+            color: "positive",
+          });
+          this.$emit("updateUsers", {
+            users: true,
+          });
+        })
+        .catch((err) => {
+          this.loader = false;
+          this.$q.notify({
+            message: err.message.split("GraphQL error:"),
+            color: "negative",
+          });
+        });
+    },
     AllPacientes() {
       this.$apollo
         .query({
@@ -1150,10 +1187,50 @@ export default {
 
       const nameValid =
         username.length >= 5 &&
-        username.length <= 15 && 
-        /^[a-zA-Z0-9_]+$/.test(username); 
+        username.length <= 15 &&
+        /^[a-zA-Z0-9_]+$/.test(username);
 
       this.isValid = passwordValid && nameValid;
+    },
+    validateDoctorInfoInputs() {
+      if (!this.dataUser) return false;
+      if (!this.dataUser.persona) return false;
+      if (!this.dataUser.usuarios) return false;
+
+      const nombre = this.dataUser.persona.nombre1;
+      const cedula = this.dataUser.persona.cedula_identidad;
+      const numeroCarnet = this.dataUser.numero_carnet;
+      const anosExperiencia = this.dataUser.anos_experiencia;
+      const areaTrabajo = this.dataUser.area_de_trabajo;
+      const horario = this.dataUser.horario;
+      const codigo = this.dataUser.persona.telefono.codigo;
+      const telefono = this.dataUser.persona.telefono.numero;
+      const correo = this.dataUser.persona.correo.correo;
+
+      const camposObligatorios = !!nombre && !!cedula && !!numeroCarnet && !!anosExperiencia &&
+        !!areaTrabajo && !!horario && !!codigo && !!telefono && !!correo;
+
+      if (!camposObligatorios) {
+        this.isDoctorInfoValid = false;
+        return false;
+      }
+
+      const nombreValido = /^[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+$/.test(nombre) && nombre.length >= 3 && nombre.length <= 200;
+
+      const cedulaValida = /^\d+$/.test(cedula) && cedula.length <= 10;
+
+      const carnetValido = /^[a-zA-Z0-9]+$/.test(numeroCarnet);
+
+      const experienciaValida = /^\d+$/.test(anosExperiencia) &&  parseInt(anosExperiencia) > 0;
+
+      const telefonoValido = /^\d+$/.test(telefono) && telefono.length <= 12;
+
+      const correoValido = /.+@.+\..+/.test(correo);
+
+      this.isDoctorInfoValid = nombreValido && cedulaValida && carnetValido && experienciaValida &&
+        telefonoValido && correoValido;
+
+      return this.isDoctorInfoValid;
     },
     deleteWorker(workerID) {
       console.log(workerID)

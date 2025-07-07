@@ -580,7 +580,7 @@ mutation doUpdateConsulta($id_consulta: ID! $input: ConsultaInput!){
 
 
 export const UPDDATE_DOCTOR_MUTATION = gql`
-mutation doUpdateDoctor($id_doctor: ID! $input: DoctorInput!){
+mutation doUpdateDoctor($id_doctor: ID! $input: ActualizarDoctorInput!){
   actualizarDoctor(id_doctor: $id_doctor, input: $input) {
     id_doctor
   }
