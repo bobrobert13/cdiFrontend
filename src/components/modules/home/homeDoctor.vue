@@ -15,8 +15,7 @@
                   class="text-primary q-mr-md" size="md"></q-icon>
                 <q-icon style="cursor: pointer" @click="workerView('addWorker')" name="mdi-plus q-mr-md" class="text-primary"
                   size="md"></q-icon>
-                <q-icon style="cursor: pointer"  name="mdi-printer-pos" class="text-primary"
-                  size="md"></q-icon>
+
               </div>
             </div>
             <div class="row justify-center" v-if="this.users.length !== 0">
@@ -63,7 +62,7 @@
                           </span>
 
                           
-                          <button type="button"
+                          <button @click="generatePacientePDF(user)" type="button"
                             lines="2"
                             class=" q-ml-xl cursor-pointer text-primary self-center text-bold" style="cursor: pointer">
                             <q-icon name="mdi-printer-pos" /> Descargar ficha de paciente
@@ -2245,6 +2244,11 @@ export default {
       }
     },
     generatePDF() {
+      this.$refs.html2Pdf.generatePdf();
+    },
+    generatePacientePDF(paciente) {
+      this.dataUser = paciente;
+      console.log("enviando todos los pacientes: ", this.dataUser);
       this.$refs.html2Pdf.generatePdf();
     },
     checkDate(date) {
