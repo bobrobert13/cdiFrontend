@@ -32,7 +32,7 @@ async function saveToken(data) {
   const cdiid = window.localStorage.getItem("cdi_id");
   const role = window.localStorage.getItem("role");
   const auth = window.localStorage.getItem("isAuthenticated");
-  console.log('user:', user, userId, role, auth);
+  // console.log('user:', user, userId, role, auth);
   await store.commit("setUser", {
     fullName: '',
     nombre_usuario: user,

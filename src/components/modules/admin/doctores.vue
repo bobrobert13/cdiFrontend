@@ -32,6 +32,7 @@
 						class="text-primary" size="md"></q-icon>
 					<q-icon style="cursor: pointer" @click="workerView('addWorker')" name="mdi-plus"
 						class="text-primary" size="md"></q-icon>
+						<q-icon style="cursor: pointer" name="mdi-printer-pos" class="text-primary q-ml-sm" size="md"></q-icon>
 				</div>
 			</div>
 			<div class="row justify-center q-mt-xl" v-if="this.users.length !== 0">

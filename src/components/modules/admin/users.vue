@@ -4,10 +4,14 @@
       <span class="text-accent text-h6 text-bold">Todos los pacientes</span>
       <div class="row justify-center">
         <div class="col-12 self-center text-right">
+
           <q-icon style="cursor: pointer" @click="workerView('searchUser')" name="mdi-account-search"
             class="text-primary" size="md"></q-icon>
           <span class="text-bold text-primary" style="cursor: pointer" @click="workerView('searchUser')">Buscar
             paciente</span>
+
+          <q-icon style="cursor: pointer" name="mdi-printer-pos" class="text-primary q-ml-lg" size="md"></q-icon>
+
         </div>
       </div>
       <div class="row justify-center q-mt-xl" v-if="this.users.length !== 0">

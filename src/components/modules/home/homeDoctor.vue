@@ -13,7 +13,9 @@
               <div class="col q-pa-md self-center text-right">
                 <q-icon style="cursor: pointer" @click="workerView('searchUser')" name="mdi-account-search"
                   class="text-primary q-mr-md" size="md"></q-icon>
-                <q-icon style="cursor: pointer" @click="workerView('addWorker')" name="mdi-plus" class="text-primary"
+                <q-icon style="cursor: pointer" @click="workerView('addWorker')" name="mdi-plus q-mr-md" class="text-primary"
+                  size="md"></q-icon>
+                <q-icon style="cursor: pointer"  name="mdi-printer-pos" class="text-primary"
                   size="md"></q-icon>
               </div>
             </div>
@@ -29,8 +31,9 @@
                         <span class="text-weight-medium">Nombre de paciente: {{ user.persona.nombre1 }}</span>
                       </q-item-label>
                       <q-item-label class="text-left q-mb-xs" lines="1">
-                        <span class="text-weight-medium">Documento de identidad: {{ user.persona.nacionalidad }} - {{ user.persona.cedula_identidad
-                        }}</span>
+                        <span class="text-weight-medium">Documento de identidad: {{ user.persona.nacionalidad }} - {{
+                          user.persona.cedula_identidad
+                          }}</span>
                       </q-item-label>
                       <q-item-label class="text-left" lines="1">
                         <span class="text-weight-medium">Edad del paciente: {{ user.persona.edad }} años</span>
@@ -53,13 +56,23 @@
                             class=" q-mr-sm cursor-pointer text-primary self-center text-bold" style="cursor: pointer">
                             <q-icon name="mdi-hospital" /> Marcar como hospitalizado
                           </span>
+
                           <span v-else @click="verDetallesDeHospitalizacion(user.hospitalizaciones)" lines="2"
                             class=" q-mr-sm cursor-pointer text-orange-9 self-center text-bold" style="cursor: pointer">
                             <q-icon name="mdi-information" /> Paciente hospitalizado
                           </span>
+
+                          
+                          <button type="button"
+                            lines="2"
+                            class=" q-ml-xl cursor-pointer text-primary self-center text-bold" style="cursor: pointer">
+                            <q-icon name="mdi-printer-pos" /> Descargar ficha de paciente
+                          </button>
+
+
                         </div>
                       </q-item-label>
-                      <q-item-section side class="q-mt-md">
+                      <q-item-section side class="q-mt-md row no-wrap">
                         <button type="button"
                           class="no-outline no-border q-px-md q-py-xs rounded-borders bg-blue-grey text-white cursor-pointer"
                           @click="userDetail(user)"><q-icon name="mdi-eye" class="q-mr-sm" /> Inspeccionar
@@ -139,12 +152,10 @@
                           option-value="value" emit-value />
                       </div>
                       <div class="col-8">
-                        <q-input filled color="deep-purple-6" type="number" v-model="dni" 
-                        :rules="[
-                      val => /^\d+$/.test(val) || 'Solo se permiten números',
-                      val => val.length <= 10 || 'Máximo 10 caracteres'
-                    ]" 
-                        label="Cédula" />
+                        <q-input filled color="deep-purple-6" type="number" v-model="dni" :rules="[
+                          val => /^\d+$/.test(val) || 'Solo se permiten números',
+                          val => val.length <= 10 || 'Máximo 10 caracteres'
+                        ]" label="Cédula" />
                       </div>
                     </div>
                     <div class="row q-mt-sm">
@@ -197,13 +208,10 @@
                           option-value="value" emit-value />
                       </div>
                       <div class="col-8">
-                        <q-input filled color="deep-purple-6"
-                        :rules="[
-                      val => /^\d+$/.test(val) || 'Solo se permiten números',
-                      val => val.length <= 12 || 'Máximo 12 caracteres'
-                    ]"
-                        v-model="telefono" type="number"
-                          label="Número de telefono" />
+                        <q-input filled color="deep-purple-6" :rules="[
+                          val => /^\d+$/.test(val) || 'Solo se permiten números',
+                          val => val.length <= 12 || 'Máximo 12 caracteres'
+                        ]" v-model="telefono" type="number" label="Número de telefono" />
                       </div>
                     </div>
                   </div>
@@ -366,7 +374,7 @@
                   <div class="text-caption q-mt-sm q-mb-xs">Edad del paciente: {{ dataUser.persona.edad }}</div>
                   <div class="text-caption q-mt-sm q-mb-xs">Sexo: {{ dataUser.persona.sexo }}</div>
                   <!-- <div class="text-caption q-mt-sm q-mb-xs">Diagnostico: {{dataUser.diagnostico}}</div> -->
-                </q-card-section> 
+                </q-card-section>
               </q-card-section>
 
               <q-card-section class="no-padding column items-center full-width justify-center q-mx-sm q-mb-md">
@@ -416,7 +424,7 @@
                       <q-item style="cursor:pointer;">
                         <q-item-section>
                           <q-item-label caption>Paciente debe asistir el: <b>{{ entradaFecha(consulta.fecha_consulta)
-                              }}</b></q-item-label>
+                          }}</b></q-item-label>
                           <span class="q-my-sm"> <q-icon name="mdi-information" color="primary" /> Estado actual: <b>{{
                             consulta.estado_consulta }}</b></span>
                           <q-item-label>Tipo de consulta: <b>{{ consulta.tipo_consulta }}</b></q-item-label>
@@ -1589,7 +1597,7 @@
                         <q-item-section>
 
                           <q-item-label lines="2" class=" text-h6 text-medium text-primary"><b>{{ medicamento.nombre
-                              }}</b> </q-item-label>
+                          }}</b> </q-item-label>
                           <q-item-label class="q-my-sm" lines="2"> <q-icon color="primary" name="mdi-information" />
                             Estado actual: <b>{{ medicamento.estado_tratamiento }}</b> </q-item-label>
                           <q-item-label lines="2"><b>Dosis recomentada:</b> {{ medicamento.dosis
@@ -2059,7 +2067,7 @@ export default {
       } else if (value.length < 3) {
         isValid = false;
       } else if (value.length > 200) {
-        isValid = false; 
+        isValid = false;
       } else if (!/^([\sa-zA-ZñÑáéíóúÁÉÍÓÚ]{3,200})*$/.test(value)) {
         isValid = false;
       }
@@ -2074,7 +2082,7 @@ export default {
       } else if (value.length < 3) {
         isValid = false;
       } else if (value.length > 200) {
-        isValid = false; 
+        isValid = false;
       } else if (!/^([\sa-zA-ZñÑáéíóúÁÉÍÓÚ]{3,200})*$/.test(value)) {
         isValid = false;
       }
@@ -2089,7 +2097,7 @@ export default {
       } else if (value.length < 3) {
         isValid = false;
       } else if (value.length > 200) {
-        isValid = false; 
+        isValid = false;
       } else if (!/^([\sa-zA-ZñÑáéíóúÁÉÍÓÚ]{3,200})*$/.test(value)) {
         isValid = false;
       }
@@ -2103,7 +2111,7 @@ export default {
       } else if (value.length < 3) {
         isValid = false;
       } else if (value.length > 200) {
-        isValid = false; 
+        isValid = false;
       } else if (!/^([\sa-zA-ZñÑáéíóúÁÉÍÓÚ]{3,200})*$/.test(value)) {
         isValid = false;
       }
@@ -2117,7 +2125,7 @@ export default {
       } else if (value.length < 3) {
         isValid = false;
       } else if (value.length > 200) {
-        isValid = false; 
+        isValid = false;
       } else if (!/^([\sa-zA-ZñÑáéíóúÁÉÍÓÚ]{3,200})*$/.test(value)) {
         isValid = false;
       }
@@ -2129,10 +2137,10 @@ export default {
       let isValid = true;
       if (!/^\d+$/.test(value)) {
         isValid = false;
-      } 
-      else if (value <= 0 ) isValid = false;
+      }
+      else if (value <= 0) isValid = false;
       else if (value.length > 10) {
-        isValid = false; 
+        isValid = false;
       }
       this.valid = isValid;
       return this.valid;
@@ -2142,10 +2150,10 @@ export default {
       let isValid = true;
       if (!/^\d+$/.test(value)) {
         isValid = false;
-      } 
-      else if (value <= 0 ) isValid = false;
+      }
+      else if (value <= 0) isValid = false;
       else if (value.length > 3) {
-        isValid = false; 
+        isValid = false;
       }
       this.valid = isValid;
       return this.valid;
@@ -2155,10 +2163,10 @@ export default {
       let isValid = true;
       if (!/^\d+$/.test(value)) {
         isValid = false;
-      } 
-      else if (value <= 0 ) isValid = false;
+      }
+      else if (value <= 0) isValid = false;
       else if (value.length > 12) {
-        isValid = false; 
+        isValid = false;
       }
       this.valid = isValid;
       return this.valid;
@@ -2314,8 +2322,8 @@ export default {
     },
     addPaciente() {
       this.loader = true;
-      if(this.nacionalidad === 'V') this.nacionalidadUser = 'Venezolano/a';
-      else if(this.nacionalidad === 'J') this.nacionalidadUser = 'Jurídico';
+      if (this.nacionalidad === 'V') this.nacionalidadUser = 'Venezolano/a';
+      else if (this.nacionalidad === 'J') this.nacionalidadUser = 'Jurídico';
       else this.nacionalidadUser = 'Extranjero/a';
 
       this.$apollo

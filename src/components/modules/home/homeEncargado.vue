@@ -32,9 +32,17 @@
                   name="mdi-folder-download" class="text-primary q-mr-lg" size="md"></q-icon> -->
                 <q-icon style="cursor: pointer" @click="workerView('searchUser')" name="mdi-account-search"
                   class="text-primary q-mr-md" size="md"></q-icon>
-                <q-icon style="cursor: pointer" @click="workerView('addWorker')" name="mdi-plus" class="text-primary"
+                <q-icon style="cursor: pointer" @click="workerView('addWorker')" name="mdi-plus" class="text-primary q-mr-md"
+                  size="md"></q-icon>
+                  <q-icon style="cursor: pointer"  name="mdi-printer-pos" class="text-primary"
                   size="md"></q-icon>
               </div>
+
+              <div v-if="tab === 'pacientesCDI'" class="col self-center text-right">
+                  <q-icon style="cursor: pointer"  name="mdi-printer-pos" class="text-primary"
+                  size="md"></q-icon>
+              </div>
+
             </div>
 
             <q-tabs v-model="tab" class="text-teal">
