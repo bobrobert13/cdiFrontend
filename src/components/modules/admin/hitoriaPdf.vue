@@ -182,7 +182,7 @@
     </q-markup-table>
 
     <!-- INFORMACION DE MEDICAMENTOS -->
-    <q-markup-table>
+    <q-markup-table v-if="data.medicamentos.length > 0">
       <thead class="bg-primary no-border no-border-radius">
         <tr>
           <th colspan="8">
