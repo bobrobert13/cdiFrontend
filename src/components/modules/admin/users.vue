@@ -10,13 +10,13 @@
           <span class="text-bold text-primary" style="cursor: pointer" @click="workerView('searchUser')">Buscar
             paciente</span>
 
-          <q-icon style="cursor: pointer" name="mdi-printer-pos" class="text-primary q-ml-lg" size="md"></q-icon>
+          <!-- <q-icon style="cursor: pointer" name="mdi-printer-pos" class="text-primary q-ml-lg" size="md"></q-icon> -->
 
         </div>
       </div>
       <div class="row justify-center q-mt-xl" v-if="this.users.length !== 0">
         <div class="col-12 q-mb-sm" v-for="(user, index) in users" :key="index">
-          <q-list class="rounded-borders bg-secondary" style="border-radius: 15px">
+          <q-list class="rounded-borders q-pa-md bg-secondary" style="border-radius: 15px">
             <q-item>
               <q-item-section top @click="userDetail(user)" style="cursor: pointer">
                 <q-item-label class="text-left q-mb-xs" lines="1">
@@ -30,20 +30,30 @@
                   <span class="text-weight-medium">Edad del paciente: {{ user.persona.edad }} años</span>
                 </q-item-label>
                 <q-separator spaced color="blue-grey" />
+                <q-item-label v-if="user.doctor" class="text-left" lines="1">
+                  <small class="text-weight-medium">Registrado por doctor: {{ user.doctor.persona.nombre1 }}</small>
+                </q-item-label>
+                <q-item-label v-if="user.doctor" class="text-left" lines="1">
+                  <small class="text-weight-medium">Carnet: {{ user.doctor.numero_carnet}}</small>
+                </q-item-label>
+                <q-item-label v-if="user.doctor" class="text-left text-primary" lines="1">
+                  <small class="text-weight-medium">Area de trabajo: {{ user.doctor.area_de_trabajo }}</small>
+                </q-item-label>
               </q-item-section>
-              <!-- <q-item-section side>
+
+              <q-item-section side>
                 <div class="text-grey-8 q-gutter-xs">
                   <q-btn
                     @click="generatePDF(user)"
                     class="gt-xs text-positive"
-                    size="12px"
+                    size="22px"
                     flat
                     dense
                     round
-                    icon="mdi-briefcase-download"
+                    icon="mdi-printer-pos"
                   />
                 </div>
-              </q-item-section> -->
+              </q-item-section>
             </q-item>
           </q-list>
         </div>
@@ -80,8 +90,10 @@
       </div>
     </div>
     <div>
+
+
       <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="true" :preview-modal="true"
-        :paginate-elements-by-height="1400" filename="historialMedico" :pdf-quality="2" :manual-pagination="false"
+        :paginate-elements-by-height="1400" filename="InformacionDePacientePDF" :pdf-quality="2" :manual-pagination="false"
         pdf-format="a4" :pdf-margin="10" pdf-orientation="portrait" pdf-content-width="800px"
         @progress="onProgress($event)" ref="html2Pdf">
         <section slot="pdf-content">
@@ -89,6 +101,10 @@
         </section>
       </vue-html2pdf>
     </div>
+
+
+
+
     <q-dialog v-model="modalDetailUser">
       <q-card class="my-card" flat bordered style="min-width: 540px">
         <q-card-section>
@@ -102,73 +118,78 @@
           </q-card-section>
 
           <q-card-section v-if="dataUser.persona" class="q-pt-xs q-pb-none no-margin">
-                  <p class="text-subtitle text-bold text-grey-9">Detalles del paciente</p>
-                  <div class="text-caption text-bold q-mt-sm q-mb-xs">Paciente: {{ dataUser.persona.nombre1 }}</div>
-                  <div class="text-caption q-mt-sm q-mb-xs">Documento de identidad:
-                    {{ dataUser.persona.cedula_identidad }}</div>
-                  <div class="text-caption q-mt-sm q-mb-xs">Edad del paciente: {{ dataUser.persona.edad }}</div>
-                  <div class="text-caption q-mt-sm q-mb-xs">Ocupación: {{ dataUser.persona.ocupacion }}</div>
-                  <div class="text-caption q-mt-sm q-mb-xs">Sexo: {{ dataUser.persona.sexo }}</div>
-                  <div class="text-caption q-mt-sm q-mb-xs">Estado civil: {{ dataUser.persona.estado_civil }}</div>
-                  <div class="text-caption q-mt-sm q-mb-xs">Número de teléfono: {{ dataUser.persona.telefono.codigo }}{{ dataUser.persona.telefono.numero }}</div>
-                  <div class="text-caption q-mt-sm q-mb-xs">Dirección: {{ dataUser.persona.direccion.sector }} - {{ dataUser.persona.direccion.calle }}  - {{ dataUser.persona.direccion.parroquia }} - {{ dataUser.persona.direccion.municipio }} - {{ dataUser.persona.direccion.codigo_postal }}</div>
-                  <div class="text-caption q-mt-sm q-mb-xs">Correo electrónico: {{ dataUser.persona.correo.correo }}</div>
-               
-           </q-card-section>
+            <p class="text-subtitle text-bold text-grey-9">Detalles del paciente</p>
+            <div class="text-caption text-bold q-mt-sm q-mb-xs">Paciente: {{ dataUser.persona.nombre1 }}</div>
+            <div class="text-caption q-mt-sm q-mb-xs">Documento de identidad:
+              {{ dataUser.persona.cedula_identidad }}</div>
+            <div class="text-caption q-mt-sm q-mb-xs">Edad del paciente: {{ dataUser.persona.edad }}</div>
+            <div class="text-caption q-mt-sm q-mb-xs">Ocupación: {{ dataUser.persona.ocupacion }}</div>
+            <div class="text-caption q-mt-sm q-mb-xs">Sexo: {{ dataUser.persona.sexo }}</div>
+            <div class="text-caption q-mt-sm q-mb-xs">Estado civil: {{ dataUser.persona.estado_civil }}</div>
+            <div class="text-caption q-mt-sm q-mb-xs">Número de teléfono: {{ dataUser.persona.telefono.codigo }}{{
+              dataUser.persona.telefono.numero }}</div>
+            <div class="text-caption q-mt-sm q-mb-xs">Dirección: {{ dataUser.persona.direccion.sector }} - {{
+              dataUser.persona.direccion.calle }} - {{ dataUser.persona.direccion.parroquia }} - {{
+                dataUser.persona.direccion.municipio }} - {{ dataUser.persona.direccion.codigo_postal }}</div>
+            <div class="text-caption q-mt-sm q-mb-xs">Correo electrónico: {{ dataUser.persona.correo.correo }}</div>
 
-           
+          </q-card-section>
+
+
           <q-card-section v-if="dataUser.doctor" class="q-pt-md q-pb-none no-margin">
-                  <p class="text-subtitle text-bold text-grey-9">Registrado por doctor: </p>
-              <div class=" row full-width no-wrap">
-                <div class=" column col-6">
-                  <div class="text-caption text-bold  q-mb-xs">Nombre de doctor: {{ dataUser.doctor.persona.nombre1 }}</div>
-                  <div class="text-caption q-mt-sm q-mb-xs">Documento de identidad:
-                    {{ dataUser.doctor.persona.cedula_identidad }}</div>
-                  <div class="text-caption q-mt-sm q-mb-xs">Especialidad: {{ dataUser.doctor.area_de_trabajo}}</div>
-                  <div class="text-caption q-mt-sm q-mb-xs">Número de carnet: {{ dataUser.doctor.numero_carnet}}</div>
+            <p class="text-subtitle text-bold text-grey-9">Registrado por doctor: </p>
+            <div class=" row full-width no-wrap">
+              <div class=" column col-6">
+                <div class="text-caption text-bold  q-mb-xs">Nombre de doctor: {{ dataUser.doctor.persona.nombre1 }}
                 </div>
-                   <div v-if="dataUser.doctor.persona.telefono || dataUser.doctor.persona.correo" class=" column col-6">
-                  <div class="text-caption text-bold q-mb-xs">Teléfono: {{ dataUser.doctor.persona.telefono.codigo }}{{ dataUser.doctor.persona.telefono.numero }}</div>
-                  <div class="text-caption q-mt-sm q-mb-xs">Correo: {{ dataUser.doctor.persona.correo.correo }}</div>
-                </div>
+                <div class="text-caption q-mt-sm q-mb-xs">Documento de identidad:
+                  {{ dataUser.doctor.persona.cedula_identidad }}</div>
+                <div class="text-caption q-mt-sm q-mb-xs">Especialidad: {{ dataUser.doctor.area_de_trabajo }}</div>
+                <div class="text-caption q-mt-sm q-mb-xs">Número de carnet: {{ dataUser.doctor.numero_carnet }}</div>
               </div>
-               
-           </q-card-section>
+              <div v-if="dataUser.doctor.persona.telefono || dataUser.doctor.persona.correo" class=" column col-6">
+                <div class="text-caption text-bold q-mb-xs">Teléfono: {{ dataUser.doctor.persona.telefono.codigo }}{{
+                  dataUser.doctor.persona.telefono.numero }}</div>
+                <div class="text-caption q-mt-sm q-mb-xs">Correo: {{ dataUser.doctor.persona.correo.correo }}</div>
+              </div>
+            </div>
 
-                <q-card-section class="q-pt-md">
-                <div class="row items-center q-px-sm justify-center">
-                  <div class="col-6">
-                    <span class="text-caption text-bold q-mt-sm q-mb-xs">Consultas relacionadas</span>
-                  </div>
-                  <div class="col-6 text-right">
-                    <span class="text-caption text-positive text-bold q-mt-sm q-mb-xs"
-                      style="cursor: pointer;"></span>
-                  </div>
-                </div>
-                <q-item-section v-if="!dataUser.consultas || !dataUser.consultas.length">
-                  <q-item-section class="row q-pa-sm justify-center">
-                    El paciente aún no tiene consultas asignadas
-                  </q-item-section>
-                </q-item-section>
-                <q-scroll-area v-else style="height: 250px; max-width: 100%;">
-                  <div v-for="(consulta, index) in dataUser.consultas" :key="index" class="q-py-xs">
-                    <q-list >
-                      <q-item style="cursor:pointer;">
-                        <q-item-section>
-                          <q-item-label caption>Paciente debe asistir el: <b>{{ entradaFecha(consulta.fecha_consulta) }}</b></q-item-label>
-                          <span class="q-my-sm"> <q-icon name="mdi-information" color="primary" /> Estado actual: <b>{{
-                            consulta.estado_consulta }}</b></span>
-                          <q-item-label>Tipo de consulta: <b>{{ consulta.tipo_consulta }}</b></q-item-label>
-                          <q-item-label><b>Motivo:</b> {{ consulta.motivo_consulta }}</q-item-label>
-                          <q-item-label><b>Síntomas:</b> {{ consulta.sintomas }}</q-item-label>
-                        </q-item-section>
-                      </q-item>
-                      <q-separator spaced inset />
-                    </q-list>
-                  </div>
-                </q-scroll-area>
-              </q-card-section>
-              <q-separator />
+          </q-card-section>
+
+          <q-card-section class="q-pt-md">
+            <div class="row items-center q-px-sm justify-center">
+              <div class="col-6">
+                <span class="text-caption text-bold q-mt-sm q-mb-xs">Consultas relacionadas</span>
+              </div>
+              <div class="col-6 text-right">
+                <span class="text-caption text-positive text-bold q-mt-sm q-mb-xs" style="cursor: pointer;"></span>
+              </div>
+            </div>
+            <q-item-section v-if="!dataUser.consultas || !dataUser.consultas.length">
+              <q-item-section class="row q-pa-sm justify-center">
+                El paciente aún no tiene consultas asignadas
+              </q-item-section>
+            </q-item-section>
+            <q-scroll-area v-else style="height: 250px; max-width: 100%;">
+              <div v-for="(consulta, index) in dataUser.consultas" :key="index" class="q-py-xs">
+                <q-list>
+                  <q-item style="cursor:pointer;">
+                    <q-item-section>
+                      <q-item-label caption>Paciente debe asistir el: <b>{{ entradaFecha(consulta.fecha_consulta)
+                          }}</b></q-item-label>
+                      <span class="q-my-sm"> <q-icon name="mdi-information" color="primary" /> Estado actual: <b>{{
+                        consulta.estado_consulta }}</b></span>
+                      <q-item-label>Tipo de consulta: <b>{{ consulta.tipo_consulta }}</b></q-item-label>
+                      <q-item-label><b>Motivo:</b> {{ consulta.motivo_consulta }}</q-item-label>
+                      <q-item-label><b>Síntomas:</b> {{ consulta.sintomas }}</q-item-label>
+                    </q-item-section>
+                  </q-item>
+                  <q-separator spaced inset />
+                </q-list>
+              </div>
+            </q-scroll-area>
+          </q-card-section>
+          <q-separator />
         </q-card-section>
 
         <q-card-actions align="center">
@@ -254,7 +275,9 @@ export default {
       alert("PDF generated successfully!");
       this.loaderPdf = false;
     },
-    generatePDF() {
+    generatePDF(user) {
+      this.dataUser = user;
+      console.log("generatePDF", this.dataUser);
       this.$refs.html2Pdf.generatePdf();
     },
     workerView(typeView) {

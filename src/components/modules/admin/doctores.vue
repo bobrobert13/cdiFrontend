@@ -6,25 +6,6 @@
 			</div>
 			<div class="row justify-center">
 				<div class="col-4 self-center text-right">
-					<!-- <q-select
-            filled
-            dense
-            v-model="especialidadDoctor"
-            :options="roleUserEspecialidad"
-            label="Buscar por especialidad"
-            map-options
-            option-label="label"
-            option-value="id"
-            >
-            <template v-slot:append>
-                <q-icon
-                v-if="especialidadDoctor !== ''"
-                class="cursor-pointer"
-                name="clear"
-                @click.stop="especialidadDoctor = 'null'"
-                />
-            </template>
-</q-select> -->
 				</div>
 				<div class="col self-center text-right">
 					<!-- <span class="text-bold text-primary" style="cursor: pointer" @click="workerView('addWorker')">Añadir doctor</span> -->
@@ -32,7 +13,6 @@
 						class="text-primary" size="md"></q-icon>
 					<q-icon style="cursor: pointer" @click="workerView('addWorker')" name="mdi-plus"
 						class="text-primary" size="md"></q-icon>
-						<q-icon style="cursor: pointer" name="mdi-printer-pos" class="text-primary q-ml-sm" size="md"></q-icon>
 				</div>
 			</div>
 			<div class="row justify-center q-mt-xl" v-if="this.users.length !== 0">
@@ -50,7 +30,8 @@
 										user.persona.nombre1
 									}}</b></span>
 								</q-item-label>
-								<small class="text-weight-medium text-left">usuario: {{ user.usuarios.nombre_usuario }}</small>
+								<small class="text-weight-medium text-left">usuario: {{ user.usuarios.nombre_usuario
+									}}</small>
 								<small class="text-weight-medium text-left">Rol: {{ user.usuarios.rol }}</small>
 								<small class="text-weight-medium text-left">Documento de identidad: {{
 									user.persona.cedula_identidad
@@ -60,13 +41,21 @@
 								}}</b></small>
 								<q-separator spaced />
 								<div v-if="user.usuarios.cdi" class="text-left column">
-									<small class="text-weight-medium text-left">Corresponde al CDI: {{ user.usuarios.cdi.nombre }}</small>
-									<small class="text-weight-medium text-left">Código de  CDI: {{ user.usuarios.cdi.numero_cdi }}</small>
-								<small class="text-weight-medium text-left">Estatus del CDI: <b>{{ user.usuarios.estado }}</b></small>
+									<small class="text-weight-medium text-left">Corresponde al CDI: {{
+										user.usuarios.cdi.nombre }}</small>
+									<small class="text-weight-medium text-left">Código de CDI: {{
+										user.usuarios.cdi.numero_cdi }}</small>
+									<small class="text-weight-medium text-left">Estatus del CDI: <b>{{
+										user.usuarios.estado }}</b></small>
 								</div>
 							</q-item-section>
 							<q-item-section side>
 								<div class="text-grey-8 q-gutter-xs">
+									<button @click="generatePDF(user)" type="button" lines="2"
+										class=" q-ml-xl q-mr-md cursor-pointer text-primary self-center text-bold"
+										style="cursor: pointer">
+										<q-icon name="mdi-printer-pos" /> Descargar información
+									</button>
 									<q-btn
 										@click="actualizarUsuario({ ...user.usuarios, estado: user.usuarios.estado === 'activo' ? 'inactivo' : 'activo' })"
 										class="gt-xs text-negative" size="12px" flat dense
@@ -311,11 +300,10 @@
 
 		<div>
 			<vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="true" :preview-modal="true"
-				:paginate-elements-by-height="1400" filename="historialDoctor" :pdf-quality="2"
+				:paginate-elements-by-height="1400" filename="informacionDeDoctor" :pdf-quality="2"
 				:manual-pagination="false" pdf-format="a4" :pdf-margin="10" pdf-orientation="portrait"
 				pdf-content-width="800px" @progress="onProgress($event)" ref="html2Pdf">
 				<section slot="pdf-content">
-					<!-- <historiaPdf :data="dataUser" /> -->
 					<HistoriaDrPdf :data="dataUser" />
 				</section>
 			</vue-html2pdf>
@@ -575,8 +563,10 @@ export default {
 		workerView(typeView) {
 			this.viewType = typeView
 		},
-		generatePDF() {
-			console.log("creando con data__ ", this.dataUser);
+		generatePDF(user) {
+			this.dataUser = user;
+			console.log("datauser: ", this.dataUser);
+			
 			this.$refs.html2Pdf.generatePdf();
 		},
 		userDetail(user) {

@@ -11,7 +11,7 @@
 						class="text-primary" size="md"></q-icon>
 					<q-icon style="cursor: pointer" @click="workerView('addWorker')" name="mdi-plus"
 						class="text-primary" size="md"></q-icon>
-					<q-icon style="cursor: pointer" name="mdi-printer-pos" class="text-primary q-ml-sm" size="md"></q-icon>
+					<q-icon @click="cdisInformationsPDF()" style="cursor: pointer" name="mdi-printer-pos" class="text-primary q-ml-sm" size="md"></q-icon>
 				</div>
 			</div>
 			<div class="row justify-center q-mt-xl" v-if="this.users.length !== 0">
@@ -301,12 +301,11 @@
 
 		<div>
 			<vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="true" :preview-modal="true"
-				:paginate-elements-by-height="1400" filename="historialDoctor" :pdf-quality="2"
+				:paginate-elements-by-height="1400" filename="informacion_de_cdis" :pdf-quality="2"
 				:manual-pagination="false" pdf-format="a4" :pdf-margin="10" pdf-orientation="portrait"
 				pdf-content-width="800px" @progress="onProgress($event)" ref="html2Pdf">
 				<section slot="pdf-content">
-					<!-- <historiaPdf :data="dataUser" /> -->
-					<historialEncVue :data="dataUser" />
+					<historialEncVue :data="users" />
 				</section>
 			</vue-html2pdf>
 		</div>
@@ -604,6 +603,9 @@ export default {
 		},
 		generatePDF() {
 			console.log("creando con data__ ", this.dataUser);
+			this.$refs.html2Pdf.generatePdf();
+		},
+		cdisInformationsPDF() {
 			this.$refs.html2Pdf.generatePdf();
 		},
 		userDetail(user) {

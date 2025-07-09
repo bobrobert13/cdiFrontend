@@ -64,8 +64,28 @@
       </tbody>
     </q-markup-table>
 
+    <div v-if="data.doctor" class=" q-mt-md q-px-md q-py-sm text-left">
+      <b>Registrado por doctor:</b>
+    </div>
+    <q-markup-table v-if="data.doctor" class=" q-mb-md">
+      <thead class="bg-primary no-border no-border-radius">
+        <tr class="text-white">
+          <th class="text-left">Carnet</th>
+          <th class="text-left">Nombre de doctor</th>
+          <th class="text-left">Area</th>
+        </tr>
+      </thead>
+      <tbody class="bg-grey-3">
+        <tr>
+          <td class="text-left">{{ data.doctor.persona.nombre1 }}</td>
+          <td class="text-left">{{ data.doctor.numero_carnet }}</td>
+          <td class="text-left">{{ data.doctor.area_de_trabajo }}</td>
+        </tr>
+      </tbody>
+    </q-markup-table>
+
     <!-- INFORMACION DE CONSULTAS -->
-    <q-markup-table v-if="data.consultas.length > 0">
+    <q-markup-table v-if="data.consultas">
       <thead class="bg-primary no-border no-border-radius">
         <tr>
           <th colspan="5">
@@ -82,7 +102,7 @@
           <th class="text-left">Estado</th>
         </tr>
       </thead>
-      <tbody  class="bg-grey-3">
+      <tbody class="bg-grey-3">
         <tr v-for="(consulta, index) in data.consultas" :key="index">
           <td class="text-left">{{ consulta.tipo_consulta }}</td>
           <td class="text-left">{{ consulta.motivo_consulta }}</td>
@@ -94,7 +114,7 @@
     </q-markup-table>
 
     <!-- INFORMACION DE DIAGNOSTICOS -->
-    <q-markup-table v-if="data.diagnosticos.length > 0">
+    <q-markup-table v-if="data.diagnosticos">
       <thead class="bg-primary no-border no-border-radius">
         <tr>
           <th colspan="5">
@@ -111,7 +131,7 @@
           <th class="text-left">Última actualización</th>
         </tr>
       </thead>
-      <tbody  class="bg-grey-3">
+      <tbody class="bg-grey-3">
         <tr v-for="(diagnostico, index) in data.diagnosticos" :key="index">
           <td class="text-left">{{ diagnostico.condicion }}</td>
           <td class="text-left">{{ diagnostico.descripcion }}</td>
@@ -123,7 +143,7 @@
     </q-markup-table>
 
     <!-- INFORMACION DE EXAMENES -->
-    <q-markup-table v-if="data.examenes.length > 0">
+    <q-markup-table v-if="data.examenes">
       <thead class="bg-primary no-border no-border-radius">
         <tr>
           <th colspan="6">
@@ -140,7 +160,7 @@
           <th class="text-left">Fecha</th>
         </tr>
       </thead>
-      <tbody  class="bg-grey-3">
+      <tbody class="bg-grey-3">
         <tr v-for="(examen, index) in data.examenes" :key="index">
           <td class="text-left">{{ examen.tipo_de_examen }}</td>
           <td class="text-left">{{ examen.descripcion }}</td>
@@ -153,7 +173,7 @@
     </q-markup-table>
 
     <!-- INFORMACION DE TRATAMIENTOS -->
-    <q-markup-table v-if="data.tratamientos.length > 0">
+    <q-markup-table v-if="data.tratamientos">
       <thead class="bg-primary no-border no-border-radius">
         <tr>
           <th colspan="6">
@@ -170,7 +190,7 @@
           <th class="text-left">Fecha de culminación</th>
         </tr>
       </thead>
-      <tbody  class="bg-grey-3">
+      <tbody class="bg-grey-3">
         <tr v-for="(tratamiento, index) in data.tratamientos" :key="index">
           <td class="text-left">{{ tratamiento.tipo_de_tratamiento }}</td>
           <td class="text-left">{{ tratamiento.detalles }}</td>
@@ -182,7 +202,7 @@
     </q-markup-table>
 
     <!-- INFORMACION DE MEDICAMENTOS -->
-    <q-markup-table v-if="data.medicamentos.length > 0">
+    <q-markup-table v-if="data.medicamentos">
       <thead class="bg-primary no-border no-border-radius">
         <tr>
           <th colspan="8">
@@ -202,7 +222,7 @@
           <th class="text-left">Fecha de fin</th>
         </tr>
       </thead>
-      <tbody  class="bg-grey-3">
+      <tbody class="bg-grey-3">
         <tr v-for="(medicamento, index) in data.medicamentos" :key="index">
           <td class="text-left">{{ medicamento.nombre }}</td>
           <td class="text-left">{{ medicamento.dosis }}</td>
@@ -217,7 +237,7 @@
     </q-markup-table>
 
     <!-- INFORMACION DE EMERGENCIAS -->
-    <q-markup-table v-if="data.emergencias.length > 0">
+    <q-markup-table v-if="data.emergencias">
       <thead class="bg-primary no-border no-border-radius">
         <tr>
           <th colspan="7">
@@ -236,7 +256,7 @@
           <th class="text-left">Destino</th>
         </tr>
       </thead>
-      <tbody  class="bg-grey-3">
+      <tbody class="bg-grey-3">
         <tr v-for="(emergencia, index) in data.emergencias" :key="index">
           <td class="text-left">{{ emergencia.motivo_emergencia }}</td>
           <td class="text-left">{{ emergencia.diagnostico_provisional }}</td>
@@ -250,7 +270,7 @@
     </q-markup-table>
 
     <!-- INFORMACION DE HOSPITALIZACIONES -->
-    <q-markup-table v-if="data.hospitalizaciones.length > 0">
+    <q-markup-table v-if="data.hospitalizaciones">
       <thead class="bg-primary no-border no-border-radius">
         <tr>
           <th colspan="6">
@@ -268,11 +288,11 @@
           <th class="text-left">Última actualización</th>
         </tr>
       </thead>
-      <tbody  class="bg-grey-3">
+      <tbody class="bg-grey-3">
         <tr v-for="(hospitalizacion, index) in data.hospitalizaciones" :key="index">
           <td class="text-left">{{ hospitalizacion.motivo_de_hospitalizacion }}</td>
           <td class="text-left">{{ hospitalizacion.unidad_hospitalaria }}</td>
-          <td class="text-left">{{ hospitalizacion.estado  }}</td>
+          <td class="text-left">{{ hospitalizacion.estado }}</td>
           <td class="text-left">{{ entradaFecha(hospitalizacion.fecha_ingreso) }}</td>
           <td class="text-left">{{ entradaFecha(hospitalizacion.fecha_egreso) || 'No definida' }}</td>
         </tr>
