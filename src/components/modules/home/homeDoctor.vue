@@ -958,8 +958,7 @@
                 <q-btn flat :disable="this.examen_tipoDeExamen === '' ||
                   this.examen_estadoExamen === '' ||
                   this.examen_descripcion === '' ||
-                  this.examen_laboratorioCentro === '' ||
-                  this.examen_observaciones === ''
+                  this.examen_laboratorioCentro === ''  
                   " @click="añadirExamen()">
                   Crear examen para paciente
                 </q-btn>
@@ -1645,14 +1644,14 @@
     </div>
 
     <div>
-      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="true" :preview-modal="true"
-        :paginate-elements-by-height="1400" filename="historialDoctorEnc" :pdf-quality="2" :manual-pagination="false"
-        pdf-format="a4" :pdf-margin="10" pdf-orientation="portrait" pdf-content-width="800px"
-        @progress="onProgress($event)" ref="html2Pdf">
-        <section slot="pdf-content">
-          <historiaPdf :data="dataUser" />
-        </section>
-      </vue-html2pdf>
+        <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="true" :preview-modal="true"
+          :paginate-elements-by-height="1400" filename="historialDoctorEnc" :pdf-quality="2" :manual-pagination="false"
+          pdf-format="a4" :pdf-margin="2" pdf-orientation="portrait" pdf-content-width="800px"
+          @progress="onProgress($event)" ref="html2Pdf">
+          <section slot="pdf-content">
+            <historiaPdf :data="dataUser" />
+          </section>
+        </vue-html2pdf>
     </div>
 
 
@@ -1809,7 +1808,7 @@ export default {
       examen_tipoDeExamen: "",
       examen_descripcion: "",
       examen_resultados: "",
-      examen_estadoExamen: '',
+      examen_estadoExamen: 'Pendiente',
       examen_laboratorioCentro: "",
       examen_valoresReferencia: "",
       examen_observaciones: "",
