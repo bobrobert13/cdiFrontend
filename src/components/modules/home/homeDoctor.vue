@@ -65,7 +65,7 @@
                           <button @click="generatePacientePDF(user)" type="button"
                             lines="2"
                             class=" q-ml-xl cursor-pointer text-primary self-center text-bold" style="cursor: pointer">
-                            <q-icon name="mdi-printer-pos" /> Descargar ficha de paciente
+                            <q-icon name="mdi-printer-pos" /> Descargar ficha del paciente
                           </button>
 
 

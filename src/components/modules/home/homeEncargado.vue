@@ -32,15 +32,17 @@
                   name="mdi-folder-download" class="text-primary q-mr-lg" size="md"></q-icon> -->
                 <q-icon style="cursor: pointer" @click="workerView('searchUser')" name="mdi-account-search"
                   class="text-primary q-mr-md" size="md"></q-icon>
-                <q-icon style="cursor: pointer" @click="workerView('addWorker')" name="mdi-plus" class="text-primary q-mr-md"
-                  size="md"></q-icon>
-                  <q-icon style="cursor: pointer"  name="mdi-printer-pos" class="text-primary"
-                  size="md"></q-icon>
+                <q-icon style="cursor: pointer" @click="workerView('addWorker')" name="mdi-plus"
+                  class="text-primary q-mr-md" size="md"></q-icon>
+                <q-icon style="cursor: pointer" name="mdi-printer-pos" class="text-primary" size="md">
+                  <q-tooltip @click="generateDoctorsPDF()" anchor="top middle" self="bottom middle" :offset="[10, 10]">
+                    <strong>Descargar doctores del CDI</strong>
+                  </q-tooltip>
+                </q-icon>
               </div>
 
               <div v-if="tab === 'pacientesCDI'" class="col self-center text-right">
-                  <q-icon style="cursor: pointer"  name="mdi-printer-pos" class="text-primary"
-                  size="md"></q-icon>
+                <q-icon style="cursor: pointer" name="mdi-printer-pos" class="text-primary" size="md"></q-icon>
               </div>
 
             </div>
@@ -84,10 +86,19 @@
                           <div class="text-grey-8 q-gutter-xs">
                             <!-- <q-btn @click="generatePDF(user)" class="gt-xs text-blue" size="12px" flat dense round
                           icon="mdi-file-download-outline" /> -->
+
+                            <button @click="generateDoctorPDF(user)" type="button" lines="2"
+                              class=" q-ml-xl q-mr-md cursor-pointer text-primary self-center text-bold"
+                              style="cursor: pointer">
+                              <q-icon name="mdi-printer-pos" /> Descargar ficha del doctor
+                            </button>
+
                             <q-btn
                               @click="actualizarUsuario({ ...user.usuarios, estado: user.usuarios.estado === 'activo' ? 'inactivo' : 'activo' })"
                               class="gt-xs text-negative" size="12px" flat dense
                               :label="user.usuarios.estado === 'activo' ? 'Inhabilitar' : 'Habilitar'" />
+
+
                           </div>
                         </q-item-section>
                       </q-item>
@@ -116,7 +127,7 @@
 
                         <q-item-section top style="cursor: pointer">
                           <q-item-label class="text-left q-mb-xs" lines="1">
-                            <span class="text-weight-medium">Nombre del aciente: <b>{{ userPaciente.persona.nombre1 }}
+                            <span class="text-weight-medium">Nombre del paciente: <b>{{ userPaciente.persona.nombre1 }}
                               </b></span>
                           </q-item-label>
                           <small class="text-weight-medium">Correo electrónico: {{ userPaciente.persona.correo.correo
@@ -916,6 +927,16 @@ export default {
       console.log("usuerios_pdf", this.pdfData);
       this.$refs.html2Pdf.generatePdf();
     },
+    generateDoctorPDF(user) {
+      this.pdfData = user;
+      console.log("usuerios_pdf", this.pdfData);
+      this.$refs.html2Pdf.generatePdf();
+    },
+    generateDoctorsPDF() {
+      this.pdfData = this.users;
+      console.log("usuerios_pdf", this.pdfData);
+      this.$refs.html2Pdf.generatePdf();
+    },
     downloadSeveralUsers() {
       this.pdfData = this.users;
       console.log("usuerios_pdf", this.pdfData);
@@ -1229,7 +1250,7 @@ export default {
 
       const carnetValido = /^[a-zA-Z0-9]+$/.test(numeroCarnet);
 
-      const experienciaValida = /^\d+$/.test(anosExperiencia) &&  parseInt(anosExperiencia) > 0;
+      const experienciaValida = /^\d+$/.test(anosExperiencia) && parseInt(anosExperiencia) > 0;
 
       const telefonoValido = /^\d+$/.test(telefono) && telefono.length <= 12;
 
