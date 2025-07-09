@@ -1,9 +1,9 @@
 <template>
   <div>
-    <div  style="margin: 12px 12px">
+    <div style="margin: 12px 12px">
       <!-- Encabezado con membrete -->
       <img src="../../../assets/membrete.png" class="full-width" />
-      
+
       <!-- Título del documento -->
       <div class="text-center q-mt-md q-mb-lg">
         <h6 class="text-primary q-mb-none">DOCTOR</h6>
@@ -11,7 +11,7 @@
       </div>
 
       <!-- Información Personal -->
-      <!-- <div class="q-mb-lg">
+      <div class="q-mb-lg">
         <h5 class="text-primary q-mb-md">DATOS PERSONALES</h5>
         <q-markup-table class="q-mb-md">
           <thead class="bg-primary">
@@ -34,24 +34,38 @@
               <td>{{ data.persona.cedula_identidad || 'No especificado' }}</td>
             </tr>
             <tr>
-              <td class="text-weight-medium">Edad</td>
-              <td>{{ data.persona.edad || 'No especificado' }} años</td>
+              <td class="text-weight-medium">Número de contacto</td>
+              <td>{{ data.persona.telefono.codigo || "+" }}{{ data.persona.telefono.numero || "No especificado" }}</td>
             </tr>
             <tr>
-              <td class="text-weight-medium">Estado Civil</td>
-              <td>{{ data.persona.estado_civil || 'No especificado' }}</td>
+              <td class="text-weight-medium">Correo electrónico</td>
+              <td>{{ data.persona.correo.correo || 'No especificado' }}</td>
             </tr>
-            <tr>
-              <td class="text-weight-medium">Sexo</td>
-              <td>{{ data.persona.sexo || 'No especificado' }}</td>
+                        <tr>
+              <td class="text-weight-medium">Código postal</td>
+              <td>{{ data.persona.direccion.codigo_postal || 'No especificado' }}</td>
             </tr>
-            <tr>
-              <td class="text-weight-medium">Ocupación</td>
-              <td>{{ data.persona.ocupacion || 'Médico' }}</td>
+                        <tr>
+              <td class="text-weight-medium">Parroquia</td>
+              <td>{{ data.persona.direccion.parroquia || 'No especificado' }}</td>
+            </tr>
+                        <tr>
+              <td class="text-weight-medium">Sector</td>
+              <td>{{ data.persona.direccion.sector || 'No especificado' }}</td>
+            </tr>
+
+                                    <tr>
+              <td class="text-weight-medium">Calle</td>
+              <td>{{ data.persona.direccion.calle || 'No especificado' }}</td>
+            </tr>
+
+                                    <tr>
+              <td class="text-weight-medium">Número de casa</td>
+              <td>{{ data.persona.direccion.numero_casa || 'No especificado' }}</td>
             </tr>
           </tbody>
         </q-markup-table>
-      </div> -->
+      </div>
 
       <!-- Información Profesional -->
       <div class="q-mb-lg">
@@ -245,7 +259,8 @@ export default {
   font-size: 13px;
 }
 
-h4, h5 {
+h4,
+h5 {
   font-weight: 600;
 }
 

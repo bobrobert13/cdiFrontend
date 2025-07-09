@@ -34,16 +34,16 @@
                   class="text-primary q-mr-md" size="md"></q-icon>
                 <q-icon style="cursor: pointer" @click="workerView('addWorker')" name="mdi-plus"
                   class="text-primary q-mr-md" size="md"></q-icon>
-                <q-icon style="cursor: pointer" name="mdi-printer-pos" class="text-primary" size="md">
+                <!-- <q-icon style="cursor: pointer" name="mdi-printer-pos" class="text-primary" size="md">
                   <q-tooltip @click="generateDoctorsPDF()" anchor="top middle" self="bottom middle" :offset="[10, 10]">
                     <strong>Descargar doctores del CDI</strong>
                   </q-tooltip>
-                </q-icon>
+                </q-icon> -->
               </div>
 
-              <div v-if="tab === 'pacientesCDI'" class="col self-center text-right">
+              <!-- <div v-if="tab === 'pacientesCDI'" class="col self-center text-right">
                 <q-icon style="cursor: pointer" name="mdi-printer-pos" class="text-primary" size="md"></q-icon>
-              </div>
+              </div> -->
 
             </div>
 
@@ -70,17 +70,17 @@
                         <q-item-section top @click="userDetailC('userDetail', user)" style="cursor: pointer">
                           <q-item-label class="text-left " lines="1">
                             <span class="text-weight-medium">Nombre: <b>{{ user.persona.nombre1
-                            }}</b></span>
+                                }}</b></span>
                           </q-item-label>
                           <q-item-label class="text-left q-mb-xs" lines="1">
                             <span class="text-weight-medium">Nombre de usuario: <b>{{ user.usuarios.nombre_usuario
-                            }}</b></span>
+                                }}</b></span>
                           </q-item-label>
                           <small class="text-weight-medium">Rol: {{ user.usuarios.rol }}</small>
                           <small class="text-weight-medium">Estatus de usuario: <b>{{ user.usuarios.estado
-                          }}</b></small>
+                              }}</b></small>
                           <small class="text-weight-medium text-primary">Especialidad: <b>{{ user.area_de_trabajo
-                          }}</b></small>
+                              }}</b></small>
                         </q-item-section>
                         <q-item-section side>
                           <div class="text-grey-8 q-gutter-xs">
@@ -90,7 +90,7 @@
                             <button @click="generateDoctorPDF(user)" type="button" lines="2"
                               class=" q-ml-xl q-mr-md cursor-pointer text-primary self-center text-bold"
                               style="cursor: pointer">
-                              <q-icon name="mdi-printer-pos" /> Descargar ficha del doctor
+                              <q-icon name="mdi-printer-pos" /> Descargar información del doctor
                             </button>
 
                             <q-btn
@@ -113,7 +113,7 @@
               </q-tab-panel>
               <q-tab-panel name="pacientesCDI">
                 <div class="text-h6"><span v-if="usersPacientes && usersPacientes.length !== 0">{{ usersPacientes.length
-                    }}</span>
+                }}</span>
                   Pacientes del CDI</div>
                 Listado de pacientes administrados por los doctores del CDI
                 <div class="row justify-center q-mt-xl" v-if="usersPacientes && this.usersPacientes.length !== 0">
@@ -141,7 +141,12 @@
                         </q-item-section>
 
                         <q-item-section side style="cursor: pointer">
-                          <q-item-label class="text-left q-mb-xs" lines="1">
+                          <q-item-label class="text-left q-mb-xs column items-center" lines="1">
+                            <button @click="generatePacientePDF(userPaciente)" type="button" lines="2"
+                              class=" q-ml-xl q-mr-md q-mb-sm cursor-pointer text-primary self-center text-bold"
+                              style="cursor: pointer">
+                              <q-icon name="mdi-printer-pos" /> Descargar ficha del paciente
+                            </button>
                             <small class="text-weight-medium">Fecha de creación: <b>{{
                               entradaCracion(userPaciente.createdAt) }}
                               </b></small>
@@ -532,14 +537,24 @@
         </div>
       </q-scroll-area>
     </div>
-    <div>
-      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="true" :preview-modal="true"
-        :paginate-elements-by-height="1400" filename="historialDoctorEnc" :pdf-quality="2" :manual-pagination="false"
+    <div >
+      <vue-html2pdf  :show-layout="false" :float-layout="true" :enable-download="true" :preview-modal="true"
+        :paginate-elements-by-height="1400" filename="InformacionDeDoctorCDI" :pdf-quality="2" :manual-pagination="false"
         pdf-format="a4" :pdf-margin="10" pdf-orientation="portrait" pdf-content-width="800px"
         @progress="onProgress($event)" ref="html2Pdf">
         <section slot="pdf-content">
-          <!-- <historiaPdf :data="dataUser" /> -->
           <historiaDrPdf :data="pdfData" />
+        </section>
+      </vue-html2pdf>
+    </div>
+
+      <div >
+      <vue-html2pdf  :show-layout="false" :float-layout="true" :enable-download="true" :preview-modal="true"
+        :paginate-elements-by-height="1400" filename="FichaDePacienteCDI" :pdf-quality="2" :manual-pagination="false"
+        pdf-format="a4" :pdf-margin="10" pdf-orientation="portrait" pdf-content-width="800px"
+        @progress="onProgress($event)" ref="html2PdfPaciente">
+        <section slot="pdf-content">
+          <historiaPdf :data="pdfData" />
         </section>
       </vue-html2pdf>
     </div>
@@ -559,14 +574,17 @@ import {
 } from "../../../graphql/user";
 import VueHtml2pdf from "vue-html2pdf";
 import historiaDrPdf from "../admin/historiaDrPdf.vue";
+import historiaPdf from "../admin/hitoriaPdf.vue";
+
 import { ADMIN_DOCTORES_QUERY } from "../../../graphql/admin";
 import moment from "moment";
 export default {
   name: "homeEncargado",
-  components: { historiaDrPdf, VueHtml2pdf },
+  components: { historiaDrPdf, historiaPdf, VueHtml2pdf },
   data() {
     return {
       config: config,
+      pdfDoctor: true,
       previewImgs: "",
       imghightlight: "",
       highlight: [],
@@ -927,7 +945,15 @@ export default {
       console.log("usuerios_pdf", this.pdfData);
       this.$refs.html2Pdf.generatePdf();
     },
+    generatePacientePDF(user) {
+      this.pdfDoctor = false;
+      this.pdfData = user;
+      console.log("usuerios_pdf", this.pdfData);
+      this.$refs.html2PdfPaciente.generatePdf();
+      this.pdfDoctor = true;
+    },
     generateDoctorPDF(user) {
+      this.pdfDoctor = true;
       this.pdfData = user;
       console.log("usuerios_pdf", this.pdfData);
       this.$refs.html2Pdf.generatePdf();

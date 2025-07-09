@@ -356,12 +356,40 @@ export const CDI_PACIENTES_QUERY = gql`
     tipo_de_sangre
     alergias
     discapacidad
-        persona {
+    persona {
       ...personaDetalles
+    }
+    consultas {
+      ...consultasDetalles
+    }
+    diagnosticos {
+      ...diagnosticoDetalles
+    }
+    examenes {
+      ...examenes
+    }
+    medicamentos {
+      ...medicamento
+    }
+    tratamientos {
+      ...tratamientos
+    }
+    emergencias {
+      ...emergenciaDetalles
+    }
+    hospitalizaciones {
+      ...hospitalizacionDetalles
     }
     }
   }
   ${PERSONA_DETALLES}
+  ${CONSULTAS_DETALLES}
+  ${DIAGNOSTICO_DETALLES}
+  ${EXAMENES_DETALLES}
+  ${MEDICAMENTOS_DETALLES}
+  ${TRATAMIENTOS_DETALLES}
+  ${EMERGENCIA_DETALLES}
+  ${HOSPITALIZACION_DETALLES}
 `;
 
 
