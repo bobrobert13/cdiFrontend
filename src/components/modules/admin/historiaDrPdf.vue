@@ -1,9 +1,9 @@
 <template>
   <div>
-    <div  style="margin: 12px 12px">
+    <div style="margin: 12px 12px">
       <!-- Encabezado con membrete -->
       <img src="../../../assets/membrete.png" class="full-width" />
-      
+
       <!-- Título del documento -->
       <div class="text-center q-mt-md q-mb-lg">
         <h6 class="text-primary q-mb-none">DOCTOR</h6>
@@ -11,7 +11,7 @@
       </div>
 
       <!-- Información Personal -->
-      <!-- <div class="q-mb-lg">
+      <div class="q-mb-lg">
         <h5 class="text-primary q-mb-md">DATOS PERSONALES</h5>
         <q-markup-table class="q-mb-md">
           <thead class="bg-primary">
@@ -33,25 +33,39 @@
               <td class="text-weight-medium">Documento de Identidad</td>
               <td>{{ data.persona.cedula_identidad || 'No especificado' }}</td>
             </tr>
-            <tr>
-              <td class="text-weight-medium">Edad</td>
-              <td>{{ data.persona.edad || 'No especificado' }} años</td>
+            <tr v-if="data.persona.telefono || data.persona.correo">
+              <td class="text-weight-medium">Número de contacto</td>
+              <td>{{ data.persona.telefono.codigo || "+" }}{{ data.persona.telefono.numero || "No especificado" }}</td>
             </tr>
-            <tr>
-              <td class="text-weight-medium">Estado Civil</td>
-              <td>{{ data.persona.estado_civil || 'No especificado' }}</td>
+            <tr v-if="data.persona.correo">
+              <td class="text-weight-medium">Correo electrónico</td>
+              <td>{{ data.persona.correo.correo || 'No especificado' }}</td>
             </tr>
-            <tr>
-              <td class="text-weight-medium">Sexo</td>
-              <td>{{ data.persona.sexo || 'No especificado' }}</td>
+            <tr v-if="data.persona.direccion">
+              <td class="text-weight-medium">Código postal</td>
+              <td>{{ data.persona.direccion.codigo_postal || 'No especificado' }}</td>
             </tr>
-            <tr>
-              <td class="text-weight-medium">Ocupación</td>
-              <td>{{ data.persona.ocupacion || 'Médico' }}</td>
+            <tr v-if="data.persona.direccion">
+              <td class="text-weight-medium">Parroquia</td>
+              <td>{{ data.persona.direccion.parroquia || 'No especificado' }}</td>
+            </tr>
+            <tr v-if="data.persona.direccion">
+              <td class="text-weight-medium">Sector</td>
+              <td>{{ data.persona.direccion.sector || 'No especificado' }}</td>
+            </tr>
+
+            <tr v-if="data.persona.direccion">
+              <td class="text-weight-medium">Calle</td>
+              <td>{{ data.persona.direccion.calle || 'No especificado' }}</td>
+            </tr>
+
+            <tr v-if="data.persona.direccion">
+              <td class="text-weight-medium">Número de casa</td>
+              <td>{{ data.persona.direccion.numero_casa || 'No especificado' }}</td>
             </tr>
           </tbody>
         </q-markup-table>
-      </div> -->
+      </div>
 
       <!-- Información Profesional -->
       <div class="q-mb-lg">
@@ -152,8 +166,8 @@
       </div> -->
 
       <!-- Información del Sistema -->
-      <!-- <div class="q-mb-lg">
-        <h5 class="text-primary q-mb-md">INFORMACIÓN DEL SISTEMA</h5>
+      <div v-if="data.usuarios && data.usuarios.cdi" class="q-mb-lg">
+        <h5 class="text-primary q-mb-md">CDI</h5>
         <q-markup-table class="q-mb-md">
           <thead class="bg-primary">
             <tr class="text-white">
@@ -163,35 +177,29 @@
           </thead>
           <tbody class="bg-grey-1">
             <tr>
-              <td class="text-weight-medium">ID del Doctor</td>
-              <td>{{ data.id_doctor || 'No especificado' }}</td>
+              <td class="text-weight-medium">Número de CDI</td>
+              <td>{{ data.usuarios.cdi.numero_cdi || 'No especificado' }}</td>
             </tr>
             <tr>
-              <td class="text-weight-medium">Estado del Usuario</td>
-              <td>
-                <q-chip 
-                  :color="data.usuarios[0].estado === 'activo' ? 'positive' : 'negative'"
-                  text-color="white"
-                  size="sm"
-                >
-                  {{ data.usuarios[0].estado || 'No especificado' }}
-                </q-chip>
-              </td>
+              <td class="text-weight-medium">Número</td>
+              <td>{{ data.usuarios.cdi.nombre || 'No especificado' }}</td>
             </tr>
             <tr>
-              <td class="text-weight-medium">Rol en el Sistema</td>
-              <td>{{ data.usuarios[0].rol || 'No especificado' }}</td>
+              <td class="text-weight-medium">Cuadrante</td>
+              <td>{{ data.usuarios.cdi.cuadrante || 'No especificado' }}</td>
             </tr>
             <tr>
-              <td class="text-weight-medium">Fecha de Registro</td>
-              <td>{{ entradaFecha(data.createdAt) }}</td>
+              <td class="text-weight-medium">Encargado</td>
+              <td>{{ data.usuarios.cdi.encargado || 'No especificado' }}</td>
             </tr>
+
+
           </tbody>
         </q-markup-table>
-      </div> -->
+      </div>
 
       <!-- Pie de página -->
-      <div class="text-center q-mt-xl q-pa-md">
+      <div class="text-center  q-pa-sm">
         <p class="text-grey-6 q-mb-none">
           Documento generado el {{ fechaActual() }} - Sistema CDI
         </p>
@@ -245,7 +253,8 @@ export default {
   font-size: 13px;
 }
 
-h4, h5 {
+h4,
+h5 {
   font-weight: 600;
 }
 
