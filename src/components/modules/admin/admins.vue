@@ -11,7 +11,8 @@
 						class="text-primary" size="md"></q-icon>
 					<q-icon style="cursor: pointer" @click="workerView('addWorker')" name="mdi-plus"
 						class="text-primary" size="md"></q-icon>
-					<q-icon style="cursor: pointer" name="mdi-printer-pos" class="text-primary q-ml-sm" size="md"></q-icon>
+					<q-icon style="cursor: pointer" name="mdi-printer-pos" class="text-primary q-ml-sm"
+						size="md"></q-icon>
 				</div>
 			</div>
 			<div class="row justify-center q-mt-xl" v-if="this.users.length !== 0">
@@ -109,29 +110,35 @@
 								'Solo se permiten caracteres',
 						]" />
 						<q-input filled color="deep-purple-6" class="q-mb-xs" v-model="cdi_numero" type="text"
-							label="Número de CDI" />
+							label="Número de CDI" :rules="[
+								(val) => !!val || 'Este campo es obligatorio',
+								(val) => val.length <= 10 || 'Máximo 10 dígitos'
+							]" />
 						<q-input filled color="deep-purple-6" class="q-mb-xs" v-model="cdi_encargado" type="text"
-							label="Nombre de encargado" />
+							label="Nombre de encargado" :rules="[
+								(val) => !!val || 'Este campo es obligatorio',
+								(val) => /^[a-zA-Z0-9]+$/.test(val) || 'Solo se permiten letras y números (sin espacios ni símbolos)'
+							]" />
 						<q-input filled color="deep-purple-6" class="q-mb-xs" v-model="cdi_cuadrante" type="text"
-							label="Cuadrante" />
-
+							label="Cuadrante" :rules="[
+								(val) => !!val || 'Este campo es obligatorio',
+								(val) => val.length >= 3 || 'Mínimo 3 caracteres',
+								(val) => val.length <= 200 || 'Máximo 20 caracteres',
+							]" />
 					</div>
 				</div>
 				<div class="col-6" style="border-left: 10px solid white;">
 					<div class="column justify-center">
-
-
 						<p class="text-subtitle  text-medium">Credenciales de acceso</p>
 						<div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 ">
-
 							<q-input filled color="deep-purple-6" class="q-mb-xs" v-model="cdi_nombre_usuario"
-								label="Nombre de usuario" />
-
-							<q-input filled :type="isPwd ? 'password' : 'text'" color="deep-purple-6"
-								v-model="cdi_contrasena" label="Password" :rules="[
-									(val) => val.length >= 6 || 'Mínimo 6 caracteres',
+								label="Nombre de usuario" :rules="[
+									(val) => val.length >= 5 || 'Mínimo 5 caracteres',
 									(val) => val.length <= 20 || 'Máximo 20 caracteres',
-								]">
+									(val) => /^[a-zA-ZñÑáéíóúÁÉÍÓÚ]+$/.test(val) || 'Solo se permiten letras (sin números ni caracteres especiales)',
+								]" />
+							<q-input filled :type="isPwd ? 'password' : 'text'" color="deep-purple-6"
+								v-model="cdi_contrasena" label="Password" :rules="passwordRules">
 								<template v-slot:append>
 									<q-icon :name="isPwd ? 'visibility_off' : 'visibility'" class="cursor-pointer"
 										@click="isPwd = !isPwd" />
@@ -144,8 +151,7 @@
 				</div>
 			</div>
 			<div v-if="viewType === 'addWorker'" class="col-xl-5 col-lg-5 col-md-5 col-sm-12 col-xs-12 q-mt-md ">
-				<q-btn unelevated :loading="loader" @click="addEncargado()"
-					:disable="!valid || cdi_nombre === '' || cdi_numero === '' || cdi_encargado === '' || cdi_cuadrante === '' || cdi_contrasena === '' || cdi_nombre_usuario === ''"
+				<q-btn unelevated :loading="loader" @click="addEncargado()" :disable="!valid"
 					class="full-width text-white bg-primary" label="Añadir CDI" />
 			</div>
 
@@ -523,12 +529,87 @@ export default {
 				this.valid = true;
 			}
 		},
+		cdi_nombre() {
+			this.validateFields();
+		},
+		cdi_numero() {
+			this.validateFields();
+		},
+		cdi_encargado() {
+			this.validateFields();
+		},
+		cdi_cuadrante() {
+			this.validateFields();
+		},
+		cdi_nombre_usuario() {
+			this.validateFields();
+		},
+		cdi_contrasena() {
+			this.validateFields();
+		},
 	},
 	methods: {
+
+		validateFields() {
+			const rules = {
+				cdi_nombre: [
+					(val) => !!val || 'Este campo es obligatorio',
+					(val) => val.length >= 3 || 'Mínimo 3 caracteres',
+					(val) => val.length <= 200 || 'Máximo 200 caracteres',
+					(val) =>
+						/^([\sa-zA-ZñÑáéíóúÁÉÍÓÚ]{3,40})*$/.test(val) ||
+						'Solo se permiten caracteres',
+				],
+				cdi_numero: [
+					(val) => !!val || 'Este campo es obligatorio',
+					(val) => val.length <= 10 || 'Máximo 10 dígitos',
+				],
+				cdi_encargado: [
+					(val) => !!val || 'Este campo es obligatorio',
+					(val) =>
+						/^[a-zA-Z0-9]+$/.test(val) ||
+						'Solo se permiten letras y números (sin espacios ni símbolos)',
+				],
+				cdi_cuadrante: [
+					(val) => !!val || 'Este campo es obligatorio',
+					(val) => val.length >= 3 || 'Mínimo 3 caracteres',
+					(val) => val.length <= 20 || 'Máximo 20 caracteres',
+				],
+				cdi_nombre_usuario: [
+					(val) => val.length >= 5 || 'Mínimo 5 caracteres',
+					(val) => val.length <= 20 || 'Máximo 20 caracteres',
+					(val) =>
+						/^[a-zA-ZñÑáéíóúÁÉÍÓÚ]+$/.test(val) ||
+						'Solo se permiten letras (sin números ni caracteres especiales)',
+				],
+				cdi_contrasena: [
+					(val) => val.length >= 8 || 'Mínimo 8 caracteres',
+					(val) =>
+						/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&.])[A-Za-z\d@$!%*?&.]{8,}$/.test(
+							val
+						) || 'Debe contener al menos una mayúscula, una minúscula, un número y un carácter especial',
+				],
+			};
+
+			const isValid =
+				rules.cdi_nombre.every((rule) => rule(this.cdi_nombre) === true) &&
+				rules.cdi_numero.every((rule) => rule(this.cdi_numero) === true) &&
+				rules.cdi_encargado.every((rule) => rule(this.cdi_encargado) === true) &&
+				rules.cdi_cuadrante.every((rule) => rule(this.cdi_cuadrante) === true) &&
+				rules.cdi_nombre_usuario.every(
+					(rule) => rule(this.cdi_nombre_usuario) === true
+				) &&
+				rules.cdi_contrasena.every((rule) => rule(this.cdi_contrasena) === true);
+
+			this.valid = isValid;
+		},
+
+
 		cdiDetails(user) {
 			this.dataUser = user;
 			this.workerView("userDetail");
 		},
+
 		validateUserCredentialsInputs() {
 			const password = this.dataUser.usuarios.contrasena;
 			const username = this.dataUser.usuarios.nombre_usuario;
