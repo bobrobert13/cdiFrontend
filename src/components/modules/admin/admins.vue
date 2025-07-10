@@ -11,7 +11,8 @@
 						class="text-primary" size="md"></q-icon>
 					<q-icon style="cursor: pointer" @click="workerView('addWorker')" name="mdi-plus"
 						class="text-primary" size="md"></q-icon>
-					<q-icon @click="cdisInformationsPDF()" style="cursor: pointer" name="mdi-printer-pos" class="text-primary q-ml-sm" size="md"></q-icon>
+					<q-icon @click="cdisInformationsPDF()" style="cursor: pointer" name="mdi-printer-pos"
+						class="text-primary q-ml-sm" size="md"></q-icon>
 				</div>
 			</div>
 			<div class="row justify-center q-mt-xl" v-if="this.users.length !== 0">
@@ -179,21 +180,25 @@
 										(val) => !!val || 'Este campo es obligatorio',
 										(val) => val.length >= 3 || 'Mínimo 3 caracteres',
 										(val) => val.length <= 200 || 'Máximo 200 caracteres',
-										(val) => /^[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+$/.test(val) || 'Solo se permiten letras y espacios (sin números ni símbolos)'
+										(val) =>
+											/^([\sa-zA-ZñÑáéíóúÁÉÍÓÚ]{3,40})*$/.test(val) ||
+											'Solo se permiten caracteres',
 									]" />
 							</div>
 							<div class="col-6 q-pa-sm">
 								<q-input filled color="deep-purple-6" @blur="validarNumeroCDI"
 									v-model="dataUser.numero_cdi" label="Número de CDI" :rules="[
 										(val) => !!val || 'Este campo es obligatorio',
-										(val) => val.length <= 10 || 'Máximo 10 dígitos'
+										(val) => val.length <= 10 || 'Máximo 10 dígitos',
 									]" />
 							</div>
 							<div class="col-6 q-pa-sm">
 								<q-input filled color="deep-purple-6" @blur="validarEncargado"
 									v-model="dataUser.encargado" label="Encargado" :rules="[
 										(val) => !!val || 'Este campo es obligatorio',
-										(val) => /^[a-zA-Z0-9]+$/.test(val) || 'Solo se permiten letras y números (sin espacios ni símbolos)'
+										(val) =>
+											/^([\sa-zA-ZñÑáéíóúÁÉÍÓÚ]{3,40})*$/.test(val) ||
+											'Solo se permiten letras y números (no símbolos)',
 									]" />
 							</div>
 							<div class="col-6 q-pa-sm">
@@ -201,7 +206,7 @@
 									v-model="dataUser.cuadrante" label="Cuadrante" :rules="[
 										(val) => !!val || 'Este campo es obligatorio',
 										(val) => val.length >= 3 || 'Mínimo 3 caracteres',
-										(val) => val.length <= 200 || 'Máximo 20 caracteres',
+										(val) => val.length <= 20 || 'Máximo 20 caracteres',
 									]" />
 							</div>
 
@@ -565,8 +570,8 @@ export default {
 				cdi_encargado: [
 					(val) => !!val || 'Este campo es obligatorio',
 					(val) =>
-						/^[a-zA-Z0-9]+$/.test(val) ||
-						'Solo se permiten letras y números (sin espacios ni símbolos)',
+						/^([\sa-zA-ZñÑáéíóúÁÉÍÓÚ]{3,40})*$/.test(val) ||
+						'Solo se permiten letras',
 				],
 				cdi_cuadrante: [
 					(val) => !!val || 'Este campo es obligatorio',
@@ -609,20 +614,27 @@ export default {
 		},
 
 		validateUserCredentialsInputs() {
+			if (!this.dataUser || !this.dataUser.usuarios) return false;
+
 			const password = this.dataUser.usuarios.contrasena;
 			const username = this.dataUser.usuarios.nombre_usuario;
 
-			const passwordValid =
-				password.length >= 8 &&
-				password.length <= 20 &&
-				/[0-9]/.test(password) &&
-				/[!@#$%^&*(),.?"{}|<>]/.test(password) &&
-				/[A-Z]/.test(password);
+			const passwordRules = [
+				(val) => val.length >= 8 || 'Mínimo 8 caracteres',
+				(val) => val.length <= 20 || 'Máximo 20 caracteres',
+				(val) => /[0-9]/.test(val) || 'Debe contener al menos un número',
+				(val) => /[!@#$%^&*(),.?"{}|<>]/.test(val) || 'Debe contener al menos un carácter especial',
+				(val) => /[A-Z]/.test(val) || 'Debe contener al menos una mayúscula'
+			];
 
-			const nameValid =
-				username.length >= 5 &&
-				username.length <= 15 &&
-				/^[a-zA-Z0-9_]+$/.test(username);
+			const usernameRules = [
+				(val) => val.length >= 5 || 'Mínimo 5 caracteres',
+				(val) => val.length <= 15 || 'Máximo 15 caracteres',
+				(val) => /^[a-zA-Z0-9_]+$/.test(val) || 'Solo se permiten letras, números y guiones bajos'
+			];
+
+			const passwordValid = passwordRules.every(rule => rule(password) === true);
+			const nameValid = usernameRules.every(rule => rule(username) === true);
 
 			this.isValid = passwordValid && nameValid;
 		},
@@ -630,52 +642,52 @@ export default {
 		validarNombre() {
 			if (!this.dataUser) return false;
 			const val = this.dataUser.nombre;
-			if (!val) {
-				this.isValidInfoCDI = false;
-			} else if (val.length < 3) {
-				this.isValidInfoCDI = false;
-			} else if (val.length > 200) {
-				this.isValidInfoCDI = false;
-			} else if (!/^[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+$/.test(val)) {
-				this.isValidInfoCDI = false;
-			} else {
-				this.isValidInfoCDI = true;
-			}
+
+			const rules = [
+				(val) => !!val || 'Este campo es obligatorio',
+				(val) => val.length >= 3 || 'Mínimo 3 caracteres',
+				(val) => val.length <= 200 || 'Máximo 200 caracteres',
+				(val) => /^[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+$/.test(val) || 'Solo se permiten letras y espacios'
+			];
+
+			this.isValidInfoCDI = rules.every(rule => rule(val) === true);
 		},
+
 		validarNumeroCDI() {
 			if (!this.dataUser) return false;
 			const val = this.dataUser.numero_cdi;
-			if (!val) {
-				this.isValidInfoCDI = false;
-			} else if (val.length > 10) {
-				this.isValidInfoCDI = false;
-			} else {
-				this.isValidInfoCDI = true;
-			}
+
+			const rules = [
+				(val) => !!val || 'Este campo es obligatorio',
+				(val) => val.length <= 10 || 'Máximo 10 dígitos'
+			];
+
+			this.isValidInfoCDI = rules.every(rule => rule(val) === true);
 		},
+
 		validarEncargado() {
 			if (!this.dataUser) return false;
 			const val = this.dataUser.encargado;
-			if (!val) {
-				this.isValidInfoCDI = false;
-			} else if (!/^[a-zA-Z0-9]+$/.test(val)) {
-				this.isValidInfoCDI = false;
-			} else {
-				this.isValidInfoCDI = true;
-			}
+
+			const rules = [
+				(val) => !!val || 'Este campo es obligatorio',
+				(val) => /^([\sa-zA-ZñÑáéíóúÁÉÍÓÚ]{3,40})*$/.test(val) || 'Solo se permiten letras y números (no símbolos)'
+			];
+
+			this.isValidInfoCDI = rules.every(rule => rule(val) === true);
 		},
+
 		validarCuadrante() {
 			if (!this.dataUser) return false;
 			const val = this.dataUser.cuadrante;
-			if (!val) {
-				this.isValidInfoCDI = false;
-			} else if (val.length < 3) {
-				this.isValidInfoCDI = false;
-			} else if (val.length > 20) {
-				this.isValidInfoCDI = false;
-			} else {
-				this.isValidInfoCDI = true;
-			}
+
+			const rules = [
+				(val) => !!val || 'Este campo es obligatorio',
+				(val) => val.length >= 3 || 'Mínimo 3 caracteres',
+				(val) => val.length <= 20 || 'Máximo 20 caracteres'
+			];
+
+			this.isValidInfoCDI = rules.every(rule => rule(val) === true);
 		},
 
 		workerView(typeView) {
@@ -823,6 +835,12 @@ export default {
 					this.loader = false;
 					this.dataUser = "";
 					this.viewType = "userList";
+					this.cdi_nombre_usuario = '';
+					this.cdi_contrasena = '';
+					this.cdi_numero = '';
+					this.cdi_nombre = '';
+					this.cdi_encargado = '';
+					this.cdi_cuadrante = '';
 					this.AllEncargados();
 					this.$q.notify({
 						message: "CDI actualizado",
