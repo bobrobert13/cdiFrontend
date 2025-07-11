@@ -1,238 +1,140 @@
 <template>
-  <div>
-    <div style="margin: 12px 12px">
-      <!-- Encabezado con membrete -->
-      <img src="../../../assets/membrete.png" class="full-width" />
+  <div class="pdf-container">
+    <img src="../../../assets/membrete.png" class="full-width q-mb-sm" style="max-height: 80px; object-fit: contain;" />
+    
+    <!-- Título del documento -->
+    <div class="text-center q-mb-md">
+      <h6 class="text-primary no-padding no-margin q-mb-none">DOCTOR</h6>
+      <p class="text-grey-6 no-padding q-mt-sm">Información Personal y Profesional</p>
+    </div>
 
-      <!-- Título del documento -->
-      <div class="text-center q-mt-xs q-mb-sm">
-        <h6 class="text-primary no-padding no=margin q-mb-none">DOCTOR</h6>
-        <p class="text-grey-6 no-padding q-mt-sm">Información Personal y Profesional</p>
-      </div>
-
-      <!-- Información Personal -->
-      <div class="q-mb-xs">
-        <h6 style="font-size: 14px;" class="text-primary q-mb-sm no-padding no-margin">DATOS PERSONALES</h6>
-        <q-markup-table class="q-mb-md">
-          <thead class="bg-primary">
-            <tr class="text-white">
-              <th class="text-left">Campo</th>
-              <th class="text-left">Información</th>
-            </tr>
-          </thead>
-          <tbody class="bg-grey-1">
-            <tr>
-              <td class="text-weight-medium">Nombre Completo</td>
-              <td>{{ data.persona.nombre1 || 'No especificado' }}</td>
-            </tr>
-            <tr>
-              <td class="text-weight-medium">Nacionalidad</td>
-              <td>{{ data.persona.nacionalidad || 'No especificado' }}</td>
-            </tr>
-            <tr>
-              <td class="text-weight-medium">Documento de Identidad</td>
-              <td>{{ data.persona.cedula_identidad || 'No especificado' }}</td>
-            </tr>
-            <tr v-if="data.persona.telefono || data.persona.correo">
-              <td class="text-weight-medium">Número de contacto</td>
-              <td>{{ data.persona.telefono.codigo || "+" }}{{ data.persona.telefono.numero || "No especificado" }}</td>
-            </tr>
-            <tr v-if="data.persona.correo">
-              <td class="text-weight-medium">Correo electrónico</td>
-              <td>{{ data.persona.correo.correo || 'No especificado' }}</td>
-            </tr>
-            <tr v-if="data.persona.direccion">
-              <td class="text-weight-medium">Código postal</td>
-              <td>{{ data.persona.direccion.codigo_postal || 'No especificado' }}</td>
-            </tr>
-            <tr v-if="data.persona.direccion">
-              <td class="text-weight-medium">Parroquia</td>
-              <td>{{ data.persona.direccion.parroquia || 'No especificado' }}</td>
-            </tr>
-            <tr v-if="data.persona.direccion">
-              <td class="text-weight-medium">Sector</td>
-              <td>{{ data.persona.direccion.sector || 'No especificado' }}</td>
-            </tr>
-
-            <tr v-if="data.persona.direccion">
-              <td class="text-weight-medium">Calle</td>
-              <td>{{ data.persona.direccion.calle || 'No especificado' }}</td>
-            </tr>
-
-            <tr v-if="data.persona.direccion">
-              <td class="text-weight-medium">Número de casa</td>
-              <td>{{ data.persona.direccion.numero_casa || 'No especificado' }}</td>
-            </tr>
-          </tbody>
-        </q-markup-table>
-      </div>
-
-      <!-- Información Profesional -->
-      <div class="q-mb-xs">
-        <h6 style="font-size: 14px;" class="text-primary q-mb-sm no-padding no-margin">INFORMACIÓN PROFESIONAL</h6>
-        <q-markup-table class="q-mb-md">
-          <thead class="bg-primary">
-            <tr class="text-white">
-              <th class="text-left">Campo</th>
-              <th class="text-left">Información</th>
-            </tr>
-          </thead>
-          <tbody class="bg-grey-1">
-            <tr>
-              <td class="text-weight-medium">Número de Carnet</td>
-              <td>{{ data.numero_carnet || 'No especificado' }}</td>
-            </tr>
-            <tr>
-              <td class="text-weight-medium">Años de Experiencia</td>
-              <td>{{ data.anos_experiencia || 'No especificado' }} años</td>
-            </tr>
-            <tr>
-              <td class="text-weight-medium">Área de Trabajo</td>
-              <td>{{ data.area_de_trabajo || 'No especificado' }}</td>
-            </tr>
-            <tr>
-              <td class="text-weight-medium">Horario</td>
-              <td>{{ data.horario || 'No especificado' }}</td>
-            </tr>
-          </tbody>
-        </q-markup-table>
-      </div>
-
-      <!-- Información de Contacto -->
-      <!-- <div class="q-mb-lg">
-        <h5 class="text-primary q-mb-md">INFORMACIÓN DE CONTACTO</h5>
-        <q-markup-table class="q-mb-md">
-          <thead class="bg-primary">
-            <tr class="text-white">
-              <th class="text-left">Campo</th>
-              <th class="text-left">Información</th>
-            </tr>
-          </thead>
-          <tbody class="bg-grey-1">
-            <tr>
-              <td class="text-weight-medium">Teléfono</td>
-              <td>
-                <span v-if="data.persona.telefono">
-                  {{ data.persona.telefono.codigo }} - {{ data.persona.telefono.numero }}
-                </span>
-                <span v-else>No especificado</span>
-              </td>
-            </tr>
-            <tr>
-              <td class="text-weight-medium">Correo Electrónico</td>
-              <td>{{ data.persona.correo.correo || 'No especificado' }}</td>
-            </tr>
-          </tbody>
-        </q-markup-table>
-      </div> -->
-
-      <!-- Dirección -->
-      <!-- <div class="q-mb-lg" v-if="data.persona.direccion">
-        <h5 class="text-primary q-mb-md">DIRECCIÓN</h5>
-        <q-markup-table class="q-mb-md">
-          <thead class="bg-primary">
-            <tr class="text-white">
-              <th class="text-left">Campo</th>
-              <th class="text-left">Información</th>
-            </tr>
-          </thead>
-          <tbody class="bg-grey-1">
-            <tr>
-              <td class="text-weight-medium">Calle</td>
-              <td>{{ data.persona.direccion.calle || 'No especificado' }}</td>
-            </tr>
-            <tr>
-              <td class="text-weight-medium">Número de Casa</td>
-              <td>{{ data.persona.direccion.numero_casa || 'No especificado' }}</td>
-            </tr>
-            <tr>
-              <td class="text-weight-medium">Sector</td>
-              <td>{{ data.persona.direccion.sector || 'No especificado' }}</td>
-            </tr>
-            <tr>
-              <td class="text-weight-medium">Parroquia</td>
-              <td>{{ data.persona.direccion.parroquia || 'No especificado' }}</td>
-            </tr>
-            <tr>
-              <td class="text-weight-medium">Código Postal</td>
-              <td>{{ data.persona.direccion.codigo_postal || 'No especificado' }}</td>
-            </tr>
-            <tr v-if="data.persona.direccion.punto_referencia">
-              <td class="text-weight-medium">Punto de Referencia</td>
-              <td>{{ data.persona.direccion.punto_referencia }}</td>
-            </tr>
-          </tbody>
-        </q-markup-table>
-      </div> -->
-      <div  v-if="data.pacientes" class="q-mb-xs">
-      <h6 style="font-size: 14px;" class="text-primary q-mb-sm no-padding no-margin">Pacientes del doctor</h6>
-      <q-markup-table>
-      <thead class="bg-primary no-border no-border-radius">
-        <tr class="text-white">
-          <th class="text-left">Nacionalidad</th>
-          <th class="text-left">Documento de identidad</th>
-          <th class="text-left">Edad</th>
-          <th class="text-left">Estado civil</th>
-          <th class="text-left">Sexo</th>
-        </tr>
-      </thead>
-      <tbody class="bg-grey-3">
-        <tr v-for="paciente in data.pacientes" :key="paciente.id_paciente">
-          <td class="text-left">{{ paciente.persona.nacionalidad }}</td>
-          <td class="text-left">{{ paciente.persona.cedula_identidad }}</td>
-          <td class="text-left">{{ paciente.persona.edad }}</td>
-          <td class="text-left">{{ paciente.persona.estado_civil }}</td>
-          <td class="text-left">{{ paciente.persona.sexo }}</td>
-        </tr>
-      </tbody>
-    </q-markup-table>
-  </div>
-      <!-- Información del Sistema -->
-      <div v-if="data.usuarios && data.usuarios.cdi" class="q-mb-lg">
-        <h5 class="text-primary q-mb-sm no-padding no-margin">CDI</h5>
-        <q-markup-table class="q-mb-md">
-          <thead class="bg-primary">
-            <tr class="text-white">
-              <th class="text-left">Campo</th>
-              <th class="text-left">Información</th>
-            </tr>
-          </thead>
-          <tbody class="bg-grey-1">
-            <tr>
-              <td class="text-weight-medium">Número de CDI</td>
-              <td>{{ data.usuarios.cdi.numero_cdi || 'No especificado' }}</td>
-            </tr>
-            <tr>
-              <td class="text-weight-medium">Número</td>
-              <td>{{ data.usuarios.cdi.nombre || 'No especificado' }}</td>
-            </tr>
-            <tr>
-              <td class="text-weight-medium">Cuadrante</td>
-              <td>{{ data.usuarios.cdi.cuadrante || 'No especificado' }}</td>
-            </tr>
-            <tr>
-              <td class="text-weight-medium">Encargado</td>
-              <td>{{ data.usuarios.cdi.encargado || 'No especificado' }}</td>
-            </tr>
-
-
-          </tbody>
-        </q-markup-table>
-      </div>
-
-      <!-- Pie de página -->
-      <div class="text-center  q-pa-sm">
-        <p class="text-grey-6 q-mb-none">
-          Documento generado el {{ fechaActual() }} - Sistema CDI
-        </p>
+    <!-- INFORMACIÓN PERSONAL -->
+    <div class="info-section">
+      <div class="section-title">DATOS PERSONALES</div>
+      <div class="info-grid">
+        <div class="info-item">
+          <span class="label">Nombre:</span>
+          <span class="value">{{ data.persona.nombre1 || 'No especificado' }}</span>
+        </div>
+        <div class="info-item">
+          <span class="label">Nacionalidad:</span>
+          <span class="value">{{ data.persona.nacionalidad || 'No especificado' }}</span>
+        </div>
+        <div class="info-item">
+          <span class="label">Cédula:</span>
+          <span class="value">{{ data.persona.cedula_identidad || 'No especificado' }}</span>
+        </div>
+        <div class="info-item" v-if="data.persona.telefono">
+          <span class="label">Teléfono:</span>
+          <span class="value">{{ data.persona.telefono.codigo || "+" }}{{ data.persona.telefono.numero || "No especificado" }}</span>
+        </div>
+        <div class="info-item" v-if="data.persona.correo">
+          <span class="label">Correo:</span>
+          <span class="value">{{ data.persona.correo.correo || 'No especificado' }}</span>
+        </div>
       </div>
     </div>
 
-    <!-- Mensaje cuando no hay datos -->
-    <!-- <div v-else class="text-center q-pa-xl">
-      <q-icon name="info" size="48px" color="grey-5" />
-      <p class="text-grey-6 q-mt-md">No hay información disponible para mostrar</p>
-    </div> -->
+    <!-- INFORMACIÓN DE DIRECCIÓN -->
+    <div v-if="data.persona.direccion" class="info-section">
+      <div class="section-title">DIRECCIÓN</div>
+      <div class="info-grid">
+        <div class="info-item">
+          <span class="label">Código Postal:</span>
+          <span class="value">{{ data.persona.direccion.codigo_postal || 'No especificado' }}</span>
+        </div>
+        <div class="info-item">
+          <span class="label">Parroquia:</span>
+          <span class="value">{{ data.persona.direccion.parroquia || 'No especificado' }}</span>
+        </div>
+        <div class="info-item">
+          <span class="label">Sector:</span>
+          <span class="value">{{ data.persona.direccion.sector || 'No especificado' }}</span>
+        </div>
+        <div class="info-item">
+          <span class="label">Calle:</span>
+          <span class="value">{{ data.persona.direccion.calle || 'No especificado' }}</span>
+        </div>
+        <div class="info-item">
+          <span class="label">Casa N°:</span>
+          <span class="value">{{ data.persona.direccion.numero_casa || 'No especificado' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- INFORMACIÓN PROFESIONAL -->
+    <div class="info-section">
+      <div class="section-title">INFORMACIÓN PROFESIONAL</div>
+      <div class="info-grid">
+        <div class="info-item">
+          <span class="label">Número Carnet:</span>
+          <span class="value">{{ data.numero_carnet || 'No especificado' }}</span>
+        </div>
+        <div class="info-item">
+          <span class="label">Años Experiencia:</span>
+          <span class="value">{{ data.anos_experiencia || 'No especificado' }} años</span>
+        </div>
+        <div class="info-item">
+          <span class="label">Área Trabajo:</span>
+          <span class="value">{{ data.area_de_trabajo || 'No especificado' }}</span>
+        </div>
+        <div class="info-item">
+          <span class="label">Horario:</span>
+          <span class="value">{{ data.horario || 'No especificado' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- PACIENTES DEL DOCTOR -->
+    <div v-if="data.pacientes && data.pacientes.length > 0" class="info-section">
+      <div class="section-title">PACIENTES ({{ data.pacientes.length }})</div>
+      <div class="compact-table">
+        <div class="table-header">
+          <div class="header-cell">Nacionalidad</div>
+          <div class="header-cell">Cédula</div>
+          <div class="header-cell">Edad</div>
+          <div class="header-cell">Estado Civil</div>
+          <div class="header-cell">Sexo</div>
+        </div>
+        <div v-for="paciente in data.pacientes" :key="paciente.id_paciente" class="table-row">
+          <div class="table-cell">{{ paciente.persona.nacionalidad }}</div>
+          <div class="table-cell">{{ paciente.persona.cedula_identidad }}</div>
+          <div class="table-cell">{{ paciente.persona.edad }}</div>
+          <div class="table-cell">{{ paciente.persona.estado_civil }}</div>
+          <div class="table-cell">{{ paciente.persona.sexo }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- INFORMACIÓN DEL CDI -->
+    <div v-if="data.usuarios && data.usuarios.cdi" class="info-section">
+      <div class="section-title">CDI ASIGNADO</div>
+      <div class="info-grid">
+        <div class="info-item">
+          <span class="label">Número CDI:</span>
+          <span class="value">{{ data.usuarios.cdi.numero_cdi || 'No especificado' }}</span>
+        </div>
+        <div class="info-item">
+          <span class="label">Nombre:</span>
+          <span class="value">{{ data.usuarios.cdi.nombre || 'No especificado' }}</span>
+        </div>
+        <div class="info-item">
+          <span class="label">Cuadrante:</span>
+          <span class="value">{{ data.usuarios.cdi.cuadrante || 'No especificado' }}</span>
+        </div>
+        <div class="info-item">
+          <span class="label">Encargado:</span>
+          <span class="value">{{ data.usuarios.cdi.encargado || 'No especificado' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pie de página -->
+    <div class="text-center q-pa-sm q-mt-md">
+      <p class="text-grey-6 q-mb-none">
+        Documento generado el {{ fechaActual() }} - Sistema CDI
+      </p>
+    </div>
   </div>
 </template>
 
@@ -260,27 +162,139 @@ export default {
 }
 </script>
 
-<style scoped>
-.q-markup-table {
-  border-radius: 8px;
-  overflow: hidden;
+<style lang="scss" scoped>
+.pdf-container {
+  padding: 10px;
+  font-family: Arial, sans-serif;
+  font-size: 10px;
+  line-height: 1.2;
+  max-width: 210mm; /* A4 width */
+  margin: 0 auto;
 }
 
-.q-markup-table thead th {
+.info-section {
+  margin-bottom: 15px;
+  page-break-inside: avoid;
+}
+
+.section-title {
+  background-color: #1976d2;
+  color: white;
+  padding: 4px 8px;
   font-weight: bold;
-  font-size: 14px;
+  font-size: 11px;
+  margin-bottom: 5px;
+  border-radius: 3px;
 }
 
-.q-markup-table tbody td {
-  font-size: 13px;
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 3px;
+  margin-bottom: 5px;
 }
 
-h4,
-h5 {
-  font-weight: 600;
+.info-item {
+  display: flex;
+  align-items: center;
+  padding: 2px 4px;
+  background-color: #f5f5f5;
+  border-radius: 2px;
 }
 
-.text-weight-medium {
-  font-weight: 500;
+.label {
+  font-weight: bold;
+  margin-right: 5px;
+  min-width: 80px;
+  color: #333;
+}
+
+.value {
+  color: #666;
+  word-break: break-word;
+}
+
+.compact-table {
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  overflow: hidden;
+  margin-top: 5px;
+}
+
+.table-header {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  background-color: #1976d2;
+  font-weight: bold;
+  font-size: 9px;
+}
+
+.header-cell {
+  padding: 3px 4px;
+  border-right: 1px solid #ddd;
+  text-align: center;
+  color: white;
+}
+
+.header-cell:last-child {
+  border-right: none;
+}
+
+.table-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  border-top: 1px solid #ddd;
+  font-size: 9px;
+}
+
+.table-row:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.table-cell {
+  padding: 3px 4px;
+  border-right: 1px solid #ddd;
+  word-break: break-word;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.table-cell:last-child {
+  border-right: none;
+}
+
+/* Responsive adjustments for printing */
+@media print {
+  .pdf-container {
+    padding: 5px;
+    font-size: 9px;
+  }
+  
+  .info-section {
+    margin-bottom: 10px;
+  }
+  
+  .section-title {
+    font-size: 10px;
+    padding: 3px 6px;
+  }
+  
+  .info-grid {
+    gap: 2px;
+  }
+  
+  .info-item {
+    padding: 1px 3px;
+  }
+  
+  .table-header,
+  .table-row {
+    font-size: 8px;
+  }
+  
+  .header-cell,
+  .table-cell {
+    padding: 2px 3px;
+  }
 }
 </style>
