@@ -13,8 +13,8 @@
               <div class="col q-pa-md self-center text-right">
                 <q-icon style="cursor: pointer" @click="workerView('searchUser')" name="mdi-account-search"
                   class="text-primary q-mr-md" size="md"></q-icon>
-                <q-icon style="cursor: pointer" @click="workerView('addWorker')" name="mdi-plus q-mr-md" class="text-primary"
-                  size="md"></q-icon>
+                <q-icon style="cursor: pointer" @click="workerView('addWorker')" name="mdi-plus q-mr-md"
+                  class="text-primary" size="md"></q-icon>
 
               </div>
             </div>
@@ -32,7 +32,7 @@
                       <q-item-label class="text-left q-mb-xs" lines="1">
                         <span class="text-weight-medium">Documento de identidad: {{ user.persona.nacionalidad }} - {{
                           user.persona.cedula_identidad
-                          }}</span>
+                        }}</span>
                       </q-item-label>
                       <q-item-label class="text-left" lines="1">
                         <span class="text-weight-medium">Edad del paciente: {{ user.persona.edad }} años</span>
@@ -61,9 +61,8 @@
                             <q-icon name="mdi-information" /> Paciente hospitalizado
                           </span>
 
-                          
-                          <button @click="generatePacientePDF(user)" type="button"
-                            lines="2"
+
+                          <button @click="generatePacientePDF(user)" type="button" lines="2"
                             class=" q-ml-xl cursor-pointer text-primary self-center text-bold" style="cursor: pointer">
                             <q-icon name="mdi-printer-pos" /> Descargar ficha del paciente
                           </button>
@@ -423,7 +422,7 @@
                       <q-item style="cursor:pointer;">
                         <q-item-section>
                           <q-item-label caption>Paciente debe asistir el: <b>{{ entradaFecha(consulta.fecha_consulta)
-                          }}</b></q-item-label>
+                              }}</b></q-item-label>
                           <span class="q-my-sm"> <q-icon name="mdi-information" color="primary" /> Estado actual: <b>{{
                             consulta.estado_consulta }}</b></span>
                           <q-item-label>Tipo de consulta: <b>{{ consulta.tipo_consulta }}</b></q-item-label>
@@ -644,7 +643,7 @@
                       <q-popup-proxy cover transition-show="scale" transition-hide="scale">
                         <q-date v-model="hospitalizacion_fechaIngreso">
                           <div class="row items-center justify-end">
-                            <q-btn v-close-popup label="Close" color="primary" flat />
+                            <q-btn v-close-popup label="Cerrar" color="primary" flat />
                           </div>
                         </q-date>
                       </q-popup-proxy>
@@ -660,7 +659,7 @@
                       <q-popup-proxy cover transition-show="scale" transition-hide="scale">
                         <q-date v-model="hospitalizacion_fechaEgreso">
                           <div class="row items-center justify-end">
-                            <q-btn v-close-popup label="Close" color="primary" flat />
+                            <q-btn v-close-popup label="Cerrar" color="primary" flat />
                           </div>
                         </q-date>
                       </q-popup-proxy>
@@ -790,7 +789,7 @@
                       <q-popup-proxy cover transition-show="scale" transition-hide="scale">
                         <q-date v-model="ingresoSalida">
                           <div class="row items-center justify-end">
-                            <q-btn v-close-popup label="Close" color="primary" flat />
+                            <q-btn v-close-popup label="Cerrar" color="primary" flat />
                           </div>
                         </q-date>
                       </q-popup-proxy>
@@ -801,14 +800,12 @@
               <q-separator />
 
               <q-card-actions align="center">
-                <q-btn flat :disable="this.ingreso === ''
-                  || this.salida === '' ||
-                  this.tipo_consulta === '' ||
-                  this.motivo_consulta === '' ||
-                  this.sintomas_consulta === '' ||
-                  this.notas_medicas === '' ||
-                  this.ingresoSalida === ''
-
+                <q-btn flat :disable="
+                  tipo_consulta === '' ||
+                  motivo_consulta === '' ||
+                  sintomas_consulta === '' ||
+                  notas_medicas === '' ||
+                  !ingresoSalida
                   " @click="añadirConsul()">
                   Añadir
                 </q-btn>
@@ -958,7 +955,7 @@
                 <q-btn flat :disable="this.examen_tipoDeExamen === '' ||
                   this.examen_estadoExamen === '' ||
                   this.examen_descripcion === '' ||
-                  this.examen_laboratorioCentro === ''  
+                  this.examen_laboratorioCentro === ''
                   " @click="añadirExamen()">
                   Crear examen para paciente
                 </q-btn>
@@ -1068,7 +1065,7 @@
                       <q-popup-proxy cover transition-show="scale" transition-hide="scale">
                         <q-date v-model="tratamiento_fechaInicio">
                           <div class="row items-center justify-end">
-                            <q-btn v-close-popup label="Close" color="primary" flat />
+                            <q-btn v-close-popup label="Cerrar" color="primary" flat />
                           </div>
                         </q-date>
                       </q-popup-proxy>
@@ -1084,7 +1081,7 @@
                       <q-popup-proxy cover transition-show="scale" transition-hide="scale">
                         <q-date v-model="tratamiento_fechaCulminacion">
                           <div class="row items-center justify-end">
-                            <q-btn v-close-popup label="Close" color="primary" flat />
+                            <q-btn v-close-popup label="Cerrar" color="primary" flat />
                           </div>
                         </q-date>
                       </q-popup-proxy>
@@ -1229,7 +1226,7 @@
                       <q-popup-proxy cover transition-show="scale" transition-hide="scale">
                         <q-date v-model="medicamento_fechaInicio">
                           <div class="row items-center justify-end">
-                            <q-btn v-close-popup label="Close" color="primary" flat />
+                            <q-btn v-close-popup label="Cerrar" color="primary" flat />
                           </div>
                         </q-date>
                       </q-popup-proxy>
@@ -1246,7 +1243,7 @@
                       <q-popup-proxy cover transition-show="scale" transition-hide="scale">
                         <q-date v-model="medicamento_fechaFin">
                           <div class="row items-center justify-end">
-                            <q-btn v-close-popup label="Close" color="primary" flat />
+                            <q-btn v-close-popup label="Cerrar" color="primary" flat />
                           </div>
                         </q-date>
                       </q-popup-proxy>
@@ -1315,7 +1312,7 @@
                       <q-popup-proxy cover transition-show="scale" transition-hide="scale">
                         <q-date v-model="ingresoSalida">
                           <div class="row items-center justify-end">
-                            <q-btn v-close-popup label="Close" color="primary" flat />
+                            <q-btn v-close-popup label="Cerrar" color="primary" flat />
                           </div>
                         </q-date>
                       </q-popup-proxy>
@@ -1326,13 +1323,12 @@
               <q-separator />
 
               <q-card-actions align="center">
-                <q-btn flat :disable="this.ingreso === ''
-                  || this.salida === '' ||
-                  this.tipo_consulta === '' ||
-                  this.motivo_consulta === '' ||
-                  this.sintomas_consulta === '' ||
-                  this.notas_medicas === '' ||
-                  this.ingresoSalida === ''
+                <q-btn flat :disable="
+                  tipo_consulta === '' ||
+                  motivo_consulta === '' ||
+                  sintomas_consulta === '' ||
+                  notas_medicas === '' ||
+                  !ingresoSalida
                   " @click="updateConsulta()">
                   Actualizar
                 </q-btn>
@@ -1595,7 +1591,7 @@
                         <q-item-section>
 
                           <q-item-label lines="2" class=" text-h6 text-medium text-primary"><b>{{ medicamento.nombre
-                          }}</b> </q-item-label>
+                              }}</b> </q-item-label>
                           <q-item-label class="q-my-sm" lines="2"> <q-icon color="primary" name="mdi-information" />
                             Estado actual: <b>{{ medicamento.estado_tratamiento }}</b> </q-item-label>
                           <q-item-label lines="2"><b>Dosis recomentada:</b> {{ medicamento.dosis
@@ -1644,14 +1640,14 @@
     </div>
 
     <div>
-        <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="true" :preview-modal="true"
-          :paginate-elements-by-height="1400" filename="FichaDePacienteDoctor" :pdf-quality="2" :manual-pagination="false"
-          pdf-format="a4" :pdf-margin="2" pdf-orientation="landscape" pdf-content-width="1050px"
-          @progress="onProgress($event)" ref="html2Pdf">
-          <section slot="pdf-content">
-            <historiaPdf :data="dataUser" />
-          </section>
-        </vue-html2pdf>
+      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="true" :preview-modal="true"
+        :paginate-elements-by-height="1400" filename="FichaDePacienteDoctor" :pdf-quality="2" :manual-pagination="false"
+        pdf-format="a4" :pdf-margin="2" pdf-orientation="landscape" pdf-content-width="1050px"
+        @progress="onProgress($event)" ref="html2Pdf">
+        <section slot="pdf-content">
+          <historiaPdf :data="dataUser" />
+        </section>
+      </vue-html2pdf>
     </div>
 
 
@@ -1987,18 +1983,18 @@ export default {
     this.AllPacientes();
   },
   watch: {
-    ingresoSalida(newValue) {
-      console.log(newValue)
-      if (!newValue.to) {
-        this.fecha = "Desde: " + newValue
-        this.ingreso = newValue
-        this.salida = newValue
-      } else {
-        this.fecha = "Desde: " + newValue.from + "| Hasta: " + newValue.to
-        this.ingreso = newValue.from
-        this.salida = newValue.to
-      }
-    },
+    // ingresoSalida(newValue) {
+    //   console.log(newValue)
+    //   if (!newValue.to) {
+    //     this.fecha = "Desde: " + newValue
+    //     this.ingreso = newValue
+    //     this.salida = newValue
+    //   } else {
+    //     this.fecha = "Desde: " + newValue.from + "| Hasta: " + newValue.to
+    //     this.ingreso = newValue.from
+    //     this.salida = newValue.to
+    //   }
+    // },
     estado(newVal) {
       this.ciudad = ""
     },
@@ -2602,42 +2598,45 @@ export default {
     NuevaHospitalizacion() {
       this.loader = true;
 
-
-      // validar que la fecha de ingreso no sea menor a la fecha actual
-      const fechaIngreso = moment(this.hospitalizacion_fechaIngreso);
-      const fechaActual = moment();
-
-      if (fechaIngreso.isBefore(fechaActual)) {
-        this.$q.notify({
-          message: "La fecha de ingreso no puede ser menor a la fecha actual",
-          color: "negative",
-        });
-        return
-      }
-      // validar que la fecha de ingreso y egreso no sean iguales
-      if (this.hospitalizacion_fechaIngreso === this.hospitalizacion_fechaEgreso) {
-        this.$q.notify({
-          message: "La fecha de ingreso y egreso no pueden ser iguales",
-          color: "negative",
-        });
-        return
-      }
-
+      // Validar que se hayan ingresado las fechas
       if (!this.hospitalizacion_fechaIngreso || !this.hospitalizacion_fechaEgreso) {
         this.$q.notify({
           message: "Debes ingresar una fecha de ingreso y egreso",
           color: "negative",
         });
-        return
+        return;
       }
 
-      // validar que la fecha de ingreso sea menor a la fecha de egreso
-      if (this.hospitalizacion_fechaIngreso > this.hospitalizacion_fechaEgreso) {
+      // Crear objetos moment para comparar fechas
+      const fechaIngreso = moment(this.hospitalizacion_fechaIngreso).startOf("day");
+      const fechaEgreso = moment(this.hospitalizacion_fechaEgreso).startOf("day");
+      const fechaActual = moment().startOf("day");
+
+      // Validar que la fecha de ingreso no sea menor a la fecha actual
+      if (fechaIngreso.isBefore(fechaActual)) {
+        this.$q.notify({
+          message: "La fecha de ingreso no puede ser menor a la fecha actual",
+          color: "negative",
+        });
+        return;
+      }
+
+      // Validar que la fecha de ingreso y egreso no sean iguales
+      if (fechaIngreso.isSame(fechaEgreso)) {
+        this.$q.notify({
+          message: "La fecha de ingreso y egreso no pueden ser iguales",
+          color: "negative",
+        });
+        return;
+      }
+
+      // Validar que la fecha de ingreso sea menor a la fecha de egreso
+      if (fechaIngreso.isAfter(fechaEgreso)) {
         this.$q.notify({
           message: "La fecha de ingreso no puede ser mayor a la fecha de egreso",
           color: "negative",
         });
-        return
+        return;
       }
 
       return this.$apollo
@@ -2765,14 +2764,23 @@ export default {
         });
     },
     añadirConsul() {
+      
+      // Validar que se haya ingresado la fecha
+      if (!this.ingresoSalida) {
+        this.$q.notify({
+          message: "Debes ingresar una fecha de consulta",
+          color: "negative",
+        });
+        return;
+      }
 
-      // validar que la fecha de inicio sea apartir de la fecha actual, no es valido el dia anterior
       const fechaInicio = moment(this.ingresoSalida).startOf("day");
       const fechaActual = moment().startOf("day");
 
+      // Validar que la fecha de consulta no sea menor a la fecha actual
       if (fechaInicio.isBefore(fechaActual)) {
         this.$q.notify({
-          message: "La fecha de inicio no puede ser menor a la fecha actual",
+          message: "La fecha de consulta no puede ser menor a la fecha actual",
           color: "negative",
         });
         return;
@@ -2951,11 +2959,21 @@ export default {
     },
     añadirTratamiento() {
       this.loader = true;
-      // validar que la fecha de inicio sea menor a la fecha de finalizacion
-      // la fecha de inicio no puede ser menor a la fecha actual
-      const fechaInicio = moment(this.tratamiento_fechaInicio);
-      const fechaActual = moment();
+      
+      // Validar que se hayan ingresado las fechas
+      if (!this.tratamiento_fechaInicio || !this.tratamiento_fechaCulminacion) {
+        this.$q.notify({
+          message: "Debes ingresar una fecha de inicio y culminación",
+          color: "negative",
+        });
+        return;
+      }
 
+      const fechaInicio = moment(this.tratamiento_fechaInicio).startOf("day");
+      const fechaCulminacion = moment(this.tratamiento_fechaCulminacion).startOf("day");
+      const fechaActual = moment().startOf("day");
+
+      // Validar que la fecha de inicio no sea menor a la fecha actual
       if (fechaInicio.isBefore(fechaActual)) {
         this.$q.notify({
           message: "La fecha de inicio no puede ser menor a la fecha actual",
@@ -2964,14 +2982,15 @@ export default {
         return;
       }
 
-
-      if (this.tratamiento_fechaInicio > this.tratamiento_fechaCulminacion) {
+      // Validar que la fecha de inicio no sea mayor a la fecha de culminación
+      if (fechaInicio.isAfter(fechaCulminacion)) {
         this.$q.notify({
-          message: "La fecha de inicio no puede ser mayor a la fecha de finalizacion",
+          message: "La fecha de inicio no puede ser mayor a la fecha de finalización",
           color: "negative",
         });
         return;
       }
+
       this.$apollo
         .mutate({
           mutation: ADDTRATAMIENTO_MUTATION,
@@ -3015,9 +3034,22 @@ export default {
     },
     añadirMedicamento() {
       this.loader = true;
-      const fechaInicio = moment(this.medicamento_fechaInicio);
-      const fechaActual = moment();
+      
+      // Validar que se hayan ingresado las fechas
+      if (!this.medicamento_fechaInicio || !this.medicamento_fechaFin) {
+        this.$q.notify({
+          message: "Debes ingresar una fecha de inicio y finalización",
+          color: "negative",
+        });
+        return;
+      }
 
+      // Crear objetos moment para comparar fechas
+      const fechaInicio = moment(this.medicamento_fechaInicio).startOf("day");
+      const fechaFin = moment(this.medicamento_fechaFin).startOf("day");
+      const fechaActual = moment().startOf("day");
+
+      // Validar que la fecha de inicio no sea menor a la fecha actual
       if (fechaInicio.isBefore(fechaActual)) {
         this.$q.notify({
           message: "La fecha de inicio no puede ser menor a la fecha actual",
@@ -3026,10 +3058,10 @@ export default {
         return;
       }
 
-
-      if (this.medicamento_fechaInicio > this.medicamento_fechaFin) {
+      // Validar que la fecha de inicio no sea mayor a la fecha de finalización
+      if (fechaInicio.isAfter(fechaFin)) {
         this.$q.notify({
-          message: "La fecha de inicio no puede ser mayor a la fecha de finalizacion",
+          message: "La fecha de inicio no puede ser mayor a la fecha de finalización",
           color: "negative",
         });
         return;
