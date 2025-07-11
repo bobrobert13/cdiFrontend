@@ -380,6 +380,9 @@ export const CDI_PACIENTES_QUERY = gql`
     hospitalizaciones {
       ...hospitalizacionDetalles
     }
+    doctor {
+      ...doctorDetalles
+    }
     }
   }
   ${PERSONA_DETALLES}
@@ -390,6 +393,7 @@ export const CDI_PACIENTES_QUERY = gql`
   ${TRATAMIENTOS_DETALLES}
   ${EMERGENCIA_DETALLES}
   ${HOSPITALIZACION_DETALLES}
+  ${DOCTOR_DETALLES}
 `;
 
 
