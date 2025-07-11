@@ -5,14 +5,14 @@
       <img src="../../../assets/membrete.png" class="full-width" />
 
       <!-- Título del documento -->
-      <div class="text-center q-mt-md q-mb-lg">
-        <h6 class="text-primary q-mb-none">DOCTOR</h6>
-        <p class="text-grey-6 q-mt-sm">Información Personal y Profesional</p>
+      <div class="text-center q-mt-xs q-mb-sm">
+        <h6 class="text-primary no-padding no=margin q-mb-none">DOCTOR</h6>
+        <p class="text-grey-6 no-padding q-mt-sm">Información Personal y Profesional</p>
       </div>
 
       <!-- Información Personal -->
-      <div class="q-mb-lg">
-        <h5 class="text-primary q-mb-md">DATOS PERSONALES</h5>
+      <div class="q-mb-xs">
+        <h6 style="font-size: 14px;" class="text-primary q-mb-sm no-padding no-margin">DATOS PERSONALES</h6>
         <q-markup-table class="q-mb-md">
           <thead class="bg-primary">
             <tr class="text-white">
@@ -68,8 +68,8 @@
       </div>
 
       <!-- Información Profesional -->
-      <div class="q-mb-lg">
-        <h6 class="text-primary q-mb-md">INFORMACIÓN PROFESIONAL</h6>
+      <div class="q-mb-xs">
+        <h6 style="font-size: 14px;" class="text-primary q-mb-sm no-padding no-margin">INFORMACIÓN PROFESIONAL</h6>
         <q-markup-table class="q-mb-md">
           <thead class="bg-primary">
             <tr class="text-white">
@@ -164,10 +164,32 @@
           </tbody>
         </q-markup-table>
       </div> -->
-
+      <div  v-if="data.pacientes" class="q-mb-xs">
+      <h6 style="font-size: 14px;" class="text-primary q-mb-sm no-padding no-margin">Pacientes del doctor</h6>
+      <q-markup-table>
+      <thead class="bg-primary no-border no-border-radius">
+        <tr class="text-white">
+          <th class="text-left">Nacionalidad</th>
+          <th class="text-left">Documento de identidad</th>
+          <th class="text-left">Edad</th>
+          <th class="text-left">Estado civil</th>
+          <th class="text-left">Sexo</th>
+        </tr>
+      </thead>
+      <tbody class="bg-grey-3">
+        <tr v-for="paciente in data.pacientes" :key="paciente.id_paciente">
+          <td class="text-left">{{ paciente.persona.nacionalidad }}</td>
+          <td class="text-left">{{ paciente.persona.cedula_identidad }}</td>
+          <td class="text-left">{{ paciente.persona.edad }}</td>
+          <td class="text-left">{{ paciente.persona.estado_civil }}</td>
+          <td class="text-left">{{ paciente.persona.sexo }}</td>
+        </tr>
+      </tbody>
+    </q-markup-table>
+  </div>
       <!-- Información del Sistema -->
       <div v-if="data.usuarios && data.usuarios.cdi" class="q-mb-lg">
-        <h5 class="text-primary q-mb-md">CDI</h5>
+        <h5 class="text-primary q-mb-sm no-padding no-margin">CDI</h5>
         <q-markup-table class="q-mb-md">
           <thead class="bg-primary">
             <tr class="text-white">

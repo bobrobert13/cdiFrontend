@@ -77,8 +77,8 @@
       </thead>
       <tbody class="bg-grey-3">
         <tr>
-          <td class="text-left">{{ data.doctor.persona.nombre1 }}</td>
           <td class="text-left">{{ data.doctor.numero_carnet }}</td>
+          <td class="text-left">{{ data.doctor.persona.nombre1 }}</td>
           <td class="text-left">{{ data.doctor.area_de_trabajo }}</td>
         </tr>
       </tbody>

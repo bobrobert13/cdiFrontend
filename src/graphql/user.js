@@ -261,6 +261,18 @@ export const CDI_DOCTORES_QUERY = gql`
     numero_carnet
     area_de_trabajo
     horario
+        pacientes {
+      id_paciente
+      vacunas
+      antecedentes_familiares
+      tipo_de_sangre
+      alergias
+      discapacidad
+      createdAt
+      persona {
+        ...personaDetalles
+      }
+}
         persona {
       ...personaDetalles
     }
