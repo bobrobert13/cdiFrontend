@@ -117,7 +117,11 @@
 						<q-input filled color="deep-purple-6" class="q-mb-xs" v-model="cdi_encargado" type="text"
 							label="Nombre de encargado" :rules="[
 								(val) => !!val || 'Este campo es obligatorio',
-								(val) => /^[a-zA-Z0-9]+$/.test(val) || 'Solo se permiten letras y números (sin espacios ni símbolos)'
+								(val) => val.length >= 3 || 'Mínimo 3 caracteres',
+								(val) => val.length <= 200 || 'Máximo 200 caracteres',
+								(val) =>
+									/^([\sa-zA-ZñÑáéíóúÁÉÍÓÚ]{3,40})*$/.test(val) ||
+									'Solo se permiten caracteres',
 							]" />
 						<q-input filled color="deep-purple-6" class="q-mb-xs" v-model="cdi_cuadrante" type="text"
 							label="Cuadrante" :rules="[
@@ -310,7 +314,7 @@
 		<!-- FIN ELIMINAR ENCARGADO -->
 
 		<div>
-			<vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="true" :preview-modal="true"
+			<vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="true" :preview-modal="false"
 				:paginate-elements-by-height="1400" filename="informacion_de_cdis" :pdf-quality="2"
 				:manual-pagination="false" pdf-format="a4" :pdf-margin="10" pdf-orientation="portrait"
 				pdf-content-width="800px" @progress="onProgress($event)" ref="html2Pdf">
@@ -569,9 +573,11 @@ export default {
 				],
 				cdi_encargado: [
 					(val) => !!val || 'Este campo es obligatorio',
+					(val) => val.length >= 3 || 'Mínimo 3 caracteres',
+					(val) => val.length <= 200 || 'Máximo 200 caracteres',
 					(val) =>
 						/^([\sa-zA-ZñÑáéíóúÁÉÍÓÚ]{3,40})*$/.test(val) ||
-						'Solo se permiten letras',
+						'Solo se permiten caracteres',
 				],
 				cdi_cuadrante: [
 					(val) => !!val || 'Este campo es obligatorio',

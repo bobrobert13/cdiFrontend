@@ -3,7 +3,7 @@
     <img src="../../../assets/membrete.png" class="full-width q-mb-sm" style="max-height: 80px; object-fit: contain;" />
     
     <!-- INFORMACIÓN PERSONAL COMPACTA -->
-    <div class="info-section">
+    <div  class="info-section">
       <div class="section-title">INFORMACIÓN PERSONAL</div>
       <div class="info-grid">
         <div class="info-item">
@@ -34,22 +34,41 @@
     </div>
 
     <!-- INFORMACIÓN DE CONTACTO -->
-    <div class="info-section">
+    <div v-if="data.persona.telefono || data.persona.correo" class="info-section">
       <div class="section-title">CONTACTO</div>
       <div class="info-grid">
         <div class="info-item">
           <span class="label">Teléfono:</span>
-          <span class="value">{{ data.persona.telefono.codigo }} {{ data.persona.telefono.numero }}</span>
+          <span class="value">{{ data.persona.telefono.codigo || 'No especificado' }} {{ data.persona.telefono.numero || 'No especificado' }}</span>
         </div>
         <div class="info-item">
           <span class="label">Correo:</span>
-          <span class="value">{{ data.persona.correo.correo }}</span>
+          <span class="value">{{ data.persona.correo.correo || 'No especificado' }}</span>
+        </div>
+      </div>
+    </div>
+
+        <!-- INFORMACIÓN DE CDI -->
+    <div v-if="data.cdi" class="info-section">
+      <div class="section-title">CDI</div>
+      <div class="info-grid">
+        <div class="info-item">
+          <span class="label">Nombre de CDI:</span>
+          <span class="value">{{ data.cdi.nombre }}</span>
+        </div>
+        <div class="info-item">
+          <span class="label">Encargado:</span>
+          <span class="value">{{ data.cdi.encargado }}</span>
+        </div>
+        <div class="info-item">
+          <span class="label">Cuadrante:</span>
+          <span class="value">{{ data.cdi.cuadrante }}</span>
         </div>
       </div>
     </div>
 
     <!-- INFORMACIÓN DE UBICACIÓN -->
-    <div class="info-section">
+    <div v-if="data.persona.direccion" class="info-section">
       <div class="section-title">DIRECCIÓN</div>
       <div class="info-grid">
         <div class="info-item">

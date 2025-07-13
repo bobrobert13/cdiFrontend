@@ -533,6 +533,13 @@ export const ADMIN_PACIENTES_QUERY = gql`
         ...personaDetalles
       }
     }
+    cdi {
+      id_cdi
+      numero_cdi
+      nombre
+      encargado
+      cuadrante
+    }
     persona {
       ...personaDetalles
     }

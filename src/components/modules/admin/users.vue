@@ -24,7 +24,7 @@
                 </q-item-label>
                 <q-item-label class="text-left q-mb-xs" lines="1">
                   <span class="text-weight-medium">Documento de identidad: {{ user.persona.cedula_identidad
-                  }}</span>
+                    }}</span>
                 </q-item-label>
                 <q-item-label class="text-left" lines="1">
                   <span class="text-weight-medium">Edad del paciente: {{ user.persona.edad }} años</span>
@@ -34,24 +34,26 @@
                   <small class="text-weight-medium">Registrado por doctor: {{ user.doctor.persona.nombre1 }}</small>
                 </q-item-label>
                 <q-item-label v-if="user.doctor" class="text-left" lines="1">
-                  <small class="text-weight-medium">Carnet: {{ user.doctor.numero_carnet}}</small>
+                  <small class="text-weight-medium">Carnet: {{ user.doctor.numero_carnet }}</small>
                 </q-item-label>
                 <q-item-label v-if="user.doctor" class="text-left text-primary" lines="1">
                   <small class="text-weight-medium">Area de trabajo: {{ user.doctor.area_de_trabajo }}</small>
                 </q-item-label>
+
+                <q-item-label v-if="user.cdi" class="text-left q-mt-md" lines="1">
+                  <small class="text-weight-medium">Pertenece al CDI: {{ user.cdi.nombre }}</small>
+                </q-item-label>
+                <q-item-label v-if="user.cdi" class="text-left" lines="1">
+                  <small class="text-weight-medium">Encargado: {{ user.cdi.encargado }}</small>
+                </q-item-label>
+
+
               </q-item-section>
 
               <q-item-section side>
                 <div class="text-grey-8 q-gutter-xs">
-                  <q-btn
-                    @click="generatePDF(user)"
-                    class="gt-xs text-positive"
-                    size="22px"
-                    flat
-                    dense
-                    round
-                    icon="mdi-printer-pos"
-                  />
+                  <q-btn @click="generatePDF(user)" class="gt-xs text-positive" size="22px" flat dense round
+                    icon="mdi-printer-pos" />
                 </div>
               </q-item-section>
             </q-item>
@@ -92,9 +94,9 @@
     <div>
 
 
-      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="true" :preview-modal="true"
-        :paginate-elements-by-height="1400" filename="InformacionDePacientePDF" :pdf-quality="2" :manual-pagination="false"
-        pdf-format="a4" :pdf-margin="10" pdf-orientation="portrait" pdf-content-width="800px"
+      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="true" :preview-modal="false"
+        :paginate-elements-by-height="1400" filename="InformacionDePacientePDF" :pdf-quality="2"
+        :manual-pagination="false" pdf-format="a4" :pdf-margin="10" pdf-orientation="portrait" pdf-content-width="800px"
         @progress="onProgress($event)" ref="html2Pdf">
         <section slot="pdf-content">
           <historiaPdf :data="dataUser" />
@@ -109,7 +111,7 @@
       <q-card class="my-card" flat bordered style="min-width: 540px">
         <q-card-section>
           <q-card-section class="col-5 flex flex-center">
-            <div class="text-overline">Historia clinica</div>
+            <div class="text-overline">Sobre el paciente</div>
           </q-card-section>
           <q-card-section class="col-5 flex flex-center">
             <q-avatar>
@@ -128,10 +130,10 @@
             <div class="text-caption q-mt-sm q-mb-xs">Estado civil: {{ dataUser.persona.estado_civil }}</div>
             <div class="text-caption q-mt-sm q-mb-xs">Número de teléfono: {{ dataUser.persona.telefono.codigo }}{{
               dataUser.persona.telefono.numero }}</div>
-            <div class="text-caption q-mt-sm q-mb-xs">Dirección: {{ dataUser.persona.direccion.sector }} - {{
+            <div class="text-caption q-mt-sm q-mb-xs" v-if="dataUser.persona.direccion">Dirección: {{ dataUser.persona.direccion.sector }} - {{
               dataUser.persona.direccion.calle }} - {{ dataUser.persona.direccion.parroquia }} - {{
                 dataUser.persona.direccion.municipio }} - {{ dataUser.persona.direccion.codigo_postal }}</div>
-            <div class="text-caption q-mt-sm q-mb-xs">Correo electrónico: {{ dataUser.persona.correo.correo }}</div>
+            <div class="text-caption q-mt-sm q-mb-xs" v-if="dataUser.persona.correo">Correo electrónico: {{ dataUser.persona.correo.correo }}</div>
 
           </q-card-section>
 
@@ -153,10 +155,23 @@
                 <div class="text-caption q-mt-sm q-mb-xs">Correo: {{ dataUser.doctor.persona.correo.correo }}</div>
               </div>
             </div>
-
           </q-card-section>
 
-          <q-card-section class="q-pt-md">
+                    <q-card-section v-if="dataUser.cdi" class="q-pt-md q-pb-none no-margin">
+            <p class="text-subtitle text-bold text-grey-9">Pertenece al CDI: </p>
+            <div class=" row full-width no-wrap">
+              <div class=" column col-6">
+                <div class="text-caption text-bold  q-mb-xs">Nombre de CDI: {{ dataUser.cdi.nombre }}
+                </div>
+                <div class="text-caption q-mt-sm q-mb-xs">Encargado:
+                  {{ dataUser.cdi.encargado }}</div>
+                <div class="text-caption q-mt-sm q-mb-xs">Cuadrante:
+                  {{ dataUser.cdi.cuadrante }}</div>
+              </div>
+            </div>
+          </q-card-section>
+
+          <q-card-section class="q-pt-lg">
             <div class="row items-center q-px-sm justify-center">
               <div class="col-6">
                 <span class="text-caption text-bold q-mt-sm q-mb-xs">Consultas relacionadas</span>
@@ -176,7 +191,7 @@
                   <q-item style="cursor:pointer;">
                     <q-item-section>
                       <q-item-label caption>Paciente debe asistir el: <b>{{ entradaFecha(consulta.fecha_consulta)
-                          }}</b></q-item-label>
+                      }}</b></q-item-label>
                       <span class="q-my-sm"> <q-icon name="mdi-information" color="primary" /> Estado actual: <b>{{
                         consulta.estado_consulta }}</b></span>
                       <q-item-label>Tipo de consulta: <b>{{ consulta.tipo_consulta }}</b></q-item-label>
@@ -291,7 +306,7 @@ export default {
         })
         .then((response) => {
           this.loaderUser = false;
-          // console.log("all paciene", response.data.pacientes);
+          console.log("all paciene", response.data.pacientes);
           this.users = Object.assign([], response.data.pacientes);
         })
         .catch((err) => {

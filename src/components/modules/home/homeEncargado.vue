@@ -552,7 +552,7 @@
       </q-scroll-area>
     </div>
     <div>
-      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="true" :preview-modal="true"
+      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="true" :preview-modal="false"
         :paginate-elements-by-height="1400" filename="InformacionDeDoctorCDI" :pdf-quality="2"
         :manual-pagination="false" pdf-format="a4" :pdf-margin="10" pdf-orientation="portrait" pdf-content-width="800px"
         @progress="onProgress($event)" ref="html2Pdf">
@@ -563,7 +563,7 @@
     </div>
 
     <div>
-      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="true" :preview-modal="true"
+      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="true" :preview-modal="false"
         :paginate-elements-by-height="1400" filename="FichaDePacienteCDI" :pdf-quality="2" :manual-pagination="false"
         pdf-format="a4" :pdf-margin="10" pdf-orientation="portrait" pdf-content-width="800px"
         @progress="onProgress($event)" ref="html2PdfPaciente">
