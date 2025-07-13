@@ -70,17 +70,17 @@
                         <q-item-section top @click="userDetailC('userDetail', user)" style="cursor: pointer">
                           <q-item-label class="text-left " lines="1">
                             <span class="text-weight-medium">Nombre: <b>{{ user.persona.nombre1
-                                }}</b></span>
+                            }}</b></span>
                           </q-item-label>
                           <q-item-label class="text-left q-mb-xs" lines="1">
                             <span class="text-weight-medium">Nombre de usuario: <b>{{ user.usuarios.nombre_usuario
-                                }}</b></span>
+                            }}</b></span>
                           </q-item-label>
                           <small class="text-weight-medium">Rol: {{ user.usuarios.rol }}</small>
                           <small class="text-weight-medium">Estatus de usuario: <b>{{ user.usuarios.estado
-                              }}</b></small>
+                          }}</b></small>
                           <small class="text-weight-medium text-primary">Especialidad: <b>{{ user.area_de_trabajo
-                              }}</b></small>
+                          }}</b></small>
                         </q-item-section>
                         <q-item-section side>
                           <div class="text-grey-8 q-gutter-xs">
@@ -113,7 +113,7 @@
               </q-tab-panel>
               <q-tab-panel name="pacientesCDI">
                 <div class="text-h6"><span v-if="usersPacientes && usersPacientes.length !== 0">{{ usersPacientes.length
-                    }}</span>
+                }}</span>
                   Pacientes del CDI</div>
                 Listado de pacientes administrados por los doctores del CDI
                 <div class="row justify-center q-mt-xl" v-if="usersPacientes && this.usersPacientes.length !== 0">
@@ -131,24 +131,25 @@
                               </b></span>
                           </q-item-label>
                           <small class="text-weight-medium">Correo electrónico: {{ userPaciente.persona.correo.correo
-                            }}</small>
+                          }}</small>
                           <small class="text-weight-medium">Número de contacto: {{ userPaciente.persona.telefono.codigo
-                            }}{{
+                          }}{{
                               userPaciente.persona.telefono.numero }}</small>
                           <small class="text-weight-medium">Documento de Identidad: {{
                             userPaciente.persona.cedula_identidad
-                            }}</small>
+                          }}</small>
                           <q-separator v-if="userPaciente.doctor" spaced color="blue-grey" />
                           <q-item-label v-if="userPaciente.doctor" class="text-left" lines="1">
                             <small class="text-weight-medium">Registrado por doctor: {{
                               userPaciente.doctor.persona.nombre1
-                              }}</small>
+                            }}</small>
                           </q-item-label>
                           <q-item-label v-if="userPaciente.doctor" class="text-left" lines="1">
                             <small class="text-weight-medium">Carnet: {{ userPaciente.doctor.numero_carnet }}</small>
                           </q-item-label>
                           <q-item-label v-if="userPaciente.doctor" class="text-left text-primary" lines="1">
-                            <small class="text-weight-medium">Area de trabajo: {{ userPaciente.doctor.area_de_trabajo }}</small>
+                            <small class="text-weight-medium">Area de trabajo: {{ userPaciente.doctor.area_de_trabajo
+                              }}</small>
                           </q-item-label>
 
                         </q-item-section>
@@ -215,7 +216,7 @@
                           @blur="validateDoctorInfoInputs" label="Cédula" :rules="[
                             (val) => !!val || 'Este campo es obligatorio',
                             (val) => /^\d+$/.test(val) || 'Solo se permiten números',
-                            (val) => val.length <= 10 || 'Máximo 10 dígitos'
+                            (val) => val.length <= 8 || 'Máximo 8 dígitos'
                           ]" />
                       </div>
                       <div class="col-6 q-pa-sm">
@@ -245,22 +246,15 @@
                           @blur="validateDoctorInfoInputs" label="Horario de trabajo" :rules="[
                             (val) => !!val || 'Este campo es obligatorio'
                           ]" :options="[
-              'Lunes a Viernes 8:00 am - 6:00 pm',
-              'Lunes a Viernes 9:00 am - 5:00 pm',
-              'Lunes a Viernes 10:00 am - 4:00 pm',
-              'Sábados 9:00 am - 1:00 pm',
-              'Sábados 10:00 am - 2:00 pm',
-              'Domingos 10:00 am - 2:00 pm',
-              'Lunes, Miércoles y Viernes 8:00 am - 5:00 pm',
-              'Martes y Jueves 10:00 am - 6:00 pm',
-              'Lunes a Viernes 8:00 am - 12:00 pm y 1:00 pm - 5:00 pm'
-            ]" />
-                      </div>
-
-                      <div class="col-6 q-pa-sm">
-                        <q-input filled color="deep-purple-6" v-model="dataUser.area_de_trabajo"
-                          @blur="validateDoctorInfoInputs" label="Especialidad" :rules="[
-                            (val) => !!val || 'Este campo es obligatorio'
+                            'Lunes a Viernes 8:00 am - 6:00 pm',
+                            'Lunes a Viernes 9:00 am - 5:00 pm',
+                            'Lunes a Viernes 10:00 am - 4:00 pm',
+                            'Sábados 9:00 am - 1:00 pm',
+                            'Sábados 10:00 am - 2:00 pm',
+                            'Domingos 10:00 am - 2:00 pm',
+                            'Lunes, Miércoles y Viernes 8:00 am - 5:00 pm',
+                            'Martes y Jueves 10:00 am - 6:00 pm',
+                            'Lunes a Viernes 8:00 am - 12:00 pm y 1:00 pm - 5:00 pm'
                           ]" />
                       </div>
 
@@ -291,6 +285,7 @@
                             (val) => /.+@.+\..+/.test(val) || 'Formato de correo electrónico inválido'
                           ]" />
                       </div>
+                      {{ isDoctorInfoValid }}
                       <q-btn unelevated :disabled="!isDoctorInfoValid" :loading="loader"
                         @click="actualizarDoctor(dataUser)" class="full-width mx-auto text-white bg-primary"
                         label="Actualizar información" />
@@ -1269,17 +1264,18 @@ export default {
       const telefono = this.dataUser.persona.telefono.numero;
       const correo = this.dataUser.persona.correo.correo;
 
+
       const camposObligatorios = !!nombre && !!cedula && !!numeroCarnet && !!anosExperiencia &&
         !!areaTrabajo && !!horario && !!codigo && !!telefono && !!correo;
 
-      if (!camposObligatorios) {
-        this.isDoctorInfoValid = false;
-        return false;
+
+      if (camposObligatorios) {
+        this.isDoctorInfoValid = true;
       }
 
       const nombreValido = /^[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+$/.test(nombre) && nombre.length >= 3 && nombre.length <= 200;
 
-      const cedulaValida = /^\d+$/.test(cedula) && cedula.length <= 10;
+      const cedulaValida = /^\d+$/.test(cedula) && cedula.length <= 8;
 
       const carnetValido = /^[a-zA-Z0-9]+$/.test(numeroCarnet);
 
@@ -1288,6 +1284,7 @@ export default {
       const telefonoValido = /^\d+$/.test(telefono) && telefono.length <= 12;
 
       const correoValido = /.+@.+\..+/.test(correo);
+
 
       this.isDoctorInfoValid = nombreValido && cedulaValida && carnetValido && experienciaValida &&
         telefonoValido && correoValido;

@@ -152,7 +152,7 @@
                       <div class="col-8">
                         <q-input filled color="deep-purple-6" type="number" v-model="dni" :rules="[
                           val => /^\d+$/.test(val) || 'Solo se permiten números',
-                          val => val.length <= 10 || 'Máximo 10 caracteres'
+                          val => val.length <= 8 || 'Máximo 8 caracteres'
                         ]" label="Cédula" />
                       </div>
                     </div>
@@ -2066,7 +2066,6 @@ export default {
         isValid = false;
       }
       this.valid = isValid;
-      return this.valid;
     },
 
     validarCampoDiscapacidad(value) {
@@ -2081,7 +2080,6 @@ export default {
         isValid = false;
       }
       this.valid = isValid;
-      return this.valid;
     },
 
     validarCampoAntecedentesFamiliares(value) {
@@ -2096,7 +2094,6 @@ export default {
         isValid = false;
       }
       this.valid = isValid;
-      return this.valid;
     },
     validarCampoAlergias(value) {
       let isValid = true;
@@ -2110,7 +2107,6 @@ export default {
         isValid = false;
       }
       this.valid = isValid;
-      return this.valid;
     },
     validarCampoOcupacion(value) {
       let isValid = true;
@@ -2124,7 +2120,6 @@ export default {
         isValid = false;
       }
       this.valid = isValid;
-      return this.valid;
     },
 
     validarDNI(value) {
@@ -2133,11 +2128,10 @@ export default {
         isValid = false;
       }
       else if (value <= 0) isValid = false;
-      else if (value.length > 10) {
+      else if (value.length > 8) {
         isValid = false;
       }
       this.valid = isValid;
-      return this.valid;
     },
 
     validarCampoPeso(value) {
@@ -2150,7 +2144,6 @@ export default {
         isValid = false;
       }
       this.valid = isValid;
-      return this.valid;
     },
 
     validarCampoTelefono(value) {
@@ -2163,7 +2156,6 @@ export default {
         isValid = false;
       }
       this.valid = isValid;
-      return this.valid;
     },
 
 
