@@ -298,6 +298,18 @@ export const ADMIN_DOCTORES_QUERY = gql`
         persona {
       ...personaDetalles
     }
+    pacientes {
+      id_paciente
+      vacunas
+      antecedentes_familiares
+      tipo_de_sangre
+      alergias
+      discapacidad
+      createdAt
+      persona {
+        ...personaDetalles
+      }
+    }
       usuarios {
         id_usuario
         nombre_usuario

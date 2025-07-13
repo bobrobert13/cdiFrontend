@@ -24,7 +24,7 @@
         </q-avatar>
        </q-item-section>
 
-       <q-item-section top @click="userDetail(user)" style="cursor: pointer">
+       <q-item-section v-if="user.persona" top @click="userDetail(user)" style="cursor: pointer">
         <q-item-label class="text-left q-mb-xs" lines="1">
          <span class="text-weight-medium">Nombre de doctor: <b>{{
           user.persona.nombre1
@@ -254,7 +254,7 @@
 
   <!-- DETALLES DEL USUARIO SELECCIONADO -->
   <q-dialog v-model="modalDetailUser">
-   <q-card class="my-card" flat bordered style="min-width: 350px">
+   <q-card class="my-card"  flat bordered style="min-width: 350px">
     <q-card-section v-if="dataUser">
      <q-card-section class="col-5 flex flex-center">
       <div class="text-overline">Detalle del doctor</div>
@@ -274,15 +274,32 @@
       <div class="text-caption q-mt-sm q-mb-xs">Años de experiencia: {{ dataUser.anos_experiencia }}
       </div>
       <div class="text-caption q-mt-sm q-mb-xs">Horario: {{ dataUser.horario }}</div>
-
-
-
       <!-- <div class="text-caption q-mt-sm q-mb-xs">Télefono: {{ dataUser.persona.telefono.codigo }}{{ dataUser.persona.telefono.numero }}</div> -->
-
-
      </q-card-section>
-    </q-card-section>
 
+   <q-card-section v-if="dataUser.pacientes && dataUser.pacientes.length > 0" class="q-pt-xs">
+         <q-card-section class="col-5 flex flex-center">
+      <div class="text-overline">Pacientes ({{ dataUser.pacientes.length }})</div>
+     </q-card-section>
+     
+     <!-- Lista de pacientes  -->
+     <div v-for="(paciente, index) in dataUser.pacientes" :key="index" class="q-mb-md q-pa-md" style="border: 1px solid #e0e0e0; border-radius: 8px;">
+      <div class="text-caption text-bold q-mt-sm q-mb-xs">Nombre de paciente: {{ paciente.persona ? paciente.persona.nombre1 : 'N/A' }}</div>
+      <div class="text-caption q-mt-sm q-mb-xs">Documento de identidad: {{ paciente.persona ? paciente.persona.cedula_identidad : 'N/A' }}</div>
+      <div class="text-caption q-mt-sm q-mb-xs">Nacionalidad: {{ paciente.persona ? paciente.persona.nacionalidad : 'N/A' }}</div>
+      <div class="text-caption q-mt-sm q-mb-xs">Sexo: {{ paciente.persona ? paciente.persona.sexo : 'N/A' }}</div>
+      <div class="text-caption q-mt-sm q-mb-xs">Teléfono: {{ paciente.persona && paciente.persona.telefono ? paciente.persona.telefono.numero : 'N/A' }}</div>
+      <div class="text-caption q-mt-sm q-mb-xs">Correo electrónico: {{ paciente.persona.correo.correo || 'N/A' }}</div>
+     </div>
+     
+     <!-- Mensaje cuando no hay pacientes -->
+     <div v-if="  !dataUser.pacientes || dataUser.pacientes.length === 0" class="text-center q-pa-md">
+      <div class="text-caption text-grey">No hay pacientes registrados</div>
+     </div>
+     </q-card-section>
+
+
+    </q-card-section>
     <q-separator />
 
     <q-card-actions align="center">

@@ -9,7 +9,7 @@
     </div>
 
     <!-- INFORMACIÓN PERSONAL -->
-    <div class="info-section">
+    <div v-if="data.persona" class="info-section">
       <div class="section-title">DATOS PERSONALES</div>
       <div class="info-grid">
         <div class="info-item">
@@ -36,7 +36,7 @@
     </div>
 
     <!-- INFORMACIÓN DE DIRECCIÓN -->
-    <div v-if="data.persona.direccion" class="info-section">
+    <div v-if="data.persona && data.persona.direccion" class="info-section">
       <div class="section-title">DIRECCIÓN</div>
       <div class="info-grid">
         <div class="info-item">
@@ -97,6 +97,7 @@
           <div class="header-cell">Sexo</div>
         </div>
         <div v-for="paciente in data.pacientes" :key="paciente.id_paciente" class="table-row">
+          <div class="table-cell">{{ paciente.persona.nombre1 }}</div>
           <div class="table-cell">{{ paciente.persona.nacionalidad }}</div>
           <div class="table-cell">{{ paciente.persona.cedula_identidad }}</div>
           <div class="table-cell">{{ paciente.persona.edad }}</div>
