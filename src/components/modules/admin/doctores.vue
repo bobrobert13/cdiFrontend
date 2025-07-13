@@ -554,7 +554,7 @@ export default {
    if (newValue !== "" && /^([a-zA-Z0-9._-]{3,}[@][a-zA-Z0-9.]{3,}[.][a-zA-Z0-9.]{3,3})*$/.test(newValue)) {
     return this.valid = true;
    } else {
-     this.valid = false;
+    this.valid = false;
    }
   },
   // async highlight(newValue) {
@@ -952,6 +952,7 @@ export default {
    };
    this.dni = "";
   },
+
  },
 };
 </script>

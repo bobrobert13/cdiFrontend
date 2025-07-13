@@ -1,7 +1,7 @@
 <template>
   <div class="pdf-container">
     <img src="../../../assets/membrete.png" class="full-width q-mb-sm" style="max-height: 80px; object-fit: contain;" />
-    
+
     <!-- Título del documento -->
     <div class="text-center q-mb-md">
       <h6 class="text-primary no-padding no-margin q-mb-none">DOCTOR</h6>
@@ -269,29 +269,29 @@ export default {
     padding: 5px;
     font-size: 9px;
   }
-  
+
   .info-section {
     margin-bottom: 10px;
   }
-  
+
   .section-title {
     font-size: 10px;
     padding: 3px 6px;
   }
-  
+
   .info-grid {
     gap: 2px;
   }
-  
+
   .info-item {
     padding: 1px 3px;
   }
-  
+
   .table-header,
   .table-row {
     font-size: 8px;
   }
-  
+
   .header-cell,
   .table-cell {
     padding: 2px 3px;
