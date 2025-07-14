@@ -43,9 +43,14 @@
 							</q-item-section>
 							<q-item-section side>
 								<div class="text-grey-8 q-gutter-xs">
+
 									<div class="text-grey-8 q-gutter-xs">
-										<!-- <q-btn @click="generatePDF(user)" class="gt-xs text-blue" size="12px" flat dense round
-                          icon="mdi-file-download-outline" /> -->
+									<button @click="generatePDF(user)" type="button" lines="2"
+										class=" q-ml-xl q-mr-md cursor-pointer text-primary self-center text-bold"
+										style="cursor: pointer">
+										<q-icon name="mdi-printer-pos" /> Descargar información
+									</button>
+						  
 										<q-btn
 											@click="actualizarUsuario({ ...user, estado: user.estado === 'activo' ? 'inactivo' : 'activo' })"
 											class="gt-xs text-negative" size="12px" flat dense
@@ -254,7 +259,7 @@
 
 
 		<q-dialog v-model="modalDetailUser">
-			<q-card class="my-card" flat bordered style="min-width: 350px">
+			<q-card class="my-card" flat bordered style="min-width: 460px">
 				<q-card-section>
 					<q-card-section class="col-5 flex flex-center">
 						<div class="text-overline">Detalle del CDI</div>
@@ -273,13 +278,72 @@
 						<div class="text-caption q-mt-sm q-mb-xs">
 							Cuadrante: {{ dataUser.cuadrante }}
 						</div>
-
-						<!-- <div class="text-caption q-mt-sm q-mb-xs">Calle: {{detailCalle}}</div>
-            <div class="text-caption q-mt-sm q-mb-xs">Sector: {{detailSector}}</div>
-            <div class="text-caption q-mt-sm q-mb-xs">Correo: {{ dataUser.email }}</div> -->
 					</q-card-section>
 				</q-card-section>
 				<q-separator />
+                <div class="row q-pa-sm q-ml-md q-mt-md">
+                  <div class="">
+                    <span class="text-caption text-bold q-mt-sm q-mb-xs">Doctores en el CDI</span>
+                  </div>
+                </div>
+				<q-card-section class="q-pt-xs">
+                <q-item-section v-if="!dataUser.doctores || !dataUser.doctores.length">
+                  <q-item-section class="row q-pa-sm justify-center">
+                    El CDI aún no tiene doctores asignados
+                  </q-item-section>
+                </q-item-section>
+                <q-scroll-area v-else style="height: 250px; max-width: 100%;">
+                  <div v-for="(doctores, index) in dataUser.doctores" :key="index" class="q-py-xs">
+                    <q-list>
+                      <q-item style="cursor:pointer;">
+                        <q-item-section>
+                          <q-item-label>Nombre del doctor: <b>{{ doctores.persona.nombre1 }}</b></q-item-label>
+                          <q-item-label>Especialidad: <b>{{ doctores.area_de_trabajo }}</b></q-item-label>
+                          <q-item-label>Horario: <b>{{ doctores.horario }}</b></q-item-label>
+                          <q-item-label>Años de experiencia: <b>{{ doctores.anos_experiencia }}</b></q-item-label>
+                          <q-item-label>Número de carnet: <b>{{ doctores.numero_carnet }}</b></q-item-label>
+                        </q-item-section>
+
+                      </q-item>
+                      <q-separator spaced inset />
+                    </q-list>
+                  </div>
+                </q-scroll-area>
+              </q-card-section>
+
+
+			                  <div class="row q-pa-sm q-mt-md">
+                  <div class="">
+                    <span class="text-caption text-bold q-mt-sm q-ml-md q-mb-xs">Pacientes en el CDI</span>
+                  </div>
+                </div>
+				<q-card-section class="q-pt-xs">
+                <q-item-section v-if="!dataUser.pacientes || !dataUser.pacientes.length">
+                  <q-item-section class="row q-pa-sm justify-center">
+                    El CDI aún no tiene pacientes asignados
+                  </q-item-section>
+                </q-item-section>
+                <q-scroll-area v-else style="height: 250px; max-width: 100%;">
+                  <div v-for="(paciente, index) in dataUser.pacientes" :key="index" class="q-py-xs">
+                    <q-list>
+                      <q-item style="cursor:pointer;">
+                        <q-item-section>
+                          <q-item-label>Nombre del paciente: <b>{{ paciente.persona.nombre1 }}</b></q-item-label>
+                          <q-item-label>Documento de identidad: <b>{{ paciente.persona.cedula_identidad }}</b></q-item-label>
+                          <q-item-label>Nacionalidad: <b>{{ paciente.persona.nacionalidad }}</b></q-item-label>
+                          <q-item-label>Fecha de registro: <b>{{ paciente.createdAt || 'No especificado' }}</b></q-item-label>
+                          <q-item-label>Teléfono: <b>{{ paciente.persona.telefono.numero || 'No especificado' }}</b></q-item-label>
+						  <q-item-label>Correo: <b>{{ paciente.persona.correo.correo || 'No especificado' }}</b></q-item-label>
+                        </q-item-section>
+
+                      </q-item>
+                      <q-separator spaced inset />
+                    </q-list>
+                  </div>
+                </q-scroll-area>
+              </q-card-section>
+
+
 
 				<q-card-actions align="center">
 					<q-btn flat v-close-popup> Cerrar </q-btn>
@@ -323,6 +387,17 @@
 				</section>
 			</vue-html2pdf>
 		</div>
+
+				<div>
+			<vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="true" :preview-modal="false"
+				:paginate-elements-by-height="1400" filename="informacion_de_cdi" :pdf-quality="2"
+				:manual-pagination="false" pdf-format="a4" :pdf-margin="10" pdf-orientation="portrait"
+				pdf-content-width="800px" @progress="onProgress($event)" ref="cdihtml2Pdf">
+				<section slot="pdf-content">
+					<historialCDIVue :data="dataUser" />
+				</section>
+			</vue-html2pdf>
+		</div>
 	</div>
 </template>
 <script>
@@ -331,9 +406,11 @@ import { ADDUSER_MUTATION, USER_DELETE, BUSCAR_USER_QUERY, ADMIN_CDIS_QUERY, ADD
 import { ADMIN_ENCARGADO_QUERY } from "../../../graphql/admin";
 import VueHtml2pdf from "vue-html2pdf";
 import historialEncVue from "./historialEnc.vue";
+import historialCDIVue from "./historiaCDIPdf.vue";
+
 export default {
 	name: "admins",
-	components: { VueHtml2pdf, historialEncVue },
+	components: { VueHtml2pdf, historialEncVue, historialCDIVue },
 	data() {
 		return {
 			isValid: false,
@@ -699,9 +776,10 @@ export default {
 		workerView(typeView) {
 			this.viewType = typeView;
 		},
-		generatePDF() {
-			console.log("creando con data__ ", this.dataUser);
-			this.$refs.html2Pdf.generatePdf();
+		generatePDF(user) {
+			this.dataUser = user;
+			console.log("dataUser", this.dataUser	);
+			this.$refs.cdihtml2Pdf.generatePdf();
 		},
 		cdisInformationsPDF() {
 			this.$refs.html2Pdf.generatePdf();
@@ -740,7 +818,6 @@ export default {
 				})
 				.then((response) => {
 					this.loaderUser = false;
-					// console.log(response.data.cdis);
 					this.users = Object.assign([], response.data.cdis);
 				})
 				.catch((err) => {

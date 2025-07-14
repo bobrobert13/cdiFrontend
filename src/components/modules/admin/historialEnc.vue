@@ -29,6 +29,7 @@
       </div>
     </div>
 
+
     <!-- Pie de página -->
     <div class="text-center q-pa-sm q-mt-md">
       <p class="text-grey-6 q-mb-none">

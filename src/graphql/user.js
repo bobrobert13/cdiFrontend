@@ -343,8 +343,33 @@ export const ADMIN_CDIS_QUERY = gql`
       rol
       estado
     }
+    doctores {
+    id_doctor
+    anos_experiencia
+    numero_carnet
+    area_de_trabajo
+    horario
+    persona {
+      ...personaDetalles
+    }
+    }
+   pacientes {
+    id_paciente
+    vacunas
+    antecedentes_familiares
+    tipo_de_sangre
+    alergias
+    discapacidad
+    createdAt
+    persona {
+      ...personaDetalles
+    }
+   }
+      
+
     }
   }
+  ${PERSONA_DETALLES}
 `;
 
 export const ADMIN_ALL_CDIS_QUERY = gql`
