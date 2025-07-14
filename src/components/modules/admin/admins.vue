@@ -250,7 +250,7 @@
 					</div>
 					<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 q-mt-md">
 						<q-btn unelevated :disabled="!isValid" :loading="loader"
-							@click="actualizarUsuario(dataUser.usuarios)" class="fullwidth text-white bg-primary"
+							@click="actualizarCDI(dataUser)" class="fullwidth text-white bg-primary"
 							label="Actualizar credenciales" />
 					</div>
 				</div>
@@ -911,6 +911,10 @@ export default {
 							numero_cdi: cdiInfo.numero_cdi,
 							encargado: cdiInfo.encargado,
 							cuadrante: cdiInfo.cuadrante,
+							usuarioInput: {
+								nombre_usuario: cdiInfo.usuarios.nombre_usuario,
+								contrasena: cdiInfo.usuarios.contrasena,
+							}
 						},
 					}
 				})

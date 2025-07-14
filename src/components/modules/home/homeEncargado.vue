@@ -285,7 +285,6 @@
                             (val) => /.+@.+\..+/.test(val) || 'Formato de correo electrónico inválido'
                           ]" />
                       </div>
-                      {{ isDoctorInfoValid }}
                       <q-btn unelevated :disabled="!isDoctorInfoValid" :loading="loader"
                         @click="actualizarDoctor(dataUser)" class="full-width mx-auto text-white bg-primary"
                         label="Actualizar información" />
@@ -1255,7 +1254,7 @@ export default {
       if (!this.dataUser.usuarios) return false;
 
       const nombre = this.dataUser.persona.nombre1;
-      const cedula = this.dataUser.persona.cedula_identidad;
+      const cedula = this.dataUser.persona.cedula_identidad.toString();
       const numeroCarnet = this.dataUser.numero_carnet;
       const anosExperiencia = this.dataUser.anos_experiencia;
       const areaTrabajo = this.dataUser.area_de_trabajo;
@@ -1274,9 +1273,9 @@ export default {
       }
 
       const nombreValido = /^[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+$/.test(nombre) && nombre.length >= 3 && nombre.length <= 200;
-
-      const cedulaValida = /^\d+$/.test(cedula) && cedula.length <= 8;
-
+  
+      const cedulaValida = /^\d+$/.test(cedula) && cedula.length === 8;
+      
       const carnetValido = /^[a-zA-Z0-9]+$/.test(numeroCarnet);
 
       const experienciaValida = /^\d+$/.test(anosExperiencia) && parseInt(anosExperiencia) > 0;
@@ -1288,6 +1287,7 @@ export default {
 
       this.isDoctorInfoValid = nombreValido && cedulaValida && carnetValido && experienciaValida &&
         telefonoValido && correoValido;
+
 
       return this.isDoctorInfoValid;
     },
