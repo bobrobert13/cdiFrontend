@@ -369,7 +369,7 @@ export default {
         });
     },
     buscarUsuario(dni) {
-      const paciente = this.users.filter((paciente) => paciente.persona.cedula_identidad === dni)
+      const paciente = this.users.filter((paciente) => paciente.persona.cedula_identidad === parseInt(dni))
       if (paciente.length !== 0) {
         this.dataUser = paciente[0];
         this.modalDetailUser = true;

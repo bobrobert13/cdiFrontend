@@ -42,169 +42,49 @@
         $route.name !== 'registro' &&
         $route.name !== 'recuperar' &&
         $route.name !== 'pedido'
-      " v-model="drawer" show-if-above :mini="true" :width="70" class="sm-hide xs-hide" content-class="bg-white">
+      " v-model="drawer" show-if-above :mini="true" :width="70" class="sm-hide xs-hide" content-class="bg-primary">
         <q-scroll-area class="fit">
           <q-list padding>
+
+
+            <q-item clickable v-ripple class="q-mb-md q-mt-lg">
+              <q-item-section avatar>
+                <router-link to="/home">
+                  <q-avatar color="white" style="cursor: pointer" icon="mdi-account-circle" text-color="primary">
+                  </q-avatar>
+                </router-link>
+              </q-item-section>
+            </q-item>
+
             <q-item clickable v-ripple class="q-mb-xl">
               <q-item-section avatar>
-                <q-avatar color="primary" style="cursor: pointer" icon="mdi-hospital-box-outline" text-color="white"
-                  @click="myInfo()">
+                <router-link to="/estadisticas">
+                  <q-avatar color="white" style="cursor: pointer" icon="mdi-google-analytics" text-color="primary">
+                  </q-avatar>
+                </router-link>
+              </q-item-section>
+            </q-item>
+
+
+            <q-item clickable v-ripple class="q-mb-md">
+              <q-item-section avatar>
+                <q-avatar color="white" style="cursor: pointer" icon="mdi-cog" text-color="primary" @click="myInfo()">
                 </q-avatar>
               </q-item-section>
             </q-item>
 
-            <q-item :class="$route.name === 'home' ? 'bg-primary q-ma-sm' : ''"
-              :style="$route.name === 'home' ? 'border-radius: 10px' : ''" clickable v-ripple>
+            <q-item clickable v-ripple style="position: fixed; bottom: 0; margin-left: 16.5px">
               <q-item-section avatar>
-                <q-btn flat to="/home" icon="mdi-badge-account" :color="$route.name === 'home' ? 'white' : 'accent'">
-                </q-btn>
-              </q-item-section>
-              <q-tooltip> Incio </q-tooltip>
-            </q-item>
-
-            <!-- <q-item
-              v-if="this.$store.state.user.role !== 'operador' && this.$store.state.user.role !== 'admin'"
-              :class="
-                $route.name === 'transacciones' ? 'bg-primary q-ma-sm' : ''
-              "
-              :style="
-                $route.name === 'transacciones' ? 'border-radius: 10px' : ''
-              "
-              clickable
-              v-ripple
-            >
-              <q-item-section avatar>
-                <q-btn
-                  flat
-                  to="/transacciones"
-                  icon="mdi-reorder-horizontal"
-                  :color="$route.name === 'transacciones' ? 'white' : 'accent'"
-                >
-                </q-btn>
-              </q-item-section>
-              <q-tooltip> Transacciones </q-tooltip>
-            </q-item>
-
-            <q-item
-              v-if="this.$store.state.user.role === 'operador' && this.$store.state.user.role !== 'admin'"
-              :class="
-                $route.name === 'transaccionesOperador'
-                  ? 'bg-primary q-ma-sm'
-                  : ''
-              "
-              :style="
-                $route.name === 'transaccionesOperador'
-                  ? 'border-radius: 10px'
-                  : ''
-              "
-              clickable
-              v-ripple
-            >
-              <q-item-section avatar>
-                <q-btn
-                  flat
-                  to="/transaccionesOperador"
-                  icon="mdi-reorder-horizontal"
-                  :color="
-                    $route.name === 'transaccionesOperador' ? 'white' : 'accent'
-                  "
-                >
-                </q-btn>
-              </q-item-section>
-              <q-tooltip> Transacciones </q-tooltip>
-            </q-item>
-
-            <q-item
-              v-if="this.$store.state.user.role === 'user'"
-              :class="$route.name === 'calculadora' ? 'bg-primary q-ma-sm' : ''"
-              :style="
-                $route.name === 'calculadora' ? 'border-radius: 10px' : ''
-              "
-              clickable
-              v-ripple
-            >
-              <q-item-section avatar>
-                <q-btn
-                  flat
-                  to="/calculadora"
-                  icon="mdi-calculator"
-                  :color="$route.name === 'calculadora' ? 'white' : 'accent'"
-                >
-                </q-btn>
-              </q-item-section>
-              <q-tooltip> Calculadora </q-tooltip>
-            </q-item>
-
-            <q-item
-              v-if="this.$store.state.user.role === 'user'"
-              :class="$route.name === 'credits' ? 'bg-primary q-ma-sm' : ''"
-              :style="$route.name === 'credits' ? 'border-radius: 10px' : ''"
-              clickable
-              v-ripple
-            >
-              <q-item-section avatar>
-                <q-btn
-                  flat
-                  to="/credits"
-                  icon="mdi-credit-card"
-                  :color="$route.name === 'credits' ? 'white' : 'accent'"
-                >
-                </q-btn>
-              </q-item-section>
-              <q-tooltip> Creditos </q-tooltip>
-            </q-item>
-
-            <q-item
-              v-if="this.$store.state.user.role !== 'operador' && this.$store.state.user.role !== 'admin'"
-              :class="$route.name === 'bancos' ? 'bg-primary q-ma-sm' : ''"
-              :style="$route.name === 'bancos' ? 'border-radius: 10px' : ''"
-              clickable
-              v-ripple
-            >
-              <q-item-section avatar>
-                <q-btn
-                  flat
-                  to="/bancos"
-                  icon="mdi-bank"
-                  :color="$route.name === 'bancos' ? 'white' : 'accent'"
-                >
-                </q-btn>
-              </q-item-section>
-              <q-tooltip> Gestión de bancos </q-tooltip>
-            </q-item>
-
-            <q-item
-              v-if="this.$store.state.user.role !== 'operador' && this.$store.state.user.role !== 'admin'"
-              :class="$route.name === 'bankAccount' ? 'bg-primary q-ma-sm' : ''"
-              :style="
-                $route.name === 'bankAccount' ? 'border-radius: 10px' : ''
-              "
-              clickable
-              v-ripple
-            >
-              <q-item-section avatar>
-                <q-btn
-                  flat
-                  to="/bankAccount"
-                  icon="mdi-bank-plus"
-                  :color="$route.name === 'bankAccount' ? 'white' : 'accent'"
-                >
-                </q-btn>
-              </q-item-section>
-              <q-tooltip> Cuentas bancarias </q-tooltip>
-            </q-item> -->
-
-            <q-item clickable v-ripple style="position: fixed; bottom: 0; margin-left: 7.5px">
-              <q-item-section avatar>
-                <q-btn flat icon="mdi-logout" color="accent" v-on:click="confirm = true"></q-btn>
+                <q-avatar v-on:click="confirm = true" color="white" size="lg" style="cursor: pointer" icon="mdi-logout"
+                  text-color="primary">
+                </q-avatar>
               </q-item-section>
             </q-item>
           </q-list>
         </q-scroll-area>
       </q-drawer>
 
-      <div class="menu-bottom md-hide lg-hide xl-hide bg-white text-primary" elevated
-        v-if="$store.state.token">
+      <div class="menu-bottom md-hide lg-hide xl-hide bg-white text-primary" elevated v-if="$store.state.token">
         <q-separator />
         <q-tabs>
           <q-route-tab to="" exact>
@@ -214,42 +94,6 @@
             </q-avatar>
           </q-route-tab>
           <q-route-tab icon="mdi-badge-account" to="/home" exact />
-          <!-- <q-route-tab
-            v-if="this.$store.state.user.role !== 'operador'"
-            icon="mdi-reorder-horizontal"
-            to="/transacciones"
-            exact
-          />
-          <q-route-tab
-            icon="mdi-reorder-horizontal"
-            to="/transaccionesOperador"
-            exact
-            v-if="this.$store.state.user.role === 'operador'"
-          />
-          <q-route-tab
-            icon="mdi-calculator"
-            to="/calculadora"
-            exact
-            v-if="this.$store.state.user.role === 'user'"
-          />
-          <q-route-tab
-            icon="mdi-credit-card"
-            to="/credits"
-            exact
-            v-if="this.$store.state.user.role === 'user'"
-          />
-          <q-route-tab
-            icon="mdi-bank"
-            to="/bancos"
-            exact
-            v-if="this.$store.state.user.role !== 'operador'"
-          />
-          <q-route-tab
-            icon="mdi-bank-plus"
-            to="/bankAccount"
-            exact
-            v-if="this.$store.state.user.role !== 'operador'"
-          /> -->
           <q-route-tab icon="mdi-logout" v-on:click="confirm = true" to="" exact />
         </q-tabs>
       </div>
@@ -823,8 +667,8 @@ export default {
         .then((response) => {
           // console.log("seguridad?? ", response.data.metodosRecuperacion);
           if (response.data) {
-            const seguridad  =  response.data.metodosRecuperacion;
-              this.pregunta1 = seguridad.preguntas[0].pregunta || '';
+            const seguridad = response.data.metodosRecuperacion;
+            this.pregunta1 = seguridad.preguntas[0].pregunta || '';
           }
         })
         .catch((err) => {

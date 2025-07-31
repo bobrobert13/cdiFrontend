@@ -11,4 +11,14 @@ export default [
     },
     props: true
   },
+  {
+    path: "/estadisticas",
+    name: "estadisticas",
+    components: { default: lazyLoad("/modules/estadisticas/estadisticas") },
+    meta: {
+      requiresAuth: true,
+      roles: ["Paciente", "admin", "Encargado", "doctor"]
+    },
+    props: true
+  },
 ];

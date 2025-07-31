@@ -17,9 +17,9 @@
             >Volver</span
           >
         </div>
-        
+
         <div
-          class="col-xl-9 col-lg-9 col-md-9 col-sm-11 col-xs-11  q-mt-xl"
+          class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 q-mt-xl"
           v-if="workersView === false"
         >
           <homeAdmin v-if="this.$store.state.user.role === 'admin'"></homeAdmin>

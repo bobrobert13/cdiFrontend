@@ -20,7 +20,7 @@
             </div>
             <div class="row justify-center" v-if="this.users.length !== 0">
               <div class="col-12 text-left q-mb-md">
-                <p class=" text-subtitle text-medium">Tu lista de pacientes:</p>
+                <p class="text-h6 text-weight-light ">Tu lista de pacientes:</p>
               </div>
               <div class="col-12 q-mb-sm" v-for="(user, index) in users" :key="index">
                 <q-list class="rounded-borders bg-grey-1" style="border-radius: 15px">
@@ -32,7 +32,7 @@
                       <q-item-label class="text-left q-mb-xs" lines="1">
                         <span class="text-weight-medium">Documento de identidad: {{ user.persona.nacionalidad }} - {{
                           user.persona.cedula_identidad
-                        }}</span>
+                          }}</span>
                       </q-item-label>
                       <q-item-label class="text-left" lines="1">
                         <span class="text-weight-medium">Edad del paciente: {{ user.persona.edad }} años</span>
@@ -115,122 +115,112 @@
                 </div>
               </div>
             </div>
-            <div class="row justify-between " v-if="viewType === 'addWorker'">
-              <div class="col-12 text-left row items-center q-mt-md q-mb-md">
+
+
+            <!-- CREACION DE NUEVO PACIENTE -->
+
+            <div class="  " v-if="viewType === 'addWorker'">
+              <div class="col-12 text-left row items-center q-mt-md q-mb-lg">
                 <q-icon style="cursor: pointer" @click="workerView('userList')" name="mdi-arrow-left"
                   class="text-primary" size="md"></q-icon>
                 <span style="cursor: pointer" class="text-bold text-accent text-h6"
-                  @click="workerView('userList')">Nuevo paciente</span>
+                  @click="workerView('userList')">Crear nuevo paciente</span>
               </div>
+              <small class="q-my-md block text-red text-bold"> <q-icon name="mdi-information" class="q-mr-xs" size="sm" color="primary" /> Los campos marcados con * son obligatorios</small>
               <div class=" col-7">
                 <div class="column justify-center">
                   <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 ">
-                    <q-input filled color="deep-purple-6" v-model="fullName" label="Nombre completo" :rules="[
-                      (val) => val.length >= 3 || 'Mínimo 3 caracteres',
-                      (val) => val.length <= 200 || 'Máximo 200 caracteres',
-                      (val) =>
-                        /^([\sa-zA-ZñÑáéíóúÁÉÍÓÚ]{3,40})*$/.test(val) ||
-                        'Solo se permiten caracteres',
-                    ]" />
+                    <q-input filled color="deep-purple-6" v-model="fullName" label="Nombre completo*" :rules="fullNameRules" />
                   </div>
                   <div class="row q-pb-xs">
                     <div class="col-12">
-                      <q-input type="email" filled v-model="correo" label="Correo electrónico" :rules="[
-                        (val) => !!val || 'Este campo es obligatorio',
-                        (val) => val.length >= 3 || 'Mínimo 3 caracteres',
-                        (val) => val.length <= 200 || 'Máximo 200 caracteres',
-                        (val) => /.+@.+\..+/.test(val) || 'Formato de correo electrónico inválido'
-                      ]" />
+                      <q-input type="email" filled v-model="correo" label="Correo electrónico*" :rules="emailRules" />
                     </div>
                   </div>
                   <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-pb-xs">
                     <div class="row">
-                      <div class="col-4">
+                      <div class="col-2">
                         <q-select filled v-model="nacionalidad" :options="nacionalidades" option-label="label"
                           option-value="value" emit-value />
                       </div>
-                      <div class="col-8">
-                        <q-input filled color="deep-purple-6" type="number" v-model="dni" :rules="[
-                          val => /^\d+$/.test(val) || 'Solo se permiten números',
-                          val => val.length <= 8 || 'Máximo 8 caracteres'
-                        ]" label="Cédula" />
+                      <div class="col-10">
+                        <q-input filled color="deep-purple-6" type="number" v-model="dni" :rules="dniRules"
+                          label="Cédula*" />
                       </div>
                     </div>
                     <div class="row q-mt-sm">
-                      <div class="col-8">
-                        <q-select filled label="Estado" v-model="estado" :options="estados" option-label="label"
+                      <div class="col-md-8 col-xl-8 col-lg-8 col-sm-12 col-xs-12">
+                        <q-select filled label="Estado*" v-model="estado" :options="estados" option-label="label"
                           option-value="value" />
                       </div>
-                      <div class="col-4">
-                        <q-select filled label="Ciudad" v-model="ciudad" :options="ciudades[estado.value]"
-                          option-label="label" option-value="value" emit-value />
+                      <div class="col-md-4 col-xl-4 col-lg-4  col-sm-12 col-xs-12">
+                        <q-select filled label="Ciudad*" v-model="ciudad" :options="ciudades[estado.value]"
+                          option-label="label" option-value="value" emit-value :rules="requiredSelectRules" />
                       </div>
                     </div>
                     <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 ">
                       <div class="row q-mt-xs q-pb-xs">
                         <div class="col-8">
-                          <q-input filled color="deep-purple-6" v-model="calle" label="Calle" />
+                          <q-input filled color="deep-purple-6" v-model="calle" label="Calle*" :rules="streetRules" />
                         </div>
                         <div class="col-4">
-                          <q-input filled color="deep-purple-6" v-model="numero" label="Número de casa" type="number" />
+                          <q-input filled color="deep-purple-6" v-model="numero" label="Número de casa*" type="number"
+                            :rules="houseNumberRules" />
                         </div>
                       </div>
                       <div class="col-xl-8 col-lg-8 col-md-8 q-pb-xs col-sm-12 col-xs-12 ">
-                        <q-input filled color="deep-purple-6" v-model="sector" label="Sector" />
+                        <q-input filled color="deep-purple-6" v-model="sector" label="Sector*" :rules="sectorRules" />
                       </div>
                       <div class="col-xl-8 col-lg-8 col-md-8 q-pb-xs col-sm-12 col-xs-12 ">
-                        <q-input filled color="deep-purple-6" v-model="punto_referencia" label="Punto de referencia" />
+                        <q-input filled color="deep-purple-6" v-model="punto_referencia" label="Punto de referencia*"
+                          :rules="referencePointRules" />
                       </div>
                       <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 ">
-                        <q-input filled color="deep-purple-6" type="number" :rules="[
-                          val => /^\d+$/.test(val) || 'Solo se permiten números',
-                          val => val.length <= 8 || 'Máximo 8 caracteres'
-                        ]" v-model="codigo_postal" label="Código postal" />
+                        <q-input filled color="deep-purple-6" type="number" v-model="codigo_postal"
+                          label="Código postal*" :rules="postalCodeRules" />
                       </div>
                     </div>
                   </div>
                   <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-pb-xs ">
-                    <q-select filled v-model="sexo" :options="sexoPaciente" label="Sexo" option-label="label"
-                      option-value="value" emit-value />
+                    <q-select filled v-model="sexo" :options="sexoPaciente" label="Sexo*" option-label="label"
+                      option-value="value" emit-value :rules="requiredSelectRules" />
                   </div>
                   <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 ">
-                    <q-input filled color="deep-purple-6" :rules="[
-                      val => /^\d+$/.test(val) || 'Solo se permiten números',
-                      val => val.length <= 3 || 'Máximo 3 caracteres'
-                    ]" v-model="edad" label="Edad" type="number" />
+                    <q-input filled color="deep-purple-6" v-model="edad" label="Edad*" type="number" :rules="ageRules" />
                   </div>
                   <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-pb-xs">
                     <div class="row">
                       <div class="col-4">
-                        <q-select filled v-model="codigo" :options="codigoTel" label="Codigo" option-label="label"
+                        <q-select filled v-model="codigo" :options="codigoTel" label="Codigo*" option-label="label"
                           option-value="value" emit-value />
                       </div>
                       <div class="col-8">
-                        <q-input filled color="deep-purple-6" :rules="[
-                          val => /^\d+$/.test(val) || 'Solo se permiten números',
-                          val => val.length <= 12 || 'Máximo 12 caracteres'
-                        ]" v-model="telefono" type="number" label="Número de telefono" />
+                        <q-input filled color="deep-purple-6" v-model="telefono" type="number"
+                          label="Número de telefono*" :rules="phoneRules" />
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
               <div class=" col-5" style="border-left: 3px solid white;">
+                <p class="text-h6 q-my-md text-weight-medium text-accent">Información adicional médica</p>
+
                 <div class="column justify-center">
                   <div class="row ">
 
                   </div>
                   <div class="row q-pb-xs">
                     <div class="col-12">
-                      <q-select filled label="Vacunas" v-model="vacunasSeleccionadas" :options="vacunas"
-                        option-label="label" option-value="value" />
+                      <q-select filled label="Vacunas*" v-model="vacunasSeleccionadas" :options="vacunas"
+                        option-label="label" option-value="value" :rules="requiredSelectRules" />
                     </div>
 
                   </div>
 
                   <div class="row q-pb-xs">
                     <div class="col-12">
-                      <q-select filled label="Tipo de sangre" v-model="sangreSeleccionada" :options="tipo_de_sangre" />
+                      <q-select filled label="Tipo de sangre*" v-model="sangreSeleccionada" :options="tipo_de_sangre"
+                        :rules="requiredSelectRules" />
                     </div>
 
                   </div>
@@ -238,87 +228,88 @@
                   <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 ">
                     <div class="row  ">
                       <div class="col-12">
-                        <q-input filled label="Enfermedades cronicas" :rules="[
+                        <q-input filled label="Enfermedades cronicas*" v-model="enfermedades_cronicas" :rules="[
                           (val) => !!val || 'Este campo es obligatorio',
                           (val) => val.length >= 3 || 'Mínimo 3 caracteres',
                           (val) => val.length <= 200 || 'Máximo 200 caracteres',
                           (val) =>
                             /^([\sa-zA-ZñÑáéíóúÁÉÍÓÚ]{3,40})*$/.test(val) ||
                             'Solo se permiten caracteres',
-                        ]" v-model="enfermedades_cronicas" />
+                        ]" />
                       </div>
 
                     </div>
                     <div class="row ">
                       <div class="col-12">
-                        <q-input filled :rules="[
+                        <q-input filled label="Discapacidad*" v-model="discapacidad" :rules="[
                           (val) => !!val || 'Este campo es obligatorio',
                           (val) => val.length >= 3 || 'Mínimo 3 caracteres',
                           (val) => val.length <= 200 || 'Máximo 200 caracteres',
                           (val) =>
                             /^([\sa-zA-ZñÑáéíóúÁÉÍÓÚ]{3,40})*$/.test(val) ||
                             'Solo se permiten caracteres',
-                        ]" label="Discapacidad" v-model="discapacidad" />
+                        ]" />
                       </div>
 
                     </div>
 
                     <div class="row ">
                       <div class="col-12">
-                        <q-input :rules="[
+                        <q-input filled label="Antecedentes familiares*" v-model="antecedentes_familiares" :rules="[
                           (val) => !!val || 'Este campo es obligatorio',
                           (val) => val.length >= 3 || 'Mínimo 3 caracteres',
                           (val) => val.length <= 200 || 'Máximo 200 caracteres',
                           (val) =>
                             /^([\sa-zA-ZñÑáéíóúÁÉÍÓÚ]{3,40})*$/.test(val) ||
                             'Solo se permiten caracteres',
-                        ]" filled label="Antecedentes familiares" v-model="antecedentes_familiares" />
+                        ]" />
                       </div>
 
                     </div>
 
                     <div class="row ">
                       <div class="col-12">
-                        <q-input :rules="[
+                        <q-input filled label="Alergias*" v-model="alergias" :rules="[
                           (val) => !!val || 'Este campo es obligatorio',
                           (val) => val.length >= 3 || 'Mínimo 3 caracteres',
                           (val) => val.length <= 200 || 'Máximo 200 caracteres',
                           (val) =>
                             /^([\sa-zA-ZñÑáéíóúÁÉÍÓÚ]{3,40})*$/.test(val) ||
                             'Solo se permiten caracteres',
-                        ]" filled label="Alergias" v-model="alergias" />
+                        ]" />
                       </div>
 
                     </div>
 
                     <div class="row ">
                       <div class="col-12">
-                        <q-input :rules="[
+                        <q-input filled label="Ocupación*" v-model="ocupacion" :rules="[
                           (val) => !!val || 'Este campo es obligatorio',
                           (val) => val.length >= 3 || 'Mínimo 3 caracteres',
                           (val) => val.length <= 200 || 'Máximo 200 caracteres',
                           (val) =>
                             /^([\sa-zA-ZñÑáéíóúÁÉÍÓÚ]{3,40})*$/.test(val) ||
                             'Solo se permiten caracteres',
-                        ]" filled label="Ocupación" v-model="ocupacion" />
+                        ]" />
                       </div>
 
                     </div>
 
                     <div class="row ">
                       <div class="col-12">
-                        <q-select filled label="Estado civil" v-model="estadoCivilSeleccionado"
-                          :options="estado_civil" />
+                        <q-select filled label="Estado civil*" v-model="estadoCivilSeleccionado" :options="estado_civil"
+                          :rules="requiredSelectRules" />
                       </div>
 
                     </div>
                     <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 ">
                       <div class="row ">
                         <div class="col-12">
-                          <q-input type="number" :rules="[
-                            val => /^\d+$/.test(val) || 'Solo se permiten números',
-                            val => val.length <= 3 || 'Máximo 3 caracteres'
-                          ]" filled color="deep-purple-6" v-model="peso" label="Peso" />
+                          <q-input filled color="deep-purple-6" v-model="peso" label="Peso (kg)*" type="number" :rules="[
+                            (val) => !!val || 'Este campo es obligatorio',
+                            (val) => val.length <= 3 || 'Máximo 3 caracteres',
+                            (val) => /^\d+$/.test(val) || 'Solo se permiten números',
+                          ]" />
                         </div>
                       </div>
                     </div>
@@ -327,31 +318,11 @@
               </div>
             </div>
             <div v-if="viewType === 'addWorker'" class="col-xl-5 col-lg-5 col-md-5 col-sm-12 col-xs-12 q-pa-xs q-pa-xs">
-              <q-btn unelevated :loading="loader" type="submit" @click="addPaciente()" :disable="!valid ||
-                dni === '' ||
-                dni.length > 30 ||
-                !sexo ||
-                !edad ||
-                edad > 100 ||
-                edad < 1 ||
-                telefono === '' ||
-                telefono.length > 12 ||
-                !estado ||
-                !ciudad ||
-                !calle ||
-                calle.length > 200 ||
-                !numero ||
-                numero.length > 16 ||
-                !sector ||
-                sector.length > 100 ||
-                !punto_referencia ||
-                !codigo_postal ||
-                !estadoCivilSeleccionado ||
-                !peso ||
-                !vacunasSeleccionadas ||
-                !sangreSeleccionada
-                " class="full-width text-white bg-primary" label="Añadir paciente" />
+              <q-btn unelevated :loading="loader" type="submit" @click="addPaciente()" :disable="!formHasNoErrors"
+                class="full-width text-white bg-primary" label="Añadir paciente" />
             </div>
+
+
           </div>
           <q-dialog v-model="modalDetailUser">
             <q-card class="my-card" flat bordered style="min-width: 450px">
@@ -422,7 +393,7 @@
                       <q-item style="cursor:pointer;">
                         <q-item-section>
                           <q-item-label caption>Paciente debe asistir el: <b>{{ entradaFecha(consulta.fecha_consulta)
-                              }}</b></q-item-label>
+                          }}</b></q-item-label>
                           <span class="q-my-sm"> <q-icon name="mdi-information" color="primary" /> Estado actual: <b>{{
                             consulta.estado_consulta }}</b></span>
                           <q-item-label>Tipo de consulta: <b>{{ consulta.tipo_consulta }}</b></q-item-label>
@@ -575,18 +546,18 @@
                               emergencia.estado_emergencia }}</b></q-item-label>
                           <q-item-label lines="2"><b>Motivo de emergencia:</b> {{
                             emergencia.motivo_emergencia
-                          }}</q-item-label>
+                            }}</q-item-label>
 
                           <q-item-label><b>Diagnóstico provisional:</b> {{ emergencia.diagnostico_provisional
-                          }}</q-item-label>
+                            }}</q-item-label>
                           <q-item-label><b>Estado del paciente:</b> {{ emergencia.estado_paciente
-                          }}</q-item-label>
+                            }}</q-item-label>
                           <q-item-label><b>Procesamiento realizado:</b> {{ emergencia.procesamiento_realizado
-                          }}</q-item-label>
+                            }}</q-item-label>
                           <q-item-label><b>Destino:</b> {{ emergencia.destino
-                          }}</q-item-label>
+                            }}</q-item-label>
                           <q-item-label><b>Notas de atención:</b> {{ emergencia.notas_de_atencion
-                          }}</q-item-label>
+                            }}</q-item-label>
                         </q-item-section>
 
                       </q-item>
@@ -722,16 +693,16 @@
                               hospitalizacion.estado }}</b></q-item-label>
                           <q-item-label lines="2"><b>Motivo de hospitalización:</b> {{
                             hospitalizacion.motivo_de_hospitalizacion
-                          }}</q-item-label>
+                            }}</q-item-label>
 
                           <q-item-label><b>Unidad hospitalaria:</b> {{ hospitalizacion.unidad_hospitalaria
-                          }}</q-item-label>
+                            }}</q-item-label>
                           <q-item-label><b>Fecha de ingreso:</b> {{ entradaFecha(hospitalizacion.fecha_ingreso)
-                          }}</q-item-label>
+                            }}</q-item-label>
                           <q-item-label><b>Fecha de egreso:</b> {{ salidaFecha(hospitalizacion.fecha_egreso)
-                          }}</q-item-label>
+                            }}</q-item-label>
                           <q-item-label><b>Notas médicas:</b> {{ hospitalizacion.notas_medicas
-                          }}</q-item-label>
+                            }}</q-item-label>
                         </q-item-section>
 
                       </q-item>
@@ -800,8 +771,7 @@
               <q-separator />
 
               <q-card-actions align="center">
-                <q-btn flat :disable="
-                  tipo_consulta === '' ||
+                <q-btn flat :disable="tipo_consulta === '' ||
                   motivo_consulta === '' ||
                   sintomas_consulta === '' ||
                   notas_medicas === '' ||
@@ -1323,8 +1293,7 @@
               <q-separator />
 
               <q-card-actions align="center">
-                <q-btn flat :disable="
-                  tipo_consulta === '' ||
+                <q-btn flat :disable="tipo_consulta === '' ||
                   motivo_consulta === '' ||
                   sintomas_consulta === '' ||
                   notas_medicas === '' ||
@@ -1378,7 +1347,7 @@
                       <q-item style="cursor:pointer;">
                         <q-item-section>
                           <q-item-label caption>Fecha de diagnostico: {{ entradaFecha(diagnostico.createdAt)
-                          }}</q-item-label>
+                            }}</q-item-label>
                           <q-item-label lines="2"><b>Diagnostico:</b> {{ diagnostico.condicion }}</q-item-label>
                           <q-item-label lines="2"><b>Gravedad:</b> {{ diagnostico.gravedad }}</q-item-label>
                           <small class=" q-mt-xs"><b>Descripción:</b> {{ diagnostico.descripcion }}</small>
@@ -1440,14 +1409,14 @@
                         <q-item-section>
                           <q-item-label caption>Fecha de asignado: {{ entradaFecha(examen.createdAt) }}</q-item-label>
                           <q-item-label lines="2"><b>Tipo de examen tratado:</b> {{ examen.tipo_de_examen
-                          }}</q-item-label>
+                            }}</q-item-label>
                           <small class=" q-mt-xs"><b>Descripción:</b> {{ examen.descripcion }}</small>
 
                           <q-item-section class=" q-mt-sm">
                             <q-item-label caption>Laboratorio: {{ examen.laboratorio_centro }}</q-item-label>
 
                             <q-item-label lines="2" class=" q-mt-sm"><b>Observaciones:</b> {{ examen.observaciones
-                            }}</q-item-label>
+                              }}</q-item-label>
                             <span class=" q-mt-xs"><b>Descripción:</b> {{ examen.descripcion }}</span>
                           </q-item-section>
                           <q-item-label lines="2" class=" q-mt-sm"><b>Valores de referencia:</b> {{
@@ -1521,12 +1490,12 @@
                             <b> Estado del tratamiento:</b> <b> {{
                               tratamiento.estado }}</b></q-item-label>
                           <q-item-label lines="2"><b>Tipo de tratamiento:</b> {{ tratamiento.tipo_de_tratamiento
-                          }}</q-item-label>
+                            }}</q-item-label>
                           <small class=" q-mt-xs"><b>Detalles:</b> {{ tratamiento.detalles }}</small>
                           <q-item-label caption>Fecha de inicio: {{ entradaFecha(tratamiento.fecha_inicio)
-                          }}</q-item-label>
+                            }}</q-item-label>
                           <q-item-label caption>Fecha de culminación: {{ entradaFecha(tratamiento.fecha_culminacion)
-                          }}</q-item-label>
+                            }}</q-item-label>
                         </q-item-section>
 
                       </q-item>
@@ -1591,26 +1560,26 @@
                         <q-item-section>
 
                           <q-item-label lines="2" class=" text-h6 text-medium text-primary"><b>{{ medicamento.nombre
-                              }}</b> </q-item-label>
+                          }}</b> </q-item-label>
                           <q-item-label class="q-my-sm" lines="2"> <q-icon color="primary" name="mdi-information" />
                             Estado actual: <b>{{ medicamento.estado_tratamiento }}</b> </q-item-label>
                           <q-item-label lines="2"><b>Dosis recomentada:</b> {{ medicamento.dosis
-                          }}</q-item-label>
+                            }}</q-item-label>
                           <q-item-label lines="2"><b>Administración:</b> {{ medicamento.via_administracion
-                          }}</q-item-label>
+                            }}</q-item-label>
                           <q-item-label lines="2"><b>Frecuencia de administración:</b> {{ medicamento.frecuencia
-                          }}</q-item-label>
+                            }}</q-item-label>
                           <q-item-label lines="2"><b>Duración recomentada:</b> {{ medicamento.duracion
-                          }}</q-item-label>
+                            }}</q-item-label>
                           <q-item-label lines="2"><b>Dosis recomentada:</b> {{ medicamento.dosis
-                          }}</q-item-label>
+                            }}</q-item-label>
                           <q-item-label lines="2"><b>Dosis recomentada:</b> {{ medicamento.dosis
-                          }}</q-item-label>
+                            }}</q-item-label>
                           <small class=" q-mt-xs"><b>Observaciones:</b> {{ medicamento.observaciones }}</small>
                           <q-item-label caption>Fecha de inicio: {{ entradaFecha(medicamento.fecha_inicio)
-                          }}</q-item-label>
+                            }}</q-item-label>
                           <q-item-label caption>Fecha de culminación: {{ entradaFecha(medicamento.fecha_fin)
-                          }}</q-item-label>
+                            }}</q-item-label>
                         </q-item-section>
                       </q-item>
                       <div class="q-ml-md row col-12 items-center self-center no-wrap ">
@@ -1659,6 +1628,25 @@ import moment from 'moment';
 import VueHtml2pdf from "vue-html2pdf";
 import historiaPdf from "../admin/hitoriaPdf.vue"
 import {
+  useFullNameValidation,
+  useEmailValidation,
+  useDniValidation,
+  useTextFieldValidation,
+  useTextWithSpecialCharsValidation,
+  useHouseNumberValidation,
+  usePostalCodeValidation,
+  useAgeValidation,
+  usePhoneValidation,
+  useWeightValidation,
+  useRequiredSelectValidation,
+  useChronicDiseasesValidation,
+  useDisabilityValidation,
+  useFamilyHistoryValidation,
+  useAllergiesValidation,
+  useOccupationValidation
+} from '../../../utils/validations'
+import { isFormValid } from '../../../utils/formUtils'
+import {
   MIS_PACIENTES_QUERY,
   ADDPACIENTE_MUTATION,
   USER_DELETE,
@@ -1683,6 +1671,110 @@ import {
 } from "../../../graphql/user";
 export default {
   name: "homeDoctor",
+  computed: {
+    fullNameRules() {
+      return useFullNameValidation();
+    },
+    emailRules() {
+      return useEmailValidation();
+    },
+    dniRules() {
+      return useDniValidation();
+    },
+    streetRules() {
+      return useTextWithSpecialCharsValidation(true, 3, 200);
+    },
+    houseNumberRules() {
+      return useHouseNumberValidation();
+    },
+    sectorRules() {
+      return useTextWithSpecialCharsValidation(true, 3, 100);
+    },
+    referencePointRules() {
+      return useTextFieldValidation(true, 3, 200);
+    },
+    postalCodeRules() {
+      return usePostalCodeValidation();
+    },
+    ageRules() {
+      return useAgeValidation();
+    },
+    phoneRules() {
+      return usePhoneValidation();
+    },
+    chronicDiseasesRules() {
+      return useChronicDiseasesValidation();
+    },
+    disabilityRules() {
+      return useDisabilityValidation();
+    },
+    familyHistoryRules() {
+      return useFamilyHistoryValidation();
+    },
+    allergiesRules() {
+      return useAllergiesValidation();
+    },
+    occupationRules() {
+      return useOccupationValidation();
+    },
+    weightRules() {
+      return useWeightValidation();
+    },
+    requiredSelectRules() {
+      return useRequiredSelectValidation();
+    },
+    formHasNoErrors() {
+      // Valores actuales del formulario
+      const formValues = {
+        fullName: this.fullName,
+        correo: this.correo,
+        dni: this.dni,
+        calle: this.calle,
+        numero: this.numero,
+        sector: this.sector,
+        punto_referencia: this.punto_referencia,
+        codigo_postal: this.codigo_postal,
+        sexo: this.sexo,
+        edad: this.edad,
+        telefono: this.telefono,
+        ciudad: this.ciudad,
+        vacunasSeleccionadas: this.vacunasSeleccionadas,
+        sangreSeleccionada: this.sangreSeleccionada,
+        enfermedades_cronicas: this.enfermedades_cronicas,
+        discapacidad: this.discapacidad,
+        antecedentes_familiares: this.antecedentes_familiares,
+        alergias: this.alergias,
+        ocupacion: this.ocupacion,
+        estadoCivilSeleccionado: this.estadoCivilSeleccionado,
+        peso: this.peso
+      }
+      // Reglas por campo
+      const validationRules = {
+        fullName: useFullNameValidation(),
+        correo: useEmailValidation(),
+        dni: useDniValidation(),
+        calle: useTextFieldValidation(true),
+        numero: useHouseNumberValidation(),
+        sector: useTextFieldValidation(true),
+        ciudad: useRequiredSelectValidation(),
+        punto_referencia: useTextFieldValidation(false),
+        codigo_postal: usePostalCodeValidation(),
+        sexo: useRequiredSelectValidation(),
+        edad: useAgeValidation(),
+        telefono: usePhoneValidation(),
+        vacunasSeleccionadas: useRequiredSelectValidation(),
+        sangreSeleccionada: useRequiredSelectValidation(),
+        enfermedades_cronicas: useChronicDiseasesValidation(),
+        discapacidad: useDisabilityValidation(),
+        antecedentes_familiares: useFamilyHistoryValidation(),
+        alergias: useAllergiesValidation(),
+        ocupacion: useOccupationValidation(),
+        estadoCivilSeleccionado: useRequiredSelectValidation(),
+        peso: useWeightValidation()
+      }
+      return isFormValid(formValues, validationRules)
+    }
+  },
   components: {
     historiaPdf,
     VueHtml2pdf
@@ -2756,7 +2848,7 @@ export default {
         });
     },
     añadirConsul() {
-      
+
       // Validar que se haya ingresado la fecha
       if (!this.ingresoSalida) {
         this.$q.notify({
@@ -2951,7 +3043,7 @@ export default {
     },
     añadirTratamiento() {
       this.loader = true;
-      
+
       // Validar que se hayan ingresado las fechas
       if (!this.tratamiento_fechaInicio || !this.tratamiento_fechaCulminacion) {
         this.$q.notify({
@@ -3026,7 +3118,7 @@ export default {
     },
     añadirMedicamento() {
       this.loader = true;
-      
+
       // Validar que se hayan ingresado las fechas
       if (!this.medicamento_fechaInicio || !this.medicamento_fechaFin) {
         this.$q.notify({
@@ -3217,7 +3309,7 @@ export default {
         });
     },
     buscarUsuario(dni) {
-      const paciente = this.users.filter((paciente) => paciente.persona.cedula_identidad === dni)
+      const paciente = this.users.filter((paciente) => paciente.persona.cedula_identidad === parseInt(dni))
       if (paciente.length !== 0) {
         this.dataUser = paciente[0];
         this.modalDetailUser = true;
