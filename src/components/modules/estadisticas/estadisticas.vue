@@ -98,11 +98,11 @@ export default {
       stats: [
         {
           label: 'Pacientes Registrados',
-          value: '1,500',
+          value: '10',
           icon: 'groups',
           color: 'primary',
-          series: [{ name: 'Pacientes', data: [200, 250, 300, 320, 400, 450, 500] }],
-          chartOptions: { chart: { type: 'area', sparkline: { enabled: true } }, stroke: { curve: 'smooth' }, fill: { opacity: 0.3 } , yaxis: { min: 0 } }
+          series: [{ name: 'Pacientes', data: [0, 10,] }],
+          chartOptions: { chart: { type: 'area', sparkline: { enabled: true }, toolbar: { show: false } }, stroke: { curve: 'smooth' }, fill: { opacity: 0.3 } , yaxis: { min: 0 } }
         },
         {
           label: 'Pacientes Nuevos (Mes)',
@@ -110,7 +110,7 @@ export default {
           icon: 'person_add',
           color: 'green',
           series: [{ name: 'Nuevos', data: [5, 15, 10, 20, 18, 25, 22] }],
-          chartOptions: { chart: { type: 'area', sparkline: { enabled: true } }, stroke: { curve: 'smooth' }, fill: { opacity: 0.3 } , yaxis: { min: 0 } }
+          chartOptions: { chart: { type: 'area', sparkline: { enabled: true }, toolbar: { show: false } }, stroke: { curve: 'smooth' }, fill: { opacity: 0.3 } , yaxis: { min: 0 } }
         },
         {
           label: 'Pacientes Atendidos (Hoy)',
@@ -118,7 +118,7 @@ export default {
           icon: 'today',
           color: 'orange',
           series: [{ name: 'Atendidos', data: [5, 10, 15, 12, 20, 25, 30] }],
-          chartOptions: { chart: { type: 'area', sparkline: { enabled: true } }, stroke: { curve: 'smooth' }, fill: { opacity: 0.3 } , yaxis: { min: 0 } }
+          chartOptions: { chart: { type: 'area', sparkline: { enabled: true }, toolbar: { show: false } }, stroke: { curve: 'smooth' }, fill: { opacity: 0.3 } , yaxis: { min: 0 } }
         },
         {
           label: 'Consultas del Mes',
@@ -126,11 +126,11 @@ export default {
           icon: 'event_available',
           color: 'red',
           series: [{ name: 'Consultas', data: [20, 25, 22, 30, 28, 35, 40] }],
-          chartOptions: { chart: { type: 'area', sparkline: { enabled: true } }, stroke: { curve: 'smooth' }, fill: { opacity: 0.3 } , yaxis: { min: 0 } }
+          chartOptions: { chart: { type: 'area', sparkline: { enabled: true }, toolbar: { show: false } }, stroke: { curve: 'smooth' }, fill: { opacity: 0.3 } , yaxis: { min: 0 } }
         }
       ],
       barChartOptions: {
-        chart: { id: 'dist-edad' },
+        chart: { id: 'dist-edad', toolbar: { show: false } },
         title: { text: 'Distribución por Edad' },
         xaxis: { categories: ['Niños (0-12)', 'Adolescentes (13-18)', 'Adultos (19-64)', 'Mayores (65+)'] },
       },
@@ -139,14 +139,14 @@ export default {
         data: [150, 200, 950, 200]
       }],
       donutChartOptions: {
-        chart: { id: 'dist-genero' },
+        chart: { id: 'dist-genero', toolbar: { show: false } },
         title: { text: 'Distribución por Género' },
         labels: ['Masculino', 'Femenino'],
       },
       donutChartSeries: [700, 800],
 
       consultasPeriodoOptions: {
-        chart: { id: 'consultas-periodo' },
+        chart: { id: 'consultas-periodo', toolbar: { show: false } },
         title: { text: 'Consultas por Período (Últimos 30 días)' },
         xaxis: { categories: Array.from({length: 30}, (_, i) => {
           const d = new Date();
@@ -160,7 +160,7 @@ export default {
       }],
 
       consultasMedicoOptions: {
-        chart: { id: 'consultas-medico' },
+        chart: { id: 'consultas-medico', toolbar: { show: false } },
         title: { text: 'Consultas por Médico' },
         xaxis: { categories: ['Dr. Martínez', 'Dra. González', 'Dr. Rodríguez', 'Dra. Pérez'] },
       },
@@ -170,7 +170,7 @@ export default {
       }],
 
       diagnosticosOptions: {
-        chart: { id: 'top-diagnosticos', type: 'bar' },
+        chart: { id: 'top-diagnosticos', type: 'bar', toolbar: { show: false } },
         plotOptions: {
           bar: {
             horizontal: true,
