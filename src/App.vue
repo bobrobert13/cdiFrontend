@@ -56,7 +56,7 @@
               </q-item-section>
             </q-item>
 
-            <q-item clickable v-ripple class="q-mb-xl">
+            <q-item v-if="this.$store.state.user.role === 'cdi'" clickable v-ripple class="q-mb-xl">
               <q-item-section avatar>
                 <router-link to="/estadisticas">
                   <q-avatar color="white" style="cursor: pointer" icon="mdi-google-analytics" text-color="primary">

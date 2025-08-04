@@ -1,9 +1,38 @@
 <template>
   <q-page padding>
-    <div class="q-pa-md">
+    <div class="q-pa-xs">
 
-      <div class="row q-col-gutter-md q-mb-md">
-        <div class="col-12 col-md-3" v-for="(stat, index) in stats" :key="index">
+      <!-- SECCIÓN DE FILTROS -->
+      <!-- Los filtros permiten cambiar el período de tiempo de los datos mostrados -->
+      <div class="row q-mb-sm">
+        <div class="col-12">
+          <q-card class="q-pa-md">
+            <div class="text-h6 q-mb-md">Filtros de Período (Semana/Mes)</div>
+            <div class="row q-gutter-md items-center">
+              <!-- Selector de período principal -->
+              <div class="col-auto">
+                <q-select v-model="selectedPeriod" outlined dense :options="periodOptions" label="Período" emit-value map-options
+                  @update:model-value="onPeriodChange" style="min-width: 150px" />
+              </div>
+
+              <!-- Botón para actualizar datos -->
+              <div class="col-auto">
+                <q-btn color="primary" label="Actualizar"  @click="updateChartData" :loading="isLoading" />
+              </div>
+
+              <!-- Indicador del período actual -->
+              <div class="col-auto">
+                <q-chip color="primary" size="md" text-color="white">
+                  {{ getCurrentPeriodLabel() }}
+                </q-chip>
+              </div>
+            </div>
+          </q-card>
+        </div>
+      </div>
+
+      <div class="row q-col-gutter-xs q-mb-sm">
+        <div class="col-12 col-md-4" v-for="(stat, index) in stats" :key="index">
           <q-card class="full-height">
             <q-card-section>
               <div class="row items-center">
@@ -21,7 +50,7 @@
         </div>
       </div>
 
-      <div class="row q-col-gutter-md q-mb-md">
+      <div class="row q-col-gutter-md q-mb-sm">
         <div class="col-12 col-md-7">
           <q-card>
             <q-card-section>
@@ -39,54 +68,50 @@
         </div>
       </div>
 
-      <div class="row q-col-gutter-md q-mb-md">
-        <div class="col-12 col-md-7">
+      <div class="row q-col-gutter-md q-mb-sm">
+        <div class="col-12 col-md-12">
           <q-card>
             <q-card-section>
-              <apexchart type="line" height="350" :options="consultasPeriodoOptions" :series="consultasPeriodoSeries"></apexchart>
+              <apexchart type="line" height="350" :options="consultasPeriodoOptions" :series="consultasPeriodoSeries">
+              </apexchart>
             </q-card-section>
           </q-card>
         </div>
-        <div class="col-12 col-md-5">
+        <div class="col-12 col-md-12">
           <q-card>
             <q-card-section>
-              <apexchart type="bar" height="350" :options="consultasMedicoOptions" :series="consultasMedicoSeries"></apexchart>
+              <apexchart type="bar" height="350" :options="consultasMedicoOptions" :series="consultasMedicoSeries">
+              </apexchart>
             </q-card-section>
           </q-card>
         </div>
       </div>
 
-      <div class="row q-col-gutter-md q-mb-md">
+      <div class="row q-col-gutter-md q-mb-sm">
         <div class="col-12">
           <q-card>
             <q-card-section>
-              <apexchart type="bar" height="400" :options="diagnosticosOptions" :series="diagnosticosSeries"></apexchart>
+              <apexchart type="bar" height="400" :options="diagnosticosOptions" :series="diagnosticosSeries">
+              </apexchart>
             </q-card-section>
           </q-card>
         </div>
       </div>
-
-      <div class="row">
-        <div class="col-12">
-          <q-card>
-            <q-card-section>
-              <div class="text-h6">Últimos Pacientes Registrados</div>
-            </q-card-section>
-            <q-table
-              :rows="lastRegisters"
-              :columns="columns"
-              row-key="id"
-            />
-          </q-card>
-        </div>
-      </div>
-
     </div>
   </q-page>
 </template>
 
 <script>
 import VueApexCharts from 'vue-apexcharts';
+import {
+  ESTADISTICA_PACIENTES_TOTALES_QUERY,
+  ESTADISTICA_PACIENTES_NUEVOS_QUERY,
+  ESTADISTICA_PACIENTES_POR_GENERO_QUERY,
+  ESTADISTICA_PACIENTES_POR_EDAD_QUERY,
+  ESTADISTICA_CONSULTAS_POR_PERIODO_QUERY,
+  ESTADISTICA_CONSULTAS_POR_DOCTOR_QUERY,
+  ESTADISTICA_TOP_TEN_DIAGNOSTICOS_QUERY
+} from '../../../graphql/estadisticas.js';
 
 export default {
   name: 'EstadisticasDashboard',
@@ -95,6 +120,54 @@ export default {
   },
   data() {
     return {
+      totalPacientes: 0,
+      totalPacientesNuevos: 0,
+      totalConsultas: 0,
+      pacientesPorGenero: [0, 0],
+      pacientesPorEdad: [0, 0, 0, 0],
+      totalConsultasMedico: 0,
+      totalDiagnosticos: 0,
+      // Arrays para datos de estadísticas
+      pacientesNuevosData: [],
+      consultasData: [],
+      // === CONFIGURACIÓN DE FILTROS ===
+      // Estado actual del filtro seleccionado
+      selectedPeriod: 'month', // Valores posibles: 'week', 'month'
+
+      // Opciones disponibles para el selector de período
+      periodOptions: [
+        { label: 'Esta Semana', value: 'week' },
+        { label: 'Este Mes', value: 'month' }
+      ],
+
+      // Estado de carga para mostrar spinner en el botón
+      isLoading: false,
+
+      // Datos originales (simulan los datos que vendrían de tu API)
+      // IMPORTANTE: Estos serán reemplazados por tus datos reales
+      // NOTA: Solo incluye datos que cambian con los filtros
+      originalData: {
+        // === DATOS SEMANALES (7 días) ===
+        weekly: {
+          consultas: [180, 220, 195, 240, 210, 280, 265],
+          pacientes: [45, 55, 48, 62, 52, 68, 61],
+          pacientesNuevos: [5, 8, 6, 12, 9, 15, 11],
+          // Datos para consultas por médico
+          consultasMedico: [85, 110, 75, 35, 12, 210],
+          // Datos para top diagnósticos
+          diagnosticos: [220, 190, 160, 140, 125, 105, 90, 75, 60, 50]
+        },
+        // === DATOS MENSUALES (4-6 semanas) ===
+        monthly: {
+          consultas: [620, 580, 720, 650, 690, 750],
+          pacientes: [155, 145, 180, 162, 172, 188],
+          pacientesNuevos: [25, 22, 35, 28, 32, 38],
+          // Datos para consultas por médico
+          consultasMedico: [180, 220, 150, 70, 12, 210],
+          // Datos para top diagnósticos
+          diagnosticos: [450, 380, 320, 280, 250, 210, 180, 150, 120, 100]
+        }
+      },
       stats: [
         {
           label: 'Pacientes Registrados',
@@ -102,23 +175,15 @@ export default {
           icon: 'groups',
           color: 'primary',
           series: [{ name: 'Pacientes', data: [0, 10,] }],
-          chartOptions: { chart: { type: 'area', sparkline: { enabled: true }, toolbar: { show: false } }, stroke: { curve: 'smooth' }, fill: { opacity: 0.3 } , yaxis: { min: 0 } }
+          chartOptions: { chart: { type: 'area', sparkline: { enabled: true }, toolbar: { show: false } }, stroke: { curve: 'smooth' }, fill: { opacity: 0.3 }, yaxis: { min: 0 } }
         },
         {
           label: 'Pacientes Nuevos (Mes)',
           value: '82',
           icon: 'person_add',
           color: 'green',
-          series: [{ name: 'Nuevos', data: [5, 15, 10, 20, 18, 25, 22] }],
-          chartOptions: { chart: { type: 'area', sparkline: { enabled: true }, toolbar: { show: false } }, stroke: { curve: 'smooth' }, fill: { opacity: 0.3 } , yaxis: { min: 0 } }
-        },
-        {
-          label: 'Pacientes Atendidos (Hoy)',
-          value: '45',
-          icon: 'today',
-          color: 'orange',
-          series: [{ name: 'Atendidos', data: [5, 10, 15, 12, 20, 25, 30] }],
-          chartOptions: { chart: { type: 'area', sparkline: { enabled: true }, toolbar: { show: false } }, stroke: { curve: 'smooth' }, fill: { opacity: 0.3 } , yaxis: { min: 0 } }
+          series: [{ name: 'Nuevos', data: [0] }],
+          chartOptions: { chart: { type: 'area', sparkline: { enabled: true }, toolbar: { show: false } }, stroke: { curve: 'smooth' }, fill: { opacity: 0.3 }, yaxis: { min: 0 } }
         },
         {
           label: 'Consultas del Mes',
@@ -126,7 +191,7 @@ export default {
           icon: 'event_available',
           color: 'red',
           series: [{ name: 'Consultas', data: [20, 25, 22, 30, 28, 35, 40] }],
-          chartOptions: { chart: { type: 'area', sparkline: { enabled: true }, toolbar: { show: false } }, stroke: { curve: 'smooth' }, fill: { opacity: 0.3 } , yaxis: { min: 0 } }
+          chartOptions: { chart: { type: 'area', sparkline: { enabled: true }, toolbar: { show: false } }, stroke: { curve: 'smooth' }, fill: { opacity: 0.3 }, yaxis: { min: 0 } }
         }
       ],
       barChartOptions: {
@@ -136,37 +201,35 @@ export default {
       },
       barChartSeries: [{
         name: 'Cantidad de Pacientes',
-        data: [150, 200, 950, 200]
+        data: [0, 0, 0, 0]
       }],
       donutChartOptions: {
         chart: { id: 'dist-genero', toolbar: { show: false } },
         title: { text: 'Distribución por Género' },
         labels: ['Masculino', 'Femenino'],
       },
-      donutChartSeries: [700, 800],
+      donutChartSeries: [0, 0],
 
       consultasPeriodoOptions: {
         chart: { id: 'consultas-periodo', toolbar: { show: false } },
         title: { text: 'Consultas por Período (Últimos 30 días)' },
-        xaxis: { categories: Array.from({length: 30}, (_, i) => {
-          const d = new Date();
-          d.setDate(d.getDate() - i);
-          return d.toLocaleDateString('es-ES', {day: '2-digit', month: '2-digit'});
-        }).reverse() },
+        xaxis: {
+          categories: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4']
+        },
       },
       consultasPeriodoSeries: [{
         name: 'Nro. Consultas',
-        data: [25, 30, 22, 40, 35, 50, 45, 48, 42, 55, 60, 58, 62, 53, 70]
+        data: [25, 30, 22, 40]
       }],
 
       consultasMedicoOptions: {
         chart: { id: 'consultas-medico', toolbar: { show: false } },
         title: { text: 'Consultas por Médico' },
-        xaxis: { categories: ['Dr. Martínez', 'Dra. González', 'Dr. Rodríguez', 'Dra. Pérez'] },
+        xaxis: { categories: ['Dr. Martínez', 'Dra. González', 'Dr. Rodríguez', 'Dra. Pérez', 'Dr. Rodrísguez', 'Dra. sPérez'] },
       },
       consultasMedicoSeries: [{
         name: 'Consultas Atendidas',
-        data: [180, 220, 150, 70]
+        data: [180, 220, 150, 70, 12, 210]
       }],
 
       diagnosticosOptions: {
@@ -196,22 +259,323 @@ export default {
         name: 'Nro. de Casos',
         data: [450, 380, 320, 280, 250, 210, 180, 150, 120, 100]
       }],
-
-      columns: [
-        { name: 'id', required: true, label: 'ID', align: 'left', field: 'id', sortable: true },
-        { name: 'nombre', label: 'Nombre', align: 'left', field: 'nombre', sortable: true },
-        { name: 'cedula', label: 'Cédula', align: 'left', field: 'cedula', sortable: true },
-        { name: 'edad', label: 'Edad', align: 'left', field: 'edad', sortable: true },
-        { name: 'genero', label: 'Género', align: 'left', field: 'genero', sortable: true },
-      ],
-      lastRegisters: [
-        { id: 1, nombre: 'Juan Pérez', cedula: 'V-12.345.678', edad: 45, genero: 'Masculino' },
-        { id: 2, nombre: 'Ana Gómez', cedula: 'V-18.765.432', edad: 29, genero: 'Femenino' },
-        { id: 3, nombre: 'Carlos Ruiz', cedula: 'V-9.876.543', edad: 68, genero: 'Masculino' },
-        { id: 4, nombre: 'María Fernández', cedula: 'V-25.432.109', edad: 15, genero: 'Femenino' },
-        { id: 5, nombre: 'Luis Torres', cedula: 'V-14.567.890', edad: 8, genero: 'Masculino' },
-      ]
     };
+  },
+
+  // === MÉTODOS PARA MANEJO DE FILTROS ===
+  methods: {
+    /**
+     * Se ejecuta cuando el usuario cambia el período en el selector
+     * @param {string} newPeriod - El nuevo período seleccionado ('week' o 'month')
+     */
+    onPeriodChange(newPeriod) {
+      console.log('Período cambiado a:', newPeriod);
+      this.selectedPeriod = newPeriod;
+      // Actualizar automáticamente cuando cambia el período
+      this.updateChartData();
+    },
+
+    /**
+     * Actualiza todos los gráficos con los datos del período seleccionado
+     * IMPORTANTE: Aquí es donde conectarás con tu API real
+     */
+    async updateChartData() {
+      this.isLoading = true;
+
+      try {
+        await this.simulateApiCall();
+
+        // After all data is fetched, update the charts with the new data
+        // const periodData = this.getDataForPeriod(this.selectedPeriod);
+
+        // Wait for the main charts to update
+        // this.updateMainCharts(periodData);
+
+        this.updateStatsCards();
+
+      } catch (error) {
+        console.error('Error al actualizar datos:', error);
+      } finally {
+        this.isLoading = false;
+      }
+    },
+
+    async simulateApiCall() {
+      await this.fetchTotalPacientes();
+      await this.fetchPacientesNuevos();
+      await this.fetchDistribucionPorGenero();
+      await this.fetchDistribucionPorEdad();
+      await this.fetchConsultasPorPeriodo();
+      await this.fetchConsultasPorDoctor();
+      await this.fetchTopDiagnosticos();
+    },
+
+
+    getDataForPeriod(period) {
+      let periodData;
+
+      switch (period) {
+        case 'week':
+          periodData = {
+            type: 'weekly',
+            data: {
+              consultas: this.consultasData.length > 0 ? this.consultasData : this.originalData.weekly.consultas,
+              pacientes: this.originalData.weekly.pacientes,
+              pacientesNuevos: this.pacientesNuevosData.length > 0 ? this.pacientesNuevosData : this.originalData.weekly.pacientesNuevos,
+              consultasMedico: this.originalData.weekly.consultasMedico,
+              diagnosticos: this.originalData.weekly.diagnosticos
+            },
+            categories: this.generateWeekCategories(),
+            title: 'Esta Semana'
+          };
+          break;
+
+        case 'month':
+        default:
+          periodData = {
+            type: 'monthly',
+            data: {
+              consultas: this.consultasData.length > 0 ? this.consultasData : this.originalData.monthly.consultas,
+              pacientes: this.originalData.monthly.pacientes,
+              pacientesNuevos: this.pacientesNuevosData.length > 0 ? this.pacientesNuevosData : this.originalData.monthly.pacientesNuevos,
+              consultasMedico: this.originalData.monthly.consultasMedico,
+              diagnosticos: this.originalData.monthly.diagnosticos
+            },
+            categories: this.generateMonthCategories(),
+            title: 'Este Mes'
+          };
+          break;
+      }
+
+      return periodData;
+    },
+
+    updateMainCharts(periodData) {
+
+
+      this.consultasPeriodoOptions = {
+        ...this.consultasPeriodoOptions,
+        title: { text: `Consultas - ${periodData.title}` },
+        xaxis: { categories: periodData.categories }
+      };
+
+      // === 2. ACTUALIZAR GRÁFICO DE CONSULTAS POR MÉDICO ===
+      this.consultasMedicoSeries = [{
+        name: 'Consultas Atendidas',
+        data: periodData.data.consultasMedico
+      }];
+
+      this.consultasMedicoOptions = {
+        ...this.consultasMedicoOptions,
+        title: { text: `Consultas por Médico - ${periodData.title}` }
+      };
+
+      // === 3. ACTUALIZAR GRÁFICO DE TOP DIAGNÓSTICOS ===
+      this.diagnosticosSeries = [{
+        name: 'Nro. de Casos',
+        data: periodData.data.diagnosticos
+      }];
+
+      this.diagnosticosOptions = {
+        ...this.diagnosticosOptions,
+        title: { text: `Top 10 Diagnósticos Más Frecuentes - ${periodData.title}` }
+      };
+
+    },
+
+
+    async updateStatsCards() {
+
+
+      this.stats[0].value = this.totalPacientes.toString();
+      this.stats[0].series = [{
+        name: 'Pacientes', data: this.selectedPeriod === 'week' ?
+          [this.totalPacientes, this.totalPacientes] : [this.totalPacientes, this.totalPacientes]
+      }];
+
+      this.stats[1].label = this.selectedPeriod === 'week' ? 'Pacientes Nuevos (Semana)' : 'Pacientes Nuevos (Mes)';
+      this.stats[1].value = this.totalPacientesNuevos.reduce((a, b) => a + b, 0).toString();
+      this.stats[1].series = [{ name: 'Nuevos', data: this.totalPacientesNuevos }];
+
+      this.stats[2].label = this.selectedPeriod === 'week' ? 'Consultas de la semana' : 'Consultas del mes';
+      this.stats[2].value = this.totalConsultas.reduce((a, b) => a + b, 0).toString();
+
+      this.stats[2].series = [{ name: 'Consultas', data: this.totalConsultas }];
+
+
+      // DISTRIBUCION POR GENERO
+      this.donutChartSeries = [this.pacientesPorGenero.masculino || 0, this.pacientesPorGenero.femenino || 0];
+
+      // DISTRIBUCION POR EDAD
+      this.barChartSeries = [{
+        name: 'Cantidad de Pacientes',
+        data: this.distribucionPorEdad
+      }];
+
+      // GRÁFICO DE CONSULTAS POR PERÍODO
+      this.consultasPeriodoSeries = [{
+        name: 'Nro. Consultas',
+        data: this.totalConsultas
+      }];
+
+      // GRÁFICO DE CONSULTAS POR MEDICO
+      this.consultasMedicoOptions = {
+        ...this.consultasMedicoOptions,
+        xaxis: {categories: this.totalConsultasMedico.nombresDoctores}
+      }
+
+      this.consultasMedicoSeries = [{
+        name: 'Consultas Atendidas',
+        data: this.totalConsultasMedico.consultasMedico
+      }];
+
+      // GRÁFICO DE TOP DIAGNOSTICOS
+      this.diagnosticosOptions = {
+        ...this.diagnosticosOptions,
+        xaxis: {categories: this.totalDiagnosticos.condiciones}
+      }
+
+      this.diagnosticosSeries = [{
+        name: 'Nro. de Casos',
+        data: this.totalDiagnosticos.totales
+      }];
+
+
+
+    },
+
+
+    generateWeekCategories() {
+      const days = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
+      return days;
+    },
+
+    generateMonthCategories() {
+      return ['Sem 1', 'Sem 2', 'Sem 3', 'Sem 4', 'Sem 5', 'Sem 6'];
+    },
+
+    getCurrentPeriodLabel() {
+      const option = this.periodOptions.find(opt => opt.value === this.selectedPeriod);
+      return option ? option.label : 'Período Desconocido';
+    },
+
+    fetchTotalPacientes() {
+      return this.$apollo
+        .query({
+          query: ESTADISTICA_PACIENTES_TOTALES_QUERY,
+          variables: { id_cdi: this.$store.state.user.cdi_id },
+          fetchPolicy: "network-only",
+        })
+        .then((response) => {
+          this.totalPacientes = response.data.cantidadPacienteTotales || 0;
+          return response;
+        })
+        .catch((err) => {
+          console.error("Error fetching total pacientes:", err);
+          this.totalPacientes = 0;
+        });
+    },
+
+
+    fetchPacientesNuevos() {
+      return this.$apollo
+        .query({
+          query: ESTADISTICA_PACIENTES_NUEVOS_QUERY,
+          variables: { id_cdi: this.$store.state.user.cdi_id, periodo: this.selectedPeriod },
+          fetchPolicy: "network-only",
+        })
+        .then((response) => {
+          this.totalPacientesNuevos = response.data.cantidadPacientesNuevos || 0;
+        })
+        .catch((err) => {
+          console.error("Error fetching pacientes nuevos:", err);
+          this.totalPacientesNuevos = 0;
+        });
+    },
+
+
+    fetchDistribucionPorGenero() {
+      return this.$apollo
+        .query({
+          query: ESTADISTICA_PACIENTES_POR_GENERO_QUERY,
+          variables: { id_cdi: this.$store.state.user.cdi_id },
+          fetchPolicy: "network-only",
+        })
+        .then((response) => {
+          this.pacientesPorGenero = response.data.distribucionPorGenero;
+        })
+        .catch((err) => {
+          console.error("Error fetching distribución por género:", err);
+
+        });
+    },
+
+    fetchDistribucionPorEdad() {
+      return this.$apollo
+        .query({
+          query: ESTADISTICA_PACIENTES_POR_EDAD_QUERY,
+          variables: { id_cdi: this.$store.state.user.cdi_id },
+          fetchPolicy: "network-only",
+        })
+        .then((response) => {
+          this.distribucionPorEdad = response.data.distribucionPorEdad;
+        })
+        .catch((err) => {
+          console.error("Error fetching distribución por edad:", err);
+        });
+    },
+
+
+    fetchConsultasPorPeriodo() {
+      return this.$apollo
+        .query({
+          query: ESTADISTICA_CONSULTAS_POR_PERIODO_QUERY,
+          variables: { id_cdi: this.$store.state.user.cdi_id, periodo: this.selectedPeriod },
+          fetchPolicy: "network-only",
+        })
+        .then((response) => {
+          this.totalConsultas = response.data.totalConsultasRealizadasPeriodo
+        })
+        .catch((err) => {
+          console.error("Error fetching consultas por período:", err);
+        });
+    },
+
+
+    fetchConsultasPorDoctor() {
+      return this.$apollo
+        .query({
+          query: ESTADISTICA_CONSULTAS_POR_DOCTOR_QUERY,
+          variables: { id_cdi: this.$store.state.user.cdi_id, periodo: this.selectedPeriod },
+          fetchPolicy: "network-only",
+        })
+        .then((response) => {
+          this.totalConsultasMedico = response.data.totalConsultasRealizadasPorMedico;
+        })
+        .catch((err) => {
+          console.error("Error fetching consultas por doctor:", err);
+        });
+    },
+
+
+    fetchTopDiagnosticos() {
+      return this.$apollo
+        .query({
+          query: ESTADISTICA_TOP_TEN_DIAGNOSTICOS_QUERY,
+          variables: { id_cdi: this.$store.state.user.cdi_id, periodo: this.selectedPeriod },
+          fetchPolicy: "network-only",
+        })
+        .then((response) => {
+          this.totalDiagnosticos = response.data.top10DiagnosticosMasComunes;
+        })
+        .catch((err) => {
+          console.error("Error fetching top diagnósticos:", err);
+        });
+    }
+  },
+
+  mounted() {
+    this.updateChartData();
   }
 };
 </script>
