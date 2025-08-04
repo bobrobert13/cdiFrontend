@@ -413,6 +413,12 @@ export default {
       }];
 
       // GRÁFICO DE CONSULTAS POR PERÍODO
+
+      this.consultasPeriodoOptions = {
+        ...this.consultasPeriodoOptions,
+        xaxis: {categories: this.selectedPeriod === 'week' ? ['dia 1', 'dia 2', 'dia 3', 'dia 4', 'dia 5', 'dia 6', 'dia 7'] : ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4']}
+      }
+
       this.consultasPeriodoSeries = [{
         name: 'Nro. Consultas',
         data: this.totalConsultas
