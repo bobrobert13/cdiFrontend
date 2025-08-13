@@ -273,6 +273,9 @@
       </div>
       <div class="text-caption q-mt-sm q-mb-xs">CI: {{ dataUser.persona.cedula_identidad }}</div>
       <div class="text-caption q-mt-sm q-mb-xs">Número de carnet: {{ dataUser.numero_carnet }}</div>
+      <div v-if="dataUser.persona.telefono" class="text-caption q-mt-sm q-mb-xs">Número de teléfono: {{ dataUser.persona.telefono.codigo }}{{ dataUser.persona.telefono.numero }}</div>
+      <div v-else class="text-caption q-mt-sm q-mb-xs">Número de teléfono: No registrado</div>
+
       <div class="text-caption q-mt-sm q-mb-xs">Área de trabajo: {{ dataUser.area_de_trabajo }}</div>
       <div class="text-caption q-mt-sm q-mb-xs">Años de experiencia: {{ dataUser.anos_experiencia }}
       </div>
