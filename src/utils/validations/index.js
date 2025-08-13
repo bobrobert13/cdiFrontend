@@ -1,7 +1,3 @@
-/**
- * Índice de validaciones
- * Exporta todas las validaciones disponibles para fácil importación
- */
 
 export {
   useFullNameValidation,
@@ -31,3 +27,8 @@ export {
   useDoctorOcupacionValidation,
   usePasswordValidation,
 } from './doctorValidations.js'
+
+
+export {
+  useCdiNumberValidation
+} from './cdiValidations.js'

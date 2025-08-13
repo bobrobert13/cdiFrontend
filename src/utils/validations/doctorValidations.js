@@ -123,7 +123,7 @@ export const useDoctorEspecialidadValidation = () => {
   ]
 }
 
-// Validaciones para nombre de usuario del doctor
+// Validaciones para nombre de usuario
 export const useDoctorNombreUsuarioValidation = () => {
   return [
     (val) => !!val || 'Este campo es obligatorio',

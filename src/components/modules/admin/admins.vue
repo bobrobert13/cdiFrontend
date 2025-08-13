@@ -45,12 +45,12 @@
 								<div class="text-grey-8 q-gutter-xs">
 
 									<div class="text-grey-8 q-gutter-xs">
-									<button @click="generatePDF(user)" type="button" lines="2"
-										class=" q-ml-xl q-mr-md cursor-pointer text-primary self-center text-bold"
-										style="cursor: pointer">
-										<q-icon name="mdi-printer-pos" /> Descargar información
-									</button>
-						  
+										<button @click="generatePDF(user)" type="button" lines="2"
+											class=" q-ml-xl q-mr-md cursor-pointer text-primary self-center text-bold"
+											style="cursor: pointer">
+											<q-icon name="mdi-printer-pos" /> Descargar información
+										</button>
+
 										<q-btn
 											@click="actualizarUsuario({ ...user, estado: user.estado === 'activo' ? 'inactivo' : 'activo' })"
 											class="gt-xs text-negative" size="12px" flat dense
@@ -106,34 +106,13 @@
 				<div class="col-6">
 					<div class="column justify-center">
 						<p class="text-subtitle text-medium">Información de CDI</p>
-						<q-input filled color="deep-purple-6" v-model="cdi_nombre" label="Nombre de CDI" :rules="[
-							(val) => !!val || 'Este campo es obligatorio',
-							(val) => val.length >= 3 || 'Mínimo 3 caracteres',
-							(val) => val.length <= 200 || 'Máximo 200 caracteres',
-							(val) =>
-								/^([\sa-zA-ZñÑáéíóúÁÉÍÓÚ]{3,40})*$/.test(val) ||
-								'Solo se permiten caracteres',
-						]" />
+						<q-input filled color="deep-purple-6" v-model="cdi_nombre" label="Nombre de CDI"
+							:rules="cdiNameRules" />
 						<q-input filled color="deep-purple-6" class="q-mb-xs" v-model="cdi_numero" type="text"
-							label="Número de CDI" :rules="[
-								(val) => !!val || 'Este campo es obligatorio',
-								(val) => val.length <= 10 || 'Máximo 10 dígitos'
-							]" />
-						<q-input filled color="deep-purple-6" class="q-mb-xs" v-model="cdi_encargado" type="text"
-							label="Nombre de encargado" :rules="[
-								(val) => !!val || 'Este campo es obligatorio',
-								(val) => val.length >= 3 || 'Mínimo 3 caracteres',
-								(val) => val.length <= 200 || 'Máximo 200 caracteres',
-								(val) =>
-									/^([\sa-zA-ZñÑáéíóúÁÉÍÓÚ]{3,40})*$/.test(val) ||
-									'Solo se permiten caracteres',
-							]" />
+							label="Número de CDI" :rules="cdiNumberRules" />
+
 						<q-input filled color="deep-purple-6" class="q-mb-xs" v-model="cdi_cuadrante" type="text"
-							label="Cuadrante" :rules="[
-								(val) => !!val || 'Este campo es obligatorio',
-								(val) => val.length >= 3 || 'Mínimo 3 caracteres',
-								(val) => val.length <= 200 || 'Máximo 20 caracteres',
-							]" />
+							label="Cuadrante" :rules="cdiCuadranteRules" />
 					</div>
 				</div>
 				<div class="col-6" style="border-left: 10px solid white;">
@@ -141,18 +120,16 @@
 						<p class="text-subtitle  text-medium">Credenciales de acceso</p>
 						<div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 ">
 							<q-input filled color="deep-purple-6" class="q-mb-xs" v-model="cdi_nombre_usuario"
-								label="Nombre de usuario" :rules="[
-									(val) => val.length >= 5 || 'Mínimo 5 caracteres',
-									(val) => val.length <= 20 || 'Máximo 20 caracteres',
-									(val) => /^[a-zA-ZñÑáéíóúÁÉÍÓÚ]+$/.test(val) || 'Solo se permiten letras (sin números ni caracteres especiales)',
-								]" />
+								label="Nombre de usuario" :rules="cdiNombreUsuarioRules" />
 							<q-input filled :type="isPwd ? 'password' : 'text'" color="deep-purple-6"
-								v-model="cdi_contrasena" label="Password" :rules="passwordRules">
+								v-model="cdi_contrasena" label="Password" :rules="cdiContrasenaRules">
 								<template v-slot:append>
 									<q-icon :name="isPwd ? 'visibility_off' : 'visibility'" class="cursor-pointer"
 										@click="isPwd = !isPwd" />
 								</template>
 							</q-input>
+							<q-input filled color="deep-purple-6" class="q-mb-xs" v-model="cdi_encargado" type="text"
+								label="Nombre de encargado" :rules="cdiEncargadoRules" />
 
 						</div>
 
@@ -160,7 +137,7 @@
 				</div>
 			</div>
 			<div v-if="viewType === 'addWorker'" class="col-xl-5 col-lg-5 col-md-5 col-sm-12 col-xs-12 q-mt-md ">
-				<q-btn unelevated :loading="loader" @click="addEncargado()" :disable="!valid"
+				<q-btn unelevated :loading="loader" @click="addEncargado()" :disable="!formHasNoErrors"
 					class="full-width text-white bg-primary" label="Añadir CDI" />
 			</div>
 
@@ -249,9 +226,8 @@
 						</div>
 					</div>
 					<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 q-mt-md">
-						<q-btn unelevated :disabled="!isValid" :loading="loader"
-							@click="actualizarCDI(dataUser)" class="fullwidth text-white bg-primary"
-							label="Actualizar credenciales" />
+						<q-btn unelevated :disabled="!isValid" :loading="loader" @click="actualizarCDI(dataUser)"
+							class="fullwidth text-white bg-primary" label="Actualizar credenciales" />
 					</div>
 				</div>
 			</div>
@@ -281,67 +257,77 @@
 					</q-card-section>
 				</q-card-section>
 				<q-separator />
-                <div class="row q-pa-sm q-ml-md q-mt-md">
-                  <div class="">
-                    <span class="text-caption text-bold q-mt-sm q-mb-xs">Doctores en el CDI</span>
-                  </div>
-                </div>
+				<div class="row q-pa-sm q-ml-md q-mt-md">
+					<div class="">
+						<span class="text-caption text-bold q-mt-sm q-mb-xs">Doctores en el CDI</span>
+					</div>
+				</div>
 				<q-card-section class="q-pt-xs">
-                <q-item-section v-if="!dataUser.doctores || !dataUser.doctores.length">
-                  <q-item-section class="row q-pa-sm justify-center">
-                    El CDI aún no tiene doctores asignados
-                  </q-item-section>
-                </q-item-section>
-                <q-scroll-area v-else style="height: 250px; max-width: 100%;">
-                  <div v-for="(doctores, index) in dataUser.doctores" :key="index" class="q-py-xs">
-                    <q-list>
-                      <q-item style="cursor:pointer;">
-                        <q-item-section>
-                          <q-item-label>Nombre del doctor: <b>{{ doctores.persona.nombre1 }}</b></q-item-label>
-                          <q-item-label>Especialidad: <b>{{ doctores.area_de_trabajo }}</b></q-item-label>
-                          <q-item-label>Horario: <b>{{ doctores.horario }}</b></q-item-label>
-                          <q-item-label>Años de experiencia: <b>{{ doctores.anos_experiencia }}</b></q-item-label>
-                          <q-item-label>Número de carnet: <b>{{ doctores.numero_carnet }}</b></q-item-label>
-                        </q-item-section>
+					<q-item-section v-if="!dataUser.doctores || !dataUser.doctores.length">
+						<q-item-section class="row q-pa-sm justify-center">
+							El CDI aún no tiene doctores asignados
+						</q-item-section>
+					</q-item-section>
+					<q-scroll-area v-else style="height: 250px; max-width: 100%;">
+						<div v-for="(doctores, index) in dataUser.doctores" :key="index" class="q-py-xs">
+							<q-list>
+								<q-item style="cursor:pointer;">
+									<q-item-section>
+										<q-item-label>Nombre del doctor: <b>{{ doctores.persona.nombre1
+												}}</b></q-item-label>
+										<q-item-label>Especialidad: <b>{{ doctores.area_de_trabajo }}</b></q-item-label>
+										<q-item-label>Horario: <b>{{ doctores.horario }}</b></q-item-label>
+										<q-item-label>Años de experiencia: <b>{{ doctores.anos_experiencia
+												}}</b></q-item-label>
+										<q-item-label>Número de carnet: <b>{{ doctores.numero_carnet
+												}}</b></q-item-label>
+									</q-item-section>
 
-                      </q-item>
-                      <q-separator spaced inset />
-                    </q-list>
-                  </div>
-                </q-scroll-area>
-              </q-card-section>
+								</q-item>
+								<q-separator spaced inset />
+							</q-list>
+						</div>
+					</q-scroll-area>
+				</q-card-section>
 
 
-			                  <div class="row q-pa-sm q-mt-md">
-                  <div class="">
-                    <span class="text-caption text-bold q-mt-sm q-ml-md q-mb-xs">Pacientes en el CDI</span>
-                  </div>
-                </div>
+				<div class="row q-pa-sm q-mt-md">
+					<div class="">
+						<span class="text-caption text-bold q-mt-sm q-ml-md q-mb-xs">Pacientes en el CDI</span>
+					</div>
+				</div>
 				<q-card-section class="q-pt-xs">
-                <q-item-section v-if="!dataUser.pacientes || !dataUser.pacientes.length">
-                  <q-item-section class="row q-pa-sm justify-center">
-                    El CDI aún no tiene pacientes asignados
-                  </q-item-section>
-                </q-item-section>
-                <q-scroll-area v-else style="height: 250px; max-width: 100%;">
-                  <div v-for="(paciente, index) in dataUser.pacientes" :key="index" class="q-py-xs">
-                    <q-list>
-                      <q-item style="cursor:pointer;">
-                        <q-item-section>
-                          <q-item-label>Nombre del paciente: <b>{{ paciente.persona.nombre1 }}</b></q-item-label>
-                          <q-item-label>Documento de identidad: <b>{{ paciente.persona.cedula_identidad }}</b></q-item-label>
-                          <q-item-label>Nacionalidad: <b>{{ paciente.persona.nacionalidad }}</b></q-item-label>
-                          <q-item-label>Fecha de registro: <b>{{ paciente.createdAt || 'No especificado' }}</b></q-item-label>
-                          <q-item-label>Teléfono: <b>{{ paciente.persona.telefono.numero || 'No especificado' }}</b></q-item-label>
-						  <q-item-label>Correo: <b>{{ paciente.persona.correo.correo || 'No especificado' }}</b></q-item-label>
-                        </q-item-section>
+					<q-item-section v-if="!dataUser.pacientes || !dataUser.pacientes.length">
+						<q-item-section class="row q-pa-sm justify-center">
+							El CDI aún no tiene pacientes asignados
+						</q-item-section>
+					</q-item-section>
+					<q-scroll-area v-else style="height: 250px; max-width: 100%;">
+						<div v-for="(paciente, index) in dataUser.pacientes" :key="index" class="q-py-xs">
+							<q-list>
+								<q-item style="cursor:pointer;">
+									<q-item-section>
+										<q-item-label>Nombre del paciente: <b>{{ paciente.persona.nombre1
+												}}</b></q-item-label>
+										<q-item-label>Documento de identidad: <b>{{ paciente.persona.cedula_identidad
+												}}</b></q-item-label>
+										<q-item-label>Nacionalidad: <b>{{ paciente.persona.nacionalidad
+												}}</b></q-item-label>
+										<q-item-label>Fecha de registro: <b>{{ paciente.createdAt || 'No especificado'
+												}}</b></q-item-label>
+										<q-item-label>Teléfono: <b>{{ paciente.persona.telefono.numero ||
+											'Noespecificado'
+										}}</b></q-item-label>
+										<q-item-label>Correo: <b>{{ paciente.persona.correo.correo || 'No especificado'
+												}}</b></q-item-label>
+									</q-item-section>
 
-                      </q-item>
-                      <q-separator spaced inset />
-                    </q-list>
-                  </div>
-                </q-scroll-area>
-              </q-card-section>
+								</q-item>
+								<q-separator spaced inset />
+							</q-list>
+						</div>
+					</q-scroll-area>
+				</q-card-section>
 
 
 
@@ -388,7 +374,7 @@
 			</vue-html2pdf>
 		</div>
 
-				<div>
+		<div>
 			<vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="true" :preview-modal="false"
 				:paginate-elements-by-height="1400" filename="informacion_de_cdi" :pdf-quality="2"
 				:manual-pagination="false" pdf-format="a4" :pdf-margin="10" pdf-orientation="portrait"
@@ -402,11 +388,23 @@
 </template>
 <script>
 import config from "../../../config";
-import { ADDUSER_MUTATION, USER_DELETE, BUSCAR_USER_QUERY, ADMIN_CDIS_QUERY, ADD_CDI_USER_MUTATION, UPDATE_CDI_STATUS_MUTATION, UPDDATE_CDI_MUTATION } from "../../../graphql/user";
-import { ADMIN_ENCARGADO_QUERY } from "../../../graphql/admin";
 import VueHtml2pdf from "vue-html2pdf";
+
 import historialEncVue from "./historialEnc.vue";
 import historialCDIVue from "./historiaCDIPdf.vue";
+
+import { USER_DELETE, ADMIN_CDIS_QUERY, ADD_CDI_USER_MUTATION, UPDATE_CDI_STATUS_MUTATION, UPDDATE_CDI_MUTATION } from "../../../graphql/user";
+
+
+import {
+	useDoctorNombreUsuarioValidation,
+	useFullNameValidation,
+	useCdiNumberValidation,
+	useTextFieldValidation,
+	usePasswordValidation
+} from "src/utils/validations";
+import { isFormValid } from "src/utils/formUtils";
+
 
 export default {
 	name: "admins",
@@ -565,6 +563,45 @@ export default {
 				{ label: "E", value: "E" },
 			],
 		};
+	},
+	computed: {
+		cdiNameRules() {
+			return useFullNameValidation();
+		},
+		cdiNumberRules() {
+			return useCdiNumberValidation();
+		},
+		cdiEncargadoRules() {
+			return useFullNameValidation();
+		},
+		cdiCuadranteRules() {
+			return useTextFieldValidation(true, 3, 100);
+		},
+		cdiNombreUsuarioRules() {
+			return useDoctorNombreUsuarioValidation(true, 3, 100);
+		},
+		cdiContrasenaRules() {
+			return usePasswordValidation();
+		},
+		formHasNoErrors() {
+			const formValues = {
+				cdi_nombre: this.cdi_nombre,
+				cdi_encargado: this.cdi_encargado,
+				cdi_cuadrante: this.cdi_cuadrante,
+				cdi_nombre_usuario: this.cdi_nombre_usuario,
+				cdi_contrasena: this.cdi_contrasena,
+				cdi_numero: this.cdi_numero,
+			}
+			const validationRules = {
+				cdi_nombre: useFullNameValidation(),
+				cdi_encargado: useFullNameValidation(),
+				cdi_cuadrante: useTextFieldValidation(true, 3, 100),
+				cdi_nombre_usuario: useDoctorNombreUsuarioValidation(true, 3, 100),
+				cdi_contrasena: usePasswordValidation(),
+				cdi_numero: useTextFieldValidation(true, 3, 100),
+			}
+			return isFormValid(formValues, validationRules)
+		}
 	},
 	created() {
 		this.AllEncargados();
@@ -778,7 +815,7 @@ export default {
 		},
 		generatePDF(user) {
 			this.dataUser = user;
-			console.log("dataUser", this.dataUser	);
+			console.log("dataUser", this.dataUser);
 			this.$refs.cdihtml2Pdf.generatePdf();
 		},
 		cdisInformationsPDF() {
