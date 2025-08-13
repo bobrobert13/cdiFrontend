@@ -36,6 +36,9 @@
         <small class="text-weight-medium text-left">Documento de identidad: {{
          user.persona.cedula_identidad
         }}</small>
+        <small v-if="user.persona.telefono" class="text-weight-medium text-left">Número de teléfono: {{
+         user.persona.telefono.numero
+        }}</small>
         <small class="text-weight-medium text-left">Estatus de usuario: <b>{{
          user.usuarios.estado
         }}</b></small>
@@ -281,7 +284,7 @@
          <q-card-section class="col-5 flex flex-center">
       <div class="text-overline">Pacientes ({{ dataUser.pacientes.length }})</div>
      </q-card-section>
-     
+
      <!-- Lista de pacientes  -->
      <div v-for="(paciente, index) in dataUser.pacientes" :key="index" class="q-mb-md q-pa-md" style="border: 1px solid #e0e0e0; border-radius: 8px;">
       <div class="text-caption text-bold q-mt-sm q-mb-xs">Nombre de paciente: {{ paciente.persona ? paciente.persona.nombre1 : 'N/A' }}</div>
@@ -291,7 +294,7 @@
       <div class="text-caption q-mt-sm q-mb-xs">Teléfono: {{ paciente.persona && paciente.persona.telefono ? paciente.persona.telefono.numero : 'N/A' }}</div>
       <div class="text-caption q-mt-sm q-mb-xs">Correo electrónico: {{ paciente.persona.correo.correo || 'N/A' }}</div>
      </div>
-     
+
      <!-- Mensaje cuando no hay pacientes -->
      <div v-if="  !dataUser.pacientes || dataUser.pacientes.length === 0" class="text-center q-pa-md">
       <div class="text-caption text-grey">No hay pacientes registrados</div>
@@ -792,7 +795,6 @@ export default {
     })
     .then((response) => {
      this.loaderUser = false;
-     // console.log(response.data.doctores);
      this.users = Object.assign([], response.data.doctores);
     })
     .catch((err) => {
