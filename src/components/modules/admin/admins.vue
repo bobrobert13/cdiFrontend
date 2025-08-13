@@ -68,6 +68,8 @@
 				</div>
 			</div>
 		</div>
+
+
 		<div class="row justify-center" v-if="viewType === 'searchUser'">
 			<div class="col-12">
 				<div>
@@ -94,6 +96,8 @@
 				</div>
 			</div>
 		</div>
+
+
 		<div class="row justify-center" v-if="viewType === 'addWorker'">
 			<div class="col-12 text-left row items-center text-left q-mb-lg">
 				<q-icon style="cursor: pointer" @click="workerView('userList')" name="mdi-arrow-left"
@@ -275,7 +279,7 @@
 									<q-item-section>
 										<q-item-label>Nombre del doctor: <b>{{ doctores.persona.nombre1
 												}}</b></q-item-label>
-										<q-item-label>Especialidad: <b>{{ doctores.area_de_trabajo }}</b></q-item-label>
+										<q-item-label>Area de trabajo: <b>{{ doctores.area_de_trabajo }}</b></q-item-label>
 										<q-item-label>Horario: <b>{{ doctores.horario }}</b></q-item-label>
 										<q-item-label>Años de experiencia: <b>{{ doctores.anos_experiencia
 												}}</b></q-item-label>
@@ -360,8 +364,30 @@
 				</q-card-actions>
 			</q-card>
 		</q-dialog>
-
 		<!-- FIN ELIMINAR ENCARGADO -->
+
+		<!-- BUSCAR CDI -->
+		<q-dialog v-model="modals.searchUser" style="min-width: 460px">
+			<q-card style="min-width: 460px" class="text-white">
+				<q-bar class="bg-primary">
+					<q-space />
+					<q-btn dense flat icon="close" v-close-popup>
+					</q-btn>
+				</q-bar>
+				<q-card-section>
+					<div class="text-h6 text-primary">Buscar CDI</div>
+				</q-card-section>
+				<q-card-section class="q-pt-none">
+					<q-input v-model="cdi_number" label="Escribe el número del CDI" />
+				</q-card-section>
+				<q-card-actions align="right" class="text-primary">
+					<q-btn flat label="Cancelar" v-close-popup />
+					<q-btn flat label="Buscar" :disable="!cdi_number.length" @click="buscarUsuario(cdi_number)" />
+				</q-card-actions>
+			</q-card>
+		</q-dialog>
+		<!-- FIN BUSCAR CDI -->
+
 
 		<div>
 			<vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="true" :preview-modal="false"
@@ -411,6 +437,9 @@ export default {
 	components: { VueHtml2pdf, historialEncVue, historialCDIVue },
 	data() {
 		return {
+			modals: {
+				searchUser: false,
+			},
 			isValid: false,
 			isValidInfoCDI: false,
 			passwordRules: [
@@ -811,6 +840,7 @@ export default {
 		},
 
 		workerView(typeView) {
+			if(typeView === 'searchUser') return this.modals.searchUser = true;
 			this.viewType = typeView;
 		},
 		generatePDF(user) {
@@ -1020,6 +1050,7 @@ export default {
 			if (usuario.length !== 0) {
 				this.dataUser = usuario[0];
 				this.modalDetailUser = true;
+				this.modals.searchUser = false;
 			} else {
 				this.$q.notify({
 					message: "El CDI con este número no existe",

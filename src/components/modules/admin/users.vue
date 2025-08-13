@@ -217,6 +217,30 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
+
+    		<!-- BUSCAR PACIENTE -->
+		<q-dialog v-model="modals.searchUser" style="min-width: 460px">
+			<q-card style="min-width: 460px" class="text-white">
+				<q-bar class="bg-primary">
+					<q-space />
+					<q-btn dense flat icon="close" v-close-popup>
+					</q-btn>
+				</q-bar>
+				<q-card-section>
+					<div class="text-h6 text-primary">Buscar paciente</div>
+				</q-card-section>
+				<q-card-section class="q-pt-none">
+					<q-input v-model="dni" label="Escribe el DNI del paciente" />
+				</q-card-section>
+				<q-card-actions align="right" class="text-primary">
+					<q-btn flat label="Cancelar" v-close-popup />
+					<q-btn flat label="Buscar" :disable="!dni.length" @click="buscarUsuario(dni)" />
+				</q-card-actions>
+			</q-card>
+		</q-dialog>
+		<!-- FIN BUSCAR PACIENTE -->
+
+
   </div>
 </template>
 <script>
@@ -237,6 +261,9 @@ export default {
   },
   data() {
     return {
+      modals: {
+        searchUser: false,
+      },
       loaderPdf: false,
       users: {},
       dataUser: [],
@@ -296,6 +323,7 @@ export default {
       this.$refs.html2Pdf.generatePdf();
     },
     workerView(typeView) {
+      if (typeView === 'searchUser') return this.modals.searchUser = true;
       this.viewType = typeView
     },
     AllUsers() {
@@ -373,6 +401,7 @@ export default {
       if (paciente.length !== 0) {
         this.dataUser = paciente[0];
         this.modalDetailUser = true;
+        this.modals.searchUser = false;
       } else {
         this.$q.notify({
           message: "Este paciente no existe",

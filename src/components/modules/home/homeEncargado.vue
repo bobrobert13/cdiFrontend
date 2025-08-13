@@ -79,7 +79,7 @@
                           <small class="text-weight-medium">Rol: {{ user.usuarios.rol }}</small>
                           <small class="text-weight-medium">Estatus de usuario: <b>{{ user.usuarios.estado
                               }}</b></small>
-                          <small class="text-weight-medium text-primary">Especialidad: <b>{{ user.area_de_trabajo
+                          <small class="text-weight-medium text-primary">Area de trabajo: <b>{{ user.area_de_trabajo
                               }}</b></small>
                         </q-item-section>
                         <q-item-section side>
@@ -453,7 +453,7 @@
                       ]" :rules="horarioRules" />
                     <q-input filled color="deep-purple-6" type="number" class="q-mb-xs"
                       v-model="doctor_anos_experiencia" label="Años de experiencia*" :rules="anosExperienciaRules" />
-                    <q-select filled v-model="roleEspecialidad" :options="roleUserEspecialidad" label="Especialidad*"
+                    <q-select filled v-model="roleEspecialidad" :options="roleUserEspecialidad" label="Area de trabajo*"
                       option-label="label" option-value="id" :rules="especialidadRules" />
                   </div>
 
