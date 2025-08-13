@@ -15,88 +15,123 @@
 						class="text-primary q-ml-sm" size="md"></q-icon>
 				</div>
 			</div>
-			<div class="row justify-center q-mt-xl" v-if="this.users.length !== 0">
-				<div class="col-12 q-mb-sm" v-for="(user, index) in users" @click="cdiDetails(user)" :key="index">
-					<q-list class="rounded-borders bg-secondary" style="border-radius: 15px">
-						<q-item>
-							<q-item-section avatar style="cursor: pointer">
-								<q-avatar color="primary" icon="mdi-hospital-building" text-color="white">
-								</q-avatar>
-							</q-item-section>
 
-							<q-item-section top style="cursor: pointer">
-								<q-item-label class="text-left" lines="1">
-									<span class="text-weight-medium">Nombre de CDI: {{ user.nombre }}</span>
-								</q-item-label>
-								<q-item-label class="text-left" lines="1">
-									<span class="text-weight-medium">Número de CDI: {{ user.numero_cdi }}</span>
-								</q-item-label>
-								<q-item-label class="text-left" lines="1">
-									<span class="text-weight-medium">Encargado: {{ user.encargado }}</span>
-								</q-item-label>
-								<q-item-label class="text-left" lines="1">
-									<span class="text-weight-medium">Cuadrante: {{ user.cuadrante }}</span>
-								</q-item-label>
-								<!-- <q-item-label class="text-left" lines="1">
+
+			<q-tabs v-model="tab" class="text-teal">
+				<q-tab :name="'cdi_activos'" :icon="'mdi-account-group'" :label="`Activos (${cdiActivos})`" />
+				<q-tab name="cdi_inactivos" icon="mdi-account-off" :label="`Inactivos (${cdiInactivos})`" />
+			</q-tabs>
+
+			<q-tab-panels v-model="tab" animated>
+				<q-tab-panel name="cdi_activos">
+					<div class="text-h6 text-left">CDIs Activos</div>
+					<div class="row justify-center q-mt-xl" v-if="this.users.length !== 0">
+						<div class="col-12 q-mb-sm" v-for="(user, index) in users" @click="cdiDetails(user)"
+							:key="index">
+							<q-list class="rounded-borders bg-secondary" style="border-radius: 15px">
+								<q-item v-if="user.estado === 'activo'">
+									<q-item-section avatar style="cursor: pointer">
+										<q-avatar color="primary" icon="mdi-hospital-building" text-color="white">
+										</q-avatar>
+									</q-item-section>
+
+									<q-item-section top style="cursor: pointer">
+										<q-item-label class="text-left" lines="1">
+											<span class="text-weight-medium">Nombre de CDI: {{ user.nombre }}</span>
+										</q-item-label>
+										<q-item-label class="text-left" lines="1">
+											<span class="text-weight-medium">Número de CDI: {{ user.numero_cdi }}</span>
+										</q-item-label>
+										<q-item-label class="text-left" lines="1">
+											<span class="text-weight-medium">Encargado: {{ user.encargado }}</span>
+										</q-item-label>
+										<q-item-label class="text-left" lines="1">
+											<span class="text-weight-medium">Cuadrante: {{ user.cuadrante }}</span>
+										</q-item-label>
+										<!-- <q-item-label class="text-left" lines="1">
                   <span class="text-weight-medium">{{ user.role }}</span>
                 </q-item-label> -->
-							</q-item-section>
-							<q-item-section side>
-								<div class="text-grey-8 q-gutter-xs">
+									</q-item-section>
+									<q-item-section side>
+										<div class="text-grey-8 q-gutter-xs">
 
-									<div class="text-grey-8 q-gutter-xs">
-										<button @click="generatePDF(user)" type="button" lines="2"
-											class=" q-ml-xl q-mr-md cursor-pointer text-primary self-center text-bold"
-											style="cursor: pointer">
-											<q-icon name="mdi-printer-pos" /> Descargar información
-										</button>
+											<div class="text-grey-8 q-gutter-xs">
+												<button @click="generatePDF(user)" type="button" lines="2"
+													class=" q-ml-xl q-mr-md cursor-pointer text-primary self-center text-bold"
+													style="cursor: pointer">
+													<q-icon name="mdi-printer-pos" /> Descargar información
+												</button>
 
-										<q-btn
-											@click="actualizarUsuario({ ...user, estado: user.estado === 'activo' ? 'inactivo' : 'activo' })"
-											class="gt-xs text-negative" size="12px" flat dense
-											:label="user.estado === 'activo' ? 'Inhabilitar' : 'Habilitar'" />
-									</div>
-								</div>
-							</q-item-section>
-						</q-item>
-					</q-list>
-				</div>
-			</div>
-			<div class="row" v-else>
-				<div class="col-12 q-mt-xl">
-					<span class="text-caption">No hay encargados registrados</span>
-				</div>
-			</div>
+												<q-btn
+													@click="actualizarUsuario({ ...user, estado: user.estado === 'activo' ? 'inactivo' : 'activo' })"
+													class="gt-xs text-negative" size="12px" flat dense
+													:label="user.estado === 'activo' ? 'Inhabilitar' : 'Habilitar'" />
+											</div>
+										</div>
+									</q-item-section>
+								</q-item>
+							</q-list>
+						</div>
+					</div>
+					<div class="row" v-else>
+						<div class="col-12 q-mt-xl">
+							<span class="text-caption">No hay encargados registrados o activos</span>
+						</div>
+					</div>
+				</q-tab-panel>
+				<q-tab-panel name="cdi_inactivos">
+					<div class="text-h6 text-left">CDIs Inactivos</div>
+					<div class="row justify-center q-mt-xl" v-if="this.users.length !== 0">
+						<div class="col-12 q-mb-sm" v-for="(user, index) in users" @click="cdiDetails(user)"
+							:key="index">
+							<q-list class="rounded-borders bg-secondary" style="border-radius: 15px">
+								<q-item v-if="user.estado === 'inactivo'">
+									<q-item-section avatar style="cursor: pointer">
+										<q-avatar color="primary" icon="mdi-hospital-building" text-color="white">
+										</q-avatar>
+									</q-item-section>
+
+									<q-item-section top style="cursor: pointer">
+										<q-item-label class="text-left" lines="1">
+											<span class="text-weight-medium">Nombre de CDI: {{ user.nombre }}</span>
+										</q-item-label>
+										<q-item-label class="text-left" lines="1">
+											<span class="text-weight-medium">Número de CDI: {{ user.numero_cdi }}</span>
+										</q-item-label>
+										<q-item-label class="text-left" lines="1">
+											<span class="text-weight-medium">Encargado: {{ user.encargado }}</span>
+										</q-item-label>
+										<q-item-label class="text-left" lines="1">
+											<span class="text-weight-medium">Cuadrante: {{ user.cuadrante }}</span>
+										</q-item-label>
+										<!-- <q-item-label class="text-left" lines="1">
+                  <span class="text-weight-medium">{{ user.role }}</span>
+                </q-item-label> -->
+									</q-item-section>
+									<q-item-section side>
+										<div class="text-grey-8 q-gutter-xs">
+
+											<div class="text-grey-8 q-gutter-xs">
+												<button @click="generatePDF(user)" type="button" lines="2"
+													class=" q-ml-xl q-mr-md cursor-pointer text-primary self-center text-bold"
+													style="cursor: pointer">
+													<q-icon name="mdi-printer-pos" /> Descargar información
+												</button>
+
+												<q-btn
+													@click="actualizarUsuario({ ...user, estado: user.estado === 'activo' ? 'inactivo' : 'activo' })"
+													class="gt-xs text-negative" size="12px" flat dense
+													:label="user.estado === 'activo' ? 'Inhabilitar' : 'Habilitar'" />
+											</div>
+										</div>
+									</q-item-section>
+								</q-item>
+							</q-list>
+						</div>
+					</div>
+				</q-tab-panel>
+			</q-tab-panels>
 		</div>
-
-
-		<div class="row justify-center" v-if="viewType === 'searchUser'">
-			<div class="col-12">
-				<div>
-					<div class="col-12 text-left">
-						<q-icon style="cursor: pointer" @click="workerView('userList')" name="mdi-arrow-left"
-							class="text-primary" size="md"></q-icon>
-					</div>
-					<div class="row justify-center">
-						<div class="col-12 text-bold text-accent text-center text-h6">
-							<span>Buscar CDI</span>
-						</div>
-						<q-icon name="mdi-account-search" size="200px" class="text-secondary"></q-icon>
-						<div class="col-10 q-mt-md">
-							<q-input outlined filled type="text" color="deep-purple-6" v-model="cdi_number"
-								label="Número de CDI" />
-						</div>
-					</div>
-					<div class="row justify-center">
-						<div class="col-4 q-mt-md">
-							<q-btn label="Buscar" class="full-width" color="primary" :disable="cdi_number === ''"
-								@click="buscarUsuario(cdi_number)" />
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-
 
 		<div class="row justify-center" v-if="viewType === 'addWorker'">
 			<div class="col-12 text-left row items-center text-left q-mb-lg">
@@ -279,7 +314,8 @@
 									<q-item-section>
 										<q-item-label>Nombre del doctor: <b>{{ doctores.persona.nombre1
 												}}</b></q-item-label>
-										<q-item-label>Area de trabajo: <b>{{ doctores.area_de_trabajo }}</b></q-item-label>
+										<q-item-label>Area de trabajo: <b>{{ doctores.area_de_trabajo
+										}}</b></q-item-label>
 										<q-item-label>Horario: <b>{{ doctores.horario }}</b></q-item-label>
 										<q-item-label>Años de experiencia: <b>{{ doctores.anos_experiencia
 												}}</b></q-item-label>
@@ -437,6 +473,9 @@ export default {
 	components: { VueHtml2pdf, historialEncVue, historialCDIVue },
 	data() {
 		return {
+			cdiActivos: 0,
+			cdiInactivos: 0,
+			tab: "cdi_activos",
 			modals: {
 				searchUser: false,
 			},
@@ -634,6 +673,7 @@ export default {
 	},
 	created() {
 		this.AllEncargados();
+		this.tab = 'cdi_activos'
 	},
 	watch: {
 		async highlight(newValue) {
@@ -840,7 +880,7 @@ export default {
 		},
 
 		workerView(typeView) {
-			if(typeView === 'searchUser') return this.modals.searchUser = true;
+			if (typeView === 'searchUser') return this.modals.searchUser = true;
 			this.viewType = typeView;
 		},
 		generatePDF(user) {
@@ -886,6 +926,9 @@ export default {
 				.then((response) => {
 					this.loaderUser = false;
 					this.users = Object.assign([], response.data.cdis);
+					this.cdiActivos = this.users.filter((user) => user.estado === "activo").length;
+					this.cdiInactivos = this.users.filter((user) => user.estado === "inactivo").length;
+
 				})
 				.catch((err) => {
 					this.loaderUser = false;
@@ -1061,7 +1104,8 @@ export default {
 
 		},
 
-	}
+	},
+
 
 }
 </script>

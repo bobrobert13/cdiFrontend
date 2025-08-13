@@ -41,7 +41,7 @@
             </div>
           </div>
         </div>
-        <div class="row q-ma-md justify-center" v-if="usersView === true">
+        <div class="row  justify-center" v-if="usersView === true">
           <div class="col-10 q-mb-xl text-right">
             <span class="text-bold text-h6 text-accent" style="cursor: pointer"
               @click="(usersView = false), (controlLista = true)">Volver</span>
@@ -50,7 +50,7 @@
             <users></users>
           </div>
         </div>
-        <div class="row q-ma-md justify-center" v-if="adminsView === true">
+        <div class="row justify-center" v-if="adminsView === true">
           <div class="col-10 q-mb-xl text-right">
             <span class="text-bold text-h6 text-accent" style="cursor: pointer"
               @click="(adminsView = false), (controlLista = true)">Volver</span>
@@ -59,7 +59,7 @@
             <admins></admins>
           </div>
         </div>
-        <div class="row q-ma-md justify-center" v-if="doctoresView === true">
+        <div class="row  justify-center" v-if="doctoresView === true">
           <div class="col-10 q-mb-xl text-right">
             <span class="text-bold text-h6 text-accent" style="cursor: pointer"
               @click="(doctoresView = false), (controlLista = true)">Volver</span>
