@@ -9,13 +9,12 @@
         </div>
         <div class="col self-center text-right">
           <!-- <span class="text-bold text-primary" style="cursor: pointer" @click="workerView('addWorker')">Añadir doctor</span> -->
-          <q-icon style="cursor: pointer" @click="workerView('searchUser')" name="mdi-account-search"
-            class="text-primary" size="md"></q-icon>
+                <q-icon style="cursor: pointer" @click="workerView('searchUser')" name="mdi-account-search"
+                  class="text-primary q-mr-md" size="md"></q-icon>
           <q-icon style="cursor: pointer" @click="workerView('addWorker')" name="mdi-plus" class="text-primary"
             size="md"></q-icon>
         </div>
       </div>
-
 
       <q-tabs v-model="tabDrEstado" class="text-teal">
         <q-tab :name="'dr_activos'" :icon="'mdi-account-group'" :label="`Activos (${drActivos})`" />
@@ -369,6 +368,31 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
+
+
+                  		<!-- BUSCAR PACIENTE -->
+		<q-dialog v-model="modals.searchUser" style="min-width: 460px">
+			<q-card style="min-width: 460px" class="text-white">
+				<q-bar class="bg-primary">
+					<q-space />
+					<q-btn dense flat icon="close" v-close-popup>
+					</q-btn>
+				</q-bar>
+				<q-card-section>
+					<div class="text-h6 text-primary">Buscar doctor</div>
+				</q-card-section>
+				<q-card-section class="q-pt-none">
+					<q-input v-model="dni" label="Escribe el DNI del doctor" />
+				</q-card-section>
+				<q-card-actions align="right" class="text-primary">
+					<q-btn flat label="Cancelar" v-close-popup />
+					<q-btn flat label="Buscar" :disable="!dni.length" @click="buscarUsuario(dni)" />
+				</q-card-actions>
+			</q-card>
+		</q-dialog>
+		<!-- FIN BUSCAR PACIENTE -->
+
+
     <!-- ELIMINAR USUARIO -->
     <q-dialog v-model="deleteUserModal">
       <q-card style="background-color: #015958" class="text-white">
@@ -417,7 +441,7 @@ import {
 import VueHtml2pdf from "vue-html2pdf";
 import HistoriaDrPdf from "./historiaDrPdf.vue";
 import { ADMIN_DOCTORES_QUERY, ADMIN_ALL_CDIS_QUERY, UPDATE_USUARIO_MUTATION } from "../../../graphql/user";
-import { 
+import {
   useDniValidation,
   useDoctorAnosExperienciaValidation,
   useDoctorEspecialidadValidation,
@@ -460,7 +484,10 @@ export default {
       cdisList: [],
       cdiSeleccionado: null,
 
-
+            // MODALES
+      modals: {
+        searchUser: false,
+      },
 
       config: config,
       previewImgs: "",
@@ -793,6 +820,7 @@ export default {
   },
   methods: {
     workerView(typeView) {
+      if(typeView === 'searchUser') return this.modals.searchUser = true;
       this.viewType = typeView
     },
     generatePDF(user) {
@@ -1119,7 +1147,7 @@ export default {
         });
     },
     buscarUsuario(dni) {
-      const usuario = this.users.filter((usuario) => usuario.persona.cedula_identidad === dni)
+      const usuario = this.users.filter((usuario) => usuario.persona.cedula_identidad === parseInt(dni))
       if (usuario.length !== 0) {
         this.dataUser = usuario[0];
         this.modalDetailUser = true;
