@@ -1131,7 +1131,7 @@ export default {
     buscarUsuario(dni) {
 
       const usuario = this.users.filter((usuario) => usuario.persona.cedula_identidad === parseInt(dni));
-      if (usuario) {
+      if (usuario.length !== 0) {
         this.dataUser = usuario[0];
         this.workerView('userDetail');
         this.modals.searchUser = false;
