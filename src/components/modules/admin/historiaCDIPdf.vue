@@ -106,7 +106,6 @@ export default {
     components: {},
     props: ["data"],
     created() {
-        console.log("dataProps", this.data);
     },
     methods: {
         salidaFecha(salida) {
