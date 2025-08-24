@@ -1121,20 +1121,23 @@
                   <div class="col-12 q-mt-xs">
                     <q-input v-model="medicamento_principioActivo" filled label="Principio activo del medicamento" />
                   </div>
-                  <div class="col-12 q-mt-xs">
-                    <q-select v-model="medicamento_dosis" filled label="Dosis recomendada" :options='["250mg",
-                      "500mg",
-                      "750mg",
-                      "1g",
-                      "5mg",
-                      "10mg",
-                      "20mg",
-                      "40mg",
-                      "100mg",
-                      "200mg",
-                      "300mg",
-                      "400mg"]' />
-                  </div>
+    <div class="col-12 q-mt-xs">
+      <q-select
+        v-model="medicamento_dosis_medida"
+        filled
+        label="Medida de dosis"
+        :options="opcionesMedidas"
+      />
+    </div>
+    <div class="col-12 q-mt-xs">
+      <q-select
+        v-model="medicamento_dosis"
+        filled
+        label="Dosis recomendada"
+        :options="dosisFiltradas"
+        :disable="!medicamento_dosis_medida"
+      />
+    </div>
                   <div class="col-12 q-mt-xs">
                     <q-select v-model="medicamento_viaAdministracion" filled label="Vía de administración" :options='["Oral",
                       "Intravenosa",
@@ -1798,6 +1801,10 @@ export default {
         peso: useWeightValidation()
       }
       return isFormValid(formValues, validationRules)
+    },
+    dosisFiltradas() {
+      if (!this.medicamento_dosis_medida) return [];
+      return this.opcionesDosisPorMedida[this.medicamento_dosis_medida] || [];
     }
   },
   components: {
@@ -1941,6 +1948,7 @@ export default {
       medicamentoSeleccionado: {},
       medicamento_nombre: "",
       medicamento_dosis: "",
+      medicamento_dosis_medida: null,
       medicamento_viaAdministracion: "",
       medicamento_frecuencia: "",
       medicamento_duracion: "",
@@ -1952,6 +1960,44 @@ export default {
       medicamento_tipoMedicamento: "",
       medicamento_contraindicaciones: "",
       medicamento_efectosSecundarios: "",
+
+
+            opcionesMedidas: [
+        'mg',
+        'g',
+        'mcg',
+        'ml',
+        'UI',
+        'tabletas',
+        'cápsulas',
+        'gotas',
+        'ampollas',
+        'comprimidos',
+        'supositorios',
+        'parches',
+        'spray',
+        'sobres',
+        'viales',
+        'pastillas'
+      ],
+      opcionesDosisPorMedida: {
+        mg: ["250mg", "500mg", "750mg", "100mg", "200mg", "300mg", "400mg"],
+        g: ["1g", "2g", "5g"],
+        mcg: ["50mcg", "100mcg", "250mcg", "500mcg"],
+        ml: ["5ml", "10ml", "15ml", "20ml", "30ml"],
+        UI: ["1000UI", "2000UI", "5000UI", "10000UI"],
+        tabletas: ["1 tableta", "2 tabletas", "3 tabletas"],
+        cápsulas: ["1 cápsula", "2 cápsulas"],
+        gotas: ["5 gotas", "10 gotas", "20 gotas"],
+        ampollas: ["1 ampolla", "2 ampollas"],
+        comprimidos: ["1 comprimido", "2 comprimidos"],
+        supositorios: ["1 supositorio"],
+        parches: ["1 parche"],
+        spray: ["1 spray", "2 sprays"],
+        sobres: ["1 sobre"],
+        viales: ["1 vial"],
+        pastillas: ["1 pastilla", "2 pastillas"]
+      },
 
       // EMERGENCIAS
 
