@@ -8,33 +8,33 @@
       <div class="info-grid">
         <div class="info-item">
           <span class="label">Nacionalidad:</span>
-          <span class="value">{{ data.persona.nacionalidad }}</span>
+          <span v-if="data.persona" class="value">{{ data.persona.nacionalidad }}</span>
         </div>
         <div class="info-item">
           <span class="label">Cédula:</span>
-          <span class="value">{{ data.persona.cedula_identidad }}</span>
+          <span v-if="data.persona" class="value">{{ data.persona.cedula_identidad }}</span>
         </div>
         <div class="info-item">
           <span class="label">Edad:</span>
-          <span class="value">{{ data.persona.edad }}</span>
+          <span v-if="data.persona" class="value">{{ data.persona.edad }}</span>
         </div>
         <div class="info-item">
           <span class="label">Estado Civil:</span>
-          <span class="value">{{ data.persona.estado_civil }}</span>
+          <span v-if="data.persona" class="value">{{ data.persona.estado_civil }}</span>
         </div>
         <div class="info-item">
           <span class="label">Sexo:</span>
-          <span class="value">{{ data.persona.sexo }}</span>
+          <span v-if="data.persona" class="value">{{ data.persona.sexo }}</span>
         </div>
         <div class="info-item">
           <span class="label">Fecha Registro:</span>
-          <span class="value">{{ entradaFecha(data.createdAt) }}</span>
+          <span v-if="data.persona || data.createdAt" class="value">{{ entradaFecha(data.createdAt) }}</span>
         </div>
       </div>
     </div>
 
     <!-- INFORMACIÓN DE CONTACTO -->
-    <div v-if="data.persona.telefono || data.persona.correo" class="info-section">
+    <div v-if="data.persona" class="info-section">
       <div class="section-title">CONTACTO</div>
       <div class="info-grid">
         <div class="info-item">
@@ -43,7 +43,7 @@
         </div>
         <div class="info-item">
           <span class="label">Correo:</span>
-          <span class="value">{{ data.persona.correo.correo || 'No especificado' }}</span>
+          <span  class="value">{{ data.persona.correo.correo || 'No especificado' }}</span>
         </div>
       </div>
     </div>
@@ -68,7 +68,7 @@
     </div>
 
     <!-- INFORMACIÓN DE UBICACIÓN -->
-    <div v-if="data.persona.direccion" class="info-section">
+    <div v-if="data.persona" class="info-section">
       <div class="section-title">DIRECCIÓN</div>
       <div class="info-grid">
         <div class="info-item">

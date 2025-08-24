@@ -15,6 +15,14 @@
       size="md"></q-icon>
     </div>
    </div>
+
+
+   <q-tabs v-model="tab" class="text-teal">
+				<q-tab :name="'cdi_activos'" :icon="'mdi-account-group'" :label="`Activos (${cdiActivos})`" />
+				<q-tab name="cdi_inactivos" icon="mdi-account-off" :label="`Inactivos (${cdiInactivos})`" />
+			</q-tabs>
+
+
    <div class="row justify-center q-mt-xl" v-if="this.users.length !== 0">
     <div class="col-12 q-mb-sm" v-for="(user, index) in users" :key="index">
      <q-list class="rounded-borders bg-secondary" style="border-radius: 15px">
