@@ -12,7 +12,7 @@
               >Control de Doctores</span
             >
           </div> -->
-            <div class="row justify-center">
+            <div class="row ">
               <div class="col self-center text-right">
                 <div class="col-4 self-center text-right">
                   <!-- <q-select filled dense v-model="especialidadDoctor" :options="roleUserEspecialidad"
@@ -263,94 +263,55 @@
                   <div class="col-12 q-mt-xs">
                     <p class="text-subtitle text-medium">Información del doctor</p>
 
-                    <div class="row jusitify-center">
-                      <div class="col-6 q-pa-sm">
+                    <div class="row ">
+                        <div class="col-6 q-pa-sm">
                         <q-input filled color="deep-purple-6" v-model="dataUser.persona.nombre1"
-                          @blur="validateDoctorInfoInputs" label="Nombre completo" :rules="[
-                            (val) => !!val || 'Este campo es obligatorio',
-                            (val) => val.length >= 3 || 'Mínimo 3 caracteres',
-                            (val) => val.length <= 200 || 'Máximo 200 caracteres',
-                            (val) => /^[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+$/.test(val) || 'Solo se permiten letras y espacios (sin números ni símbolos)'
-                          ]" />
-                      </div>
-                      <div class="col-6 q-pa-sm">
+                           label="Nombre completo" :rules="fullNameRules" />
+                        </div>
+                        <div class="col-6 q-pa-sm">
                         <q-input filled color="deep-purple-6" v-model="dataUser.persona.cedula_identidad"
-                          @blur="validateDoctorInfoInputs" label="Cédula" :rules="[
-                            (val) => !!val || 'Este campo es obligatorio',
-                            (val) => /^\d+$/.test(val) || 'Solo se permiten números',
-                            (val) => val.length <= 8 || 'Máximo 8 dígitos'
-                          ]" />
-                      </div>
-                      <div class="col-6 q-pa-sm">
+                           label="Cédula" :rules="dniRules" />
+                        </div>
+                        <div class="col-6 q-pa-sm">
                         <q-input filled color="deep-purple-6" v-model="dataUser.numero_carnet"
-                          @blur="validateDoctorInfoInputs" label="Número de carnet" :rules="[
-                            (val) => !!val || 'Este campo es obligatorio',
-                            (val) => /^[a-zA-Z0-9]+$/.test(val) || 'Solo se permiten letras y números (sin espacios ni símbolos)'
-                          ]" />
-                      </div>
-                      <div class="col-6 q-pa-sm">
+                           label="Número de carnet" :rules="carnetRules" />
+                        </div>
+                        <div class="col-6 q-pa-sm">
                         <q-input filled color="deep-purple-6" v-model="dataUser.anos_experiencia"
-                          @blur="validateDoctorInfoInputs" label="Años de experiencia" :rules="[
-                            (val) => !!val || 'Este campo es obligatorio',
-                            (val) => /^\d+$/.test(val) || 'Solo se permiten números',
-                            (val) => val.length <= 3 || 'Máximo 3 dígitos',
-                            (val) => parseInt(val) > 0 || 'Debe ser mayor a 0'
-                          ]" />
-                      </div>
-                      <div class="col-6 q-pa-sm">
+                           label="Años de experiencia" :rules="anosExperienciaRules" />
+                        </div>
+                        <div class="col-6 q-pa-sm">
                         <q-input filled color="deep-purple-6" v-model="dataUser.area_de_trabajo"
-                          @blur="validateDoctorInfoInputs" label="Area de trabajo" :rules="[
-                            (val) => !!val || 'Este campo es obligatorio'
-                          ]" />
-                      </div>
-                      <div class="col-6 q-pa-sm">
+                           label="Area de trabajo" :rules="ocupacionRules" />
+                        </div>
+                        <div class="col-6 q-pa-sm">
                         <q-select filled color="deep-purple-6" v-model="dataUser.horario"
-                          @blur="validateDoctorInfoInputs" label="Horario de trabajo" :rules="[
-                            (val) => !!val || 'Este campo es obligatorio'
-                          ]" :options="[
-                            'Lunes a Viernes 8:00 am - 6:00 pm',
-                            'Lunes a Viernes 9:00 am - 5:00 pm',
-                            'Lunes a Viernes 10:00 am - 4:00 pm',
-                            'Sábados 9:00 am - 1:00 pm',
-                            'Sábados 10:00 am - 2:00 pm',
-                            'Domingos 10:00 am - 2:00 pm',
-                            'Lunes, Miércoles y Viernes 8:00 am - 5:00 pm',
-                            'Martes y Jueves 10:00 am - 6:00 pm',
-                            'Lunes a Viernes 8:00 am - 12:00 pm y 1:00 pm - 5:00 pm'
-                          ]" />
-                      </div>
-
-
-                      <div class="col-6 q-pa-sm">
+                           label="Horario de trabajo" :rules="horarioRules" />
+                        </div>
+                        <div class="col-6 q-pa-sm">
                         <q-select filled v-if="dataUser.persona.telefono" v-model="dataUser.persona.telefono.codigo"
-                          @blur="validateDoctorInfoInputs" :options="codigoTel" label="Código" :rules="[
-                            (val) => !!val || 'Este campo es obligatorio'
-                          ]" option-label="label" option-value="value" emit-value />
-                      </div>
-
-                      <div class="col-6 q-pa-sm">
+                           :options="codigoTel" label="Código" :rules="requiredSelectRules" option-label="label" option-value="value" emit-value />
+                        </div>
+                        <div class="col-6 q-pa-sm">
                         <q-input filled color="deep-purple-6" v-if="dataUser.persona.telefono"
-                          v-model="dataUser.persona.telefono.numero" @blur="validateDoctorInfoInputs" label="Teléfono"
-                          :rules="[
-                            (val) => !!val || 'Este campo es obligatorio',
-                            (val) => /^\d+$/.test(val) || 'Solo se permiten números',
-                            (val) => val.length <= 12 || 'Máximo 12 dígitos'
-                          ]">
+                          v-model="dataUser.persona.telefono.numero"  label="Teléfono"
+                          :rules="telefonoRules">
                         </q-input>
-                      </div>
-
-                      <div class="col-6 q-pa-sm">
+                        </div>
+                        <div class="col-6 q-pa-sm">
                         <q-input filled color="deep-purple-6" v-if="dataUser.persona.correo"
-                          v-model="dataUser.persona.correo.correo" @blur="validateDoctorInfoInputs" label="Email"
-                          :rules="[
-                            (val) => !!val || 'Este campo es obligatorio',
-                            (val) => /.+@.+\..+/.test(val) || 'Formato de correo electrónico inválido'
-                          ]" />
-                      </div>
-                      <q-btn unelevated :disabled="!isDoctorInfoValid" :loading="loader"
+                          v-model="dataUser.persona.correo.correo"  label="Email"
+                          :rules="emailRules" />
+                        </div>
+
+
+
+                      <q-btn unelevated :disable="!formHasNoUpdateDoctorErrors" :loading="loader"
                         @click="actualizarDoctor(dataUser)" class="full-width mx-auto text-white bg-primary"
                         label="Actualizar información" />
                     </div>
+
+
                   </div>
 
                   <div class="col-12 q-mt-xl">
@@ -730,6 +691,29 @@ export default {
         password: usePasswordValidation()
       }
       return isFormValid(formValues, validationRules)
+    },
+    formHasNoUpdateDoctorErrors() {
+      const formValuesUpdate = {
+        fullName: this.dataUser.persona.nombre1,
+        dni: this.dataUser.persona.cedula_identidad,
+        numero_carnet: this.dataUser.numero_carnet,
+        anos_experiencia: this.dataUser.anos_experiencia,
+        area_de_trabajo: this.dataUser.area_de_trabajo,
+        horario: this.dataUser.horario,
+        telefono: this.dataUser.persona.telefono ? this.dataUser.persona.telefono.numero : '',
+        correo: this.dataUser.persona.correo ? this.dataUser.persona.correo.correo : ''
+      }
+      const validationRulesUpdate = {
+        fullName: useFullNameValidation(),
+        dni: useDniValidation(),
+        numero_carnet: useDoctorCarnetValidation(),
+        anos_experiencia: useDoctorAnosExperienciaValidation(),
+        area_de_trabajo: useDoctorOcupacionValidation(),
+        horario: useDoctorHorarioValidation(),
+        telefono: usePhoneValidation(),
+        correo: useEmailValidation()
+      }
+      return isFormValid(formValuesUpdate, validationRulesUpdate)
     }
   },
   data() {
@@ -1087,32 +1071,26 @@ export default {
       return moment(createdAt).format('DD-MM-YYYY')
     },
     generatePDF(user) {
-      console.log("funcion?? ");
       this.pdfData = user;
-      console.log("usuerios_pdf", this.pdfData);
       this.$refs.html2Pdf.generatePdf();
     },
     generatePacientePDF(user) {
       this.pdfDoctor = false;
       this.pdfData = user;
-      console.log("usuerios_pdf", this.pdfData);
       this.$refs.html2PdfPaciente.generatePdf();
       this.pdfDoctor = true;
     },
     generateDoctorPDF(user) {
       this.pdfDoctor = true;
       this.pdfData = user;
-      console.log("usuerios_pdf", this.pdfData);
       this.$refs.html2Pdf.generatePdf();
     },
     generateDoctorsPDF() {
       this.pdfData = this.users;
-      console.log("usuerios_pdf", this.pdfData);
       this.$refs.html2Pdf.generatePdf();
     },
     downloadSeveralUsers() {
       this.pdfData = this.users;
-      console.log("usuerios_pdf", this.pdfData);
       this.$refs.html2Pdf.generatePdf();
     },
     workerView(typeView) {

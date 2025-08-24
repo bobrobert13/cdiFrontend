@@ -109,10 +109,9 @@ export const useDoctorHorarioValidation = () => {
 export const useDoctorAnosExperienciaValidation = () => {
   return [
     (val) => !!val || 'Este campo es obligatorio',
-    (val) => /^\d+$/.test(val) || 'Solo se permiten números',
-    (val) => val.length <= 2 || 'Máximo 2 caracteres',
-    (val) => parseInt(val) >= 0 || 'Los años de experiencia deben ser mayor o igual a 0',
-    (val) => parseInt(val) <= 50 || 'Los años de experiencia deben ser menor a 50 años'
+    (val) => /^\d{1,2}$/.test(val) || 'Solo se permiten números (máximo 2 dígitos)',
+    (val) => parseInt(val, 10) >= 0 || 'Los años de experiencia deben ser mayor o igual a 0',
+    (val) => parseInt(val, 10) <= 50 || 'Los años de experiencia deben ser menor o igual a 50 años'
   ]
 }
 

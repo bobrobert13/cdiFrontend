@@ -5,6 +5,8 @@
 // - fieldsToCheck: ['campo1', 'campo2'] (opcional)
 
 export function isFormValid(formValues, validationRules, fieldsToCheck) {
+  console.log('validando: ', validationRules);
+  
   // Si no se especifican campos, valida todos los definidos en validationRules
   const fields = fieldsToCheck || Object.keys(validationRules)
 
