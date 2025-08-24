@@ -58,10 +58,23 @@
                 <div class="text-h6"><span v-if="users && users.length !== 0">{{ users.length }}</span> Doctores del CDI
                 </div>
                 Listado de usuarios doctores pertenecientes al CDI
-                <div class="row justify-center q-mt-xl" v-if="this.users && this.users.length !== 0">
-                  <div class="col-12 q-mb-sm" v-for="(user, index) in users" :key="index">
-                    <q-list class="rounded-borders bg-secondary" style="border-radius: 15px">
-                      <q-item>
+
+                <div class=" row q-mt-sm">
+                  <q-tabs
+                    v-model="tabEstadoEncargado"
+                    class="text-teal no-padding no-margin"
+                  >
+                    <q-tab name="encargadosActivos" :label="`Activos (${cantidadDoctoresActivos})`" />
+                    <q-tab name="encargadosInactivos" :label="`Inactivos (${cantidadDoctoresInactivos})`" />
+                  </q-tabs>
+                </div>
+
+                <div class=" full-width q-mt-md" v-if="this.users && this.users.length !== 0">
+                  <q-tab-panels v-model="tabEstadoEncargado" animated>
+                    <q-tab-panel name="encargadosActivos" class="full-width">
+                  <div class="full-width q-mb-sm" v-for="(user, index) in users" :key="index">
+                    <q-list v-if="user.usuarios.estado === 'activo'" class="rounded-borders full-width bg-secondary" style="border-radius: 15px">
+                      <q-item class="full-width">
                         <q-item-section avatar @click="userDetailC('userDetail', user)" style="cursor: pointer">
                           <q-avatar color="primary" icon="mdi-doctor" text-color="white">
                           </q-avatar>
@@ -104,6 +117,55 @@
                       </q-item>
                     </q-list>
                   </div>
+                    </q-tab-panel>
+                    <q-tab-panel name="encargadosInactivos">
+                  <div class="full-width q-mb-sm" v-for="(user, index) in users" :key="index">
+                    <q-list v-if="user.usuarios.estado === 'inactivo' " class="rounded-borders full-width bg-secondary" style="border-radius: 15px">
+                      <q-item class="full-width">
+                        <q-item-section avatar @click="userDetailC('userDetail', user)" style="cursor: pointer">
+                          <q-avatar color="primary" icon="mdi-doctor" text-color="white">
+                          </q-avatar>
+                        </q-item-section>
+
+                        <q-item-section top @click="userDetailC('userDetail', user)" style="cursor: pointer">
+                          <q-item-label class="text-left " lines="1">
+                            <span class="text-weight-medium">Nombre: <b>{{ user.persona.nombre1
+                                }}</b></span>
+                          </q-item-label>
+                          <q-item-label class="text-left q-mb-xs" lines="1">
+                            <span class="text-weight-medium">Nombre de usuario: <b>{{ user.usuarios.nombre_usuario
+                                }}</b></span>
+                          </q-item-label>
+                          <small class="text-weight-medium">Rol: {{ user.usuarios.rol }}</small>
+                          <small class="text-weight-medium">Estatus de usuario: <b>{{ user.usuarios.estado
+                              }}</b></small>
+                          <small class="text-weight-medium text-primary">Area de trabajo: <b>{{ user.area_de_trabajo
+                              }}</b></small>
+                        </q-item-section>
+                        <q-item-section side>
+                          <div class="text-grey-8 q-gutter-xs">
+                            <!-- <q-btn @click="generatePDF(user)" class="gt-xs text-blue" size="12px" flat dense round
+                          icon="mdi-file-download-outline" /> -->
+
+                            <button @click="generateDoctorPDF(user)" type="button" lines="2"
+                              class=" q-ml-xl q-mr-md cursor-pointer text-primary self-center text-bold"
+                              style="cursor: pointer">
+                              <q-icon name="mdi-printer-pos" /> Descargar información del doctor
+                            </button>
+
+                            <q-btn
+                              @click="actualizarUsuario({ ...user.usuarios, estado: user.usuarios.estado === 'activo' ? 'inactivo' : 'activo' })"
+                              class="gt-xs text-negative" size="12px" flat dense
+                              :label="user.usuarios.estado === 'activo' ? 'Inhabilitar' : 'Habilitar'" />
+                          </div>
+                        </q-item-section>
+                      </q-item>
+                    </q-list>
+       
+                  </div>
+                    </q-tab-panel>
+                  </q-tab-panels>
+
                 </div>
                 <div class="row" v-else>
                   <div class="col-12 q-mt-xl">
@@ -672,6 +734,9 @@ export default {
   },
   data() {
     return {
+      tabEstadoEncargado: 'encargadosActivos',
+      cantidadDoctoresActivos: 0,
+      cantidadDoctoresInactivos: 0,
       config: config,
       pdfDoctor: true,
       previewImgs: "",
@@ -1100,6 +1165,8 @@ export default {
           this.loaderUser = false;
           // console.log(response.data.doctoresCDI);
           this.users = Object.assign([], response.data.doctoresCDI);
+          this.cantidadDoctoresActivos = this.users.filter(user => user.usuarios.estado === 'activo').length;
+          this.cantidadDoctoresInactivos = this.users.filter(user => user.usuarios.estado === 'inactivo').length;
         })
         .catch((err) => {
           this.loaderUser = false;
@@ -1278,6 +1345,9 @@ export default {
         });
     },
     actualizarUsuario(usuario) {
+      if (!usuario.contrasena || usuario.contrasena === '' || usuario.contrasena === null) {
+        usuario.contrasena = '';
+      }
       this.loader = true;
       this.$apollo
         .mutate({
@@ -1295,7 +1365,7 @@ export default {
         .then((response) => {
           this.loader = false;
           this.viewType = "userList"
-          this.dataUser.usuarios.contrasena = '';
+          if (this.dataUser) this.dataUser.usuarios.contrasena = '';
 
           this.AllDoctores();
           this.$q.notify({
