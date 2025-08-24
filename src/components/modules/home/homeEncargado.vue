@@ -288,8 +288,6 @@
                           v-model="dataUser.persona.correo.correo" label="Email" :rules="emailRules" />
                       </div>
 
-
-
                       <q-btn unelevated :disable="!formHasNoUpdateDoctorErrors" :loading="loader"
                         @click="actualizarDoctor(dataUser)" class="full-width mx-auto text-white bg-primary"
                         label="Actualizar información" />
