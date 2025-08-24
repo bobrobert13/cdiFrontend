@@ -17,15 +17,16 @@
    </div>
 
 
-   <q-tabs v-model="tab" class="text-teal">
-				<q-tab :name="'cdi_activos'" :icon="'mdi-account-group'" :label="`Activos (${cdiActivos})`" />
-				<q-tab name="cdi_inactivos" icon="mdi-account-off" :label="`Inactivos (${cdiInactivos})`" />
+   <q-tabs v-model="tabDrEstado" class="text-teal">
+				<q-tab :name="'dr_activos'" :icon="'mdi-account-group'" :label="`Activos (${drActivos})`" />
+				<q-tab name="dr_inactivos" icon="mdi-account-off" :label="`Inactivos (${drInactivos})`" />
 			</q-tabs>
 
-
+      <q-tab-panels v-model="tabDrEstado" animated>
+        <q-tab-panel name="dr_activos">
    <div class="row justify-center q-mt-xl" v-if="this.users.length !== 0">
     <div class="col-12 q-mb-sm" v-for="(user, index) in users" :key="index">
-     <q-list class="rounded-borders bg-secondary" style="border-radius: 15px">
+     <q-list v-if="user.usuarios.estado === 'activo'" class="rounded-borders bg-secondary" style="border-radius: 15px">
       <q-item>
        <q-item-section avatar @click="userDetail(user)" style="cursor: pointer">
         <q-avatar color="primary" icon="mdi-doctor" text-color="white">
@@ -78,9 +79,73 @@
    </div>
    <div class="row" v-else>
     <div class="col-12 q-mt-xl">
-     <span class="text-caption">No hay Doctores registrados</span>
+     <span class="text-caption">No hay doctores activos registrados</span>
     </div>
    </div>
+        </q-tab-panel>
+        <q-tab-panel name="dr_inactivos">
+   <div class="row justify-center q-mt-xl" v-if="this.users.length !== 0">
+    <div class="col-12 q-mb-sm" v-for="(user, index) in users" :key="index">
+     <q-list v-if="user.usuarios.estado === 'inactivo'" class="rounded-borders bg-secondary" style="border-radius: 15px">
+      <q-item>
+       <q-item-section avatar @click="userDetail(user)" style="cursor: pointer">
+        <q-avatar color="primary" icon="mdi-doctor" text-color="white">
+        </q-avatar>
+       </q-item-section>
+
+       <q-item-section v-if="user.persona" top @click="userDetail(user)" style="cursor: pointer">
+        <q-item-label class="text-left q-mb-xs" lines="1">
+         <span class="text-weight-medium">Nombre de doctor: <b>{{
+          user.persona.nombre1
+         }}</b></span>
+        </q-item-label>
+        <small class="text-weight-medium text-left">usuario: {{ user.usuarios.nombre_usuario
+        }}</small>
+        <small class="text-weight-medium text-left">Rol: {{ user.usuarios.rol }}</small>
+        <small class="text-weight-medium text-left">Documento de identidad: {{
+         user.persona.cedula_identidad
+        }}</small>
+        <small v-if="user.persona.telefono" class="text-weight-medium text-left">Número de teléfono: {{
+         user.persona.telefono.numero
+        }}</small>
+        <small class="text-weight-medium text-left">Estatus de usuario: <b>{{
+         user.usuarios.estado
+        }}</b></small>
+        <q-separator spaced />
+        <div v-if="user.usuarios.cdi" class="text-left column">
+         <small class="text-weight-medium text-left">Corresponde al CDI: {{
+          user.usuarios.cdi.nombre }}</small>
+         <small class="text-weight-medium text-left">Código de CDI: {{
+          user.usuarios.cdi.numero_cdi }}</small>
+         <small class="text-weight-medium text-left">Estatus del CDI: <b>{{
+          user.usuarios.estado }}</b></small>
+        </div>
+       </q-item-section>
+       <q-item-section side>
+        <div class="text-grey-8 q-gutter-xs">
+         <button @click="generatePDF(user)" type="button" lines="2"
+          class=" q-ml-xl q-mr-md cursor-pointer text-primary self-center text-bold" style="cursor: pointer">
+          <q-icon name="mdi-printer-pos" /> Descargar información
+         </button>
+         <q-btn
+          @click="actualizarUsuario({ ...user.usuarios, estado: user.usuarios.estado === 'activo' ? 'inactivo' : 'activo' })"
+          class="gt-xs text-negative" size="12px" flat dense
+          :label="user.usuarios.estado === 'activo' ? 'Inhabilitar' : 'Habilitar'" />
+        </div>
+       </q-item-section>
+      </q-item>
+     </q-list>
+    </div>
+   </div>
+   <div class="row" v-else>
+    <div class="col-12 q-mt-xl">
+     <span class="text-caption">No hay doctores inactivos registrados</span>
+    </div>
+   </div>
+        </q-tab-panel>
+      </q-tab-panels>
+
+
   </div>
   <div class="row justify-center" v-if="viewType === 'searchUser'">
    <div class="col-12">
@@ -385,6 +450,7 @@ export default {
     (val) => /[A-Z]/.test(val) || 'Debes incluir al menos 1 letra mayúscula',
    ],
 
+
    // DATOS DE DOCTOR:
    doctor_numero_carnet: '',
    doctor_horario: '',
@@ -415,6 +481,9 @@ export default {
    image: [],
    imagePreview: [],
    tab: "users",
+   tabDrEstado: "dr_activos",
+   drActivos: 0,
+   drInactivos: 0,
    role: "Doctor",
    dni: "",
    telefono: "",
@@ -807,6 +876,8 @@ export default {
     .then((response) => {
      this.loaderUser = false;
      this.users = Object.assign([], response.data.doctores);
+      this.drActivos = this.users.filter((user) => user.usuarios.estado === 'activo').length;
+      this.drInactivos = this.users.filter((user) => user.usuarios.estado === 'inactivo').length;
     })
     .catch((err) => {
      this.loaderUser = false;
