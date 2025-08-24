@@ -144,7 +144,7 @@
         <div v-for="(diagnostico, index) in data.diagnosticos" :key="index" class="table-row">
           <div class="table-cell">{{ diagnostico.condicion }}</div>
           <div class="table-cell">{{ diagnostico.gravedad }}</div>
-          <div class="table-cell">{{ entradaFecha(diagnostico.fecha_diagnostico) || 'No especificado' }}</div>
+          <div class="table-cell">{{ entradaFecha(diagnostico.createdAt) || 'No especificado' }}</div>
         </div>
       </div>
     </div>

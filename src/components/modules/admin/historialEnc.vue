@@ -8,27 +8,49 @@
       <p class="text-grey-6 no-padding q-mt-sm">Listado de Centros de Diagnóstico Integral</p>
     </div>
 
-    <!-- LISTADO DE CDIs -->
+    <!-- LISTADO DE CDIs separado en dos columnas: Activos / Inactivos -->
     <div class="info-section">
-      <div class="section-title">CDIs REGISTRADOS ({{ data.length }})</div>
-      <div class="compact-table">
-        <div class="table-header">
-          <div class="header-cell">Número CDI</div>
-          <div class="header-cell">Nombre</div>
-          <div class="header-cell">Encargado</div>
-          <div class="header-cell">Cuadrante</div>
-          <div class="header-cell">Estado</div>
+      <div class="section-title">CDIs REGISTRADOS ({{ totalCount }})</div>
+
+      <div class="two-columns">
+        <div class="column">
+          <div class="sub-title">Activos ({{ activeCount }})</div>
+          <div class="compact-table small">
+            <div class="table-header">
+              <div class="header-cell">Número CDI</div>
+              <div class="header-cell">Nombre</div>
+              <div class="header-cell">Encargado</div>
+              <div class="header-cell">Fecha de registro</div>
+            </div>
+            <div v-for="(cdi, index) in activeList" :key="'act-'+index" class="table-row">
+              <div class="table-cell">{{ cdi.numero_cdi }}</div>
+              <div class="table-cell">{{ cdi.nombre }}</div>
+              <div class="table-cell">{{ cdi.encargado }}</div>
+              <div class="table-cell">{{ salidaFecha(cdi.createdAt) }}</div>
+
+            </div>
+          </div>
         </div>
-        <div v-for="(cdi, index) in data" :key="index" class="table-row">
-          <div class="table-cell">{{ cdi.numero_cdi }}</div>
-          <div class="table-cell">{{ cdi.nombre }}</div>
-          <div class="table-cell">{{ cdi.encargado }}</div>
-          <div class="table-cell">{{ cdi.cuadrante }}</div>
-          <div class="table-cell">{{ cdi.estado }}</div>
+
+        <div class="column">
+          <div class="sub-title">Inactivos ({{ inactiveCount }})</div>
+          <div class="compact-table small">
+            <div class="table-header">
+              <div class="header-cell">Número CDI</div>
+              <div class="header-cell">Nombre</div>
+              <div class="header-cell">Encargado</div>
+              <div class="header-cell">Fecha de registro</div>
+            </div>
+            <div v-for="(cdi, index) in inactiveList" :key="'inact-'+index" class="table-row">
+              <div class="table-cell">{{ cdi.numero_cdi }}</div>
+              <div class="table-cell">{{ cdi.nombre }}</div>
+              <div class="table-cell">{{ cdi.encargado }}</div>
+              <div class="table-cell">{{ salidaFecha(cdi.createdAt) }}</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-
 
     <!-- Pie de página -->
     <div class="text-center q-pa-sm q-mt-md">
@@ -40,14 +62,41 @@
 </template>
 
 <script>
-import { data } from 'jquery';
 import moment from 'moment'
 export default {
   name: "historiaPdfEnc",
   components: {},
   props: ["data"],
   created() {
-    console.log("di hola pdf", this.props.data);
+    // data viene como prop
+    console.log("historialEnc: data length", Array.isArray(this.data) ? this.data.length : 0);
+  },
+  computed: {
+    // total general
+    totalCount() {
+      return Array.isArray(this.data) ? this.data.length : 0;
+    },
+    // Filtrar activos e inactivos. Asumimos que la propiedad se llama 'estado' y contiene 'Activo' o similar.
+    activeList() {
+      if (!Array.isArray(this.data)) return [];
+      return this.data.filter(d => {
+        const e = (d.estado || '').toString().toLowerCase();
+        return e === 'activo' || e === 'act' || e === '1' || e === 'true' || e === 'si' || e === 'sí';
+      });
+    },
+    inactiveList() {
+      if (!Array.isArray(this.data)) return [];
+      return this.data.filter(d => {
+        const e = (d.estado || '').toString().toLowerCase();
+        return !(e === 'activo' || e === 'act' || e === '1' || e === 'true' || e === 'si' || e === 'sí');
+      });
+    },
+    activeCount() {
+      return this.activeList.length;
+    },
+    inactiveCount() {
+      return this.inactiveList.length;
+    }
   },
   methods: {
     salidaFecha(salida) {
@@ -162,5 +211,32 @@ export default {
   .table-cell {
     padding: 2px 3px;
   }
+}
+
+/* Two column layout for active/inactive lists */
+.two-columns {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.column {
+  flex: 1 1 50%;
+  min-width: 200px;
+}
+.sub-title {
+  font-weight: bold;
+  margin-bottom: 6px;
+  font-size: 10px;
+}
+.compact-table.small .table-header {
+  font-size: 8px;
+}
+.compact-table.small .table-row {
+  font-size: 8px;
+}
+
+/* Ensure cells wrap nicely in the compact two-column view */
+.compact-table.small .table-cell {
+  padding: 2px 4px;
 }
 </style>
