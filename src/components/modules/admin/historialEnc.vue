@@ -40,6 +40,7 @@
 </template>
 
 <script>
+import { data } from 'jquery';
 import moment from 'moment'
 export default {
   name: "historiaPdfEnc",

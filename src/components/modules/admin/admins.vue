@@ -201,42 +201,23 @@
 						<div class="row jusitify-center">
 							<div class="col-6 q-pa-sm">
 								<q-input filled @blur="validarNombre" color="deep-purple-6" v-model="dataUser.nombre"
-									label="Nombre de CDI" :rules="[
-										(val) => !!val || 'Este campo es obligatorio',
-										(val) => val.length >= 3 || 'Mínimo 3 caracteres',
-										(val) => val.length <= 200 || 'Máximo 200 caracteres',
-										(val) =>
-											/^([\sa-zA-ZñÑáéíóúÁÉÍÓÚ]{3,40})*$/.test(val) ||
-											'Solo se permiten caracteres',
-									]" />
+									label="Nombre de CDI" :rules="cdiNameRules" />
 							</div>
 							<div class="col-6 q-pa-sm">
 								<q-input filled color="deep-purple-6" @blur="validarNumeroCDI"
-									v-model="dataUser.numero_cdi" label="Número de CDI" :rules="[
-										(val) => !!val || 'Este campo es obligatorio',
-										(val) => val.length <= 10 || 'Máximo 10 dígitos',
-									]" />
+									v-model="dataUser.numero_cdi" label="Número de CDI" :rules="cdiNumberRules" />
 							</div>
 							<div class="col-6 q-pa-sm">
 								<q-input filled color="deep-purple-6" @blur="validarEncargado"
-									v-model="dataUser.encargado" label="Encargado" :rules="[
-										(val) => !!val || 'Este campo es obligatorio',
-										(val) =>
-											/^([\sa-zA-ZñÑáéíóúÁÉÍÓÚ]{3,40})*$/.test(val) ||
-											'Solo se permiten letras y números (no símbolos)',
-									]" />
+									v-model="dataUser.encargado" label="Encargado" :rules="cdiEncargadoRules" />
 							</div>
 							<div class="col-6 q-pa-sm">
 								<q-input filled color="deep-purple-6" @blur="validarCuadrante"
-									v-model="dataUser.cuadrante" label="Cuadrante" :rules="[
-										(val) => !!val || 'Este campo es obligatorio',
-										(val) => val.length >= 3 || 'Mínimo 3 caracteres',
-										(val) => val.length <= 20 || 'Máximo 20 caracteres',
-									]" />
+									v-model="dataUser.cuadrante" label="Cuadrante" :rules="cdiCuadranteRules" />
 							</div>
 
 
-							<q-btn unelevated :disable="!isValidInfoCDI" :loading="loader"
+							<q-btn unelevated :disable="!formHasNoErrorsUpdateCDI" :loading="loader"
 								@click="actualizarCDI(dataUser)" class="full-width mx-auto text-white bg-primary"
 								label="Actualizar información" />
 						</div>
@@ -666,6 +647,21 @@ export default {
 				cdi_cuadrante: useTextFieldValidation(true, 3, 100),
 				cdi_nombre_usuario: useDoctorNombreUsuarioValidation(true, 3, 100),
 				cdi_contrasena: usePasswordValidation(),
+				cdi_numero: useTextFieldValidation(true, 3, 100),
+			}
+			return isFormValid(formValues, validationRules)
+		},
+		formHasNoErrorsUpdateCDI() {
+			const formValues = {
+				cdi_nombre: this.dataUser.nombre,
+				cdi_encargado: this.dataUser.encargado,
+				cdi_cuadrante: this.dataUser.cuadrante,
+				cdi_numero: this.dataUser.numero_cdi,
+			}
+			const validationRules = {
+				cdi_nombre: useFullNameValidation(),
+				cdi_encargado: useFullNameValidation(),
+				cdi_cuadrante: useTextFieldValidation(true, 3, 100),
 				cdi_numero: useTextFieldValidation(true, 3, 100),
 			}
 			return isFormValid(formValues, validationRules)
