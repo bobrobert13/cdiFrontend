@@ -47,6 +47,7 @@
                   <small class="text-weight-medium">Encargado: {{ user.cdi.encargado }}</small>
                 </q-item-label>
 
+                <small class="text-weight-bold text-primary ">Ver detalles</small>
 
               </q-item-section>
 

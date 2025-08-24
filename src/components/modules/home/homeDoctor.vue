@@ -2355,20 +2355,16 @@ export default {
     },
     generatePacientePDF(paciente) {
       this.dataUser = paciente;
-      console.log("enviando todos los pacientes: ", this.dataUser);
       this.$refs.html2Pdf.generatePdf();
     },
     checkDate(date) {
       var currentDate = new Date();
-      console.log("current date: " + date)
       const CINCO_MIN = 5 * 60 * 1000;
       // const UNA_HORA=60 *60 * 1000;
       // const VENTICUATRO_HORAS=1 * 24 * 60 * 60 * 1000;
       if ((currentDate - new Date(date)) > CINCO_MIN) {
-        console.log("no puede editar porque han pasado las 24 horas: ", date)
         this.canEdit = false;
       } else {
-        console.log("puede editar porque no han pasado las 24 horas: ", date)
         this.canEdit = true;
       }
     },
