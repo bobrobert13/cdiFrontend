@@ -45,10 +45,7 @@
                 Listado de usuarios doctores pertenecientes al CDI
 
                 <div class=" row q-mt-sm">
-                  <q-tabs
-                    v-model="tabEstadoEncargado"
-                    class="text-teal no-padding no-margin"
-                  >
+                  <q-tabs v-model="tabEstadoEncargado" class="text-teal no-padding no-margin">
                     <q-tab name="encargadosActivos" :label="`Activos (${cantidadDoctoresActivos})`" />
                     <q-tab name="encargadosInactivos" :label="`Inactivos (${cantidadDoctoresInactivos})`" />
                   </q-tabs>
@@ -57,97 +54,100 @@
                 <div class=" full-width q-mt-md" v-if="this.users && this.users.length !== 0">
                   <q-tab-panels v-model="tabEstadoEncargado" animated>
                     <q-tab-panel name="encargadosActivos" class="full-width">
-                  <div class="full-width q-mb-sm" v-for="(user, index) in users" :key="index">
-                    <q-list v-if="user.usuarios.estado === 'activo'" class="rounded-borders full-width bg-secondary" style="border-radius: 15px">
-                      <q-item class="full-width">
-                        <q-item-section avatar @click="userDetailC('userDetail', user)" style="cursor: pointer">
-                          <q-avatar color="primary" icon="mdi-doctor" text-color="white">
-                          </q-avatar>
-                        </q-item-section>
+                      <div class="full-width q-mb-sm" v-for="(user, index) in users" :key="index">
+                        <q-list v-if="user.usuarios.estado === 'activo'" class="rounded-borders full-width bg-secondary"
+                          style="border-radius: 15px">
+                          <q-item class="full-width">
+                            <q-item-section avatar @click="userDetailC('userDetail', user)" style="cursor: pointer">
+                              <q-avatar color="primary" icon="mdi-doctor" text-color="white">
+                              </q-avatar>
+                            </q-item-section>
 
-                        <q-item-section top @click="userDetailC('userDetail', user)" style="cursor: pointer">
-                          <q-item-label class="text-left " lines="1">
-                            <span class="text-weight-medium">Nombre: <b>{{ user.persona.nombre1
+                            <q-item-section top @click="userDetailC('userDetail', user)" style="cursor: pointer">
+                              <q-item-label class="text-left " lines="1">
+                                <span class="text-weight-medium">Nombre: <b>{{ user.persona.nombre1
                                 }}</b></span>
-                          </q-item-label>
-                          <q-item-label class="text-left q-mb-xs" lines="1">
-                            <span class="text-weight-medium">Nombre de usuario: <b>{{ user.usuarios.nombre_usuario
+                              </q-item-label>
+                              <q-item-label class="text-left q-mb-xs" lines="1">
+                                <span class="text-weight-medium">Nombre de usuario: <b>{{ user.usuarios.nombre_usuario
                                 }}</b></span>
-                          </q-item-label>
-                          <small class="text-weight-medium">Rol: {{ user.usuarios.rol }}</small>
-                          <small class="text-weight-medium">Estatus de usuario: <b>{{ user.usuarios.estado
+                              </q-item-label>
+                              <small class="text-weight-medium">Rol: {{ user.usuarios.rol }}</small>
+                              <small class="text-weight-medium">Documento de identidad: <b> {{ user.persona.cedula_identidad }}</b></small>
+                              <small class="text-weight-medium">Estatus de usuario: <b>{{ user.usuarios.estado
                               }}</b></small>
-                          <small class="text-weight-medium text-primary">Area de trabajo: <b>{{ user.area_de_trabajo
+                              <small class="text-weight-medium text-primary">Area de trabajo: <b>{{ user.area_de_trabajo
                               }}</b></small>
-                        </q-item-section>
-                        <q-item-section side>
-                          <div class="text-grey-8 q-gutter-xs">
-                            <!-- <q-btn @click="generatePDF(user)" class="gt-xs text-blue" size="12px" flat dense round
+                            </q-item-section>
+                            <q-item-section side>
+                              <div class="text-grey-8 q-gutter-xs">
+                                <!-- <q-btn @click="generatePDF(user)" class="gt-xs text-blue" size="12px" flat dense round
                           icon="mdi-file-download-outline" /> -->
 
-                            <button @click="generateDoctorPDF(user)" type="button" lines="2"
-                              class=" q-ml-xl q-mr-md cursor-pointer text-primary self-center text-bold"
-                              style="cursor: pointer">
-                              <q-icon name="mdi-printer-pos" /> Descargar información del doctor
-                            </button>
+                                <button @click="generateDoctorPDF(user)" type="button" lines="2"
+                                  class=" q-ml-xl q-mr-md cursor-pointer text-primary self-center text-bold"
+                                  style="cursor: pointer">
+                                  <q-icon name="mdi-printer-pos" /> Descargar información del doctor
+                                </button>
 
-                            <q-btn
-                              @click="actualizarUsuario({ ...user.usuarios, estado: user.usuarios.estado === 'activo' ? 'inactivo' : 'activo' })"
-                              class="gt-xs text-negative" size="12px" flat dense
-                              :label="user.usuarios.estado === 'activo' ? 'Inhabilitar' : 'Habilitar'" />
+                                <q-btn
+                                  @click="actualizarUsuario({ ...user.usuarios, estado: user.usuarios.estado === 'activo' ? 'inactivo' : 'activo' })"
+                                  class="gt-xs text-negative" size="12px" flat dense
+                                  :label="user.usuarios.estado === 'activo' ? 'Inhabilitar' : 'Habilitar'" />
 
 
-                          </div>
-                        </q-item-section>
-                      </q-item>
-                    </q-list>
-                  </div>
+                              </div>
+                            </q-item-section>
+                          </q-item>
+                        </q-list>
+                      </div>
                     </q-tab-panel>
                     <q-tab-panel name="encargadosInactivos">
-                  <div class="full-width q-mb-sm" v-for="(user, index) in users" :key="index">
-                    <q-list v-if="user.usuarios.estado === 'inactivo' " class="rounded-borders full-width bg-secondary" style="border-radius: 15px">
-                      <q-item class="full-width">
-                        <q-item-section avatar @click="userDetailC('userDetail', user)" style="cursor: pointer">
-                          <q-avatar color="primary" icon="mdi-doctor" text-color="white">
-                          </q-avatar>
-                        </q-item-section>
+                      <div class="full-width q-mb-sm" v-for="(user, index) in users" :key="index">
+                        <q-list v-if="user.usuarios.estado === 'inactivo'"
+                          class="rounded-borders full-width bg-secondary" style="border-radius: 15px">
+                          <q-item class="full-width">
+                            <q-item-section avatar @click="userDetailC('userDetail', user)" style="cursor: pointer">
+                              <q-avatar color="primary" icon="mdi-doctor" text-color="white">
+                              </q-avatar>
+                            </q-item-section>
 
-                        <q-item-section top @click="userDetailC('userDetail', user)" style="cursor: pointer">
-                          <q-item-label class="text-left " lines="1">
-                            <span class="text-weight-medium">Nombre: <b>{{ user.persona.nombre1
+                            <q-item-section top @click="userDetailC('userDetail', user)" style="cursor: pointer">
+                              <q-item-label class="text-left " lines="1">
+                                <span class="text-weight-medium">Nombre: <b>{{ user.persona.nombre1
                                 }}</b></span>
-                          </q-item-label>
-                          <q-item-label class="text-left q-mb-xs" lines="1">
-                            <span class="text-weight-medium">Nombre de usuario: <b>{{ user.usuarios.nombre_usuario
+                              </q-item-label>
+                              <q-item-label class="text-left q-mb-xs" lines="1">
+                                <span class="text-weight-medium">Nombre de usuario: <b>{{ user.usuarios.nombre_usuario
                                 }}</b></span>
-                          </q-item-label>
-                          <small class="text-weight-medium">Rol: {{ user.usuarios.rol }}</small>
-                          <small class="text-weight-medium">Estatus de usuario: <b>{{ user.usuarios.estado
+                              </q-item-label>
+                              <small class="text-weight-medium">Rol: {{ user.usuarios.rol }}</small>
+                              <small class="text-weight-medium">Estatus de usuario: <b>{{ user.usuarios.estado
                               }}</b></small>
-                          <small class="text-weight-medium text-primary">Area de trabajo: <b>{{ user.area_de_trabajo
+                              <small class="text-weight-medium text-primary">Area de trabajo: <b>{{ user.area_de_trabajo
                               }}</b></small>
-                        </q-item-section>
-                        <q-item-section side>
-                          <div class="text-grey-8 q-gutter-xs">
-                            <!-- <q-btn @click="generatePDF(user)" class="gt-xs text-blue" size="12px" flat dense round
+                            </q-item-section>
+                            <q-item-section side>
+                              <div class="text-grey-8 q-gutter-xs">
+                                <!-- <q-btn @click="generatePDF(user)" class="gt-xs text-blue" size="12px" flat dense round
                           icon="mdi-file-download-outline" /> -->
 
-                            <button @click="generateDoctorPDF(user)" type="button" lines="2"
-                              class=" q-ml-xl q-mr-md cursor-pointer text-primary self-center text-bold"
-                              style="cursor: pointer">
-                              <q-icon name="mdi-printer-pos" /> Descargar información del doctor
-                            </button>
+                                <button @click="generateDoctorPDF(user)" type="button" lines="2"
+                                  class=" q-ml-xl q-mr-md cursor-pointer text-primary self-center text-bold"
+                                  style="cursor: pointer">
+                                  <q-icon name="mdi-printer-pos" /> Descargar información del doctor
+                                </button>
 
-                            <q-btn
-                              @click="actualizarUsuario({ ...user.usuarios, estado: user.usuarios.estado === 'activo' ? 'inactivo' : 'activo' })"
-                              class="gt-xs text-negative" size="12px" flat dense
-                              :label="user.usuarios.estado === 'activo' ? 'Inhabilitar' : 'Habilitar'" />
-                          </div>
-                        </q-item-section>
-                      </q-item>
-                    </q-list>
-       
-                  </div>
+                                <q-btn
+                                  @click="actualizarUsuario({ ...user.usuarios, estado: user.usuarios.estado === 'activo' ? 'inactivo' : 'activo' })"
+                                  class="gt-xs text-negative" size="12px" flat dense
+                                  :label="user.usuarios.estado === 'activo' ? 'Inhabilitar' : 'Habilitar'" />
+                              </div>
+                            </q-item-section>
+                          </q-item>
+                        </q-list>
+
+                      </div>
                     </q-tab-panel>
                   </q-tab-panels>
 
@@ -178,18 +178,18 @@
                               </b></span>
                           </q-item-label>
                           <small class="text-weight-medium">Correo electrónico: {{ userPaciente.persona.correo.correo
-                            }}</small>
+                          }}</small>
                           <small class="text-weight-medium">Número de contacto: {{ userPaciente.persona.telefono.codigo
-                            }}{{
+                          }}{{
                               userPaciente.persona.telefono.numero }}</small>
                           <small class="text-weight-medium">Documento de Identidad: {{
                             userPaciente.persona.cedula_identidad
-                            }}</small>
+                          }}</small>
                           <q-separator v-if="userPaciente.doctor" spaced color="blue-grey" />
                           <q-item-label v-if="userPaciente.doctor" class="text-left" lines="1">
                             <small class="text-weight-medium">Registrado por doctor: {{
                               userPaciente.doctor.persona.nombre1
-                              }}</small>
+                            }}</small>
                           </q-item-label>
                           <q-item-label v-if="userPaciente.doctor" class="text-left" lines="1">
                             <small class="text-weight-medium">Carnet: {{ userPaciente.doctor.numero_carnet }}</small>
@@ -249,45 +249,44 @@
                     <p class="text-subtitle text-medium">Información del doctor</p>
 
                     <div class="row ">
-                        <div class="col-6 q-pa-sm">
-                        <q-input filled color="deep-purple-6" v-model="dataUser.persona.nombre1"
-                           label="Nombre completo" :rules="fullNameRules" />
-                        </div>
-                        <div class="col-6 q-pa-sm">
-                        <q-input filled color="deep-purple-6" v-model="dataUser.persona.cedula_identidad"
-                           label="Cédula" :rules="dniRules" />
-                        </div>
-                        <div class="col-6 q-pa-sm">
-                        <q-input filled color="deep-purple-6" v-model="dataUser.numero_carnet"
-                           label="Número de carnet" :rules="carnetRules" />
-                        </div>
-                        <div class="col-6 q-pa-sm">
+                      <div class="col-6 q-pa-sm">
+                        <q-input filled color="deep-purple-6" v-model="dataUser.persona.nombre1" label="Nombre completo"
+                          :rules="fullNameRules" />
+                      </div>
+                      <div class="col-6 q-pa-sm">
+                        <q-input filled color="deep-purple-6" v-model="dataUser.persona.cedula_identidad" label="Cédula"
+                          :rules="dniRules" />
+                      </div>
+                      <div class="col-6 q-pa-sm">
+                        <q-input filled color="deep-purple-6" v-model="dataUser.numero_carnet" label="Número de carnet"
+                          :rules="carnetRules" />
+                      </div>
+                      <div class="col-6 q-pa-sm">
                         <q-input filled color="deep-purple-6" v-model="dataUser.anos_experiencia"
-                           label="Años de experiencia" :rules="anosExperienciaRules" />
-                        </div>
-                        <div class="col-6 q-pa-sm">
-                        <q-input filled color="deep-purple-6" v-model="dataUser.area_de_trabajo"
-                           label="Area de trabajo" :rules="ocupacionRules" />
-                        </div>
-                        <div class="col-6 q-pa-sm">
-                        <q-select filled color="deep-purple-6" v-model="dataUser.horario"
-                           label="Horario de trabajo" :rules="horarioRules" />
-                        </div>
-                        <div class="col-6 q-pa-sm">
+                          label="Años de experiencia" :rules="anosExperienciaRules" />
+                      </div>
+                      <div class="col-6 q-pa-sm">
+                        <q-input filled color="deep-purple-6" v-model="dataUser.area_de_trabajo" label="Area de trabajo"
+                          :rules="ocupacionRules" />
+                      </div>
+                      <div class="col-6 q-pa-sm">
+                        <q-select filled color="deep-purple-6" v-model="dataUser.horario" label="Horario de trabajo"
+                          :rules="horarioRules" />
+                      </div>
+                      <div class="col-6 q-pa-sm">
                         <q-select filled v-if="dataUser.persona.telefono" v-model="dataUser.persona.telefono.codigo"
-                           :options="codigoTel" label="Código" :rules="requiredSelectRules" option-label="label" option-value="value" emit-value />
-                        </div>
-                        <div class="col-6 q-pa-sm">
+                          :options="codigoTel" label="Código" :rules="requiredSelectRules" option-label="label"
+                          option-value="value" emit-value />
+                      </div>
+                      <div class="col-6 q-pa-sm">
                         <q-input filled color="deep-purple-6" v-if="dataUser.persona.telefono"
-                          v-model="dataUser.persona.telefono.numero"  label="Teléfono"
-                          :rules="telefonoRules">
+                          v-model="dataUser.persona.telefono.numero" label="Teléfono" :rules="telefonoRules">
                         </q-input>
-                        </div>
-                        <div class="col-6 q-pa-sm">
+                      </div>
+                      <div class="col-6 q-pa-sm">
                         <q-input filled color="deep-purple-6" v-if="dataUser.persona.correo"
-                          v-model="dataUser.persona.correo.correo"  label="Email"
-                          :rules="emailRules" />
-                        </div>
+                          v-model="dataUser.persona.correo.correo" label="Email" :rules="emailRules" />
+                      </div>
 
 
 
@@ -376,7 +375,7 @@
             </div>
 
             <!-- CREAR UN NUEVO DOCTOR -->
-            <div  v-if="viewType === 'addWorker'">
+            <div v-if="viewType === 'addWorker'">
               <div class="col-12 text-left row items-center q-mt-md q-mb-md">
                 <q-icon style="cursor: pointer" @click="workerView('userList')" name="mdi-arrow-left"
                   class="text-primary" size="md"></q-icon>
@@ -389,7 +388,8 @@
 
               <div class="col-7">
                 <div class="column justify-center">
-                  <q-input filled color="deep-purple-6" v-model="fullName" label="Nombre completo*" :rules="fullNameRules" />
+                  <q-input filled color="deep-purple-6" v-model="fullName" label="Nombre completo*"
+                    :rules="fullNameRules" />
 
                   <q-select filled class="q-mb-xs" v-model="nacionalidad" :options="nacionalidades" option-label="label"
                     option-value="value" emit-value label="Nacionalidad*" />
@@ -410,29 +410,35 @@
                   </div>
                   <div class="row q-mb-xs">
                     <div class="col-8">
-                      <q-input filled color="deep-purple-6" v-model="calle" label="Calle*" :rules="requiredSelectRules" />
+                      <q-input filled color="deep-purple-6" v-model="calle" label="Calle*"
+                        :rules="requiredSelectRules" />
                     </div>
                     <div class="col-4">
-                      <q-input filled color="deep-purple-6" v-model="numero" label="Número de casa*" type="number" :rules="houseNumberRules" />
+                      <q-input filled color="deep-purple-6" v-model="numero" label="Número de casa*" type="number"
+                        :rules="houseNumberRules" />
                     </div>
                   </div>
                   <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-mb-xs">
-                    <q-input filled color="deep-purple-6" v-model="sector" label="Sector*" :rules="requiredSelectRules" />
+                    <q-input filled color="deep-purple-6" v-model="sector" label="Sector*"
+                      :rules="requiredSelectRules" />
                   </div>
                   <div class="col-xl-8 col-lg-8 col-md-8 q-pb-xs col-sm-12 col-xs-12 ">
-                    <q-input filled color="deep-purple-6" v-model="punto_referencia" label="Punto de referencia*" :rules="requiredSelectRules" />
+                    <q-input filled color="deep-purple-6" v-model="punto_referencia" label="Punto de referencia*"
+                      :rules="requiredSelectRules" />
                   </div>
                   <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-mb-xs">
-                    <q-input filled color="deep-purple-6" type="number" :rules="postalCodeRules" v-model="codigo_postal" label="Código postal*" />
+                    <q-input filled color="deep-purple-6" type="number" :rules="postalCodeRules" v-model="codigo_postal"
+                      label="Código postal*" />
                   </div>
                   <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-mb-xs">
                     <div class="row">
                       <div class="col-4">
                         <q-select filled v-model="codigo" :options="codigoTel" label="Codigo*" option-label="label"
-                          option-value="value" emit-value  />
+                          option-value="value" emit-value />
                       </div>
                       <div class="col-8">
-                        <q-input filled color="deep-purple-6" :rules="telefonoRules" v-model="telefono" type="number" label="Número de telefono*" />
+                        <q-input filled color="deep-purple-6" :rules="telefonoRules" v-model="telefono" type="number"
+                          label="Número de telefono*" />
                       </div>
                     </div>
                   </div>
@@ -488,14 +494,40 @@
               </div>
 
               <div class="col-xl-5 col-lg-5 col-md-5 col-sm-12 col-xs-12 q-mb-xs ">
-              <q-btn unelevated type='submit' :loading="loader" @click="addDoctor()" :disable="!formHasNoErrors" class="full-width text-white bg-primary" label="Añadir doctor" />
-            </div>
+                <q-btn unelevated type='submit' :loading="loader" @click="addDoctor()" :disable="!formHasNoErrors"
+                  class="full-width text-white bg-primary" label="Añadir doctor" />
+              </div>
             </div>
 
             <!-- FIN CREAR NUEVO DOCTOR -->
 
 
           </div>
+
+
+          <!-- BUSCAR PACIENTE -->
+          <q-dialog v-model="modals.searchUser" style="min-width: 460px">
+            <q-card style="min-width: 460px" class="text-white">
+              <q-bar class="bg-primary">
+                <q-space />
+                <q-btn dense flat icon="close" v-close-popup>
+                </q-btn>
+              </q-bar>
+              <q-card-section>
+                <div class="text-h6 text-primary">Buscar doctor</div>
+              </q-card-section>
+              <q-card-section class="q-pt-none">
+                <q-input v-model="dni" label="Escribe el DNI del doctor" />
+              </q-card-section>
+              <q-card-actions align="right" class="text-primary">
+                <q-btn flat label="Cancelar" v-close-popup />
+                <q-btn flat label="Buscar" :disable="!dni.length" @click="buscarUsuario(dni)" />
+              </q-card-actions>
+            </q-card>
+          </q-dialog>
+          <!-- FIN BUSCAR PACIENTE -->
+
+
           <!-- ELIMINAR USUARIO -->
           <q-dialog v-model="deleteUserModal">
             <q-card style="background-color: #015958" class="text-white">
@@ -703,6 +735,12 @@ export default {
   },
   data() {
     return {
+
+      // MODALES
+      modals: {
+        searchUser: false,
+      },
+
       tabEstadoEncargado: 'encargadosActivos',
       cantidadDoctoresActivos: 0,
       cantidadDoctoresInactivos: 0,
@@ -747,13 +785,6 @@ export default {
       userName: "",
       password: "",
       password2: "",
-      // passwordRules: [
-      //   (val) => val.length >= 8 || 'Mínimo 8 caracteres',
-      //   (val) => val.length <= 20 || 'Máximo 20 caracteres',
-      //   (val) => /[0-9]/.test(val) || 'Debes incluir al menos 1 número',
-      //   (val) => /[!@#$%^&*(),.?" :{}|<>]/.test(val) || 'Debes incluir al menos 1 carácter especial',
-      //   (val) => /[A-Z]/.test(val) || 'Debes incluir al menos 1 letra mayúscula',
-      // ],
       userId: "",
       dataUser: "",
       user: "",
@@ -1079,6 +1110,7 @@ export default {
       this.$refs.html2Pdf.generatePdf();
     },
     workerView(typeView) {
+      if (typeView === 'searchUser') return this.modals.searchUser = true;
       this.viewType = typeView
     },
     userDetailC(viewType, user) {
@@ -1098,18 +1130,20 @@ export default {
         reader.readAsDataURL(file);
       });
     },
-    buscarUsuario(usuario_busqueda) {
-      const usuario = this.users.find(user => user.usuarios.nombre_usuario === usuario_busqueda);
+    buscarUsuario(dni) {
+
+      const usuario = this.users.filter((usuario) => usuario.persona.cedula_identidad === parseInt(dni));
       if (usuario) {
-        this.dataUser = usuario;
+        this.dataUser = usuario[0];
         this.workerView('userDetail');
+        this.modals.searchUser = false;
       } else {
         this.$q.notify({
-          message: 'Usuario no encontrado',
-          color: 'negative'
+          message: "Este doctor no existe",
+          color: "negative",
         });
-      }
-      usuario_busqueda = '';
+      };
+      this.dni = "";
     },
     buscarPorEspecialidad(e) {
       this.especialidadDoctor = e;
