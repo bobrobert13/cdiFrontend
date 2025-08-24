@@ -370,7 +370,7 @@
     </q-dialog>
 
 
-                  		<!-- BUSCAR PACIENTE -->
+    <!-- BUSCAR PACIENTE -->
 		<q-dialog v-model="modals.searchUser" style="min-width: 460px">
 			<q-card style="min-width: 460px" class="text-white">
 				<q-bar class="bg-primary">
@@ -1151,6 +1151,7 @@ export default {
       if (usuario.length !== 0) {
         this.dataUser = usuario[0];
         this.modalDetailUser = true;
+        this.modals.searchUser = false;
       } else {
         this.$q.notify({
           message: "Este doctor no existe",
