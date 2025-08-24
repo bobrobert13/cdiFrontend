@@ -16,7 +16,6 @@ function setRole(data) {
 }
 
 async function saveToken(data) {
-  // console.log("data de save token:", data);
   window.localStorage.setItem("user", data.usuario.nombre_usuario);
   window.localStorage.setItem("status", data.usuario.status || '');
   window.localStorage.setItem("user_id", data.usuario.id_usuario);
@@ -32,7 +31,6 @@ async function saveToken(data) {
   const cdiid = window.localStorage.getItem("cdi_id");
   const role = window.localStorage.getItem("role");
   const auth = window.localStorage.getItem("isAuthenticated");
-  // console.log('user:', user, userId, role, auth);
   await store.commit("setUser", {
     fullName: '',
     nombre_usuario: user,

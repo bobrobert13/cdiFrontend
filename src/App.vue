@@ -490,9 +490,8 @@ export default {
       totalTime: "",
     };
   },
-  async created() {
+   created() {
     this.infoUser();
-    console.log("uusuario", this.$store.state.user);
   },
   watch: {
     myInfoD(newVal) {
@@ -677,6 +676,7 @@ export default {
         });
     },
     async infoUser() {
+    console.log("uusuario", this.$store.state.user);
       if (this.$store.state.user.role === 'cdi') {
         await this.obtenerInformacionCDI();
       } else if (this.$store.state.user.role === 'doctor') {

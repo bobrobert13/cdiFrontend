@@ -35,57 +35,25 @@ const Router = new VueRouter({
 });
 
 Router.beforeEach((to, from, next) => {
+
   const authenticated = isAuthenticated();
   if (store.state.user.role === "" && authenticated) refreshUser();
-  let meta = {};
-  if (to.meta && to.meta.hasOwnProperty("requiresAuth")) meta = to.meta;
-  else {
-    to.matched.some(record => {
-      if (record.meta.requiresAuth) {
-        meta = record.meta;
-        return record.meta.requiresAuth;
-      }
-    });
+
+  const isLoginRoute = to.name === "login" || to.path === "/" || to.path === "/login";
+
+  if (authenticated && isLoginRoute) {
+    next({ name: "home" });
+    return;
   }
 
-  const authorized = isAuthorized(meta);
-  next();
-  // if (meta.requiresAuth && !authenticated) {
-  //   console.log('No autorizado', authorized, to.path);
-    
-  //   if (to.path !== '/login') {
-  //     next({
-  //       path: "/login",
-  //       query: { redirect: to.fullPath }
-  //     });
-  //   } else {
-  //     next(); // Permitir la navegación a la página de login
-  //   }
-  // } else {
-  //   next(); // Permitir la navegación
-  // }
-});
+  if (!authenticated && !isLoginRoute) {
+    // not logged in -> go to login, keep intended destination in query
+    next({ name: "login" });
+    return;
+  }
 
-//   if (meta.requiresAuth && !authenticated) {
-//     console.log('autorizado', authorized, to.path);
-    
-//     next({
-//       path: "/login",
-//       query: { redirect: to.fullPath }
-//     });
-//   } else
-//   if (authenticated && ["/login"].indexOf(to.path) >= 0) {
-//     next("/home");
-//   } else if (authenticated && ["/"].indexOf(to.path) >= 0) {
-//     next({
-//       path: "/home"
-//     });
-//   } else if (to.matched.length === 0 || !authorized) {
-//     next({ name: "Error404" });
-//   } else {
-//     next();
-//   }
-// });
+  next();
+});
 
 Router.beforeResolve((to, from, next) => {
   if (to.name) {
