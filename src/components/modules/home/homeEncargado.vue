@@ -7,29 +7,14 @@
       <q-scroll-area class="q-mt-md q-mb-md" :thumb-style="thumbStyle" :bar-style="barStyle" style="height: 75vh">
         <div class="row justify-center">
           <div class="col-10" v-if="viewType === 'userList'">
-            <!-- <div class="col-12">
-            <span class="text-accent text-h6 text-bold"
-              >Control de Doctores</span
-            >
-          </div> -->
+
             <div class="row ">
               <div class="col self-center text-right">
                 <div class="col-4 self-center text-right">
-                  <!-- <q-select filled dense v-model="especialidadDoctor" :options="roleUserEspecialidad"
-                    label="Buscar por Area" option-label="label" option-value="id">
-                    <template v-slot:append>
-                      <q-icon v-if="especialidadDoctor !== ''" class="cursor-pointer" name="clear"
-                        @click.stop="especialidadDoctor = 'null'" />
-                    </template>
-</q-select> -->
                 </div>
-                <!-- <span class="text-bold text-primary" style="cursor: pointer" @click="workerView('searchUser')">Buscar doctor</span> -->
               </div>
               <div v-if="tab === 'doctoresCDI'" class="col self-center text-right">
-                <!-- <span class="text-bold text-primary" style="cursor: pointer" @click="workerView('addWorker')">Añadir doctor</span> -->
 
-                <!-- <q-icon v-if="users.length !== 0" style="cursor: pointer" @click="downloadSeveralUsers()"
-                  name="mdi-folder-download" class="text-primary q-mr-lg" size="md"></q-icon> -->
                 <q-icon style="cursor: pointer" @click="workerView('searchUser')" name="mdi-account-search"
                   class="text-primary q-mr-md" size="md"></q-icon>
                 <q-icon style="cursor: pointer" @click="workerView('addWorker')" name="mdi-plus"
