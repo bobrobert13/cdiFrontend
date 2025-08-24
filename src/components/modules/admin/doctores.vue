@@ -1,5 +1,5 @@
 <template>
-  <div class="row justify-center">
+  <div class="">
     <div class="col-12" v-if="viewType === 'userList'">
       <div class="col-12">
         <span class="text-accent text-h6 text-bold">Control de Doctores</span>
@@ -176,146 +176,126 @@
         </div>
       </div>
     </div>
-    <div v-if="viewType === 'addWorker'">
-      <div class="col-12 text-left row items-center q-mt-md q-mb-md">
-        <q-icon style="cursor: pointer" @click="workerView('userList')" name="mdi-arrow-left" class="text-primary"
-          size="md"></q-icon>
-        <span style="cursor: pointer" class="text-bold text-accent text-h6" @click="workerView('userList')">Crear nuevo
-          doctor</span>
-      </div>
 
 
-      <div class="col-7">
-        <div class="column justify-center">
-          <p class="text-subtitle text-medium">Información general</p>
-
-          <q-input filled color="deep-purple-6" v-model="fullName" label="Nombre completo" :rules="[
-            (val) => val.length >= 3 || 'Mínimo 3 caracteres',
-            (val) => val.length <= 200 || 'Máximo 200 caracteres',
-            (val) =>
-              /^([\sa-zA-ZñÑáéíóúÁÉÍÓÚ]{3,40})*$/.test(val) ||
-              'Solo se permiten caracteres',
-          ]" />
-          <q-select filled class="q-mb-xs" v-model="nacionalidad" :options="nacionalidades" option-label="label"
-            option-value="value" emit-value />
-
-          <q-input filled color="deep-purple-6" class="q-mb-xs" v-model="dni" type="number" label="Cédula" :rules="[
-            val => /^\d+$/.test(val) || 'Solo se permiten números',
-            val => val.length <= 8 || 'Máximo 8 caracteres'
-          ]" />
-
-
-          <div class="row q-mb-xs">
-            <div class="col-8">
-              <q-select filled label="Estado" v-model="estado" :options="estados" option-label="label"
-                option-value="value" />
-            </div>
-            <div class="col-4">
-              <q-select filled label="Ciudad" v-model="ciudad" :options="ciudades[estado.value]" option-label="label"
-                option-value="value" emit-value />
-            </div>
-          </div>
-          <div class="row q-mb-xs">
-            <div class="col-8">
-              <q-input filled color="deep-purple-6" v-model="calle" label="Calle" />
-            </div>
-            <div class="col-4">
-              <q-input filled color="deep-purple-6" v-model="numero" label="Número de casa" type="number" />
-            </div>
-          </div>
-          <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-mb-xs">
-            <q-input filled color="deep-purple-6" v-model="sector" label="Sector" />
-          </div>
-          <div class="col-xl-8 col-lg-8 col-md-8  col-sm-12 col-xs-12 q-pb-xs ">
-            <q-input filled color="deep-purple-6" v-model="punto_referencia" label="Punto de referencia" />
-          </div>
-          <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-mb-xs">
-            <q-input filled color="deep-purple-6" v-model="codigo_postal" :rules="[
-              val => /^\d+$/.test(val) || 'Solo se permiten números',
-              val => val.length <= 8 || 'Máximo 8 caracteres'
-            ]" label="Código postal" />
-          </div>
-          <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-mb-xs">
-            <div class="row">
-              <div class="col-4">
-                <q-select filled v-model="codigo" :options="codigoTel" label="Codigo" option-label="label"
-                  option-value="value" emit-value />
+            <!-- CREAR UN NUEVO DOCTOR -->
+            <div  v-if="viewType === 'addWorker'">
+              <div class="col-12  text-left row items-center q-mt-md q-mb-md">
+                <q-icon style="cursor: pointer" @click="workerView('userList')" name="mdi-arrow-left"
+                  class="text-primary" size="md"></q-icon>
+                <span style="cursor: pointer" class="text-bold text-accent text-h6"
+                  @click="workerView('userList')">Crear nuevo
+                  doctor</span>
               </div>
-              <div class="col-8">
-                <q-input filled color="deep-purple-6" :rules="[
-                  val => /^\d+$/.test(val) || 'Solo se permiten números',
-                  val => val.length <= 12 || 'Máximo 12 caracteres'
-                ]" v-model="telefono" type="number" label="Número de telefono" />
+              <small class="q-my-md block text-red text-bold"> <q-icon name="mdi-information" class="q-mr-xs" size="sm"
+                  color="primary" />Los campos marcados con * son obligatorios</small>
+
+              <div class="col-7">
+                <div class="column justify-center">
+                  <q-input filled color="deep-purple-6" v-model="fullName" label="Nombre completo*" :rules="fullNameRules" />
+
+                  <q-select filled class="q-mb-xs" v-model="nacionalidad" :options="nacionalidades" option-label="label"
+                    option-value="value" emit-value label="Nacionalidad*" />
+
+                  <q-input filled color="deep-purple-6" type="number" v-model="dni" :rules="dniRules" label="Cédula*" />
+
+                  <q-input type="email" filled v-model="email" label="Correo electrónico*" :rules="emailRules" />
+
+                  <div class="row q-mb-xs">
+                    <div class="col-8">
+                      <q-select filled label="Estado*" v-model="estado" :options="estados" option-label="label"
+                        option-value="value" :rules="requiredSelectRules" />
+                    </div>
+                    <div class="col-4">
+                      <q-select filled label="Ciudad*" v-model="ciudad" :options="ciudades[estado.value]"
+                        option-label="label" option-value="value" emit-value :rules="requiredSelectRules" />
+                    </div>
+                  </div>
+                  <div class="row q-mb-xs">
+                    <div class="col-8">
+                      <q-input filled color="deep-purple-6" v-model="calle" label="Calle*" :rules="requiredSelectRules" />
+                    </div>
+                    <div class="col-4">
+                      <q-input filled color="deep-purple-6" v-model="numero" label="Número de casa*" type="number" :rules="houseNumberRules" />
+                    </div>
+                  </div>
+                  <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-mb-xs">
+                    <q-input filled color="deep-purple-6" v-model="sector" label="Sector*" :rules="requiredSelectRules" />
+                  </div>
+                  <div class="col-xl-8 col-lg-8 col-md-8 q-pb-xs col-sm-12 col-xs-12 ">
+                    <q-input filled color="deep-purple-6" v-model="punto_referencia" label="Punto de referencia*" :rules="requiredSelectRules" />
+                  </div>
+                  <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-mb-xs">
+                    <q-input filled color="deep-purple-6" type="number" :rules="postalCodeRules" v-model="codigo_postal" label="Código postal*" />
+                  </div>
+                  <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-mb-xs">
+                    <div class="row">
+                      <div class="col-4">
+                        <q-select filled v-model="codigo" :options="codigoTel" label="Codigo*" option-label="label"
+                          option-value="value" emit-value  />
+                      </div>
+                      <div class="col-8">
+                        <q-input filled color="deep-purple-6" :rules="telefonoRules" v-model="telefono" type="number" label="Número de telefono*" />
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
               </div>
+              <div class="col-7" style="border-left: 10px solid white;">
+                <div class="column justify-center">
+                  <p class="text-h6 q-my-md text-weight-medium text-accent">Información del doctor</p>
+                  <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 ">
+                    <q-input filled color="deep-purple-6" type="text" class="q-mb-xs" v-model="doctor_numero_carnet"
+                      label="Número de carnet*" :rules="carnetRules" />
+                    <q-input filled color="deep-purple-6" type="text" class="q-mb-xs" v-model="doctor_ocupacion"
+                      label="Ocupación*" :rules="ocupacionRules" />
+                    <q-select filled color="deep-purple-6" type="text" class="q-mb-xs" v-model="doctor_horario"
+                      label="Horario*" :options="[
+                        'Lunes a Viernes 8:00 am - 6:00 pm',
+                        'Lunes a Viernes 9:00 am - 5:00 pm',
+                        'Lunes a Viernes 10:00 am - 4:00 pm',
+                        'Sábados 9:00 am - 1:00 pm',
+                        'Sábados 10:00 am - 2:00 pm',
+                        'Domingos 10:00 am - 2:00 pm',
+                        'Lunes, Miércoles y Viernes 8:00 am - 5:00 pm',
+                        'Martes y Jueves 10:00 am - 6:00 pm',
+                        'Lunes a Viernes 8:00 am - 12:00 pm y 1:00 pm - 5:00 pm'
+                      ]" :rules="horarioRules" />
+                    <q-input filled color="deep-purple-6" type="number" class="q-mb-xs"
+                      v-model="doctor_anos_experiencia" label="Años de experiencia*" :rules="anosExperienciaRules" />
+                    <q-select filled v-model="roleEspecialidad" :options="roleUserEspecialidad" label="Area de trabajo*"
+                      option-label="label" option-value="id" :rules="especialidadRules" />
+                  </div>
+
+
+                  <p class="text-h6 q-my-md text-weight-medium text-accent">Credenciales de acceso</p>
+                  <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 ">
+
+                    <q-select filled v-model="role" :options="roleUser" class="q-mb-sm" label="Tipo de usuario*"
+                      option-label="label" option-value="value" emit-value disable />
+                    <q-input filled color="deep-purple-6" class="" type="text" autocomplete="off"
+                      v-model="doctor_nombre_usuario" label="Nombre de usuario*" :rules="nombreUsuarioRules" />
+
+                    <q-input filled class="q-mt-md" autocomplete="off" :type="isPwd ? 'password' : 'text'"
+                      color="deep-purple-6" v-model="password" label="Password*" :rules="passwordRules">
+                      <template v-slot:append>
+                        <q-icon :name="isPwd ? 'visibility_off' : 'visibility'" class="cursor-pointer"
+                          @click="isPwd = !isPwd" />
+                      </template>
+                    </q-input>
+
+                  </div>
+
+                </div>
+              </div>
+
+              <div class="col-xl-5 col-lg-5 col-md-5 col-sm-12 col-xs-12 q-mb-xs ">
+              <q-btn unelevated type='submit' :loading="loader" @click="addDoctor()" :disable="!formHasNoErrors" class="full-width text-white bg-primary" label="Añadir doctor" />
             </div>
-          </div>
-          <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-mb-xs ">
-            <q-input filled color="deep-purple-6" v-model="email" label="Email" type="email" :rules="[
-              (val) => !!val || 'Este campo es obligatorio',
-              (val) => val.length >= 3 || 'Mínimo 3 caracteres',
-              (val) => val.length <= 200 || 'Máximo 200 caracteres',
-              (val) => /.+@.+\..+/.test(val) || 'Formato de correo electrónico inválido'
-            ]" />
-          </div>
-        </div>
-      </div>
-      <div class="col-6" style="border-left: 10px solid white;">
-        <div class="column justify-center">
-          <p class="text-subtitle text-medium">Información del doctor</p>
-          <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 ">
-            <q-input filled color="deep-purple-6" class="q-mb-xs" v-model="doctor_numero_carnet"
-              label="Número de carnet" />
-            <q-select filled color="deep-purple-6" class="q-mb-xs" v-model="doctor_horario" label="Horario" :options="[
-              'Lunes a Viernes 8:00 am - 6:00 pm',
-              'Lunes a Viernes 9:00 am - 5:00 pm',
-              'Lunes a Viernes 10:00 am - 4:00 pm',
-              'Sábados 9:00 am - 1:00 pm',
-              'Sábados 10:00 am - 2:00 pm',
-              'Domingos 10:00 am - 2:00 pm',
-              'Lunes, Miércoles y Viernes 8:00 am - 5:00 pm',
-              'Martes y Jueves 10:00 am - 6:00 pm',
-              'Lunes a Viernes 8:00 am - 12:00 pm y 1:00 pm - 5:00 pm'
-            ]" />
-            <q-input filled color="deep-purple-6" type="number" class="q-mb-xs" v-model="doctor_anos_experiencia"
-              label="Años de experiencia" />
-            <q-select filled v-model="roleEspecialidad" :options="roleUserEspecialidad" label="Especialidad"
-              option-label="label" option-value="id" />
-          </div>
+            </div>
+            <!-- FIN CREAR NUEVO DOCTOR -->
 
-
-          <p class="text-subtitle q-mt-md text-medium">Credenciales de acceso</p>
-          <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 ">
-
-            <q-select filled v-model="role" :options="roleUser" class="q-mb-xs" label="Tipo de usuario"
-              option-label="label" option-value="value" emit-value disable />
-            <q-input filled color="deep-purple-6" class="q-mb-xs" v-model="doctor_nombre_usuario"
-              label="Nombre de usuario" :rules="[
-                (val) => val.length >= 5 || 'Mínimo 5 caracteres',
-                (val) => val.length <= 20 || 'Máximo 20 caracteres',
-                (val) => /^[a-zA-ZñÑáéíóúÁÉÍÓÚ]+$/.test(val) || 'Solo se permiten letras (sin números ni caracteres especiales)',
-              ]" />
-
-            <q-select filled color="deep-purple-6" class="q-mb-xs" v-model="cdiSeleccionado" label="Asignar al CDI"
-              :options="cdisList" />
-
-            <q-input filled :type="isPwd ? 'password' : 'text'" color="deep-purple-6" v-model="password"
-              label="Password" :rules="passwordRules">
-
-              <template v-slot:append>
-                <q-icon :name="isPwd ? 'visibility_off' : 'visibility'" class="cursor-pointer"
-                  @click="isPwd = !isPwd" />
-              </template>
-            </q-input>
-
-          </div>
-
-        </div>
-      </div>
-    </div>
-    <div v-if="viewType === 'addWorker'" class="col-xl-5 col-lg-5 col-md-5 col-sm-12 col-xs-12 q-mb-xs ">
-      <q-btn unelevated :loading="loader" @click="addDoctor()" class="full-width text-white bg-primary"
-        label="Añadir doctor" />
-    </div>
 
 
     <!-- DETALLES DEL USUARIO SELECCIONADO -->
@@ -437,20 +417,29 @@ import {
 import VueHtml2pdf from "vue-html2pdf";
 import HistoriaDrPdf from "./historiaDrPdf.vue";
 import { ADMIN_DOCTORES_QUERY, ADMIN_ALL_CDIS_QUERY, UPDATE_USUARIO_MUTATION } from "../../../graphql/user";
+import { 
+  useDniValidation,
+  useDoctorAnosExperienciaValidation,
+  useDoctorEspecialidadValidation,
+  useDoctorCarnetValidation,
+  useDoctorHorarioValidation,
+  useDoctorNombreUsuarioValidation,
+  useDoctorOcupacionValidation,
+  useEmailValidation,
+  useFullNameValidation,
+  useHouseNumberValidation,
+  usePasswordValidation,
+  usePhoneValidation,
+  usePostalCodeValidation,
+  useRequiredSelectValidation,
+  useTextFieldValidation
+} from "src/utils/validations";
+import { isFormValid } from "src/utils/formUtils";
 export default {
   name: "doctores",
   components: { HistoriaDrPdf, VueHtml2pdf },
   data() {
     return {
-      passwordRules: [
-        (val) => val.length >= 8 || 'Mínimo 8 caracteres',
-        (val) => val.length <= 20 || 'Máximo 20 caracteres',
-        (val) => /[0-9]/.test(val) || 'Debes incluir al menos 1 número',
-        (val) => /[!@#$%^&*(),.?" :{}|<>]/.test(val) || 'Debes incluir al menos 1 carácter especial',
-        (val) => /[A-Z]/.test(val) || 'Debes incluir al menos 1 letra mayúscula',
-      ],
-
-
       // DATOS DE DOCTOR:
       doctor_numero_carnet: '',
       doctor_horario: '',
@@ -458,6 +447,7 @@ export default {
       doctor_nombre_usuario: '',
       punto_referencia: '',
       codigo_postal: '',
+      doctor_ocupacion: '',
 
       doctor_contrasena: '',
       isValid: false,
@@ -487,7 +477,6 @@ export default {
       role: "Doctor",
       dni: "",
       telefono: "",
-      telefono: "",
       direccion: {
         UserId: this.$store.state.user.id,
         CiudadId: 1,
@@ -497,7 +486,7 @@ export default {
       sector: "",
       detailSector: "",
       detailCalle: "",
-      estado: { label: 'Anzoátegui', value: 2 },
+      estado: "",
       ciudad: "",
       especialidadDoctor: "",
       roleEspecialidad: { label: "Enfermería", value: "Enfermeria", id: 1 },
@@ -515,7 +504,6 @@ export default {
       maximizedToggle: true,
       userName: "",
       password: "",
-      password2: "",
       userId: "",
       dataUser: "",
       user: "",
@@ -623,6 +611,96 @@ export default {
       viewType: "userList",
       nacionalidadUser: ""
     };
+  },
+  computed: {
+    fullNameRules() {
+      return useFullNameValidation();
+    },
+        emailRules() {
+      return useEmailValidation();
+    },
+    dniRules() {
+      return useDniValidation();
+    },
+    anosExperienciaRules() {
+      return useDoctorAnosExperienciaValidation();
+    },
+    carnetRules() {
+      return useDoctorCarnetValidation();
+    },
+    especialidadRules() {
+      return useDoctorEspecialidadValidation();
+    },
+    horarioRules() {
+      return useDoctorHorarioValidation();
+    },
+    houseNumberRules() {
+      return useHouseNumberValidation();
+    },
+    nombreUsuarioRules() {
+      return useDoctorNombreUsuarioValidation();
+    },
+    ocupacionRules() {
+      return useDoctorOcupacionValidation();
+    },
+    passwordRules() {
+      return usePasswordValidation();
+    },
+    telefonoRules() {
+      return usePhoneValidation();
+    },
+    postalCodeRules() {
+      return usePostalCodeValidation();
+    },
+    requiredSelectRules() {
+      return useRequiredSelectValidation();
+    },
+    textFieldRules() {
+      return useTextFieldValidation();
+    },
+    formHasNoErrors() {
+      const formValues = {
+        fullName: this.fullName,
+        email: this.email,
+        dni: this.dni,
+        estado: this.estado,
+        ciudad: this.ciudad,
+        calle: this.calle,
+        numero: this.numero,
+        sector: this.sector,
+        punto_referencia: this.punto_referencia,
+        codigo_postal: this.codigo_postal,
+        telefono: this.telefono,
+        doctor_numero_carnet: this.doctor_numero_carnet,
+        doctor_ocupacion: this.doctor_ocupacion,
+        doctor_horario: this.doctor_horario,
+        doctor_anos_experiencia: this.doctor_anos_experiencia,
+        roleEspecialidad: this.roleEspecialidad,
+        doctor_nombre_usuario: this.doctor_nombre_usuario,
+        password: this.password
+      }
+      const validationRules = {
+        fullName: useFullNameValidation(),
+        email: useEmailValidation(),
+        dni: useDniValidation(),
+        estado: useRequiredSelectValidation(),
+        ciudad: useRequiredSelectValidation(),
+        calle: useRequiredSelectValidation(),
+        numero: useHouseNumberValidation(),
+        sector: useRequiredSelectValidation(),
+        punto_referencia: useRequiredSelectValidation(),
+        codigo_postal: usePostalCodeValidation(),
+        telefono: usePhoneValidation(),
+        doctor_numero_carnet: useDoctorCarnetValidation(),
+        doctor_ocupacion: useDoctorOcupacionValidation(),
+        doctor_horario: useDoctorHorarioValidation(),
+        doctor_anos_experiencia: useDoctorAnosExperienciaValidation(),
+        roleEspecialidad: useDoctorEspecialidadValidation(),
+        doctor_nombre_usuario: useDoctorNombreUsuarioValidation(),
+        password: usePasswordValidation()
+      }
+      return isFormValid(formValues, validationRules)
+    },
   },
   created() {
     this.AllDoctores();
