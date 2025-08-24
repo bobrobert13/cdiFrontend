@@ -2218,7 +2218,41 @@ export default {
       }
     },
   },
+  watch: {
+    medicamento_duracion: 'actualizarFechasMedicamento'
+  },
   methods: {
+    actualizarFechasMedicamento(newVal) {
+      if (!newVal) {
+        this.medicamento_fechaInicio = '';
+        this.medicamento_fechaFin = '';
+        return;
+      }
+
+      const today = new Date();
+      const year = today.getFullYear();
+      const month = String(today.getMonth() + 1).padStart(2, '0');
+      const day = String(today.getDate()).padStart(2, '0');
+      this.medicamento_fechaInicio = `${year}/${month}/${day}`;
+
+      if (newVal === 'Indefinido' || newVal === 'Según indicación médica') {
+        this.medicamento_fechaFin = '';
+        return;
+      }
+
+      const daysMatch = newVal.match(/(\d+)\s*días?/);
+      if (daysMatch) {
+        const days = parseInt(daysMatch[1], 10);
+        const endDate = new Date(today);
+        endDate.setDate(today.getDate() + days);
+        const endYear = endDate.getFullYear();
+        const endMonth = String(endDate.getMonth() + 1).padStart(2, '0');
+        const endDay = String(endDate.getDate()).padStart(2, '0');
+        this.medicamento_fechaFin = `${endYear}/${endMonth}/${endDay}`;
+      } else {
+        this.medicamento_fechaFin = '';
+      }
+    },
 
     validarCampoEnfermedadesCronicas(value) {
       let isValid = true;
