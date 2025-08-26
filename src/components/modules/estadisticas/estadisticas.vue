@@ -1,9 +1,49 @@
 <template>
   <q-page padding>
-    <div class="q-pa-xs">
 
+    <section v-if="this.$store.state.user.role === 'admin' && !showStatsPanel" class=" column">
+
+      <h4 class=" q-my-sm text-primary">Estadisticas de CDIs</h4>
+      <p>A continuación se presenta la lista de CDIs en el sistema. Haz click para ir a sus estadisticas.</p>
+
+      <q-table flat bordered dense :data="rows" :columns="columns" row-key="id" :filter="filter"
+        rows-per-page-label="Registros por página" no-data-label="No hay datos disponibles"
+        class="text-primary full-height" style=" min-height: 80vh;">
+        <template v-slot:top-right>
+          <div class=" q-px-lg q-py-sm">
+                      <q-input dense color="primary" filled  v-model="filter" placeholder="Buscar">
+            <template v-slot:append>
+              <q-icon name="search" />
+            </template>
+          </q-input>
+          </div>
+        </template>
+
+        <template v-slot:body="props">
+          <tr class="q-px-md">
+            <td class="text-left">{{ props.row.name }}</td>
+            <td class="text-center">{{ props.row.numero_cdi }}</td>
+            <td class="text-left">{{ props.row.encargado }}</td>
+            <td class="text-center">{{ props.row.cuadrante }}</td>
+            <td class="text-center">
+              <q-btn color="primary" @click="showStats(props.row.id)" label="Ver Estadísticas" size="sm" />
+            </td>
+          </tr>
+        </template>
+      </q-table>
+
+    </section>
+
+    <div v-else-if="showStatsPanel" class="q-pa-xs">
       <!-- SECCIÓN DE FILTROS -->
       <!-- Los filtros permiten cambiar el período de tiempo de los datos mostrados -->
+
+      <div v-if="this.$store.state.user.role === 'admin'" class="row q-mb-sm">
+        <div class="col-12">
+          <q-btn color="primary" label="Volver a la lista de CDIs" @click="backToListCdi" icon="arrow_back" />
+        </div>
+      </div>
+
       <div class="row q-mb-sm">
         <div class="col-12">
           <q-card class="q-pa-md">
@@ -11,13 +51,13 @@
             <div class="row q-gutter-md items-center">
               <!-- Selector de período principal -->
               <div class="col-auto">
-                <q-select v-model="selectedPeriod" outlined dense :options="periodOptions" label="Período" emit-value map-options
-                  @update:model-value="onPeriodChange" style="min-width: 150px" />
+                <q-select v-model="selectedPeriod" outlined dense :options="periodOptions" label="Período" emit-value
+                  map-options @update:model-value="onPeriodChange" style="min-width: 150px" />
               </div>
 
               <!-- Botón para actualizar datos -->
               <div class="col-auto">
-                <q-btn color="primary" label="Actualizar"  @click="updateChartData" :loading="isLoading" />
+                <q-btn color="primary" label="Actualizar" @click="updateChartData" :loading="isLoading" />
               </div>
 
               <!-- Indicador del período actual -->
@@ -103,6 +143,8 @@
 
 <script>
 import VueApexCharts from 'vue-apexcharts';
+import { ADMIN_ALL_CDIS_QUERY } from 'src/graphql/user.js';
+
 import {
   ESTADISTICA_PACIENTES_TOTALES_QUERY,
   ESTADISTICA_PACIENTES_NUEVOS_QUERY,
@@ -113,6 +155,7 @@ import {
   ESTADISTICA_TOP_TEN_DIAGNOSTICOS_QUERY
 } from '../../../graphql/estadisticas.js';
 
+
 export default {
   name: 'EstadisticasDashboard',
   components: {
@@ -120,6 +163,50 @@ export default {
   },
   data() {
     return {
+      filter: '',
+      userId: this.$store.state.user.id,
+      showStatsPanel: false,
+      columns: [
+        {
+          name: 'name',
+          required: true,
+          label: 'Nombre CDI',
+          align: 'left',
+          field: row => row.name,
+          format: val => `${val}`,
+          sortable: true
+        },
+        {
+          name: 'numero_cdi',
+          label: 'Número CDI',
+          align: 'center',
+          field: row => row.numero_cdi,
+          sortable: true
+        },
+        {
+          name: 'encargado',
+          label: 'Encargado',
+          align: 'left',
+          field: row => row.encargado,
+          sortable: true
+        },
+        {
+          name: 'cuadrante',
+          label: 'Cuadrante',
+          align: 'center',
+          field: row => row.cuadrante,
+          sortable: true
+        },
+        {
+          name: 'id',
+          label: '',
+          align: 'center',
+          field: '',
+          sortable: false,
+        },
+
+      ],
+      rows: [],
       totalPacientes: 0,
       totalPacientesNuevos: 0,
       totalConsultas: 0,
@@ -264,6 +351,36 @@ export default {
 
   // === MÉTODOS PARA MANEJO DE FILTROS ===
   methods: {
+
+    AllEncargados() {
+      this.$apollo
+        .query({
+          query: ADMIN_ALL_CDIS_QUERY,
+          fetchPolicy: "network-only",
+        })
+        .then((response) => {
+          const cdis = response.data.todosCdis || [];
+          // llenando registro para el row de la tabla
+          if(!cdis.length) {
+            this.rows = [];
+            return;
+          }
+          this.rows = cdis.map(cdi => ({
+            name: cdi.nombre,
+            id: cdi.id_cdi,
+            numero_cdi: cdi.numero_cdi,
+            encargado: cdi.encargado,
+            cuadrante: cdi.cuadrante,
+          }));
+        })
+        .catch((err) => {
+          this.$q.notify({
+            message: err.message.split('Ha ocurrido un error consultando todos los CDIs'),
+            color: "negative",
+          });
+        });
+    },
+
     /**
      * Se ejecuta cuando el usuario cambia el período en el selector
      * @param {string} newPeriod - El nuevo período seleccionado ('week' o 'month')
@@ -416,7 +533,7 @@ export default {
 
       this.consultasPeriodoOptions = {
         ...this.consultasPeriodoOptions,
-        xaxis: {categories: this.selectedPeriod === 'week' ? ['dia 1', 'dia 2', 'dia 3', 'dia 4', 'dia 5', 'dia 6', 'dia 7'] : ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4']}
+        xaxis: { categories: this.selectedPeriod === 'week' ? ['dia 1', 'dia 2', 'dia 3', 'dia 4', 'dia 5', 'dia 6', 'dia 7'] : ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'] }
       }
 
       this.consultasPeriodoSeries = [{
@@ -427,7 +544,7 @@ export default {
       // GRÁFICO DE CONSULTAS POR MEDICO
       this.consultasMedicoOptions = {
         ...this.consultasMedicoOptions,
-        xaxis: {categories: this.totalConsultasMedico.nombresDoctores}
+        xaxis: { categories: this.totalConsultasMedico.nombresDoctores }
       }
 
       this.consultasMedicoSeries = [{
@@ -438,7 +555,7 @@ export default {
       // GRÁFICO DE TOP DIAGNOSTICOS
       this.diagnosticosOptions = {
         ...this.diagnosticosOptions,
-        xaxis: {categories: this.totalDiagnosticos.condiciones}
+        xaxis: { categories: this.totalDiagnosticos.condiciones }
       }
 
       this.diagnosticosSeries = [{
@@ -469,7 +586,7 @@ export default {
       return this.$apollo
         .query({
           query: ESTADISTICA_PACIENTES_TOTALES_QUERY,
-          variables: { id_cdi: this.$store.state.user.cdi_id },
+          variables: { id_cdi: this.userId },
           fetchPolicy: "network-only",
         })
         .then((response) => {
@@ -487,7 +604,7 @@ export default {
       return this.$apollo
         .query({
           query: ESTADISTICA_PACIENTES_NUEVOS_QUERY,
-          variables: { id_cdi: this.$store.state.user.cdi_id, periodo: this.selectedPeriod },
+          variables: { id_cdi: this.userId, periodo: this.selectedPeriod },
           fetchPolicy: "network-only",
         })
         .then((response) => {
@@ -504,7 +621,7 @@ export default {
       return this.$apollo
         .query({
           query: ESTADISTICA_PACIENTES_POR_GENERO_QUERY,
-          variables: { id_cdi: this.$store.state.user.cdi_id },
+          variables: { id_cdi: this.userId },
           fetchPolicy: "network-only",
         })
         .then((response) => {
@@ -520,7 +637,7 @@ export default {
       return this.$apollo
         .query({
           query: ESTADISTICA_PACIENTES_POR_EDAD_QUERY,
-          variables: { id_cdi: this.$store.state.user.cdi_id },
+          variables: { id_cdi: this.userId },
           fetchPolicy: "network-only",
         })
         .then((response) => {
@@ -536,7 +653,7 @@ export default {
       return this.$apollo
         .query({
           query: ESTADISTICA_CONSULTAS_POR_PERIODO_QUERY,
-          variables: { id_cdi: this.$store.state.user.cdi_id, periodo: this.selectedPeriod },
+          variables: { id_cdi: this.userId, periodo: this.selectedPeriod },
           fetchPolicy: "network-only",
         })
         .then((response) => {
@@ -552,7 +669,7 @@ export default {
       return this.$apollo
         .query({
           query: ESTADISTICA_CONSULTAS_POR_DOCTOR_QUERY,
-          variables: { id_cdi: this.$store.state.user.cdi_id, periodo: this.selectedPeriod },
+          variables: { id_cdi: this.userId, periodo: this.selectedPeriod },
           fetchPolicy: "network-only",
         })
         .then((response) => {
@@ -568,7 +685,7 @@ export default {
       return this.$apollo
         .query({
           query: ESTADISTICA_TOP_TEN_DIAGNOSTICOS_QUERY,
-          variables: { id_cdi: this.$store.state.user.cdi_id, periodo: this.selectedPeriod },
+          variables: { id_cdi: this.userId, periodo: this.selectedPeriod },
           fetchPolicy: "network-only",
         })
         .then((response) => {
@@ -577,11 +694,32 @@ export default {
         .catch((err) => {
           console.error("Error fetching top diagnósticos:", err);
         });
-    }
-  },
+    },
 
+    showStats(cdiId = null) {
+      if (this.$store.state.user.role === 'admin') {
+        this.AllEncargados();
+        this.userId = cdiId;
+        if(cdiId) {
+          this.showStatsPanel = true;
+          this.updateChartData();
+        }
+      } 
+      else {
+        this.showStatsPanel = true;
+        this.userId = this.$store.state.user.cdi_id;
+        this.updateChartData();
+        
+      }
+    },
+
+    backToListCdi() {
+      this.showStatsPanel = false;
+      this.userId = null;
+    },
+  },
   mounted() {
-    this.updateChartData();
+    this.showStats();
   }
 };
 </script>
