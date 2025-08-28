@@ -3084,7 +3084,7 @@ export default {
           this.examen_tipoDeExamen = '';
           this.examen_descripcion = '';
           this.examen_resultados = '';
-          this.examen_estadoExamen = '';
+          this.examen_estadoExamen = 'Pendiente';
           this.examen_laboratorioCentro = '';
           this.examen_valoresReferencia = '';
           this.examen_observaciones = '';

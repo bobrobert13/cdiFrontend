@@ -265,6 +265,9 @@
                       v-model="doctor_anos_experiencia" label="Años de experiencia*" :rules="anosExperienciaRules" />
                     <q-select filled v-model="roleEspecialidad" :options="roleUserEspecialidad" label="Area de trabajo*"
                       option-label="label" option-value="id" :rules="especialidadRules" />
+
+                                  <q-select filled color="deep-purple-6" class="q-mb-xs" v-model="cdiSeleccionado" label="Asignar al CDI*"
+              :options="cdisList" :rules="requiredSelectRules" />
                   </div>
 
 
