@@ -69,6 +69,16 @@ export const useHouseNumberValidation = () => {
   ]
 }
 
+// validaciones para el numero de orden de representante min 2 max 8
+export const useOrderNumberValidation = () => {
+  return [
+    (val) => !!val || 'Este campo es obligatorio',
+    (val) => /^\d+$/.test(val) || 'Solo se permiten números',
+    (val) => val.length >= 2 || 'Mínimo 2 caracteres',
+    (val) => val.length <= 8 || 'Máximo 8 caracteres'
+  ]
+}
+
 // Validaciones para código postal
 export const usePostalCodeValidation = () => {
   return [

@@ -119,18 +119,20 @@
 
             <!-- CREACION DE NUEVO PACIENTE -->
 
-            <div class="  " v-if="viewType === 'addWorker'">
+            <div v-if="viewType === 'addWorker'">
               <div class="col-12 text-left row items-center q-mt-md q-mb-lg">
                 <q-icon style="cursor: pointer" @click="workerView('userList')" name="mdi-arrow-left"
                   class="text-primary" size="md"></q-icon>
                 <span style="cursor: pointer" class="text-bold text-accent text-h6"
                   @click="workerView('userList')">Crear nuevo paciente</span>
               </div>
-              <small class="q-my-md block text-red text-bold"> <q-icon name="mdi-information" class="q-mr-xs" size="sm" color="primary" /> Los campos marcados con * son obligatorios</small>
+              <small class="q-my-md block text-red text-bold"> <q-icon name="mdi-information" class="q-mr-xs" size="sm"
+                  color="primary" /> Los campos marcados con * son obligatorios</small>
               <div class=" col-7">
                 <div class="column justify-center">
                   <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 ">
-                    <q-input filled color="deep-purple-6" v-model="fullName" label="Nombre completo*" :rules="fullNameRules" />
+                    <q-input filled color="deep-purple-6" v-model="fullName" label="Nombre completo*"
+                      :rules="fullNameRules" />
                   </div>
                   <div class="row q-pb-xs">
                     <div class="col-12">
@@ -186,8 +188,26 @@
                       option-value="value" emit-value :rules="requiredSelectRules" />
                   </div>
                   <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 ">
-                    <q-input filled color="deep-purple-6" v-model="edad" label="Edad*" type="number" :rules="ageRules" />
+                    <q-input filled color="deep-purple-6" v-model="edad" label="Edad*" type="number"
+                      :rules="ageRules" />
                   </div>
+
+
+                  <div v-if="edad < 18 && edad" class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 column ">
+                    <p class=" text-weight-medium text-red q-mb-xs"><b>El paciente es menor de edad *</b></p>
+                    <small>Se necesita información adicional del representante legal.</small>
+                    <div class="row q-mt-sm"></div>
+                      <div class="col-6">
+                        <q-input filled color="deep-purple-6" v-model="documento_identidad_representante"
+                          label="Documento de identidad del representante*" :rules="dniRules" />
+                      </div>
+                      <div class="col-6">
+                        <q-input filled color="deep-purple-6" type="number" v-model="numero_orden_representante"
+                          label="Número de orden del representante*" :rules="orderNumberRules" />
+                      </div>
+                  </div>
+
+
                   <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-pb-xs">
                     <div class="row">
                       <div class="col-4">
@@ -434,27 +454,27 @@
           </q-dialog>
 
 
-              		<!-- BUSCAR PACIENTE -->
-		<q-dialog v-model="modals.searchUser" style="min-width: 460px">
-			<q-card style="min-width: 460px" class="text-white">
-				<q-bar class="bg-primary">
-					<q-space />
-					<q-btn dense flat icon="close" v-close-popup>
-					</q-btn>
-				</q-bar>
-				<q-card-section>
-					<div class="text-h6 text-primary">Buscar paciente</div>
-				</q-card-section>
-				<q-card-section class="q-pt-none">
-					<q-input v-model="dni" label="Escribe el DNI del paciente" />
-				</q-card-section>
-				<q-card-actions align="right" class="text-primary">
-					<q-btn flat label="Cancelar" v-close-popup />
-					<q-btn flat label="Buscar" :disable="!dni.length" @click="buscarUsuario(dni)" />
-				</q-card-actions>
-			</q-card>
-		</q-dialog>
-		<!-- FIN BUSCAR PACIENTE -->
+          <!-- BUSCAR PACIENTE -->
+          <q-dialog v-model="modals.searchUser" style="min-width: 460px">
+            <q-card style="min-width: 460px" class="text-white">
+              <q-bar class="bg-primary">
+                <q-space />
+                <q-btn dense flat icon="close" v-close-popup>
+                </q-btn>
+              </q-bar>
+              <q-card-section>
+                <div class="text-h6 text-primary">Buscar paciente</div>
+              </q-card-section>
+              <q-card-section class="q-pt-none">
+                <q-input v-model="dni" label="Escribe el DNI del paciente" />
+              </q-card-section>
+              <q-card-actions align="right" class="text-primary">
+                <q-btn flat label="Cancelar" v-close-popup />
+                <q-btn flat label="Buscar" :disable="!dni.length" @click="buscarUsuario(dni)" />
+              </q-card-actions>
+            </q-card>
+          </q-dialog>
+          <!-- FIN BUSCAR PACIENTE -->
 
 
           <!-- ELIMINAR USUARIO -->
@@ -1121,23 +1141,14 @@
                   <div class="col-12 q-mt-xs">
                     <q-input v-model="medicamento_principioActivo" filled label="Principio activo del medicamento" />
                   </div>
-    <div class="col-12 q-mt-xs">
-      <q-select
-        v-model="medicamento_dosis_medida"
-        filled
-        label="Medida de dosis"
-        :options="opcionesMedidas"
-      />
-    </div>
-    <div class="col-12 q-mt-xs">
-      <q-select
-        v-model="medicamento_dosis"
-        filled
-        label="Dosis recomendada"
-        :options="dosisFiltradas"
-        :disable="!medicamento_dosis_medida"
-      />
-    </div>
+                  <div class="col-12 q-mt-xs">
+                    <q-select v-model="medicamento_dosis_medida" filled label="Medida de dosis"
+                      :options="opcionesMedidas" />
+                  </div>
+                  <div class="col-12 q-mt-xs">
+                    <q-select v-model="medicamento_dosis" filled label="Dosis recomendada" :options="dosisFiltradas"
+                      :disable="!medicamento_dosis_medida" />
+                  </div>
                   <div class="col-12 q-mt-xs">
                     <q-select v-model="medicamento_viaAdministracion" filled label="Vía de administración" :options='["Oral",
                       "Intravenosa",
@@ -1671,7 +1682,8 @@ import {
   useDisabilityValidation,
   useFamilyHistoryValidation,
   useAllergiesValidation,
-  useOccupationValidation
+  useOccupationValidation,
+  useOrderNumberValidation
 } from '../../../utils/validations'
 import { isFormValid } from '../../../utils/formUtils'
 import {
@@ -1708,6 +1720,9 @@ export default {
     },
     dniRules() {
       return useDniValidation();
+    },
+    orderNumberRules() {
+      return useOrderNumberValidation();
     },
     streetRules() {
       return useTextWithSpecialCharsValidation(true, 3, 200);
@@ -1770,6 +1785,8 @@ export default {
         sangreSeleccionada: this.sangreSeleccionada,
         enfermedades_cronicas: this.enfermedades_cronicas,
         discapacidad: this.discapacidad,
+        documento_identidad_representante: this.documento_identidad_representante,
+        numero_orden_representante: this.numero_orden_representante,
         antecedentes_familiares: this.antecedentes_familiares,
         alergias: this.alergias,
         ocupacion: this.ocupacion,
@@ -1789,6 +1806,10 @@ export default {
         codigo_postal: usePostalCodeValidation(),
         sexo: useRequiredSelectValidation(),
         edad: useAgeValidation(),
+        ...(this.edad < 18 && {
+          documento_identidad_representante: useDniValidation(),
+          numero_orden_representante: useOrderNumberValidation(),
+        }),
         telefono: usePhoneValidation(),
         vacunasSeleccionadas: useRequiredSelectValidation(),
         sangreSeleccionada: useRequiredSelectValidation(),
@@ -1818,6 +1839,8 @@ export default {
       modals: {
         searchUser: false,
       },
+
+      
       modalUpdateExamen: false,
       modalUpdateDiagnostico: false,
       modalAddDiagnostico: false,
@@ -1884,6 +1907,9 @@ export default {
       punto_referencia: '',            // Ejemplo: 'Cerca de la plaza'
       codigo_postal: '',               // Ejemplo: '1010'
       correo: '',
+
+      numero_orden_representante: '',
+      documento_identidad_representante: '',
 
       canEdit: false,
       ingreso: "",
@@ -1962,7 +1988,7 @@ export default {
       medicamento_efectosSecundarios: "",
 
 
-            opcionesMedidas: [
+      opcionesMedidas: [
         'mg',
         'g',
         'mcg',
@@ -2455,7 +2481,7 @@ export default {
       return moment(entrada).format('DD-MM-YYYY')
     },
     workerView(typeView) {
-      if(typeView === 'searchUser') return this.modals.searchUser = true;
+      if (typeView === 'searchUser') return this.modals.searchUser = true;
       this.viewType = typeView
     },
     userDetail(user) {
@@ -2523,6 +2549,8 @@ export default {
               peso: parseInt(this.peso),
               vacunas: this.vacunasSeleccionadas.value,
               discapacidad: this.discapacidad,
+              documento_identidad_representante: parseInt(this.documento_identidad_representante),
+              numero_orden_representante: parseInt(this.numero_orden_representante),
               antecedentes_familiares: this.antecedentes_familiares,
               tipo_de_sangre: this.sangreSeleccionada.value,
               alergias: this.alergias,

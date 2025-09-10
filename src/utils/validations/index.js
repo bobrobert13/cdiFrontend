@@ -15,7 +15,8 @@ export {
   useDisabilityValidation,
   useFamilyHistoryValidation,
   useAllergiesValidation,
-  useOccupationValidation
+  useOccupationValidation,
+  useOrderNumberValidation
 } from './patientValidations.js'
 
 export {
