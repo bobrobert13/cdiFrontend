@@ -2599,6 +2599,7 @@ export default {
           this.direccion = "";
           this.password = "";
           this.highlight = "";
+          this.edad = 0;
           this.viewType = "userList"
           this.AllPacientes();
           this.$q.notify({
