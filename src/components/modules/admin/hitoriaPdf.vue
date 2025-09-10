@@ -1,7 +1,7 @@
 <template>
   <div class="pdf-container">
     <img src="../../../assets/membrete.png" class="full-width q-mb-sm" style="max-height: 80px; object-fit: contain;" />
-    
+
     <!-- INFORMACIÓN PERSONAL COMPACTA -->
     <div  class="info-section">
       <div class="section-title">INFORMACIÓN PERSONAL</div>
@@ -230,12 +230,14 @@
           <div class="header-cell">Unidad</div>
           <div class="header-cell">Estado</div>
           <div class="header-cell">Ingreso</div>
+          <div class="header-cell">Egreso</div>
         </div>
         <div v-for="(hospitalizacion, index) in data.hospitalizaciones" :key="index" class="table-row">
           <div class="table-cell">{{ hospitalizacion.motivo_de_hospitalizacion }}</div>
           <div class="table-cell">{{ hospitalizacion.unidad_hospitalaria }}</div>
           <div class="table-cell">{{ hospitalizacion.estado }}</div>
           <div class="table-cell">{{ entradaFecha(hospitalizacion.fecha_ingreso) }}</div>
+					<div class="table-cell">{{ salidaFecha(hospitalizacion.fecha_egreso) || '-' }}</div>
         </div>
       </div>
     </div>
@@ -248,6 +250,9 @@ export default {
   name: "historiaPdf",
   components: {},
   props: ["data"],
+	mounted() {
+		console.log('Data recibida en historiaPdf:', this.data);
+	},
   methods: {
     salidaFecha(salida) {
       return moment(salida).format('DD-MM-YYYY')
@@ -319,11 +324,11 @@ export default {
 }
 
 .table-header {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-  background-color: #e3f2fd;
-  font-weight: bold;
-  font-size: 9px;
+	display: grid;
+	grid-template-columns: repeat(5, 0.5fr);
+	background-color: #e3f2fd;
+	font-weight: bold;
+	font-size: 9px;
 }
 
 .header-cell {
@@ -338,7 +343,7 @@ export default {
 
 .table-row {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-columns:repeat(5, 0.5fr);
   border-top: 1px solid #ddd;
   font-size: 9px;
 }
@@ -365,29 +370,29 @@ export default {
     padding: 5px;
     font-size: 9px;
   }
-  
+
   .info-section {
     margin-bottom: 10px;
   }
-  
+
   .section-title {
     font-size: 10px;
     padding: 3px 6px;
   }
-  
+
   .info-grid {
     gap: 2px;
   }
-  
+
   .info-item {
     padding: 1px 3px;
   }
-  
+
   .table-header,
   .table-row {
     font-size: 8px;
   }
-  
+
   .header-cell,
   .table-cell {
     padding: 2px 3px;
