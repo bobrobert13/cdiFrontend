@@ -534,6 +534,40 @@
                   <div class="col-12 q-mt-xs">
                     <q-input v-model="emergencia_notasDeAtencion" filled label="Notas de atención" />
                   </div>
+
+									                  <div class="col-11 q-mt-md q-pa-xs">
+                    <span>Fecha de ingreso emergencia:</span>
+                    <q-input filled v-model="emergencia_fechaIngreso" disable label="Fecha de ingreso "></q-input>
+                  </div>
+                  <div class="col-1 self-center q-pa-xs q-pt-md">
+                    <q-btn icon="event" round color="primary">
+                      <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                        <q-date v-model="emergencia_fechaIngreso">
+                          <div class="row items-center justify-end">
+                            <q-btn v-close-popup label="Cerrar" color="primary" flat />
+                          </div>
+                        </q-date>
+                      </q-popup-proxy>
+                    </q-btn>
+                  </div>
+
+                  <div class="col-11 q-pa-xs">
+                    <span>Fecha de egreso emergencia:</span>
+                    <q-input filled v-model="emergencia_fechaEgreso" disable label="Fecha de egreso"></q-input>
+                  </div>
+                  <div class="col-1 self-center q-pa-xs q-pt-md">
+                    <q-btn icon="event" round color="primary">
+                      <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                        <q-date v-model="emergencia_fechaEgreso">
+                          <div class="row items-center justify-end">
+                            <q-btn v-close-popup label="Cerrar" color="primary" flat />
+                          </div>
+                        </q-date>
+                      </q-popup-proxy>
+                    </q-btn>
+                  </div>
+
+
                 </div>
               </q-card-section>
               <q-separator />
@@ -545,7 +579,9 @@
                   this.emergencia_procesamientoRealizado === '' ||
                   this.emergencia_tiempoAtencion === '' ||
                   this.emergencia_destino === '' ||
-                  this.emergencia_notasDeAtencion === ''
+                  this.emergencia_notasDeAtencion === '' ||
+                  this.emergencia_fechaIngreso === '' ||
+                  this.emergencia_fechaEgreso === ''
                   " @click="NuevaEmergencia()">
                   Crear emergencia para paciente
                 </q-btn>
@@ -603,7 +639,17 @@
                             }}</q-item-label>
                           <q-item-label><b>Notas de atención:</b> {{ emergencia.notas_de_atencion
                             }}</q-item-label>
+
+														<br>
+                          <q-item-label><b>Fecha de ingreso:</b> {{
+                            entradaFecha(emergencia.fecha_ingreso)
+                            }}</q-item-label>
+													<q-item-label><b>Fecha de egreso:</b> {{
+														entradaFecha(emergencia.fecha_egreso)
+														}}</q-item-label>
+
                         </q-item-section>
+
 
                       </q-item>
                       <div class="q-ml-md row col-12 items-center self-center no-wrap ">
@@ -630,7 +676,7 @@
           <q-dialog v-model="modalHospitalizacion">
             <q-card class="my-card" flat bordered style="min-width: 350px">
               <q-card-section>
-                Nuevo hospitalización
+                Nueva hospitalización
               </q-card-section>
               <q-card-section>
                 <div class="row">
@@ -1840,7 +1886,7 @@ export default {
         searchUser: false,
       },
 
-      
+
       modalUpdateExamen: false,
       modalUpdateDiagnostico: false,
       modalAddDiagnostico: false,
@@ -2034,6 +2080,8 @@ export default {
       emergencia_tiempoAtencion: null,
       emergencia_notasDeAtencion: "",
       emergencia_destino: "",
+			emergencia_fechaIngreso: '',
+			emergencia_fechaEgreso: '',
 
 
       // HOSPITALIZACION
@@ -2771,12 +2819,56 @@ export default {
     },
     NuevaEmergencia() {
       this.loader = true;
+
+      // Validar que se hayan ingresado las fechas
+      if (!this.emergencia_fechaIngreso || !this.emergencia_fechaEgreso) {
+        this.$q.notify({
+          message: "Debes ingresar una fecha de ingreso y egreso",
+          color: "negative",
+        });
+        return;
+      }
+
+      // Crear objetos moment para comparar fechas
+      const fechaIngreso = moment(this.emergencia_fechaIngreso).startOf("day");
+      const fechaEgreso = moment(this.emergencia_fechaEgreso).startOf("day");
+      const fechaActual = moment().startOf("day");
+
+      // Validar que la fecha de ingreso no sea menor a la fecha actual
+      if (fechaIngreso.isBefore(fechaActual)) {
+        this.$q.notify({
+          message: "La fecha de ingreso no puede ser menor a la fecha actual",
+          color: "negative",
+        });
+        return;
+      }
+
+      // Validar que la fecha de ingreso y egreso no sean iguales
+      if (fechaIngreso.isSame(fechaEgreso)) {
+        this.$q.notify({
+          message: "La fecha de ingreso y egreso no pueden ser iguales",
+          color: "negative",
+        });
+        return;
+      }
+
+      // Validar que la fecha de ingreso sea menor a la fecha de egreso
+      if (fechaIngreso.isAfter(fechaEgreso)) {
+        this.$q.notify({
+          message: "La fecha de ingreso no puede ser mayor a la fecha de egreso",
+          color: "negative",
+        });
+        return;
+      }
+
       return this.$apollo
         .mutate({
           mutation: ADD_EMERGENCIA_MUTATION,
           variables: {
             input: {
               motivo_emergencia: this.emergencia_motivoEmergencia,
+              fecha_ingreso: this.emergencia_fechaIngreso,
+              fecha_egreso: this.emergencia_fechaEgreso,
               diagnostico_provisional: this.emergencia_diagnosticoProvisional,
               estado_paciente: this.emergencia_estadoPaciente,
               procesamiento_realizado: this.emergencia_procesamientoRealizado,
@@ -2802,6 +2894,8 @@ export default {
           this.emergencia_tiempoAtencion = null;
           this.emergencia_notasDeAtencion = '';
           this.emergencia_motivoEmergencia = '';
+					this.emergencia_fechaIngreso = '';
+					this.emergencia_fechaEgreso = '';
           this.AllPacientes()
           this.$q.notify({
             message: "Paciente enviado a emergencias",

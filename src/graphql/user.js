@@ -96,7 +96,7 @@ export const PERSONA_DETALLES = gql`
 
 export const CONSULTAS_DETALLES = gql`
 fragment consultasDetalles on Consulta {
-  id_consulta, fecha_consulta, estado_consulta, tipo_consulta, motivo_consulta, sintomas, notas_medicas, createdAt 
+  id_consulta, fecha_consulta, estado_consulta, tipo_consulta, motivo_consulta, sintomas, notas_medicas, createdAt
 }
 `;
 
@@ -164,6 +164,8 @@ export const EMERGENCIA_DETALLES = gql`
 fragment emergenciaDetalles on Emergencia {
     id_emergencia
     motivo_emergencia
+    fecha_ingreso
+    fecha_egreso
     diagnostico_provisional
     estado_paciente
   	estado_emergencia
@@ -365,7 +367,7 @@ export const ADMIN_CDIS_QUERY = gql`
       ...personaDetalles
     }
    }
-      
+
 
     }
   }
@@ -629,6 +631,8 @@ mutation doCreateEmergencia($input: EmergenciaInput!) {
   crearEmergencia(input: $input) {
     id_emergencia
     motivo_emergencia
+    fecha_ingreso
+    fecha_egreso
     diagnostico_provisional
     estado_paciente
     procesamiento_realizado

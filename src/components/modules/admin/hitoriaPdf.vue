@@ -212,11 +212,16 @@
           <div class="header-cell">Motivo</div>
           <div class="header-cell">Estado</div>
           <div class="header-cell">Destino</div>
+          <div class="header-cell">Fecha de ingreso</div>
+          <div class="header-cell">Fecha de egreso</div>
+
         </div>
         <div v-for="(emergencia, index) in data.emergencias" :key="index" class="table-row">
           <div class="table-cell">{{ emergencia.motivo_emergencia }}</div>
           <div class="table-cell">{{ emergencia.estado_emergencia }}</div>
           <div class="table-cell">{{ emergencia.destino }}</div>
+					<div class="table-cell">{{ entradaFecha(emergencia.fecha_ingreso) || '-' }}</div>
+					<div class="table-cell">{{ salidaFecha(emergencia.fecha_egreso) || '-' }}</div>
         </div>
       </div>
     </div>
