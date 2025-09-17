@@ -13,7 +13,7 @@
       <div class="section-title">CDIs REGISTRADOS ({{ totalCount }})</div>
 
       <div class="two-columns">
-        <div class="column">
+        <div v-if="this.isActive" class="column">
           <div class="sub-title">Activos ({{ activeCount }})</div>
           <div class="compact-table small">
             <div class="table-header">
@@ -32,7 +32,7 @@
           </div>
         </div>
 
-        <div class="column">
+        <div v-if="!this.isActive" class="column">
           <div class="sub-title">Inactivos ({{ inactiveCount }})</div>
           <div class="compact-table small">
             <div class="table-header">
@@ -66,7 +66,7 @@ import moment from 'moment'
 export default {
   name: "historiaPdfEnc",
   components: {},
-  props: ["data"],
+  props: ["data", "isActive"], // isActive: true para activos, false para inactivos
   created() {
     // data viene como prop
     console.log("historialEnc: data length", Array.isArray(this.data) ? this.data.length : 0);

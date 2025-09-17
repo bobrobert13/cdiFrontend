@@ -24,7 +24,9 @@
 
 			<q-tab-panels v-model="tab" animated>
 				<q-tab-panel name="cdi_activos">
-					<div class="text-h6 text-left">CDIs Activos</div>
+					<div class="text-h6 text-left row no-wrap">CDIs Activos </div>
+					<button @click="GenerateCdisStatusPDF()" class=" cursor-pointer text-primary self-center text-bold"
+						type="button"> <small style="font-size: 12px;">Descargar lista de cdis activos</small></button>
 					<div class="row justify-center q-mt-xl" v-if="this.users.length !== 0">
 						<div class="col-12 q-mb-sm" v-for="(user, index) in users" @click="cdiDetails(user)"
 							:key="index">
@@ -81,6 +83,8 @@
 				</q-tab-panel>
 				<q-tab-panel name="cdi_inactivos">
 					<div class="text-h6 text-left">CDIs Inactivos</div>
+					<button @click="GenerateCdisStatusPDF()" class=" cursor-pointer text-primary self-center text-bold"
+						type="button"> <small style="font-size: 12px;">Descargar lista de cdis inactivos</small></button>
 					<div class="row justify-center q-mt-xl" v-if="this.users.length !== 0">
 						<div class="col-12 q-mb-sm" v-for="(user, index) in users" @click="cdiDetails(user)"
 							:key="index">
@@ -417,6 +421,17 @@
 			</vue-html2pdf>
 		</div>
 
+				<div>
+			<vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="true" :preview-modal="false"
+				:paginate-elements-by-height="1400" filename="Listado_CDIS_STATUS" :pdf-quality="2"
+				:manual-pagination="false" pdf-format="a4" :pdf-margin="10" pdf-orientation="portrait"
+				pdf-content-width="800px" @progress="onProgress($event)" ref="html2Pdfstatus">
+				<section slot="pdf-content">
+					<HistorialCdisListaEstado :data="users" :isActive="tab === 'cdi_activos'" />
+				</section>
+			</vue-html2pdf>
+		</div>
+
 		<div>
 			<vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="true" :preview-modal="false"
 				:paginate-elements-by-height="1400" filename="informacion_de_cdi" :pdf-quality="2"
@@ -434,6 +449,7 @@ import config from "../../../config";
 import VueHtml2pdf from "vue-html2pdf";
 
 import historialEncVue from "./historialEnc.vue";
+import HistorialCdisListaEstado from "./historialCdisListaEstado.vue";
 import historialCDIVue from "./historiaCDIPdf.vue";
 
 import { USER_DELETE, ADMIN_CDIS_QUERY, ADD_CDI_USER_MUTATION, UPDATE_CDI_STATUS_MUTATION, UPDDATE_CDI_MUTATION } from "../../../graphql/user";
@@ -451,7 +467,7 @@ import { isFormValid } from "src/utils/formUtils";
 
 export default {
 	name: "admins",
-	components: { VueHtml2pdf, historialEncVue, historialCDIVue },
+	components: { VueHtml2pdf, historialEncVue, historialCDIVue, HistorialCdisListaEstado },
 	data() {
 		return {
 			cdiActivos: 0,
@@ -883,6 +899,9 @@ export default {
 			this.dataUser = user;
 			console.log("dataUser", this.dataUser);
 			this.$refs.cdihtml2Pdf.generatePdf();
+		},
+		GenerateCdisStatusPDF() {
+			this.$refs.html2Pdfstatus.generatePdf();
 		},
 		cdisInformationsPDF() {
 			this.$refs.html2Pdf.generatePdf();
