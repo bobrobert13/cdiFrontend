@@ -1,10 +1,8 @@
 <template>
   <div class="row justify-center">
-    <div class="col-12  ">
-      <span class="text-bold text-h6  text-accent">Pacientes</span>
-    </div>
-    <div class="col-12  bg-white" style="min-height: 85vh; border-radius: 20px">
-      <q-scroll-area class="q-mt-md q-mb-md" :thumb-style="thumbStyle" :bar-style="barStyle" style="height: 80vh">
+
+    <div class="col-12 bg-white" style="min-height: 85vh; border-radius: 20px">
+      <q-scroll-area class=" q-mb-md" :thumb-style="thumbStyle" :bar-style="barStyle" style="height: 80vh">
         <div class="row justify-center">
           <div class="col-10" v-if="viewType === 'userList'">
             <div class="row justify-center">
@@ -23,63 +21,78 @@
                 <p class="text-h6 text-weight-light ">Tu lista de pacientes:</p>
               </div>
               <div class="col-12 q-mb-sm" v-for="(user, index) in users" :key="index">
-                <q-list class="rounded-borders bg-grey-1" style="border-radius: 15px">
-                  <q-item v-if="user.persona">
+                <q-list class="rounded-borders bg-grey-2" style="border-radius: 15px">
+                  <q-item v-if="user.persona" >
                     <q-item-section top class=" q-py-md" style="cursor: pointer">
-                      <q-item-label class="text-left q-mb-xs" lines="1">
-                        <span class="text-weight-medium">Nombre de paciente: {{ user.persona.nombre1 }}</span>
-                      </q-item-label>
-                      <q-item-label class="text-left q-mb-xs" lines="1">
-                        <span class="text-weight-medium">Documento de identidad: {{ user.persona.nacionalidad }} - {{
-                          user.persona.cedula_identidad
-                          }}</span>
-                      </q-item-label>
-                      <q-item-label class="text-left" lines="1">
-                        <span class="text-weight-medium">Edad del paciente: {{ user.persona.edad }} años</span>
-                      </q-item-label>
+                        <div class="row">
+                          <div class="col-6 q-mb-xs">
+                            <q-item-label class="text-left" lines="1">
+                              <span class="text-weight-medium">Nombre:</span> {{ user.persona.nombre1 }} {{ user.persona.apellido1 }}
+                            </q-item-label>
+                          </div>
+                          <div class="col-6 q-mb-xs">
+                            <q-item-label class="text-right" lines="1">
+                              <span class="text-weight-medium">Edad:</span> {{ user.persona.edad }} años
+                            </q-item-label>
+                          </div>
+                          <div class="col-6 q-mb-xs">
+                            <q-item-label class="text-left" lines="1">
+                              <span class="text-weight-medium">Nacionalidad:</span> {{ user.persona.nacionalidad }}
+                            </q-item-label>
+														 <q-item-label class="text-left" lines="1">
+                              <span class="text-weight-medium">Documento:</span>  {{ user.persona.cedula_identidad }}
+                            </q-item-label>
+                          </div>
+                          <div class="col-6 q-mb-xs">
+                            <q-item-label class="text-right" lines="1">
+                              <span class="text-weight-medium">Sexo:</span> {{ user.persona.sexo }}
+                            </q-item-label>
+                            <q-item-label class="text-right" lines="1">
+                              <span class="text-weight-medium">Telefono:</span> {{ user.persona.telefono.codigo }}-{{ user.persona.telefono.numero }}
+                            </q-item-label>
+                          </div>
+                        </div>
                       <q-separator spaced color="blue-grey" />
                       <q-item-label class="text-left" lines="1">
                         <div class="row col-12 items-center self-center no-wrap ">
 
-                          <span v-if="!estadoEmergenciaPaciente(user.emergencias)"
+                          <small v-if="!estadoEmergenciaPaciente(user.emergencias)"
                             @click="seleccionarUrgencias(user.persona, user.id_paciente)" lines="2"
                             class=" q-mr-lg cursor-pointer text-red-9 self-center text-bold" style="cursor: pointer">
                             <q-icon name="mdi-alert" /> Enviar a emergencias
-                          </span>
-                          <span v-else @click="verDetallesDeEmergencia(user.emergencias)" lines="2"
+                          </small>
+                          <small v-else @click="verDetallesDeEmergencia(user.emergencias)" lines="2"
                             class=" q-mr-sm cursor-pointer text-red-9  self-center text-bold" style="cursor: pointer">
                             <q-icon name="mdi-information" /> Paciente en emergencias
-                          </span>
-                          <span v-if="!estadoHospitalizadoPaciente(user.hospitalizaciones)"
+                          </small>
+                          <small v-if="!estadoHospitalizadoPaciente(user.hospitalizaciones)"
                             @click="seleccionarHospitalizacion(user.persona, user.id_paciente)" lines="2"
                             class=" q-mr-sm cursor-pointer text-primary self-center text-bold" style="cursor: pointer">
                             <q-icon name="mdi-hospital" /> Marcar como hospitalizado
-                          </span>
+                          </small>
 
-                          <span v-else @click="verDetallesDeHospitalizacion(user.hospitalizaciones)" lines="2"
+                          <small v-else @click="verDetallesDeHospitalizacion(user.hospitalizaciones)" lines="2"
                             class=" q-mr-sm cursor-pointer text-orange-9 self-center text-bold" style="cursor: pointer">
                             <q-icon name="mdi-information" /> Paciente hospitalizado
-                          </span>
-
-
-                          <button @click="generatePacientePDF(user)" type="button" lines="2"
-                            class=" q-ml-xl cursor-pointer text-primary self-center text-bold" style="cursor: pointer">
-                            <q-icon name="mdi-printer-pos" /> Descargar ficha del paciente
-                          </button>
-
+                          </small>
 
                         </div>
                       </q-item-label>
-                      <q-item-section side class="q-mt-md row no-wrap">
+                      <q-item-section  class="q-mt-md row no-wrap q-gutter-y-xs">
                         <button type="button"
-                          class="no-outline no-border q-px-md q-py-xs rounded-borders bg-blue-grey text-white cursor-pointer"
+                          class="no-outline no-border q-px-md q-py-xs rounded-borders bg-primary text-white cursor-pointer"
                           @click="userDetail(user)"><q-icon name="mdi-eye" class="q-mr-sm" /> Inspeccionar
                           paciente</button>
+
+													<button type="button"
+                          class="no-outline no-border q-px-md q-py-xs rounded-borders bg-blue-grey text-white cursor-pointer"
+                         @click="generatePacientePDF(user)"><q-icon name="mdi-printer" class="q-mr-sm" />Descargar ficha del paciente</button>
                       </q-item-section>
                     </q-item-section>
 
                   </q-item>
                 </q-list>
+								<hr class="q-my-md ">
               </div>
             </div>
             <div class="row justify-center" v-else>

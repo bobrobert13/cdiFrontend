@@ -432,6 +432,7 @@ export default {
   },
   data() {
     return {
+
       emailA: "",
       nameA: "",
       addCorreoM: false,
