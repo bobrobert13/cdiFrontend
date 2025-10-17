@@ -192,6 +192,8 @@ fragment hospitalizacionDetalles on Hospitalizacion {
 }
 `;
 
+
+
 export const DOCTOR_DETALLES = gql`
   fragment doctorDetalles on Doctor {
     id_doctor
@@ -1045,5 +1047,4 @@ query checkUserRecovery($email: String) {
 		UserId
 	}
 }
-
 `

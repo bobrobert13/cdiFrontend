@@ -93,7 +93,7 @@ export const useAgeValidation = () => {
   return [
     (val) => !!val || 'Este campo es obligatorio',
     (val) => /^\d+$/.test(val) || 'Solo se permiten números',
-    (val) => val.length <= 3 || 'Máximo 3 caracteres',
+    (val) => !val || val.length <= 3 || 'Máximo 3 caracteres',
     (val) => parseInt(val) >= 1 || 'La edad debe ser mayor a 0',
     (val) => parseInt(val) <= 120 || 'La edad debe ser menor a 120 años'
   ]

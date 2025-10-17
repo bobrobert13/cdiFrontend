@@ -130,6 +130,16 @@
                   color="primary" /> Los campos marcados con * son obligatorios</small>
               <div class=" col-7">
                 <div class="column justify-center">
+									                   <div class="row">
+                      <div class="col-2">
+                        <q-select filled v-model="nacionalidad" :options="nacionalidades" option-label="label"
+                          option-value="value" emit-value />
+                      </div>
+                      <div class="col-10">
+                        <q-input filled color="deep-purple-6" type="number" v-model="dni" @blur="obtenerInformacionPersonaRegistrada" :rules="dniRules"
+                          label="Cédula*" />
+                      </div>
+                    </div>
                   <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 ">
                     <q-input filled color="deep-purple-6" v-model="fullName" label="Nombre completo*"
                       :rules="fullNameRules" />
@@ -140,17 +150,8 @@
                     </div>
                   </div>
                   <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-pb-xs">
-                    <div class="row">
-                      <div class="col-2">
-                        <q-select filled v-model="nacionalidad" :options="nacionalidades" option-label="label"
-                          option-value="value" emit-value />
-                      </div>
-                      <div class="col-10">
-                        <q-input filled color="deep-purple-6" type="number" v-model="dni" :rules="dniRules"
-                          label="Cédula*" />
-                      </div>
-                    </div>
-                    <div class="row q-mt-sm">
+
+                    <div class="row ">
                       <div class="col-md-8 col-xl-8 col-lg-8 col-sm-12 col-xs-12">
                         <q-select filled label="Estado*" v-model="estado" :options="estados" option-label="label"
                           option-value="value" />
@@ -188,7 +189,7 @@
                       option-value="value" emit-value :rules="requiredSelectRules" />
                   </div>
                   <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 ">
-                    <q-input filled color="deep-purple-6" v-model="edad" label="Edad*" type="number"
+                    <q-input filled color="deep-purple-6" v-model="edad" label="Edad*"
                       :rules="ageRules" />
                   </div>
 
@@ -1755,6 +1756,7 @@ import {
   UPDDATE_ESTADO_HOSPITALIZACION_MUTATION,
   UPDDATE_ESTADO_EMERGENCIA_MUTATION
 } from "../../../graphql/user";
+import { PERSONA_POR_CEDULA_QUERY } from "src/graphql/persona";
 export default {
   name: "homeDoctor",
   computed: {
@@ -2296,6 +2298,78 @@ export default {
     medicamento_duracion: 'actualizarFechasMedicamento'
   },
   methods: {
+		 obtenerInformacionPersonaRegistrada() {
+			console.log('dni:', this.dni);
+			let dniRules = useDniValidation();
+			let validDni = dniRules.every(rule => rule(this.dni) === true);
+			console.log('dni valido?', validDni);
+			if(!validDni) return;
+			this.$apollo
+        .query({
+					query: PERSONA_POR_CEDULA_QUERY,
+					          variables: {
+            cedula_identidad: parseFloat(this.dni)
+          }
+				}).then((response) => {
+					const datosPersona = response.data.personaPorCedula;
+					const { correo, telefono, direccion, doctor, paciente, ...persona} = datosPersona;
+					this.limpiarTodoslosCampos();
+					this.llenarCamposDePersonaExistente({correo, telefono, direccion, doctor, paciente, persona: persona});
+				}).catch((err) => {
+					this.limpiarTodoslosCampos();
+          // this.$q.notify({
+          //   message: err.message.split("GraphQL error:"),
+          //   color: "negative",
+          // });
+        });
+		},
+		llenarCamposDePersonaExistente({correo, telefono, direccion, doctor, paciente, persona}) {
+			this.fullName = persona.nombre1;
+			this.ocupacion = persona.ocupacion;
+			this.estadoCivilSeleccionado = persona.estado_civil;
+			this.correo = correo.correo;
+			this.ciudad = direccion.parroquia;
+			this.calle = direccion.calle;
+			this.numero = direccion.numero_casa;
+			this.punto_referencia = direccion.punto_referencia;
+			this.sector = direccion.sector;
+			this.codigo_postal = direccion.codigo_postal;
+			this.sexo = persona.sexo;
+			this.edad = persona.edad.toString();
+			this.codigo = telefono.codigo;
+			this.telefono = telefono.numero;
+			if (!paciente) return;
+			this.vacunasSeleccionadas = paciente.vacunas;
+			this.sangreSeleccionada = paciente.tipo_de_sangre;
+			this.enfermedades_cronicas = paciente.enfermedades_cronicas;
+			this.discapacidad = paciente.discapacidad;
+			this.antecedentes_familiares = paciente.antecedentes_familiares;
+			this.alergias = paciente.alergias;
+			this.peso = paciente.peso.toString();
+		},
+		limpiarTodoslosCampos(){
+			this.fullName = "";
+			this.ocupacion = "";
+			this.estadoCivilSeleccionado = "";
+			this.correo = "";
+			this.ciudad = "";
+			this.calle = "";
+			this.numero = "";
+			this.punto_referencia = "";
+			this.sector = "";
+			this.codigo_postal = "";
+			this.sexo = "Masculino";
+			this.edad = 0;
+			this.codigo = 414;
+			this.telefono = "";
+			this.vacunasSeleccionadas = "";
+			this.sangreSeleccionada = "";
+			this.enfermedades_cronicas = "";
+			this.discapacidad = "";
+			this.antecedentes_familiares = "";
+			this.alergias = "";
+			this.peso = null;
+		},
     actualizarFechasMedicamento(newVal) {
       if (!newVal) {
         this.medicamento_fechaInicio = '';
@@ -2530,6 +2604,10 @@ export default {
     },
     workerView(typeView) {
       if (typeView === 'searchUser') return this.modals.searchUser = true;
+			if(typeView === 'workersList') {
+				this.AllWorkers();
+				this.limpiarTodoslosCampos();
+			}
       this.viewType = typeView
     },
     userDetail(user) {
@@ -2648,8 +2726,6 @@ export default {
           this.password = "";
           this.highlight = "";
           this.edad = 0;
-          this.viewType = "userList"
-          this.AllPacientes();
           this.$q.notify({
             message: "Paciente añadido",
             color: "positive",
@@ -2657,6 +2733,7 @@ export default {
           this.$emit("updateUsers", {
             users: true,
           });
+					setTimeout(() => window.location.reload(), 2000);
         })
         .catch((err) => {
           this.loader = false;
