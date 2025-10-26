@@ -55,6 +55,21 @@
                   map-options @update:model-value="onPeriodChange" style="min-width: 150px" />
               </div>
 
+              <!-- Selector de mes (solo visible cuando el período es 'Mes') -->
+              <div class="col-auto" v-if="selectedPeriod === 'month'">
+                <q-select
+                  v-model="selectedMonth"
+                  outlined
+                  dense
+                  :options="monthOptions"
+                  label="Mes"
+                  emit-value
+                  map-options
+                  @update:model-value="onMonthChange"
+                  style="min-width: 170px"
+                />
+              </div>
+
               <!-- Botón para actualizar datos -->
               <div class="col-auto">
                 <q-btn color="primary" label="Actualizar" @click="updateChartData" :loading="isLoading" />
@@ -159,7 +174,7 @@ import {
 export default {
   name: 'EstadisticasDashboard',
   components: {
-    apexchart: VueApexCharts,
+    VueApexCharts,
   },
   data() {
     return {
@@ -220,11 +235,29 @@ export default {
       // === CONFIGURACIÓN DE FILTROS ===
       // Estado actual del filtro seleccionado
       selectedPeriod: 'month', // Valores posibles: 'week', 'month'
+  // Mes seleccionado (1-12). Por defecto, mes actual
+  selectedMonth: new Date().getMonth() + 1,
 
       // Opciones disponibles para el selector de período
       periodOptions: [
         { label: 'Esta Semana', value: 'week' },
         { label: 'Este Mes', value: 'month' }
+      ],
+
+      // Opciones de meses
+      monthOptions: [
+        { label: 'Enero', value: 1 },
+        { label: 'Febrero', value: 2 },
+        { label: 'Marzo', value: 3 },
+        { label: 'Abril', value: 4 },
+        { label: 'Mayo', value: 5 },
+        { label: 'Junio', value: 6 },
+        { label: 'Julio', value: 7 },
+        { label: 'Agosto', value: 8 },
+        { label: 'Septiembre', value: 9 },
+        { label: 'Octubre', value: 10 },
+        { label: 'Noviembre', value: 11 },
+        { label: 'Diciembre', value: 12 }
       ],
 
       // Estado de carga para mostrar spinner en el botón
@@ -381,33 +414,26 @@ export default {
         });
     },
 
-    /**
-     * Se ejecuta cuando el usuario cambia el período en el selector
-     * @param {string} newPeriod - El nuevo período seleccionado ('week' o 'month')
-     */
+
     onPeriodChange(newPeriod) {
-      console.log('Período cambiado a:', newPeriod);
       this.selectedPeriod = newPeriod;
       // Actualizar automáticamente cuando cambia el período
       this.updateChartData();
     },
 
-    /**
-     * Actualiza todos los gráficos con los datos del período seleccionado
-     * IMPORTANTE: Aquí es donde conectarás con tu API real
-     */
+    onMonthChange(newMonth) {
+      this.selectedMonth = newMonth;
+      if (this.selectedPeriod === 'month') {
+        this.updateChartData();
+      }
+    },
+
+
     async updateChartData() {
       this.isLoading = true;
 
       try {
         await this.simulateApiCall();
-
-        // After all data is fetched, update the charts with the new data
-        // const periodData = this.getDataForPeriod(this.selectedPeriod);
-
-        // Wait for the main charts to update
-        // this.updateMainCharts(periodData);
-
         this.updateStatsCards();
 
       } catch (error) {
@@ -514,7 +540,7 @@ export default {
       this.stats[1].value = this.totalPacientesNuevos.reduce((a, b) => a + b, 0).toString();
       this.stats[1].series = [{ name: 'Nuevos', data: this.totalPacientesNuevos }];
 
-      this.stats[2].label = this.selectedPeriod === 'week' ? 'Consultas de la semana' : 'Consultas del mes';
+      this.stats[2].label = this.selectedPeriod === 'week' ? 'Consultas de la semana' : `Consultas del mes`;
       this.stats[2].value = this.totalConsultas.reduce((a, b) => a + b, 0).toString();
 
       this.stats[2].series = [{ name: 'Consultas', data: this.totalConsultas }];
@@ -579,6 +605,10 @@ export default {
 
     getCurrentPeriodLabel() {
       const option = this.periodOptions.find(opt => opt.value === this.selectedPeriod);
+      if (this.selectedPeriod === 'month') {
+        const m = this.monthOptions.find(m => m.value === this.selectedMonth);
+        return `${option ? option.label : 'Mes'}${m ? `: ${m.label}` : ''}`;
+      }
       return option ? option.label : 'Período Desconocido';
     },
 
@@ -601,10 +631,18 @@ export default {
 
 
     fetchPacientesNuevos() {
+      const variables = {
+        id_cdi: this.userId,
+        periodo: this.selectedPeriod
+      };
+      if (this.selectedPeriod === 'month') variables.mes = this.selectedMonth;
+      console.log('mes enviado:', variables);
+      
+
       return this.$apollo
         .query({
           query: ESTADISTICA_PACIENTES_NUEVOS_QUERY,
-          variables: { id_cdi: this.userId, periodo: this.selectedPeriod },
+          variables,
           fetchPolicy: "network-only",
         })
         .then((response) => {
@@ -650,10 +688,16 @@ export default {
 
 
     fetchConsultasPorPeriodo() {
+      const variables = {
+        id_cdi: this.userId,
+        periodo: this.selectedPeriod
+      };
+      if (this.selectedPeriod === 'month') variables.mes = this.selectedMonth;
+
       return this.$apollo
         .query({
           query: ESTADISTICA_CONSULTAS_POR_PERIODO_QUERY,
-          variables: { id_cdi: this.userId, periodo: this.selectedPeriod },
+          variables,
           fetchPolicy: "network-only",
         })
         .then((response) => {
@@ -666,10 +710,16 @@ export default {
 
 
     fetchConsultasPorDoctor() {
+      const variables = {
+        id_cdi: this.userId,
+        periodo: this.selectedPeriod
+      };
+      if (this.selectedPeriod === 'month') variables.mes = this.selectedMonth;
+
       return this.$apollo
         .query({
           query: ESTADISTICA_CONSULTAS_POR_DOCTOR_QUERY,
-          variables: { id_cdi: this.userId, periodo: this.selectedPeriod },
+          variables,
           fetchPolicy: "network-only",
         })
         .then((response) => {
@@ -682,10 +732,16 @@ export default {
 
 
     fetchTopDiagnosticos() {
+      const variables = {
+        id_cdi: this.userId,
+        periodo: this.selectedPeriod
+      };
+      if (this.selectedPeriod === 'month') variables.mes = this.selectedMonth;
+
       return this.$apollo
         .query({
           query: ESTADISTICA_TOP_TEN_DIAGNOSTICOS_QUERY,
-          variables: { id_cdi: this.userId, periodo: this.selectedPeriod },
+          variables,
           fetchPolicy: "network-only",
         })
         .then((response) => {
