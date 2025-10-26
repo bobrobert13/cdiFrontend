@@ -16,7 +16,7 @@ function setRole(data) {
 }
 
 async function saveToken(data) {
-  window.localStorage.setItem("user", data.usuario.nombre_usuario);
+  window.localStorage.setItem("user", data.usuario.nombre_usuario || '');
   window.localStorage.setItem("status", data.usuario.status || '');
   window.localStorage.setItem("user_id", data.usuario.id_usuario);
   window.localStorage.setItem("doctor_id", data.usuario.fk_doctor_id);

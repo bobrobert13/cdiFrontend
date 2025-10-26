@@ -155,11 +155,10 @@
             </div>
 
             <div class="row q-mt-lg justify-center">
-              <p>Credenciales de acceso</p>
               <div class="col-12">
                 <div class="row">
-                  <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 q-pa-sm">
-                    <q-input disable filled color="deep-purple-6" v-model="userCDIProfile.usuarios.nombre_usuario"
+                  <div  class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 q-pa-sm">
+                    <q-input disable filled color="deep-purple-6" :value="this.$store.state.user.nombre_usuario"
                       @blur="validateCDICredentialsInputs" label="Nombre de usuario"
                       :rules="[val => val.length >= 3 || 'El nombre de usuario debe tener al menos 3 caracteres']" />
                   </div>
@@ -212,7 +211,7 @@
             </div>
 
             <div v-if="userDoctorProfile.usuarios" class="row q-mt-lg justify-center">
-              <p>Credenciales de acceso</p>
+              <p>Credenciales de acceso: {{ userDoctorProfile }}</p>
               <div class="col-12">
                 <div class="row">
                   <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 q-pa-sm">
@@ -762,10 +761,10 @@ export default {
         .mutate({
           mutation: UPDATE_USUARIO_MUTATION,
           variables: {
-            id_usuario: usuario.id_usuario,
+            id_usuario: this.$store.state.user.user_id,
             input: {
               contrasena: this.$store.state.user.role === 'cdi' ? this.cdi_contrasena : this.doctor_contrasena || this.admin_contrasena,
-              nombre_usuario: usuario.nombre_usuario,
+              nombre_usuario: this.$store.state.user.nombre_usuario,
             },
           },
         })
