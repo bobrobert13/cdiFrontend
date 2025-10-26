@@ -211,7 +211,7 @@
             </div>
 
             <div v-if="userDoctorProfile.usuarios" class="row q-mt-lg justify-center">
-              <p>Credenciales de acceso: {{ userDoctorProfile }}</p>
+              <p>Credenciales de acceso:</p>
               <div class="col-12">
                 <div class="row">
                   <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 q-pa-sm">
@@ -676,7 +676,6 @@ export default {
         });
     },
     async infoUser() {
-    console.log("uusuario", this.$store.state.user);
       if (this.$store.state.user.role === 'cdi') {
         await this.obtenerInformacionCDI();
       } else if (this.$store.state.user.role === 'doctor') {
@@ -685,7 +684,6 @@ export default {
         await this.obtenerInformacionAdmin();
       }
     },
-
     obtenerInformacionCDI() {
       this.$apollo
         .query({

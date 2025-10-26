@@ -392,9 +392,24 @@
                   <q-select filled class="q-mb-xs" v-model="nacionalidad" :options="nacionalidades" option-label="label"
                     option-value="value" emit-value label="Nacionalidad*" />
 
+                    <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-pb-xs ">
                   <q-input filled color="deep-purple-6" type="number" v-model="dni" :rules="dniRules" label="Cédula*" />
+                  </div>
 
                   <q-input type="email" filled v-model="email" label="Correo electrónico*" :rules="emailRules" />
+
+                                    <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-pb-xs ">
+                    <q-select filled v-model="sexo" :options="sexoDoctor" label="Sexo*" option-label="label"
+                      option-value="value" emit-value :rules="requiredSelectRules" />
+                  </div>
+                                    <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-pb-xs ">
+                                          <q-select filled label="Estado civil*" v-model="estadoCivilSeleccionado" :options="estado_civil"
+                          :rules="requiredSelectRules" />
+                          </div>
+
+                          <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-pb-xs ">
+         <q-input type="text" filled v-model="edad" label="Edad*" :rules="ageRules" />
+         </div>
 
                   <div class="row q-mb-xs">
                     <div class="col-8">
@@ -609,7 +624,8 @@ import {
   usePhoneValidation,
   usePostalCodeValidation,
   useRequiredSelectValidation,
-  useTextFieldValidation
+  useTextFieldValidation,
+  useAgeValidation
 } from '../../../utils/validations'
 import { isFormValid } from '../../../utils/formUtils'
 import moment from "moment";
@@ -625,6 +641,9 @@ export default {
     },
     dniRules() {
       return useDniValidation();
+    },
+    ageRules() {
+      return [...useAgeValidation(), (val) => parseInt(val) >= 18 || 'La edad debe ser mayor a 18', ];
     },
     anosExperienciaRules() {
       return useDoctorAnosExperienciaValidation();
@@ -671,6 +690,9 @@ export default {
         estado: this.estado,
         ciudad: this.ciudad,
         calle: this.calle,
+        sexo: this.sexo,
+        edad: this.edad,
+        estadoCivilSeleccionado: this.estadoCivilSeleccionado,
         numero: this.numero,
         sector: this.sector,
         punto_referencia: this.punto_referencia,
@@ -799,6 +821,22 @@ export default {
       doctor_nombre_usuario: '',
       punto_referencia: '',
       codigo_postal: '',
+
+      estadoCivilSeleccionado: '',
+      estado_civil: [
+        { label: "Soltero", value: "Soltero" },
+        { label: "Casado", value: "Casado" },
+        { label: "Divorciado", value: "Divorciado" },
+        { label: "Viudo", value: "Viudo" },
+        { label: "Unión libre", value: "Unión libre" }
+      ],  
+      edad: 0,
+
+      sexoDoctor: [
+        { label: "Masculino", value: "Masculino" },
+        { label: "Femenino", value: "Femenino" }
+      ],
+      sexo: "Masculino",
 
       doctor_contrasena: '',
       isValid: false,
