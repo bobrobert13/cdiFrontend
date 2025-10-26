@@ -1318,7 +1318,10 @@ export default {
                 nombre1: this.fullName,
                 cedula_identidad: parseInt(this.dni),
                 nacionalidad: this.nacionalidad,
+                estado_civil: this.estadoCivilSeleccionado.value,
                 ocupacion: this.doctor_ocupacion,
+                sexo: this.sexo,
+                edad: parseInt(this.edad),
                 telefonoInput: {
                   codigo: this.codigo,
                   numero: this.telefono
@@ -1356,6 +1359,11 @@ export default {
           this.email = "";
           this.password = "";
           this.dni = "";
+          this.edad = 0;
+          this.codigo_postal = '',
+          this.punto_referencia = '',
+          this.sexo = 'Masculino',
+          this.estadoCivilSeleccionado = '',
           this.telefono = "";
           this.direccion = "";
           this.highlight = "";
