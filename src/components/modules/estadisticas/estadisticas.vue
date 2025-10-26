@@ -636,8 +636,6 @@ export default {
         periodo: this.selectedPeriod
       };
       if (this.selectedPeriod === 'month') variables.mes = this.selectedMonth;
-      console.log('mes enviado:', variables);
-      
 
       return this.$apollo
         .query({

@@ -79,11 +79,7 @@
                               <small class="text-weight-medium text-primary">Area de trabajo: <b>{{ user.area_de_trabajo
                               }}</b></small>
                             </q-item-section>
-                            <q-item-section side>
-                              <div class="text-grey-8 q-gutter-xs">
-                                <!-- <q-btn @click="generatePDF(user)" class="gt-xs text-blue" size="12px" flat dense round
-                          icon="mdi-file-download-outline" /> -->
-
+                            <q-item-section >
                                 <button @click="generateDoctorPDF(user)" type="button" lines="2"
                                   class=" q-ml-xl q-mr-md cursor-pointer text-primary self-center text-bold"
                                   style="cursor: pointer">
@@ -95,8 +91,6 @@
                                   class="gt-xs text-negative" size="12px" flat dense
                                   :label="user.usuarios.estado === 'activo' ? 'Inhabilitar' : 'Habilitar'" />
 
-
-                              </div>
                             </q-item-section>
                           </q-item>
                         </q-list>
@@ -127,12 +121,9 @@
                               <small class="text-weight-medium text-primary">Area de trabajo: <b>{{ user.area_de_trabajo
                               }}</b></small>
                             </q-item-section>
-                            <q-item-section side>
-                              <div class="text-grey-8 q-gutter-xs">
-                                <!-- <q-btn @click="generatePDF(user)" class="gt-xs text-blue" size="12px" flat dense round
-                          icon="mdi-file-download-outline" /> -->
 
-                                <button @click="generateDoctorPDF(user)" type="button" lines="2"
+                          </q-item>
+                                                          <button @click="generateDoctorPDF(user)" type="button" lines="2"
                                   class=" q-ml-xl q-mr-md cursor-pointer text-primary self-center text-bold"
                                   style="cursor: pointer">
                                   <q-icon name="mdi-printer-pos" /> Descargar información del doctor
@@ -142,9 +133,6 @@
                                   @click="actualizarUsuario({ ...user.usuarios, estado: user.usuarios.estado === 'activo' ? 'inactivo' : 'activo' })"
                                   class="gt-xs text-negative" size="12px" flat dense
                                   :label="user.usuarios.estado === 'activo' ? 'Inhabilitar' : 'Habilitar'" />
-                              </div>
-                            </q-item-section>
-                          </q-item>
                         </q-list>
 
                       </div>
@@ -165,61 +153,43 @@
                 Listado de pacientes administrados por los doctores del CDI
                 <div class="row justify-center q-mt-xl" v-if="usersPacientes && this.usersPacientes.length !== 0">
                   <div class="col-12 q-mb-sm" v-for="(userPaciente, index) in usersPacientes" :key="index">
-                    <q-list class="rounded-borders bg-secondary" style="border-radius: 15px">
-                      <q-item>
-                        <q-item-section avatar style="cursor: pointer">
-                          <q-avatar color="primary" icon="mdi-account-circle" text-color="white">
-                          </q-avatar>
-                        </q-item-section>
-
-                        <q-item-section top style="cursor: pointer">
-                          <q-item-label class="text-left q-mb-xs" lines="1">
-                            <span class="text-weight-medium">Nombre del paciente: <b>{{ userPaciente.persona.nombre1 }}
-                              </b></span>
-                          </q-item-label>
-                          <small class="text-weight-medium">Correo electrónico: {{ userPaciente.persona.correo.correo
-                          }}</small>
-                          <small class="text-weight-medium">Número de contacto: {{ userPaciente.persona.telefono.codigo
-                          }}{{
-                              userPaciente.persona.telefono.numero }}</small>
-                          <small class="text-weight-medium">Documento de Identidad: {{
-                            userPaciente.persona.cedula_identidad
-                          }}</small>
-                          <q-separator v-if="userPaciente.doctor" spaced color="blue-grey" />
-                          <q-item-label v-if="userPaciente.doctor" class="text-left" lines="1">
-                            <small class="text-weight-medium">Registrado por doctor: {{
-                              userPaciente.doctor.persona.nombre1
-                            }}</small>
-                          </q-item-label>
-                          <q-item-label v-if="userPaciente.doctor" class="text-left" lines="1">
-                            <small class="text-weight-medium">Carnet: {{ userPaciente.doctor.numero_carnet }}</small>
-                          </q-item-label>
-                          <q-item-label v-if="userPaciente.doctor" class="text-left text-primary" lines="1">
-                            <small class="text-weight-medium">Area de trabajo: {{ userPaciente.doctor.area_de_trabajo
-                            }}</small>
-                          </q-item-label>
-
-                        </q-item-section>
-
-                        <q-item-section side style="cursor: pointer">
-                          <q-item-label class="text-left q-mb-xs column items-center" lines="1">
-                            <button @click="generatePacientePDF(userPaciente)" type="button" lines="2"
-                              class=" q-ml-xl q-mr-md q-mb-sm cursor-pointer text-primary self-center text-bold"
-                              style="cursor: pointer">
-                              <q-icon name="mdi-printer-pos" /> Descargar ficha del paciente
-                            </button>
-                            <small class="text-weight-medium">Fecha de creación: <b>{{
-                              entradaCracion(userPaciente.createdAt) }}
-                              </b></small>
-                          </q-item-label>
-
-                        </q-item-section>
-                        <q-item-section side>
-                          <div class="text-grey-8 q-gutter-xs">
-                            <!-- <q-btn @click="generatePDF(user)" class="gt-xs text-blue" size="12px" flat dense round
-                          icon="mdi-file-download-outline" /> -->
+                    <q-list class="rounded-borders bg-grey-2" style="border-radius: 15px">
+                      <q-item v-if="userPaciente.persona">
+                        <q-item-section top class=" q-py-md" style="cursor: pointer">
+                          <div class="row">
+                            <div class="col-6 q-mb-xs">
+                              <q-item-label class="text-left" lines="1">
+                                <span class="text-weight-medium">Nombre:</span> {{ userPaciente.persona.nombre1 }} {{ userPaciente.persona.apellido1 }}
+                              </q-item-label>
+                            </div>
+                            <div class="col-6 q-mb-xs">
+                              <q-item-label class="text-right" lines="1">
+                                <span class="text-weight-medium">Edad:</span> {{ userPaciente.persona.edad }} años
+                              </q-item-label>
+                            </div>
+                            <div class="col-6 q-mb-xs">
+                              <q-item-label class="text-left" lines="1">
+                                <span class="text-weight-medium">Nacionalidad:</span> {{ userPaciente.persona.nacionalidad }}
+                              </q-item-label>
+                              <q-item-label class="text-left" lines="1">
+                                <span class="text-weight-medium">Documento:</span>  {{ userPaciente.persona.cedula_identidad }}
+                              </q-item-label>
+                            </div>
+                            <div class="col-6 q-mb-xs">
+                              <q-item-label class="text-right" lines="1">
+                                <span class="text-weight-medium">Sexo:</span> {{ userPaciente.persona.sexo }}
+                              </q-item-label>
+                              <q-item-label class="text-right" lines="1">
+                                <span class="text-weight-medium">Telefono:</span> {{ userPaciente.persona.telefono.codigo }}-{{ userPaciente.persona.telefono.numero }}
+                              </q-item-label>
+                            </div>
                           </div>
-                        </q-item-section>
+                          <q-separator spaced color="blue-grey" />
+
+                            <button type="button"
+                              class="no-outline no-border q-px-md q-py-xs rounded-borders bg-blue-grey text-white cursor-pointer"
+                             @click="generatePacientePDF(userPaciente)"><q-icon name="mdi-printer" class="q-mr-sm" />Descargar ficha del paciente</button>
+                          </q-item-section>
                       </q-item>
                     </q-list>
                   </div>

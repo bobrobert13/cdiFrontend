@@ -36,13 +36,13 @@
 <template>
   <div id="q-app">
     <q-layout view="hHh Lpr lff" container style="min-height: 100vh">
-      <q-drawer v-if="
+      <q-drawer  v-if="
         $store.state.user.isAuthenticated &&
         $route.name !== 'login' &&
         $route.name !== 'registro' &&
         $route.name !== 'recuperar' &&
         $route.name !== 'pedido'
-      " v-model="drawer" show-if-above :mini="true" :width="70" class="sm-hide xs-hide" content-class="bg-primary">
+      " v-model="drawer" show-if-above :mini="true" class="sm-hide xs-hide" content-class="bg-primary">
         <q-scroll-area class="fit">
           <q-list padding>
 
@@ -84,6 +84,8 @@
         </q-scroll-area>
       </q-drawer>
 
+
+
       <div class="menu-bottom md-hide lg-hide xl-hide bg-white text-primary" elevated v-if="$store.state.token">
         <q-separator />
         <q-tabs>
@@ -110,6 +112,43 @@
         </q-page>
       </q-page-container>
       <!-- FIN CONTENIDO -->
+
+      <navbar
+      v-if="
+        $store.state.user.isAuthenticated &&
+        $route.name !== 'login' &&
+        $route.name !== 'registro' &&
+        $route.name !== 'recuperar' &&
+        $route.name !== 'pedido'
+      "
+      class="q-pa-sm bg-primary md-hide lg-hide xl-hide full-width fixed-bottom ">
+          <div class="row full-width justify-evenly items-center ">
+            <div class="col-1">
+                <router-link to="/home">
+                  <q-avatar color="white" style="cursor: pointer" icon="mdi-account-circle" text-color="primary">
+                  </q-avatar>
+                </router-link>
+            </div>
+
+            <div class="col-1" v-if="this.$store.state.user.role !== 'doctor'">
+                <router-link to="/estadisticas" >
+                  <q-avatar color="white" style="cursor: pointer" icon="mdi-google-analytics" text-color="primary">
+                  </q-avatar>
+                </router-link>
+            </div>
+
+            <div class="col-1">
+                <q-avatar color="white" style="cursor: pointer" icon="mdi-cog" text-color="primary" @click="myInfo()">
+                </q-avatar>
+            </div>
+
+            <div class="col-1">
+                <q-avatar v-on:click="confirm = true" color="white"  style="cursor: pointer" icon="mdi-logout"
+                  text-color="primary">
+                </q-avatar>
+              </div>
+          </div>
+      </navbar>
     </q-layout>
 
     <!-- INFO DIALOG -->
@@ -395,7 +434,10 @@
         </div>
       </q-card>
     </q-dialog>
+
+
   </div>
+  
 </template>
 
 <script>
