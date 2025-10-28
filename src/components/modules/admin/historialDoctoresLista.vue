@@ -21,6 +21,7 @@
               <div class="header-cell">Cédula</div>
               <div class="header-cell">Teléfono</div>
               <div class="header-cell">Correo</div>
+              <div class="header-cell">Estado</div>
             </div>
             <div v-for="(data, index) in activeList" :key="'act-'+index" class="table-row">
                <span class="value"  >{{ data.persona.nombre1 || 'No especificado' }}</span>
@@ -28,6 +29,7 @@
               <div class="table-cell">{{ data.persona.cedula_identidad || 'No especificado' }}</div>
               <div class="table-cell">{{ data.persona.telefono.codigo + ' ' + (data.persona.telefono.numero || 'No especificado') }}</div>
               <div class="table-cell">{{ data.persona.correo.correo || 'No especificado' }}</div>
+                <div class="table-cell">{{ data.usuarios.estado || 'No especificado' }}</div>
             </div>
           </div>
         </div>
@@ -47,6 +49,8 @@
               <div class="table-cell">{{ data.persona.cedula_identidad || 'No especificado' }}</div>
               <div class="table-cell">{{ data.persona.telefono.codigo + ' ' + (data.persona.telefono.numero || 'No especificado') }}</div>
               <div class="table-cell">{{ data.persona.correo.correo || 'No especificado' }}</div>
+                <div class="table-cell">{{ data.usuarios.estado || 'No especificado' }}</div>
+
             </div>
           </div>
         </div>
@@ -119,7 +123,7 @@ export default {
   font-family: Arial, sans-serif;
   font-size: 10px;
   line-height: 1.2;
-  max-width: 210mm; /* A4 width */
+  max-width: 210mm;
   margin: 0 auto;
 }
 
@@ -141,32 +145,23 @@ export default {
 .compact-table {
   border: 1px solid #ddd;
   border-radius: 3px;
-  overflow: hidden;
+  overflow-x: auto;
   margin-top: 5px;
+  width: 100%;
 }
 
-.table-header {
+.table-header, .table-row {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: repeat(6, minmax(100px, 1fr));
   background-color: #1976d2;
   font-weight: bold;
   font-size: 9px;
-}
-
-.header-cell {
-  padding: 3px 4px;
-  border-right: 1px solid #ddd;
-  text-align: center;
-  color: white;
-}
-
-.header-cell:last-child {
-  border-right: none;
+  min-width: 600px;
 }
 
 .table-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  background-color: #fff;
+  font-weight: normal;
   border-top: 1px solid #ddd;
   font-size: 9px;
 }
@@ -175,42 +170,67 @@ export default {
   background-color: #f9f9f9;
 }
 
-.table-cell {
+.header-cell, .table-cell, .value {
   padding: 3px 4px;
   border-right: 1px solid #ddd;
+  text-align: center;
+  color: #333;
   word-break: break-word;
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.table-cell:last-child {
+.header-cell {
+  color: white;
+  background-color: #1976d2;
+}
+
+.header-cell:last-child, .table-cell:last-child, .value:last-child {
   border-right: none;
 }
 
-/* Responsive adjustments for printing */
-@media print {
+/* Responsive: stack columns on small screens */
+@media (max-width: 900px) {
   .pdf-container {
-    padding: 5px;
     font-size: 9px;
   }
-
-  .info-section {
-    margin-bottom: 10px;
+  .table-header, .table-row {
+    grid-template-columns: repeat(6, minmax(80px, 1fr));
+    min-width: 480px;
   }
+}
 
-  .section-title {
-    font-size: 10px;
-    padding: 3px 6px;
-  }
-
-  .table-header,
-  .table-row {
+@media (max-width: 600px) {
+  .pdf-container {
     font-size: 8px;
+    padding: 2px;
   }
-
-  .header-cell,
-  .table-cell {
-    padding: 2px 3px;
+  .section-title {
+    font-size: 9px;
+    padding: 2px 4px;
+  }
+  .compact-table {
+    margin-top: 2px;
+  }
+  .table-header, .table-row {
+    grid-template-columns: 1fr;
+    display: block;
+    min-width: unset;
+  }
+  .table-header, .table-row {
+    background-color: transparent;
+  }
+  .header-cell, .table-cell, .value {
+    display: block;
+    border-right: none;
+    border-bottom: 1px solid #eee;
+    text-align: left;
+    white-space: normal;
+    padding: 4px 2px;
+  }
+  .header-cell:last-child, .table-cell:last-child, .value:last-child {
+    border-bottom: none;
   }
 }
 
@@ -235,8 +255,6 @@ export default {
 .compact-table.small .table-row {
   font-size: 8px;
 }
-
-/* Ensure cells wrap nicely in the compact two-column view */
 .compact-table.small .table-cell {
   padding: 2px 4px;
 }
