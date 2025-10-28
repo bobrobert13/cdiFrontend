@@ -19,11 +19,11 @@
                   class="text-primary q-mr-md" size="md"></q-icon>
                 <q-icon style="cursor: pointer" @click="workerView('addWorker')" name="mdi-plus"
                   class="text-primary q-mr-md" size="md"></q-icon>
-                <!-- <q-icon style="cursor: pointer" name="mdi-printer-pos" class="text-primary" size="md">
-                  <q-tooltip @click="generateDoctorsPDF()" anchor="top middle" self="bottom middle" :offset="[10, 10]">
+                <q-icon  @click="generateDoctorsPDF()" style="cursor: pointer" name="mdi-printer-pos" class="text-primary" size="md">
+                  <q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]">
                     <strong>Descargar doctores del CDI</strong>
                   </q-tooltip>
-                </q-icon> -->
+                </q-icon>
               </div>
 
               <!-- <div v-if="tab === 'pacientesCDI'" class="col self-center text-right">
@@ -559,6 +559,20 @@
         </section>
       </vue-html2pdf>
     </div>
+
+
+    
+        <div>
+			<vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="true" :preview-modal="false"
+				:paginate-elements-by-height="1400" filename="Listado_DOCTORES" :pdf-quality="2"
+				:manual-pagination="false" pdf-format="a4" :pdf-margin="10" pdf-orientation="portrait"
+				pdf-content-width="800px" @progress="onProgress($event)" ref="html2Pdfstatus">
+				<section slot="pdf-content">
+					<HistorialDoctoresLista :data="users" :isActive="tabEstadoEncargado === 'encargadosActivos'" />
+				</section>
+			</vue-html2pdf>
+    </div>
+
   </div>
 </template>
 <script>
@@ -575,6 +589,7 @@ import {
 } from "../../../graphql/user";
 import VueHtml2pdf from "vue-html2pdf";
 import historiaDrPdf from "../admin/historiaDrPdf.vue";
+import HistorialDoctoresLista from "../admin/historialDoctoresLista.vue";
 import historiaPdf from "../admin/hitoriaPdf.vue";
 
 import { ADMIN_DOCTORES_QUERY } from "../../../graphql/admin";
@@ -601,7 +616,7 @@ import { isFormValid } from '../../../utils/formUtils'
 import moment from "moment";
 export default {
   name: "homeEncargado",
-  components: { historiaDrPdf, historiaPdf, VueHtml2pdf },
+  components: { historiaDrPdf, historiaPdf, VueHtml2pdf, HistorialDoctoresLista },
   computed: {
     fullNameRules() {
       return useFullNameValidation();
@@ -1109,7 +1124,7 @@ export default {
     },
     generateDoctorsPDF() {
       this.pdfData = this.users;
-      this.$refs.html2Pdf.generatePdf();
+      this.$refs.html2Pdfstatus.generatePdf();
     },
     downloadSeveralUsers() {
       this.pdfData = this.users;

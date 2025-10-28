@@ -47,7 +47,19 @@
               @click="(usersView = false), (controlLista = true)">Volver</span>
           </div>
           <div class="col-10 q-mb-xl text-center">
-            <users></users>
+            <!-- PARA PACIENTES -->
+            <users>
+    <section class=" row  no-wrap full-width q-gutter-x-xl justify-start">
+        <div @click="adminControl()" class="cursor-pointer column justify-center items-center">
+          <q-icon name="mdi-account-group" color="primary" size="55px" />
+          <span>Ir a CDIS</span>
+        </div>
+        <div @click="doctorControl()" class="cursor-pointer column justify-center items-center">
+        <q-icon name="mdi-doctor" color="primary" size="55px" />
+      <span>Ir a Doctores</span>  
+      </div>
+    </section>
+            </users>
           </div>
         </div>
         <div class="row justify-center" v-if="adminsView === true">
@@ -56,7 +68,20 @@
               @click="(adminsView = false), (controlLista = true)">Volver</span>
           </div>
           <div class="col-10 q-mb-xl text-center">
-            <admins></admins>
+            <!-- PARA CDIS -->
+            <admins>
+    <section class=" row  no-wrap full-width q-gutter-x-xl justify-start">
+        <div @click="userControl()" class="cursor-pointer column justify-center items-center">
+          <q-icon name="mdi-account-group" color="primary" size="55px" />
+          <span>Ir a pacientes</span>
+        </div>
+        <div @click="doctorControl()" class="cursor-pointer column justify-center items-center">
+        <q-icon name="mdi-doctor" color="primary" size="55px" />
+      <span>Ir a Doctores</span>  
+      </div>
+    </section>
+
+            </admins> 
           </div>
         </div>
         <div class="row  justify-center" v-if="doctoresView === true">
@@ -64,8 +89,22 @@
             <span class="text-bold text-h6 text-accent" style="cursor: pointer"
               @click="(doctoresView = false), (controlLista = true)">Volver</span>
           </div>
+            <!-- PARA DOCTORES -->
           <div class="col-10 q-mb-xl text-center">
-            <doctores></doctores>
+            <doctores>
+
+                  <section class=" row  no-wrap full-width q-gutter-x-xl justify-start">
+        <div @click="adminControl()" class="cursor-pointer column justify-center items-center">
+          <q-icon name="mdi-account-group" color="primary" size="55px" />
+          <span>Ir a CDIS</span>
+        </div>
+        <div @click="userControl()" class="cursor-pointer column justify-center items-center">
+        <q-icon name="mdi-doctor" color="primary" size="55px" />
+      <span>Ir a pacientes</span>  
+      </div>
+    </section>
+
+            </doctores>
           </div>
         </div>
       </q-scroll-area>
@@ -108,14 +147,26 @@ export default {
   watch: {},
   methods: {
     userControl() {
+
+      this.adminsView = false;
+      this.doctoresView = false;
+
       this.usersView = true;
       this.controlLista = false;
     },
     adminControl() {
+
+      this.usersView = false;
+      this.doctoresView = false;
+
       this.adminsView = true;
       this.controlLista = false;
     },
     doctorControl() {
+
+      this.usersView = false;
+      this.adminsView = false;
+
       this.doctoresView = true;
       this.controlLista = false;
     },

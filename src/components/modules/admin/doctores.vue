@@ -1,5 +1,8 @@
 <template>
   <div class="">
+
+    <slot></slot>
+
     <div class="col-12" v-if="viewType === 'userList'">
       <div class="col-12">
         <span class="text-accent text-h6 text-bold">Control de Doctores</span>
@@ -13,6 +16,8 @@
                   class="text-primary q-mr-md" size="md"></q-icon>
           <q-icon style="cursor: pointer" @click="workerView('addWorker')" name="mdi-plus" class="text-primary"
             size="md"></q-icon>
+            					<q-icon @click="doctorsInformationsPDF()" style="cursor: pointer" name="mdi-printer-pos"
+						class="text-primary q-ml-sm" size="md"></q-icon>
         </div>
       </div>
 
@@ -46,6 +51,8 @@
                       user.persona.cedula_identidad
                       }}</small>
                     <small v-if="user.persona.telefono" class="text-weight-medium text-left">Número de teléfono: {{
+                      user.persona.telefono.codigo
+                      }}-{{
                       user.persona.telefono.numero
                       }}</small>
                     <small class="text-weight-medium text-left">Estatus de usuario: <b>{{
@@ -326,6 +333,21 @@
             <div class="text-caption q-mt-sm q-mb-xs">Años de experiencia: {{ dataUser.anos_experiencia }}
             </div>
             <div class="text-caption q-mt-sm q-mb-xs">Horario: {{ dataUser.horario }}</div>
+
+            <div class="text-caption q-mt-md text-weight-bold q-mb-xs">Información de CDI</div>
+
+            <div v-if="dataUser.usuarios.cdi" class="text-caption q-mt-sm q-mb-xs">Nombre de CDI: {{
+              dataUser.usuarios.cdi.nombre }}</div>
+
+            <div v-if="dataUser.usuarios.cdi" class="text-caption q-mt-sm q-mb-xs">Código: {{
+              dataUser.usuarios.cdi.numero_cdi }}</div>
+
+            <div v-if="dataUser.usuarios.cdi" class="text-caption q-mt-sm q-mb-xs">Cuadrante: {{
+              dataUser.usuarios.cdi.cuadrante }}</div>
+
+             <div v-if="dataUser.usuarios.cdi" class="text-caption q-mt-sm q-mb-xs">Encargado: {{
+              dataUser.usuarios.cdi.encargado }}</div>
+
             <!-- <div class="text-caption q-mt-sm q-mb-xs">Télefono: {{ dataUser.persona.telefono.codigo }}{{ dataUser.persona.telefono.numero }}</div> -->
           </q-card-section>
 
@@ -431,6 +453,19 @@
         </section>
       </vue-html2pdf>
     </div>
+
+        <div>
+			<vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="true" :preview-modal="false"
+				:paginate-elements-by-height="1400" filename="Listado_DOCTORES_STATUS" :pdf-quality="2"
+				:manual-pagination="false" pdf-format="a4" :pdf-margin="10" pdf-orientation="portrait"
+				pdf-content-width="800px" @progress="onProgress($event)" ref="html2Pdfstatus">
+				<section slot="pdf-content">
+					<HistorialDoctoresLista :data="users" :isActive="tabDrEstado === 'dr_activos'" />
+				</section>
+			</vue-html2pdf>
+    </div>
+
+
   </div>
 </template>
 <script>
@@ -443,6 +478,8 @@ import {
 } from "../../../graphql/user";
 import VueHtml2pdf from "vue-html2pdf";
 import HistoriaDrPdf from "./historiaDrPdf.vue";
+import HistorialDoctoresLista from "./historialDoctoresLista.vue";
+
 import { ADMIN_DOCTORES_QUERY, ADMIN_ALL_CDIS_QUERY, UPDATE_USUARIO_MUTATION } from "../../../graphql/user";
 import {
   useDniValidation,
@@ -464,7 +501,7 @@ import {
 import { isFormValid } from "src/utils/formUtils";
 export default {
   name: "doctores",
-  components: { HistoriaDrPdf, VueHtml2pdf },
+  components: { HistoriaDrPdf, VueHtml2pdf, HistorialDoctoresLista },
   data() {
     return {
       // DATOS DE DOCTOR:
@@ -828,10 +865,11 @@ export default {
     },
     generatePDF(user) {
       this.dataUser = user;
-      console.log("datauser: ", this.dataUser);
-
       this.$refs.html2Pdf.generatePdf();
     },
+    		doctorsInformationsPDF() {
+			this.$refs.html2Pdfstatus.generatePdf();
+		},
     userDetail(user) {
       this.modalDetailUser = true;
       this.dataUser = user;

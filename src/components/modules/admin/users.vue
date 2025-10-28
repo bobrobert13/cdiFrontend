@@ -1,5 +1,7 @@
 <template>
   <div class="row justify-center">
+   <slot></slot>
+
     <div class="col-12" v-if="viewType === 'userList'">
       <span class="text-accent text-h6 text-bold">Todos los pacientes</span>
       <div class="row justify-center">

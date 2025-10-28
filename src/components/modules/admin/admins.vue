@@ -1,5 +1,8 @@
 <template>
 	<div class="row justify-center">
+
+		<slot></slot>
+
 		<div class="col-12" v-if="viewType === 'userList'">
 			<div class="col-12">
 				<span class="text-accent text-h6 text-bold">Listado de usuarios CDIs</span>
@@ -204,19 +207,19 @@
 
 						<div class="row jusitify-center">
 							<div class="col-6 q-pa-sm">
-								<q-input filled @blur="validarNombre" color="deep-purple-6" v-model="dataUser.nombre"
+								<q-input filled  color="deep-purple-6" v-model="dataUser.nombre"
 									label="Nombre de CDI" :rules="cdiNameRules" />
 							</div>
 							<div class="col-6 q-pa-sm">
-								<q-input filled color="deep-purple-6" @blur="validarNumeroCDI"
+								<q-input filled color="deep-purple-6" 
 									v-model="dataUser.numero_cdi" label="Número de CDI" :rules="cdiNumberRules" />
 							</div>
 							<div class="col-6 q-pa-sm">
-								<q-input filled color="deep-purple-6" @blur="validarEncargado"
+								<q-input filled color="deep-purple-6" 
 									v-model="dataUser.encargado" label="Encargado" :rules="cdiEncargadoRules" />
 							</div>
 							<div class="col-6 q-pa-sm">
-								<q-input filled color="deep-purple-6" @blur="validarCuadrante"
+								<q-input filled color="deep-purple-6" 
 									v-model="dataUser.cuadrante" label="Cuadrante" :rules="cdiCuadranteRules" />
 							</div>
 
@@ -235,22 +238,18 @@
 						<div class="row jusitify-center">
 							<div class="col-6 q-pa-sm">
 								<q-input filled color="deep-purple-6" v-model="dataUser.usuarios.nombre_usuario"
-									@blur="validateUserCredentialsInputs" label="Nombre de usuario" :rules="[
-										(val) => val.length >= 5 || 'Mínimo 5 caracteres',
-										(val) => val.length <= 20 || 'Máximo 20 caracteres',
-										(val) => /^[a-zA-ZñÑáéíóúÁÉÍÓÚ]+$/.test(val) || 'Solo se permiten letras (sin números ni caracteres especiales)',
-									]" />
+									 label="Nombre de usuario" :rules="cdiNombreUsuarioRules" />
 							</div>
 
 							<div class="col-6 q-pa-sm">
 								<q-input filled color="deep-purple-6" v-model="dataUser.usuarios.contrasena"
-									@blur="validateUserCredentialsInputs" :rules="passwordRules" label="Contraseña" />
+									 :rules="cdiContrasenaRules" label="Contraseña" />
 							</div>
 
 						</div>
 					</div>
 					<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 q-mt-md">
-						<q-btn unelevated :disabled="!isValid" :loading="loader" @click="actualizarCDI(dataUser)"
+						<q-btn unelevated :disabled="!formHasNoErrorsUpdateCdiCredentials" :loading="loader" @click="actualizarCDI(dataUser)"
 							class="fullwidth text-white bg-primary" label="Actualizar credenciales" />
 					</div>
 				</div>
@@ -640,7 +639,7 @@ export default {
 			return useFullNameValidation();
 		},
 		cdiCuadranteRules() {
-			return useTextFieldValidation(true, 3, 100);
+			return useFullNameValidation();
 		},
 		cdiNombreUsuarioRules() {
 			return useDoctorNombreUsuarioValidation(true, 3, 100);
@@ -660,13 +659,24 @@ export default {
 			const validationRules = {
 				cdi_nombre: useFullNameValidation(),
 				cdi_encargado: useFullNameValidation(),
-				cdi_cuadrante: useTextFieldValidation(true, 3, 100),
+				cdi_cuadrante: useFullNameValidation(),
 				cdi_nombre_usuario: useDoctorNombreUsuarioValidation(true, 3, 100),
 				cdi_contrasena: usePasswordValidation(),
 				cdi_numero: useTextFieldValidation(true, 3, 100),
 			}
 			return isFormValid(formValues, validationRules)
 		},
+		formHasNoErrorsUpdateCdiCredentials() {
+			const formValues = {
+				cdi_nombre_usuario: this.dataUser.usuarios.nombre_usuario,
+				cdi_contrasena: this.dataUser.usuarios.contrasena,
+			}
+			const validationRules = {
+				cdi_nombre_usuario: useDoctorNombreUsuarioValidation(true, 3, 100),
+				cdi_contrasena: usePasswordValidation(),
+			}
+			return isFormValid(formValues, validationRules)
+		},	
 		formHasNoErrorsUpdateCDI() {
 			const formValues = {
 				cdi_nombre: this.dataUser.nombre,
@@ -677,7 +687,7 @@ export default {
 			const validationRules = {
 				cdi_nombre: useFullNameValidation(),
 				cdi_encargado: useFullNameValidation(),
-				cdi_cuadrante: useTextFieldValidation(true, 3, 100),
+				cdi_cuadrante:	useFullNameValidation() ,
 				cdi_numero: useTextFieldValidation(true, 3, 100),
 			}
 			return isFormValid(formValues, validationRules)
