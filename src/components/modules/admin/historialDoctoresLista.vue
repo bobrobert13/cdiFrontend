@@ -10,7 +10,7 @@
 
     <!-- LISTADO DE DOCTORES separado en dos columnas: Activos / Inactivos -->
     <div class="info-section">
-      <div class="section-title">DOCTORES REGISTRADOS ({{ totalCount }})</div>
+      <div class="section-title">DOCTORES REGISTRADOS INACTIVOS ({{ this.isActive  ? activeList.length : inactiveList.length }})</div>
 
       <div class="two-columns">
         <div v-if="this.isActive" class="column">
@@ -42,6 +42,7 @@
               <div class="header-cell">Cédula</div>
               <div class="header-cell">Teléfono</div>
               <div class="header-cell">Correo</div>
+              <div class="header-cell">Estado</div>
             </div>
            <div v-for="(data, index) in inactiveList" :key="'inact-'+index" class="table-row">
                <span class="value">{{ data.persona.nombre1 || 'No especificado' }}</span>
@@ -50,7 +51,6 @@
               <div class="table-cell">{{ data.persona.telefono.codigo + ' ' + (data.persona.telefono.numero || 'No especificado') }}</div>
               <div class="table-cell">{{ data.persona.correo.correo || 'No especificado' }}</div>
                 <div class="table-cell">{{ data.usuarios.estado || 'No especificado' }}</div>
-
             </div>
           </div>
         </div>

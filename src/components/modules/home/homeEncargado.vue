@@ -54,6 +54,8 @@
                 <div class=" full-width q-mt-md" v-if="this.users && this.users.length !== 0">
                   <q-tab-panels v-model="tabEstadoEncargado" animated>
                     <q-tab-panel name="encargadosActivos" class="full-width">
+                      					<button @click="generateDoctorsPDF()" class=" cursor-pointer q-mb-sm text-primary self-center text-bold"
+						type="button"> <small style="font-size: 12px;">Descargar lista de doctores activos</small></button>
                       <div class="full-width q-mb-sm" v-for="(user, index) in users" :key="index">
                         <q-list v-if="user.usuarios.estado === 'activo'" class="rounded-borders full-width bg-secondary"
                           style="border-radius: 15px">
@@ -97,6 +99,8 @@
                       </div>
                     </q-tab-panel>
                     <q-tab-panel name="encargadosInactivos">
+                      <button @click="generateDoctorsPDF()" class=" cursor-pointer q-mb-sm text-primary self-center text-bold"
+						type="button"> <small style="font-size: 12px;">Descargar lista de doctores inactivos</small></button>
                       <div class="full-width q-mb-sm" v-for="(user, index) in users" :key="index">
                         <q-list v-if="user.usuarios.estado === 'inactivo'"
                           class="rounded-borders full-width bg-secondary" style="border-radius: 15px">
@@ -1104,6 +1108,7 @@ export default {
 
 
 
+
     entradaCracion(createdAt) {
       return moment(createdAt).format('DD-MM-YYYY')
     },
@@ -1125,6 +1130,10 @@ export default {
     generateDoctorsPDF() {
       this.pdfData = this.users;
       this.$refs.html2Pdfstatus.generatePdf();
+    },
+    GenerateDoctoresStatusPDF() {
+      this.pdfData = this.users;
+      this.$refs.html2PdfByStatus.generatePdf();
     },
     downloadSeveralUsers() {
       this.pdfData = this.users;
