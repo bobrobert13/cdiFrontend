@@ -90,19 +90,23 @@
       <div class="section-title">PACIENTES ({{ data.pacientes.length }})</div>
       <div class="compact-table">
         <div class="table-header">
+          <div class="header-cell">Nombre</div>
           <div class="header-cell">Nacionalidad</div>
-          <div class="header-cell">Cédula</div>
           <div class="header-cell">Edad</div>
-          <div class="header-cell">Estado Civil</div>
+          <!-- <div class="header-cell">Estado Civil</div> -->
           <div class="header-cell">Sexo</div>
+          <div class="header-cell">Atendido el:</div>
+
         </div>
         <div v-for="paciente in data.pacientes" :key="paciente.id_paciente" class="table-row">
           <div class="table-cell">{{ paciente.persona.nombre1 }}</div>
-          <div class="table-cell">{{ paciente.persona.nacionalidad }}</div>
           <div class="table-cell">{{ paciente.persona.cedula_identidad }}</div>
           <div class="table-cell">{{ paciente.persona.edad }}</div>
-          <div class="table-cell">{{ paciente.persona.estado_civil }}</div>
+          <!-- <div class="table-cell">{{ paciente.persona.estado_civil }}</div> -->
           <div class="table-cell">{{ paciente.persona.sexo }}</div>
+          <div class="table-cell">{{ entradaFecha(paciente.createdAt) }}</div>
+
+
         </div>
       </div>
     </div>
@@ -144,9 +148,9 @@ import moment from 'moment'
 
 export default {
   name: "historiaPdfDr",
-  components: {},
   props: ["data"],
   created() {
+    console.log('listado docto:', this.data);
   },
   methods: {
     salidaFecha(salida) {
