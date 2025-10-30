@@ -19,7 +19,7 @@
                   class="text-primary q-mr-md" size="md"></q-icon>
                 <q-icon style="cursor: pointer" @click="workerView('addWorker')" name="mdi-plus"
                   class="text-primary q-mr-md" size="md"></q-icon>
-                <q-icon  @click="generateDoctorsPDF()" style="cursor: pointer" name="mdi-printer-pos" class="text-primary" size="md">
+                <q-icon  @click="generateAllDoctorsReport()" style="cursor: pointer" name="mdi-printer-pos" class="text-primary" size="md">
                   <q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]">
                     <strong>Descargar doctores del CDI</strong>
                   </q-tooltip>
@@ -577,6 +577,18 @@
 			</vue-html2pdf>
     </div>
 
+            <div>
+			<vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="true" :preview-modal="false"
+				:paginate-elements-by-height="1400" filename="Listado_Completo_De_Doctores" :pdf-quality="2"
+				:manual-pagination="false" pdf-format="a4" :pdf-margin="10" pdf-orientation="portrait"
+				pdf-content-width="800px" @progress="onProgress($event)" ref="html2PdfAllDoctors">
+				<section slot="pdf-content">
+					<PdfListaDoctoresCompleta :data="users"  />
+				</section>
+			</vue-html2pdf>
+    </div>
+
+
   </div>
 </template>
 <script>
@@ -618,9 +630,10 @@ import {
 } from '../../../utils/validations'
 import { isFormValid } from '../../../utils/formUtils'
 import moment from "moment";
+import PdfListaDoctoresCompleta from "../admin/pdf-lista-doctores-completa.vue";
 export default {
   name: "homeEncargado",
-  components: { historiaDrPdf, historiaPdf, VueHtml2pdf, HistorialDoctoresLista },
+  components: { historiaDrPdf, historiaPdf, VueHtml2pdf, HistorialDoctoresLista, PdfListaDoctoresCompleta },
   computed: {
     fullNameRules() {
       return useFullNameValidation();
@@ -1131,9 +1144,9 @@ export default {
       this.pdfData = this.users;
       this.$refs.html2Pdfstatus.generatePdf();
     },
-    GenerateDoctoresStatusPDF() {
+    generateAllDoctorsReport() {
       this.pdfData = this.users;
-      this.$refs.html2PdfByStatus.generatePdf();
+      this.$refs.html2PdfAllDoctors.generatePdf();
     },
     downloadSeveralUsers() {
       this.pdfData = this.users;
