@@ -438,7 +438,7 @@
                   <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 ">
                     <q-input filled color="deep-purple-6" type="text" class="q-mb-xs" v-model="doctor_numero_carnet"
                       label="Número de carnet*" :rules="carnetRules" />
-                    <q-input filled color="deep-purple-6" type="text" class="q-mb-xs" v-model="doctor_ocupacion"
+                    <q-input filled color="deep-purple-6" type="text" class="q-mb-xs hidden" v-model="doctor_ocupacion"
                       label="Ocupación*" :rules="ocupacionRules" />
                     <q-select filled color="deep-purple-6" type="text" class="q-mb-xs" v-model="doctor_horario"
                       label="Horario*" :options="[
