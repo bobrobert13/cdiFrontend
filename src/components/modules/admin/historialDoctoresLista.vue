@@ -10,7 +10,7 @@
 
     <!-- LISTADO DE DOCTORES separado en dos columnas: Activos / Inactivos -->
     <div class="info-section">
-      <div class="section-title">DOCTORES REGISTRADOS INACTIVOS ({{ this.isActive  ? activeList.length : inactiveList.length }})</div>
+      <div class="section-title">DOCTORES REGISTRADOS {{ this.isActive ? 'ACTIVOS' : 'INACTIVOS' }} ({{ this.isActive  ? activeList.length : inactiveList.length }})</div>
 
       <div class="two-columns">
         <div v-if="this.isActive" class="column">
