@@ -714,6 +714,9 @@ export default {
         email: useEmailValidation(),
         dni: useDniValidation(),
         estado: useRequiredSelectValidation(),
+        edad: useAgeValidation(),
+        sexo: useRequiredSelectValidation(),
+        estadoCivilSeleccionado: useRequiredSelectValidation(),
         ciudad: useRequiredSelectValidation(),
         calle: useRequiredSelectValidation(),
         numero: useHouseNumberValidation(),
@@ -1217,7 +1220,7 @@ export default {
         });
     },
     actualizarDoctor(doctorUpdate) {
-      console.log('editando la informacion del doctor:', doctorUpdate);
+      // console.log('editando la informacion del doctor:', doctorUpdate);
 
       this.loader = true;
       this.$apollo

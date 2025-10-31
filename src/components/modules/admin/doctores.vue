@@ -79,6 +79,10 @@
                         @click="actualizarUsuario({ ...user.usuarios, estado: user.usuarios.estado === 'activo' ? 'inactivo' : 'activo' })"
                         class="gt-xs text-negative" size="12px" flat dense
                         :label="user.usuarios.estado === 'activo' ? 'Inhabilitar' : 'Habilitar'" />
+                        <q-btn
+                        @click="setUpdateWorkerData(user)"
+                        class=" text-primary" size="12px" flat dense
+                        label="Editar" />
                     </div>
                   </q-item-section>
                 </q-item>
@@ -141,6 +145,10 @@
                         @click="actualizarUsuario({ ...user.usuarios, estado: user.usuarios.estado === 'activo' ? 'inactivo' : 'activo' })"
                         class="gt-xs text-negative" size="12px" flat dense
                         :label="user.usuarios.estado === 'activo' ? 'Inhabilitar' : 'Habilitar'" />
+                        <q-btn
+                        @click="setUpdateWorkerData(user)"
+                        class=" text-primary" size="12px" flat dense
+                        label="Editar" />
                     </div>
                   </q-item-section>
                 </q-item>
@@ -206,6 +214,20 @@
                   <q-input filled color="deep-purple-6" type="number" v-model="dni" :rules="dniRules" label="Cédula*" />
 
                   <q-input type="email" filled v-model="email" label="Correo electrónico*" :rules="emailRules" />
+
+                                                      <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-pb-xs ">
+                    <q-select filled v-model="sexo" :options="sexoDoctor" label="Sexo*" option-label="label"
+                      option-value="value" emit-value :rules="requiredSelectRules" />
+                  </div>
+                                    <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-pb-xs ">
+                                          <q-select filled label="Estado civil*" v-model="estadoCivilSeleccionado" :options="estado_civil"
+                          :rules="requiredSelectRules" />
+                          </div>
+
+                          <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-pb-xs ">
+         <q-input type="text" filled v-model="edad" label="Edad*" :rules="ageRules" />
+                          </div>
+
 
                   <div class="row q-mb-xs">
                     <div class="col-8">
@@ -304,6 +326,108 @@
             </div>
             </div>
             <!-- FIN CREAR NUEVO DOCTOR -->
+
+
+
+
+                        <!-- ACTUALIZAR EL DOCTOR -->
+            <div  v-if="viewType === 'updateWorker'">
+              <div class="col-12  text-left row items-center q-mt-md q-mb-md">
+                <q-icon style="cursor: pointer" @click="workerView('userList')" name="mdi-arrow-left"
+                  class="text-primary" size="md"></q-icon>
+                <span style="cursor: pointer" class="text-bold text-accent text-h6"
+                  @click="workerView('userList')">Actualizar
+                  doctor</span>
+              </div>
+              <small class="q-my-md block text-red text-bold"> <q-icon name="mdi-information" class="q-mr-xs" size="sm"
+                  color="primary" />Los campos marcados con * son obligatorios</small>
+
+                <div class="col-7">
+                <div class="column justify-center">
+                  <q-input filled color="deep-purple-6" v-model="dataUser.persona.nombre1" label="Nombre completo*" :rules="fullNameRules" />
+
+                  <q-select filled class="q-mb-xs" v-model="dataUser.persona.nacionalidad" :options="nacionalidades" option-label="label"
+                  option-value="value" emit-value label="Nacionalidad*" />
+
+                  <q-input filled color="deep-purple-6" type="number" v-model="dataUser.persona.cedula_identidad" :rules="dniRules" label="Cédula*" />
+
+                  <q-input type="email" filled v-model="dataUser.persona.correo.correo" label="Correo electrónico*" :rules="emailRules" />
+
+                  <div class="row q-mb-xs">
+                  <!-- <div class="col-8">
+                    <q-select filled label="Estado*" v-model="dataUser.persona.direccion.estado" :options="estados" option-label="label"
+                    option-value="value" emit-value :rules="requiredSelectRules" />
+                  </div>
+                  <div class="col-4">
+                    <q-select filled label="Ciudad*" v-model="dataUser.persona.direccion.parroquia"
+                    :options="ciudades[dataUser.persona.direccion.estado]" emit-value :rules="requiredSelectRules" />
+                  </div> -->
+                  </div>
+                  <div class="row q-mb-xs">
+                  <div class="col-8">
+                    <q-input filled color="deep-purple-6" v-model="dataUser.persona.direccion.calle" label="Calle*" :rules="requiredSelectRules" />
+                  </div>
+                  <div class="col-4">
+                    <q-input filled color="deep-purple-6" v-model="dataUser.persona.direccion.numero_casa" label="Número de casa*" type="number" :rules="houseNumberRules" />
+                  </div>
+                  </div>
+                  <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-mb-xs">
+                  <q-input filled color="deep-purple-6" v-model="dataUser.persona.direccion.sector" label="Sector*" :rules="requiredSelectRules" />
+                  </div>
+                  <div class="col-xl-8 col-lg-8 col-md-8 q-pb-xs col-sm-12 col-xs-12 ">
+                  <q-input filled color="deep-purple-6" v-model="dataUser.persona.direccion.punto_referencia" label="Punto de referencia*" :rules="requiredSelectRules" />
+                  </div>
+                  <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-mb-xs">
+                  <q-input filled color="deep-purple-6" type="number" :rules="postalCodeRules" v-model="dataUser.persona.direccion.codigo_postal" label="Código postal*" />
+                  </div>
+                  <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-mb-xs">
+                  <div class="row">
+                    <div class="col-4">
+                    <q-select filled v-model="dataUser.persona.telefono.codigo" :options="codigoTel" label="Codigo*" option-label="label"
+                      option-value="value" emit-value  />
+                    </div>
+                    <div class="col-8">
+                    <q-input filled color="deep-purple-6" :rules="telefonoRules" v-model="dataUser.persona.telefono.numero" type="number" label="Número de telefono*" />
+                    </div>
+                  </div>
+                  </div>
+
+                </div>
+                </div>
+                <div class="col-7" style="border-left: 10px solid white;">
+                <div class="column justify-center">
+                  <p class="text-h6 q-my-md text-weight-medium text-accent">Información del doctor</p>
+                  <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 ">
+                  <q-input filled color="deep-purple-6" type="text" class="q-mb-xs" v-model="dataUser.numero_carnet"
+                    label="Número de carnet*" :rules="carnetRules" />
+                  <q-input filled color="deep-purple-6" type="text" class="q-mb-xs hidden" v-model="dataUser.ocupacion"
+                    label="Ocupación*" :rules="ocupacionRules" />
+                  <q-select filled color="deep-purple-6" type="text" class="q-mb-xs" v-model="dataUser.horario"
+                    label="Horario*" :options="[
+                    'Lunes a Viernes 8:00 am - 6:00 pm',
+                    'Lunes a Viernes 9:00 am - 5:00 pm',
+                    'Lunes a Viernes 10:00 am - 4:00 pm',
+                    'Sábados 9:00 am - 1:00 pm',
+                    'Sábados 10:00 am - 2:00 pm',
+                    'Domingos 10:00 am - 2:00 pm',
+                    'Lunes, Miércoles y Viernes 8:00 am - 5:00 pm',
+                    'Martes y Jueves 10:00 am - 6:00 pm',
+                    'Lunes a Viernes 8:00 am - 12:00 pm y 1:00 pm - 5:00 pm'
+                    ]" :rules="horarioRules" />
+                  <q-input filled color="deep-purple-6" type="number" class="q-mb-xs"
+                    v-model="dataUser.anos_experiencia" label="Años de experiencia*" :rules="anosExperienciaRules" />
+                  <q-select filled v-model="dataUser.area_de_trabajo" :options="roleUserEspecialidad" label="Area de trabajo*"
+                    option-label="label" option-value="value" emit-value :rules="especialidadRules" />
+                  </div>
+
+                </div>
+                </div>
+
+              <div class="col-xl-5 col-lg-5 col-md-5 col-sm-12 col-xs-12 q-mb-xs ">
+              <q-btn unelevated type='submit' :loading="loader" @click="actualizarDoctor(dataUser)" :disable="!formUpdateHasNoErrors" class="full-width text-white bg-primary" label="Añadir doctor" />
+            </div>
+            </div>
+            <!-- FIN ACTUALIZAR DOCTOR -->
 
 
 
@@ -474,7 +598,8 @@ import {
   ADDUSER_MUTATION,
   USER_DELETE,
   BUSCAR_USER_QUERY,
-  ADD_DOCTOR_USER_MUTATION
+  ADD_DOCTOR_USER_MUTATION,
+  UPDDATE_DOCTOR_MUTATION
 } from "../../../graphql/user";
 import VueHtml2pdf from "vue-html2pdf";
 import HistoriaDrPdf from "./historiaDrPdf.vue";
@@ -496,7 +621,8 @@ import {
   usePhoneValidation,
   usePostalCodeValidation,
   useRequiredSelectValidation,
-  useTextFieldValidation
+  useTextFieldValidation,
+  useAgeValidation
 } from "src/utils/validations";
 import { isFormValid } from "src/utils/formUtils";
 export default {
@@ -512,6 +638,22 @@ export default {
       punto_referencia: '',
       codigo_postal: '',
       doctor_ocupacion: 'Doctor',
+
+            estadoCivilSeleccionado: '',
+      estado_civil: [
+        { label: "Soltero", value: "Soltero" },
+        { label: "Casado", value: "Casado" },
+        { label: "Divorciado", value: "Divorciado" },
+        { label: "Viudo", value: "Viudo" },
+        { label: "Unión libre", value: "Unión libre" }
+      ],  
+      edad: 0,
+
+      sexoDoctor: [
+        { label: "Masculino", value: "Masculino" },
+        { label: "Femenino", value: "Femenino" }
+      ],
+      sexo: "Masculino",
 
       doctor_contrasena: '',
       isValid: false,
@@ -689,6 +831,9 @@ export default {
     dniRules() {
       return useDniValidation();
     },
+    ageRules() {
+      return [...useAgeValidation(), (val) => parseInt(val) >= 18 || 'La edad debe ser mayor a 18', ];
+    },
     anosExperienciaRules() {
       return useDoctorAnosExperienciaValidation();
     },
@@ -733,6 +878,9 @@ export default {
         estado: this.estado,
         ciudad: this.ciudad,
         calle: this.calle,
+        sexo: this.sexo,
+        edad: this.edad,
+        estadoCivilSeleccionado: this.estadoCivilSeleccionado,
         numero: this.numero,
         sector: this.sector,
         punto_referencia: this.punto_referencia,
@@ -751,6 +899,9 @@ export default {
         email: useEmailValidation(),
         dni: useDniValidation(),
         estado: useRequiredSelectValidation(),
+        edad: useAgeValidation(),
+        sexo: useRequiredSelectValidation(),
+        estadoCivilSeleccionado: useRequiredSelectValidation(),
         ciudad: useRequiredSelectValidation(),
         calle: useRequiredSelectValidation(),
         numero: useHouseNumberValidation(),
@@ -765,6 +916,45 @@ export default {
         roleEspecialidad: useDoctorEspecialidadValidation(),
         doctor_nombre_usuario: useDoctorNombreUsuarioValidation(),
         password: usePasswordValidation()
+      }
+      return isFormValid(formValues, validationRules)
+    },
+        formUpdateHasNoErrors() {
+      const formValues = {
+        fullName: this.dataUser.persona.nombre1,
+        email: this.dataUser.persona.correo ? this.dataUser.persona.correo.correo : '',
+        dni: this.dataUser.persona.cedula_identidad,
+        // estado: this.estado,
+        // ciudad: this.dataUser.direccion.ciudad,
+        calle: this.dataUser.persona.direccion.calle,
+        numero_casa: this.dataUser.persona.direccion.numero_casa,
+        sector: this.dataUser.persona.direccion.sector,
+        punto_referencia: this.dataUser.persona.direccion.punto_referencia,
+        codigo_postal: this.dataUser.persona.direccion.codigo_postal,
+        telefono: this.dataUser.persona.telefono ? this.dataUser.persona.telefono.numero : '',
+        doctor_numero_carnet: this.dataUser.numero_carnet,
+        doctor_ocupacion: 'Doctor',
+        doctor_horario: this.dataUser.horario,
+        doctor_anos_experiencia: this.dataUser.anos_experiencia,
+        roleEspecialidad: this.dataUser.area_de_trabajo,
+      }
+      const validationRules = {
+        fullName: useFullNameValidation(),
+        email: useEmailValidation(),
+        dni: useDniValidation(),
+        // estado: useRequiredSelectValidation(),
+        // ciudad: useRequiredSelectValidation(),
+        calle: useRequiredSelectValidation(),
+        numero_casa: useHouseNumberValidation(),
+        sector: useRequiredSelectValidation(),
+        punto_referencia: useRequiredSelectValidation(),
+        codigo_postal: usePostalCodeValidation(),
+        telefono: usePhoneValidation(),
+        doctor_numero_carnet: useDoctorCarnetValidation(),
+        doctor_ocupacion: useDoctorOcupacionValidation(),
+        doctor_horario: useDoctorHorarioValidation(),
+        doctor_anos_experiencia: useDoctorAnosExperienciaValidation(),
+        roleEspecialidad: useDoctorEspecialidadValidation(),
       }
       return isFormValid(formValues, validationRules)
     },
@@ -862,6 +1052,47 @@ export default {
     workerView(typeView) {
       if(typeView === 'searchUser') return this.modals.searchUser = true;
       this.viewType = typeView
+    },
+    setUpdateWorkerData(doctor) {
+      // console.log('loc', doctor);
+      this.dataUser = {
+        id_doctor: doctor.id_doctor,
+        numero_carnet: doctor.numero_carnet,
+        ocupacion: doctor.ocupacion,
+        horario: doctor.horario,
+        anos_experiencia: parseFloat(doctor.anos_experiencia),
+        area_de_trabajo: doctor.area_de_trabajo,
+        usuarios: {
+          id: doctor.usuarios.id,
+          nombre_usuario: doctor.usuarios.nombre_usuario,
+          password: '',
+          cdiId: doctor.usuarios.cdi ? doctor.usuarios.cdi.id_cdi : null
+        },
+        persona: {
+          nombre1: doctor.persona.nombre1,
+          nombre2: doctor.persona.nombre2,
+          apellido1: doctor.persona.apellido1,
+          apellido2: doctor.persona.apellido2,
+          cedula_identidad: doctor.persona.cedula_identidad,
+          nacionalidad: doctor.persona.nacionalidad === 'Venezolano/a' ? 'V' : 'E',
+          direccion: {
+            parroquia: doctor.persona.direccion.parroquia,
+            calle: doctor.persona.direccion.calle,
+            numero_casa: doctor.persona.direccion.numero_casa,
+            sector: doctor.persona.direccion.sector,
+            punto_referencia: doctor.persona.direccion.punto_referencia,
+            codigo_postal: doctor.persona.direccion.codigo_postal
+          },
+          telefono: doctor.persona.telefono ? {
+            codigo: doctor.persona.telefono.codigo,
+            numero: doctor.persona.telefono.numero
+          } : null,
+          correo: doctor.persona.correo ? {
+            correo: doctor.persona.correo.correo
+          } : null
+        }
+      };
+      this.viewType = "updateWorker";
     },
     generatePDF(user) {
       this.dataUser = user;
@@ -1057,6 +1288,9 @@ export default {
                 cedula_identidad: parseInt(this.dni),
                 nacionalidad: this.nacionalidad,
                 ocupacion: this.doctor_ocupacion,
+                estado_civil: this.estadoCivilSeleccionado.value,
+                sexo: this.sexo,
+                edad: parseInt(this.edad),
                 telefonoInput: {
                   codigo: this.codigo,
                   numero: this.telefono
@@ -1110,6 +1344,83 @@ export default {
           this.AllDoctores();
           this.$q.notify({
             message: "Doctor añadido",
+            color: "positive",
+          });
+          this.$emit("updateUsers", {
+            users: true,
+          });
+        })
+        .catch((err) => {
+          this.loader = false;
+          this.$q.notify({
+            message: err.message.split("GraphQL error:"),
+            color: "negative",
+          });
+        });
+    },
+    actualizarDoctor(doctorUpdate) {
+      // console.log('editando la informacion del doctor:', doctorUpdate);
+      if (doctorUpdate.persona.nacionalidad === 'V') this.nacionalidadUser = 'Venezolano/a';
+      else this.nacionalidadUser = 'Extranjero/a';
+      this.loader = true;
+      this.$apollo
+        .mutate({
+          mutation: UPDDATE_DOCTOR_MUTATION,
+          variables: {
+            id_doctor: doctorUpdate.id_doctor,
+            input: {
+              doctorInput: {
+                anos_experiencia: parseInt(doctorUpdate.anos_experiencia),
+                numero_carnet: doctorUpdate.numero_carnet,
+                area_de_trabajo: doctorUpdate.area_de_trabajo,
+                horario: doctorUpdate.horario,
+                fk_cdi_id: this.$store.state.user.cdi_id,
+              },
+              personaInput: {
+                nombre1: doctorUpdate.persona.nombre1,
+                cedula_identidad: doctorUpdate.persona.cedula_identidad,
+                nacionalidad: this.nacionalidadUser,
+                telefonoInput: {
+                  codigo: doctorUpdate.persona.telefono.codigo,
+                  numero: doctorUpdate.persona.telefono.numero
+                },
+                correoInput: {
+                  correo: doctorUpdate.persona.correo.correo
+                },
+                direccionInput: {
+                   parroquia: doctorUpdate.persona.direccion.parroquia,
+                   calle: doctorUpdate.persona.direccion.calle,
+                   numero_casa: doctorUpdate.persona.direccion.numero_casa,
+                   sector: doctorUpdate.persona.direccion.sector,
+                   punto_referencia: doctorUpdate.persona.direccion.punto_referencia,
+                   codigo_postal: doctorUpdate.persona.direccion.codigo_postal
+                }
+       
+              },
+            },
+          },
+        })
+        .then((response) => {
+          this.loader = false;
+          this.dataUser = "";
+          this.fullName = "";
+          this.calle = "";
+          this.numero = "";
+          this.nacionalidad = "";
+          this.dataUser = null;
+          this.sector = "";
+          this.estado = { label: 'Anzoátegui', value: 2 }
+          this.ciudad = ""
+          this.email = "";
+          this.password = "";
+          this.dni = "";
+          this.telefono = "";
+          this.direccion = "";
+          this.highlight = "";
+          this.viewType = "userList"
+          this.AllDoctores();
+          this.$q.notify({
+            message: "Doctor actualizado",
             color: "positive",
           });
           this.$emit("updateUsers", {
