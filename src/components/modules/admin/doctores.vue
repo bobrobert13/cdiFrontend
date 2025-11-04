@@ -28,7 +28,9 @@
 
       <q-tab-panels v-model="tabDrEstado" animated>
         <q-tab-panel name="dr_activos">
-          <div class="row justify-center q-mt-xl" v-if="this.users.length !== 0">
+          	<button @click="generateDoctorsPDF()" class=" cursor-pointer q-my-sm text-primary self-center text-bold"
+						type="button"> <small style="font-size: 12px;">Descargar lista de doctores activos</small></button>
+          <div class="row justify-center q-mt-sm" v-if="this.users.length !== 0">
             <div class="col-12 q-mb-sm" v-for="(user, index) in users" :key="index">
               <q-list v-if="user.usuarios.estado === 'activo'" class="rounded-borders bg-secondary"
                 style="border-radius: 15px">
@@ -96,8 +98,10 @@
           </div>
         </q-tab-panel>
         <q-tab-panel name="dr_inactivos">
-          <div class="row justify-center q-mt-xl" v-if="this.users.length !== 0">
-            <div class="col-12 q-mb-sm" v-for="(user, index) in users" :key="index">
+          	<button @click="generateDoctorsPDF()" class=" cursor-pointer q-my-sm text-primary self-center text-bold"
+						type="button"> <small style="font-size: 12px;">Descargar lista de doctores inactivos</small></button>
+          <div class="row justify-center " v-if="this.users.length !== 0">
+            <div class="col-12 q-mb-xs" v-for="(user, index) in users" :key="index">
               <q-list v-if="user.usuarios.estado === 'inactivo'" class="rounded-borders bg-secondary"
                 style="border-radius: 15px">
                 <q-item>
@@ -578,7 +582,18 @@
       </vue-html2pdf>
     </div>
 
-        <div>
+            <div>
+			<vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="true" :preview-modal="false"
+				:paginate-elements-by-height="1400" filename="Listado_Completo_De_Doctores" :pdf-quality="2"
+				:manual-pagination="false" pdf-format="a4" :pdf-margin="10" pdf-orientation="portrait"
+				pdf-content-width="800px" @progress="onProgress($event)" ref="html2PdfAllDoctors">
+				<section slot="pdf-content">
+					<PdfListaDoctoresCompleta :data="users"  />
+				</section>
+			</vue-html2pdf>
+    </div>
+
+            <div>
 			<vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="true" :preview-modal="false"
 				:paginate-elements-by-height="1400" filename="Listado_DOCTORES_STATUS" :pdf-quality="2"
 				:manual-pagination="false" pdf-format="a4" :pdf-margin="10" pdf-orientation="portrait"
@@ -593,6 +608,7 @@
   </div>
 </template>
 <script>
+
 import config from "../../../config";
 import {
   ADDUSER_MUTATION,
@@ -604,6 +620,7 @@ import {
 import VueHtml2pdf from "vue-html2pdf";
 import HistoriaDrPdf from "./historiaDrPdf.vue";
 import HistorialDoctoresLista from "./historialDoctoresLista.vue";
+import PdfListaDoctoresCompleta from "../admin/pdf-lista-doctores-completa.vue";
 
 import { ADMIN_DOCTORES_QUERY, ADMIN_ALL_CDIS_QUERY, UPDATE_USUARIO_MUTATION } from "../../../graphql/user";
 import {
@@ -627,7 +644,7 @@ import {
 import { isFormValid } from "src/utils/formUtils";
 export default {
   name: "doctores",
-  components: { HistoriaDrPdf, VueHtml2pdf, HistorialDoctoresLista },
+  components: { HistoriaDrPdf, VueHtml2pdf, HistorialDoctoresLista, PdfListaDoctoresCompleta },
   data() {
     return {
       // DATOS DE DOCTOR:
@@ -1099,8 +1116,12 @@ export default {
       this.$refs.html2Pdf.generatePdf();
     },
     		doctorsInformationsPDF() {
-			this.$refs.html2Pdfstatus.generatePdf();
+			this.$refs.html2PdfAllDoctors.generatePdf();
 		},
+        generateDoctorsPDF() {
+      this.pdfData = this.users;
+      this.$refs.html2Pdfstatus.generatePdf();
+    },
     userDetail(user) {
       this.modalDetailUser = true;
       this.dataUser = user;

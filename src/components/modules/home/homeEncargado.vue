@@ -563,8 +563,6 @@
         </section>
       </vue-html2pdf>
     </div>
-
-
     
         <div>
 			<vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="true" :preview-modal="false"
