@@ -14,7 +14,6 @@
                 </div>
               </div>
               <div v-if="tab === 'doctoresCDI'" class="col self-center text-right">
-
                 <q-icon style="cursor: pointer" @click="workerView('searchUser')" name="mdi-account-search"
                   class="text-primary q-mr-md" size="md"></q-icon>
                 <q-icon style="cursor: pointer" @click="workerView('addWorker')" name="mdi-plus"
@@ -25,11 +24,10 @@
                   </q-tooltip>
                 </q-icon>
               </div>
-
-              <!-- <div v-if="tab === 'pacientesCDI'" class="col self-center text-right">
-                <q-icon style="cursor: pointer" name="mdi-printer-pos" class="text-primary" size="md"></q-icon>
-              </div> -->
-
+                 <div v-if="tab === 'pacientesCDI'" class="col self-center text-right">
+                <q-icon style="cursor: pointer" @click="modals.searchPaciente = !modals.searchPaciente" name="mdi-account-search"
+                  class="text-primary q-mr-md" size="md"></q-icon>
+              </div>
             </div>
 
             <q-tabs v-model="tab" class="text-teal">
@@ -492,7 +490,7 @@
           </div>
 
 
-          <!-- BUSCAR PACIENTE -->
+          <!-- BUSCAR DOCTOR -->
           <q-dialog v-model="modals.searchUser" style="min-width: 460px">
             <q-card style="min-width: 460px" class="text-white">
               <q-bar class="bg-primary">
@@ -509,6 +507,30 @@
               <q-card-actions align="right" class="text-primary">
                 <q-btn flat label="Cancelar" v-close-popup />
                 <q-btn flat label="Buscar" :disable="!dni.length" @click="buscarUsuario(dni)" />
+              </q-card-actions>
+            </q-card>
+          </q-dialog>
+          <!-- FIN BUSCAR DOCTOR -->
+
+
+          
+          <!-- BUSCAR PACIENTE -->
+          <q-dialog v-model="modals.searchPaciente" style="min-width: 460px">
+            <q-card style="min-width: 460px" class="text-white">
+              <q-bar class="bg-primary">
+                <q-space />
+                <q-btn dense flat icon="close" v-close-popup>
+                </q-btn>
+              </q-bar>
+              <q-card-section>
+                <div class="text-h6 text-primary">Buscar paciente</div>
+              </q-card-section>
+              <q-card-section class="q-pt-none">
+                <q-input v-model="dni" label="Escribe el DNI del paciente" />
+              </q-card-section>
+              <q-card-actions align="right" class="text-primary">
+                <q-btn flat label="Cancelar" v-close-popup />
+                <q-btn flat label="Buscar" :disable="!dni.length" @click="buscarPaciente(dni)" />
               </q-card-actions>
             </q-card>
           </q-dialog>
@@ -542,6 +564,105 @@
         </div>
       </q-scroll-area>
     </div>
+
+
+
+
+
+              <q-dialog v-model="modals.detallesPaciente">
+            <q-card class="my-card" flat bordered style="min-width: 450px">
+              <q-card-section>
+                <q-card-section class="col-5 flex flex-center no-padding">
+                  <div class="text-overline text-h6 text-grey-9">Informacion del paciente</div>
+                </q-card-section>
+                <q-card-section v-if="dataUser.persona" class="q-pt-xs q-pb-none no-margin">
+                  <div class="text-caption text-bold  ">Paciente: {{ dataUser.persona.nombre1 }}</div>
+                  <div class="text-caption  ">Documento de identidad:
+                    {{ dataUser.persona.nacionalidad }} - {{ dataUser.persona.cedula_identidad }}</div>
+                  <div class="text-caption  ">Edad del paciente: {{ dataUser.persona.edad }}</div>
+                  <div class="text-caption  ">Sexo: {{ dataUser.persona.sexo }}</div>
+                </q-card-section>
+              </q-card-section>
+
+              <q-card-section>
+                <div class="row items-center q-px-sm">
+                  <div class="col-12">
+                    <span class="text-caption text-bold ">Consultas</span>
+                  </div>
+                </div>
+                <q-item-section v-if="!dataUser.consultas || !dataUser.consultas.length">
+                  <q-item-section class="row q-pa-sm justify-center">
+                    El paciente aún no tiene consultas asignadas
+                  </q-item-section>
+                </q-item-section>
+                <q-scroll-area v-else  style="height: 140px; max-width: 100%;">
+                  <div v-for="(consulta, index) in dataUser.consultas" :key="index" >
+                    <q-list @click="updateConsulModal(consulta)">
+                      <q-item style="cursor:pointer;">
+                        <q-item-section>
+                          <span class="q-my-sm"> <q-icon name="mdi-information" color="primary" /> Estado actual: <b>{{
+                            consulta.estado_consulta }}</b></span>
+                          <q-item-label>Tipo de consulta: <b>{{ consulta.tipo_consulta }}</b></q-item-label>
+                          <q-item-label><b>Motivo:</b> {{ consulta.motivo_consulta }}</q-item-label>
+                          <q-item-label><b>Síntomas:</b> {{ consulta.sintomas }}</q-item-label>
+                        </q-item-section>
+                      </q-item>
+                    </q-list>
+                  </div>
+                </q-scroll-area>
+
+
+                                <div class="row items-center q-px-sm">
+                  <div class="col-12">
+                    <span class="text-caption text-bold ">Diagnósticos</span>
+                  </div>
+                </div>
+                                <q-item-section v-if="!dataUser.diagnosticos || !dataUser.diagnosticos.length">
+                  <q-item-section class="row q-pa-sm justify-center">
+                    El paciente aún no tiene diagnósticos
+                  </q-item-section>
+                </q-item-section>
+                <q-scroll-area v-else  style="height: 140px; max-width: 100%;">
+                    <div v-for="(diagnostico, index) in dataUser.diagnosticos" :key="index">
+                    <q-list>
+                      <q-item style="cursor:pointer;">
+                      <q-item-section>
+                        <span class="q-my-sm">
+                        <q-icon name="mdi-information" color="primary" /> 
+                        Condición: <b>{{ diagnostico.condicion }}</b>
+                        </span>
+                        <q-item-label>
+                        <b>Descripción:</b> {{ diagnostico.descripcion }}
+                        </q-item-label>
+                        <q-item-label>
+                        <b>Gravedad:</b> {{ diagnostico.gravedad }}
+                        </q-item-label>
+                        <q-item-label v-if="diagnostico.fecha_diagnostico">
+                        <b>Fecha diagnóstico:</b> {{ diagnostico.fecha_diagnostico }}
+                        </q-item-label>
+                        <q-item-label>
+                        <b>Registrado el:</b> {{ salidaFecha(diagnostico.createdAt) }}
+                        </q-item-label>
+                      </q-item-section>
+                      </q-item>
+                    </q-list>
+                    </div>
+                </q-scroll-area>
+
+
+
+              </q-card-section>
+              <q-separator />
+
+              <q-card-actions align="center">
+                <q-btn flat v-close-popup>
+                  Cerrar
+                </q-btn>
+                <!-- <q-btn @click="generatePDF()" flat v-close-popup> Descargar historial </q-btn> -->
+              </q-card-actions>
+            </q-card>
+          </q-dialog>
+
     <div>
       <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="true" :preview-modal="false"
         :paginate-elements-by-height="1400" filename="InformacionDeDoctorCDI" :pdf-quality="2"
@@ -762,8 +883,9 @@ export default {
       // MODALES
       modals: {
         searchUser: false,
+        searchPaciente: false,
+        detallesPaciente: false,
       },
-
       tabEstadoEncargado: 'encargadosActivos',
       cantidadDoctoresActivos: 0,
       cantidadDoctoresInactivos: 0,
@@ -1189,6 +1311,22 @@ export default {
       };
       this.dni = "";
     },
+
+    buscarPaciente(dni) {
+      const paciente = this.usersPacientes.filter((paciente) => paciente.persona.cedula_identidad === parseInt(dni));
+      if (paciente.length !== 0) {
+        this.dataUser = paciente[0];
+        this.modals.searchPaciente = false;
+        this.modals.detallesPaciente = true;
+      } else {
+        this.$q.notify({
+          message: "Este paciente no existe",
+          color: "negative",
+        });
+      };
+      this.dni = "";
+    },
+
     buscarPorEspecialidad(e) {
       this.especialidadDoctor = e;
       this.AllDoctores();
@@ -1523,6 +1661,12 @@ export default {
             color: "negative",
           });
         });
+    },
+        salidaFecha(salida) {
+      return moment(salida).format('DD-MM-YYYY')
+    },
+    entradaFecha(entrada) {
+      return moment(entrada).format('DD-MM-YYYY')
     },
   },
 };
