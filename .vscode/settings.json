@@ -1,4 +1,8 @@
 {
     "editor.fontFamily": "'Comic Mono', Consolas, 'Courier New', monospace",
-    "editor.fontSize": 15
+    "editor.fontSize": 15,
+    "workbench.colorCustomizations": {
+        "minimap.background": "#00000000",
+        "scrollbar.shadow": "#00000000"
+    }
 }

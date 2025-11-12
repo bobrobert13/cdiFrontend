@@ -622,7 +622,10 @@
               </q-card-section>
               <q-card-section class="q-pt-md">
                 <div class="row items-center q-px-sm justify-center">
-                  <div class="col-6">
+                  <div class="col-6 column">
+                   
+                   <p @click="downloadEmergenciesReport(user)" class=" cursor-pointer no-padding no-margin"> <q-icon name="mdi-cloud-print" size="20px" color="primary"  /> Descargar lista de diagnosticos </p>
+
                     <span class="text-caption text-bold q-mt-sm q-mb-xs">Historial de emergencias</span>
                   </div>
                 </div>
@@ -779,7 +782,8 @@
               </q-card-section>
               <q-card-section class="q-pt-md">
                 <div class="row items-center q-px-sm justify-center">
-                  <div class="col-6">
+                  <div class="col-6 column">
+                    <p @click="downloadHospitalizationReport()" class=" cursor-pointer no-padding no-margin"> <q-icon name="mdi-cloud-print" size="20px" color="primary"  /> Descargar lista de hospitalizaciones </p>
                     <span class="text-caption text-bold q-mt-sm q-mb-xs">Historial de hospitalización</span>
                   </div>
                 </div>
@@ -1417,7 +1421,8 @@
                   </q-avatar>
                 </q-card-section>
                 <q-card-section class="col-5 no-margin flex flex-center no-padding">
-                  <div class="text-overline text-h6 text-grey-9">Dianosticos al paciente</div>
+             
+                  <div class="text-overline text-h6 text-grey-9">Dianosticos al paciente </div>
                 </q-card-section>
                 <div v-if="dataUser.persona" class="col-5 no-margin flex flex-center no-padding">
                   <div class="text-overline text-h6 text-grey-9">{{ dataUser.persona.nombre1 }}</div>
@@ -1425,7 +1430,8 @@
               </q-card-section>
               <q-card-section class="q-pt-md">
                 <div class="row items-center q-px-sm justify-center">
-                  <div class="col-6">
+                  <div class="col-6 column">
+                     <p @click="downloadDiagnosticsReport(dataUser)" class=" cursor-pointer no-padding no-margin"> <q-icon name="mdi-cloud-print" size="20px" color="primary"  /> Descargar lista de diagnosticos </p>
                     <span class="text-caption text-bold q-mt-sm q-mb-xs">Historial de diagnosticos</span>
                   </div>
                   <div class="col-6 text-right">
@@ -1487,7 +1493,8 @@
               </q-card-section>
               <q-card-section class="q-pt-md">
                 <div class="row items-center q-px-sm justify-center">
-                  <div class="col-6">
+                  <div class="col-6 column">
+                    <p @click="downloadExamsReport()" class=" cursor-pointer no-padding no-margin"> <q-icon name="mdi-cloud-print" size="20px" color="primary"  /> Descargar lista de exámenes </p>
                     <span class="text-caption text-bold q-mt-sm q-mb-xs">Historial de exámenes</span>
                   </div>
                   <div class="col-6 text-right">
@@ -1565,7 +1572,9 @@
               </q-card-section>
               <q-card-section class="q-pt-md">
                 <div class="row items-center q-px-sm justify-center">
-                  <div class="col-6">
+                  <div class="col-6 column">
+                                         <p @click="downloadTreatmentsReport()" class=" cursor-pointer no-padding no-margin"> <q-icon name="mdi-cloud-print" size="20px" color="primary"  /> Descargar lista de tratamientos </p>
+
                     <span class="text-caption text-bold q-mt-sm q-mb-xs">Historial de tratamientos</span>
                   </div>
                   <div class="col-6 text-right">
@@ -1637,7 +1646,8 @@
               </q-card-section>
               <q-card-section class="q-pt-md">
                 <div class="row items-center q-px-sm justify-center">
-                  <div class="col-6">
+                  <div class="col-6 column">
+                    <p @click="downloadMedicationsReport()" class=" cursor-pointer no-padding no-margin"> <q-icon name="mdi-cloud-print" size="20px" color="primary"  /> Descargar lista de medicamentos </p>
                     <span class="text-caption text-bold q-mt-sm q-mb-xs">Historial de medicamentos</span>
                   </div>
                   <div class="col-6 text-right">
@@ -1718,6 +1728,76 @@
       </vue-html2pdf>
     </div>
 
+        <div>
+      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="true" :preview-modal="false"
+        :paginate-elements-by-height="1400" filename="Diagnosticos_del_Paciente" :pdf-quality="2" :manual-pagination="false"
+        pdf-format="a4" :pdf-margin="2" pdf-orientation="landscape" pdf-content-width="1050px"
+        @progress="onProgress($event)" ref="downloadDiagnosticsReport">
+        <section slot="pdf-content">
+          <historiaDiagPdf :data="dataUser" />
+        </section>
+      </vue-html2pdf>
+    </div>
+
+            <div>
+      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="true" :preview-modal="false"
+        :paginate-elements-by-height="1400" filename="Examenes_del_Paciente" :pdf-quality="2" :manual-pagination="false"
+        pdf-format="a4" :pdf-margin="2" pdf-orientation="landscape" pdf-content-width="1050px"
+        @progress="onProgress($event)" ref="downloadExamsReport">
+        <section slot="pdf-content">
+          <ReporteExamenes :data="dataUser" />
+        </section>
+      </vue-html2pdf>
+    </div>
+
+                <div>
+      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="true" :preview-modal="false"
+        :paginate-elements-by-height="1400" filename="Tratamientos_del_Paciente" :pdf-quality="2" :manual-pagination="false"
+        pdf-format="a4" :pdf-margin="2" pdf-orientation="landscape" pdf-content-width="1050px"
+        @progress="onProgress($event)" ref="downloadTratamientosReport">
+        <section slot="pdf-content">
+          <ReporteTratamientos :data="dataUser" />
+        </section>
+      </vue-html2pdf>
+    </div>
+
+
+              <div>
+      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="true" :preview-modal="false"
+        :paginate-elements-by-height="1400" filename="Medicamentos_del_Paciente" :pdf-quality="2" :manual-pagination="false"
+        pdf-format="a4" :pdf-margin="2" pdf-orientation="landscape" pdf-content-width="1050px"
+        @progress="onProgress($event)" ref="downloadMedicamentosReport">
+        <section slot="pdf-content">
+          <ReporteMedicamentos :data="dataUser" />
+        </section>
+      </vue-html2pdf>
+    </div>
+
+                  <div>
+      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="true" :preview-modal="false"
+        :paginate-elements-by-height="1400" filename="Emergencias_del_Paciente" :pdf-quality="2" :manual-pagination="false"
+        pdf-format="a4" :pdf-margin="2" pdf-orientation="landscape" pdf-content-width="1050px"
+        @progress="onProgress($event)" ref="downloadEmergenciasReport">
+        <section slot="pdf-content">
+          <ReporteEmergencias :data="dataUser" />
+        </section>
+      </vue-html2pdf>
+    </div>
+
+
+                      <div>
+      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="true" :preview-modal="false"
+        :paginate-elements-by-height="1400" filename="Hospitalizaciones_del_Paciente" :pdf-quality="2" :manual-pagination="false"
+        pdf-format="a4" :pdf-margin="2" pdf-orientation="landscape" pdf-content-width="1050px"
+        @progress="onProgress($event)" ref="downloadHospitalizacionesReport">
+        <section slot="pdf-content">
+          <ReporteHospitalizaciones :data="dataUser" />
+        </section>
+      </vue-html2pdf>
+    </div>
+
+
+
 
   </div>
 </template>
@@ -1726,6 +1806,8 @@ import config from "../../../config";
 import moment from 'moment';
 import VueHtml2pdf from "vue-html2pdf";
 import historiaPdf from "../admin/hitoriaPdf.vue"
+import historiaDiagPdf from "../admin/historiaDiagPdf.vue"
+
 import {
   useFullNameValidation,
   useEmailValidation,
@@ -1770,8 +1852,23 @@ import {
   UPDDATE_ESTADO_EMERGENCIA_MUTATION
 } from "../../../graphql/user";
 import { PERSONA_POR_CEDULA_QUERY } from "src/graphql/persona";
+import ReporteExamenes from "../admin/reports/reporteExamenes.vue";
+import ReporteTratamientos from "../admin/reports/reporteTratamientos.vue";
+import ReporteEmergencias from "../admin/reports/reporteEmergencias.vue";
+import ReporteHospitalizaciones from "../admin/reports/reporteHospitalizaciones.vue";
+import ReporteMedicamentos from "../admin/reports/reporteMedicamentos.vue";
 export default {
   name: "homeDoctor",
+    components: {
+    historiaPdf,
+    ReporteExamenes,
+    ReporteTratamientos,
+    ReporteEmergencias,
+    ReporteHospitalizaciones,
+    ReporteMedicamentos,
+    historiaDiagPdf,
+    VueHtml2pdf
+  },
   computed: {
     fullNameRules() {
       return useFullNameValidation();
@@ -1889,10 +1986,7 @@ export default {
       return this.opcionesDosisPorMedida[this.medicamento_dosis_medida] || [];
     }
   },
-  components: {
-    historiaPdf,
-    VueHtml2pdf
-  },
+
   data() {
     return {
 
@@ -2597,6 +2691,24 @@ export default {
     generatePacientePDF(paciente) {
       this.dataUser = paciente;
       this.$refs.html2Pdf.generatePdf();
+    },
+    downloadDiagnosticsReport(dataUser) {
+      this.$refs.downloadDiagnosticsReport.generatePdf();
+    },
+    downloadExamsReport() {
+      this.$refs.downloadExamsReport.generatePdf();
+    },
+    downloadTreatmentsReport() {
+      this.$refs.downloadTratamientosReport.generatePdf();
+    },
+    downloadMedicationsReport() {
+      this.$refs.downloadMedicamentosReport.generatePdf();
+    },
+    downloadEmergenciesReport() {
+      this.$refs.downloadEmergenciasReport.generatePdf();
+    },
+    downloadHospitalizationReport() {
+      this.$refs.downloadHospitalizacionesReport.generatePdf();
     },
     checkDate(date) {
       var currentDate = new Date();
