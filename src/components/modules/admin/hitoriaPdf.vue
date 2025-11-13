@@ -265,6 +265,33 @@ export default {
     entradaFecha(entrada) {
       return moment(entrada).format('DD-MM-YYYY')
     },
+    
+    salidaFechaHora(salida) {
+      if (!salida) return '';
+
+      if (typeof salida === 'string' && /([zZ]|[+-]\d{2}:?\d{2})$/.test(salida)) {
+        const mz = moment.parseZone(salida).local();
+  return mz.isValid() ? mz.format('DD-MM-YYYY hh:mm A') : '';
+      }
+
+      let m = moment.utc(salida, ['YYYY-MM-DD HH:mm:ss', 'YYYY-MM-DDTHH:mm:ss', 'YYYY-MM-DD'], true).local();
+      if (!m.isValid()) {
+        m = moment(salida).local();
+      }
+  return m.isValid() ? m.format('DD-MM-YYYY hh:mm A') : '';
+    },
+    entradaFechaHora(entrada) {
+      if (!entrada) return '';
+
+      if (typeof entrada === 'string' && /([zZ]|[+-]\d{2}:?\d{2})$/.test(entrada)) {
+        const mz = moment.parseZone(entrada).local();
+  return mz.isValid() ? mz.format('DD-MM-YYYY hh:mm A') : '';
+      }
+
+      let m = moment.utc(entrada, ['YYYY-MM-DD HH:mm:ss', 'YYYY-MM-DDTHH:mm:ss', 'YYYY-MM-DD'], true).local();
+      if (!m.isValid()) m = moment(entrada).local();
+  return m.isValid() ? m.format('DD-MM-YYYY hh:mm A') : '';
+    },
   }
 }
 </script>
