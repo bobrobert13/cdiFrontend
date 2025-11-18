@@ -6,6 +6,10 @@
     <div  class="info-section">
       <div class="section-title">INFORMACIÓN PERSONAL</div>
       <div class="info-grid">
+                <div class="info-item">
+          <span class="label">Nombre:</span>
+          <span v-if="data.persona" class="value">{{ data.persona.nombre1 }}</span>
+        </div>
         <div class="info-item">
           <span class="label">Nacionalidad:</span>
           <span v-if="data.persona" class="value">{{ data.persona.nacionalidad }}</span>

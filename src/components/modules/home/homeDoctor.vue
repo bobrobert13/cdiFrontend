@@ -624,7 +624,7 @@
                 <div class="row items-center q-px-sm justify-center">
                   <div class="col-6 column">
                    
-                   <p @click="downloadEmergenciesReport(user)" class=" cursor-pointer no-padding no-margin"> <q-icon name="mdi-cloud-print" size="20px" color="primary"  /> Descargar lista de diagnosticos </p>
+                   <p @click="downloadEmergenciesReport(user)" class=" cursor-pointer no-padding no-margin"> <q-icon name="mdi-cloud-print" size="20px" color="primary"  /> Descargar lista de emergencias </p>
 
                     <span class="text-caption text-bold q-mt-sm q-mb-xs">Historial de emergencias</span>
                   </div>
