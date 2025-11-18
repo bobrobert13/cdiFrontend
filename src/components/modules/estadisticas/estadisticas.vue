@@ -88,8 +88,9 @@
 
       <div class="row q-col-gutter-xs q-mb-sm">
         <div class="col-12 col-md-4" v-for="(stat, index) in stats" :key="index">
-          <q-card class="full-height">
+          <q-card class="full-height q-pa-sm">
             <q-card-section>
+            <q-btn color="primary" icon="print" class=" cursor-pointer float-right" dense flat @click="onReport(stat.id)" />
               <div class="row items-center">
                 <q-icon :name="stat.icon" size="lg" class="q-mr-md" :color="stat.color" />
                 <div>
@@ -109,6 +110,7 @@
         <div class="col-12 col-md-7">
           <q-card>
             <q-card-section>
+            <q-btn color="primary" icon="print" class=" cursor-pointer z-max float-right" dense flat @click="onReport('dist-edad')" />
               <apexchart type="bar" height="350" :options="barChartOptions" :series="barChartSeries"></apexchart>
             </q-card-section>
           </q-card>
@@ -117,6 +119,7 @@
           <q-card>
 
             <q-card-section>
+            <q-btn color="primary" icon="print" class=" cursor-pointer z-max float-right" dense flat @click="onReport('dist-genero')" />
               <apexchart type="donut" height="350" :options="donutChartOptions" :series="donutChartSeries"></apexchart>
             </q-card-section>
           </q-card>
@@ -127,6 +130,7 @@
         <div class="col-12 col-md-12">
           <q-card>
             <q-card-section>
+            <q-btn color="primary" icon="print" class=" cursor-pointer z-max float-right" dense flat @click="onReport('consultas-periodo')" />
               <apexchart type="line" height="350" :options="consultasPeriodoOptions" :series="consultasPeriodoSeries">
               </apexchart>
             </q-card-section>
@@ -135,6 +139,7 @@
         <div class="col-12 col-md-12">
           <q-card>
             <q-card-section>
+            <q-btn color="primary" icon="print" class=" cursor-pointer z-max float-right" dense flat @click="onReport('consultas-medico')" />
               <apexchart type="bar" height="350" :options="consultasMedicoOptions" :series="consultasMedicoSeries">
               </apexchart>
             </q-card-section>
@@ -146,6 +151,7 @@
         <div class="col-12">
           <q-card>
             <q-card-section>
+            <q-btn color="primary" icon="print" class=" cursor-pointer z-max float-right" dense flat @click="onReport('top-diagnosticos')" />
               <apexchart type="bar" height="400" :options="diagnosticosOptions" :series="diagnosticosSeries">
               </apexchart>
             </q-card-section>
@@ -170,11 +176,30 @@ import {
   ESTADISTICA_TOP_TEN_DIAGNOSTICOS_QUERY
 } from '../../../graphql/estadisticas.js';
 
+// PLANTILLAS DE ESTADISTICAS:
+
+import ReporteTotalPacientes from '../../modules/admin/reports/estadisticas/reporteTotalPacientes.vue';
+import ReportePacienteNuevosPeriodo from '../../modules/admin/reports/estadisticas/reportePacienteNuevosPeriodo.vue';
+import ReporteConsultasPeriodo from '../../modules/admin/reports/estadisticas/reporteConsultasPeriodo.vue';
+import ReporteDistGenero from '../../modules/admin/reports/estadisticas/reporteDistGenero.vue';
+import ReporteDistEdad from '../../modules/admin/reports/estadisticas/reporteDistEdad.vue';
+import ReporteConsultasPorMedicoPeriodo from '../../modules/admin/reports/estadisticas/reporteConsultasPorMedicoPeriodo.vue';
+import ReporteTopDiagnosticos from '../../modules/admin/reports/estadisticas/reporteTopDiagnosticos.vue';
+import ReporteConsultaMes from '../../modules/admin/reports/estadisticas/reporteConsultaMes.vue';
+
 
 export default {
   name: 'EstadisticasDashboard',
   components: {
     VueApexCharts,
+    ReporteConsultasPeriodo,
+    ReporteTotalPacientes,
+    ReportePacienteNuevosPeriodo,
+    ReporteDistGenero,
+    ReporteDistEdad,
+    ReporteConsultasPorMedicoPeriodo,
+    ReporteTopDiagnosticos,
+    ReporteConsultaMes
   },
   data() {
     return {
@@ -292,6 +317,7 @@ export default {
         {
           label: 'Pacientes Registrados',
           value: '10',
+          id: 'stat-pacientes-registrados',
           icon: 'groups',
           color: 'primary',
           series: [{ name: 'Pacientes', data: [0, 10,] }],
@@ -300,6 +326,7 @@ export default {
         {
           label: 'Pacientes Nuevos (Mes)',
           value: '82',
+          id: 'stat-pacientes-nuevos',
           icon: 'person_add',
           color: 'green',
           series: [{ name: 'Nuevos', data: [0] }],
@@ -308,6 +335,7 @@ export default {
         {
           label: 'Consultas del Mes',
           value: '620',
+          id: 'stat-consultas-mes',
           icon: 'event_available',
           color: 'red',
           series: [{ name: 'Consultas', data: [20, 25, 22, 30, 28, 35, 40] }],
@@ -414,6 +442,146 @@ export default {
         });
     },
 
+    onReport(typeId) {
+      if (typeId === 'stat-pacientes-registrados') {
+        this.onReportTotalPacientes();
+      } else if (typeId === 'stat-pacientes-nuevos') {
+        this.onReportPacientesNuevos();
+      } else if (typeId === 'stat-consultas-mes') {
+        this.onReportConsultas();
+      } else if (typeId === 'dist-genero') {
+        this.onReportDistribucionGenero();
+      } else if (typeId === 'dist-edad') {
+        this.onReportDistribucionEdad();
+      } else if (typeId === 'consultas-periodo') {
+        this.onReportConsultasPeriodo();
+      } else if (typeId === 'consultas-medico') {
+        this.onReportConsultasMedico();
+      } else if (typeId === 'top-diagnosticos') {
+        this.onReportTopDiagnosticos();
+      } else {
+        console.log('Tipo de reporte desconocido');
+      }
+    },
+
+    onReportTotalPacientes() {
+      console.log({
+        reporte: 'Pacientes Registrados',
+        id_cdi: this.userId,
+        totalPacientes: this.totalPacientes
+      });
+    },
+    onReportPacientesNuevos() {
+      const datos = Array.isArray(this.totalPacientesNuevos)
+        ? this.totalPacientesNuevos
+        : [this.totalPacientesNuevos || 0];
+      const categorias = this.selectedPeriod === 'week'
+        ? ['Día 1', 'Día 2', 'Día 3', 'Día 4', 'Día 5', 'Día 6', 'Día 7']
+        : ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'];
+      console.log({
+        reporte: this.selectedPeriod === 'week' ? 'Pacientes Nuevos (Semana)' : 'Pacientes Nuevos (Mes)',
+        id_cdi: this.userId,
+        periodo: this.selectedPeriod,
+        mes: this.selectedPeriod === 'month' ? this.selectedMonth : undefined,
+        categorias,
+        datos,
+        total: datos.reduce((a, b) => a + b, 0)
+      });
+    },
+    onReportConsultas() {
+      const datos = Array.isArray(this.totalConsultas)
+        ? this.totalConsultas
+        : [this.totalConsultas || 0];
+      const categorias = this.selectedPeriod === 'week'
+        ? ['Día 1', 'Día 2', 'Día 3', 'Día 4', 'Día 5', 'Día 6', 'Día 7']
+        : ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'];
+      console.log({
+        reporte: this.selectedPeriod === 'week' ? 'Consultas de la Semana' : 'Consultas del Mes',
+        id_cdi: this.userId,
+        periodo: this.selectedPeriod,
+        mes: this.selectedPeriod === 'month' ? this.selectedMonth : undefined,
+        categorias,
+        datos,
+        total: datos.reduce((a, b) => a + b, 0)
+      });
+    },
+    onReportDistribucionGenero() {
+      const masculino = typeof this.pacientesPorGenero === 'object' && this.pacientesPorGenero !== null && !Array.isArray(this.pacientesPorGenero)
+        ? (this.pacientesPorGenero.masculino || 0)
+        : (Array.isArray(this.pacientesPorGenero) ? (this.pacientesPorGenero[0] || 0) : 0);
+      const femenino = typeof this.pacientesPorGenero === 'object' && this.pacientesPorGenero !== null && !Array.isArray(this.pacientesPorGenero)
+        ? (this.pacientesPorGenero.femenino || 0)
+        : (Array.isArray(this.pacientesPorGenero) ? (this.pacientesPorGenero[1] || 0) : 0);
+      console.log({
+        reporte: 'Distribución por Género',
+        id_cdi: this.userId,
+        etiquetas: ['Masculino', 'Femenino'],
+        datos: [masculino, femenino]
+      });
+    },
+    onReportDistribucionEdad() {
+      const categorias = (this.barChartOptions && this.barChartOptions.xaxis && this.barChartOptions.xaxis.categories)
+        ? this.barChartOptions.xaxis.categories
+        : ['Niños (0-12)', 'Adolescentes (13-18)', 'Adultos (19-64)', 'Mayores (65+)'];
+      const datos = Array.isArray(this.distribucionPorEdad)
+        ? this.distribucionPorEdad
+        : [0, 0, 0, 0];
+      console.log({
+        reporte: 'Distribución por Edad',
+        id_cdi: this.userId,
+        categorias,
+        datos
+      });
+    },
+    onReportConsultasPeriodo() {
+      const categorias = (this.consultasPeriodoOptions && this.consultasPeriodoOptions.xaxis && this.consultasPeriodoOptions.xaxis.categories)
+        ? this.consultasPeriodoOptions.xaxis.categories
+        : (this.selectedPeriod === 'week'
+          ? ['Día 1', 'Día 2', 'Día 3', 'Día 4', 'Día 5', 'Día 6', 'Día 7']
+          : ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4']);
+      const datos = Array.isArray(this.totalConsultas)
+        ? this.totalConsultas
+        : [this.totalConsultas || 0];
+      console.log({
+        reporte: 'Consultas por Período',
+        id_cdi: this.userId,
+        periodo: this.selectedPeriod,
+        mes: this.selectedPeriod === 'month' ? this.selectedMonth : undefined,
+        categorias,
+        datos,
+        total: datos.reduce((a, b) => a + b, 0)
+      });
+    },
+    onReportConsultasMedico() {
+      const categorias = this.totalConsultasMedico && this.totalConsultasMedico.nombresDoctores
+        ? this.totalConsultasMedico.nombresDoctores
+        : [];
+      const datos = this.totalConsultasMedico && this.totalConsultasMedico.consultasMedico
+        ? this.totalConsultasMedico.consultasMedico
+        : [];
+      console.log({
+        reporte: 'Consultas por Médico',
+        id_cdi: this.userId,
+        periodo: this.selectedPeriod,
+        mes: this.selectedPeriod === 'month' ? this.selectedMonth : undefined,
+        medicos: categorias,
+        consultas: datos
+      });
+    },
+    onReportTopDiagnosticos() {
+      const condiciones = this.totalDiagnosticos && this.totalDiagnosticos.condiciones
+        ? this.totalDiagnosticos.condiciones
+        : [];
+      const totales = this.totalDiagnosticos && this.totalDiagnosticos.totales
+        ? this.totalDiagnosticos.totales
+        : [];
+      console.log({
+        reporte: 'Top 10 Diagnósticos Más Frecuentes',
+        id_cdi: this.userId,
+        condiciones,
+        totales
+      });
+    },
 
     onPeriodChange(newPeriod) {
       this.selectedPeriod = newPeriod;
