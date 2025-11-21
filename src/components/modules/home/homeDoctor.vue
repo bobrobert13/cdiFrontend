@@ -2764,7 +2764,7 @@ export default {
       this.viewType = typeView
     },
     userDetail(user) {
-      console.log('detalles: ', user);
+      // console.log('detalles: ', user);
 
       this.modalDetailUser = true;
       this.dataUser = user;

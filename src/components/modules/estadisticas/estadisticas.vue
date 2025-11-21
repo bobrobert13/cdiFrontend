@@ -90,7 +90,7 @@
         <div class="col-12 col-md-4" v-for="(stat, index) in stats" :key="index">
           <q-card class="full-height q-pa-sm">
             <q-card-section>
-            <q-btn color="primary" icon="print" class=" cursor-pointer float-right" dense flat @click="onReport(stat.id)" />
+            <q-btn v-if="stat.id !== 'stat-pacientes-registrados'" color="primary" icon="download" class=" cursor-pointer float-right" dense flat @click="onReport(stat.id)" />
               <div class="row items-center">
                 <q-icon :name="stat.icon" size="lg" class="q-mr-md" :color="stat.color" />
                 <div>
@@ -110,7 +110,7 @@
         <div class="col-12 col-md-7">
           <q-card>
             <q-card-section>
-            <q-btn color="primary" icon="print" class=" cursor-pointer z-max float-right" dense flat @click="onReport('dist-edad')" />
+            <q-btn color="primary" icon="download" class=" cursor-pointer z-max float-right" dense flat @click="onReport('dist-edad')" />
               <apexchart type="bar" height="350" :options="barChartOptions" :series="barChartSeries"></apexchart>
             </q-card-section>
           </q-card>
@@ -119,7 +119,7 @@
           <q-card>
 
             <q-card-section>
-            <q-btn color="primary" icon="print" class=" cursor-pointer z-max float-right" dense flat @click="onReport('dist-genero')" />
+            <q-btn color="primary" icon="download" class=" cursor-pointer z-max float-right" dense flat @click="onReport('dist-genero')" />
               <apexchart type="donut" height="350" :options="donutChartOptions" :series="donutChartSeries"></apexchart>
             </q-card-section>
           </q-card>
@@ -130,7 +130,7 @@
         <div class="col-12 col-md-12">
           <q-card>
             <q-card-section>
-            <q-btn color="primary" icon="print" class=" cursor-pointer z-max float-right" dense flat @click="onReport('consultas-periodo')" />
+            <q-btn color="primary" icon="download" class=" cursor-pointer z-max float-right" dense flat @click="onReport('consultas-periodo')" />
               <apexchart type="line" height="350" :options="consultasPeriodoOptions" :series="consultasPeriodoSeries">
               </apexchart>
             </q-card-section>
@@ -139,7 +139,7 @@
         <div class="col-12 col-md-12">
           <q-card>
             <q-card-section>
-            <q-btn color="primary" icon="print" class=" cursor-pointer z-max float-right" dense flat @click="onReport('consultas-medico')" />
+            <q-btn color="primary" icon="download" class=" cursor-pointer z-max float-right" dense flat @click="onReport('consultas-medico')" />
               <apexchart type="bar" height="350" :options="consultasMedicoOptions" :series="consultasMedicoSeries">
               </apexchart>
             </q-card-section>
@@ -151,7 +151,7 @@
         <div class="col-12">
           <q-card>
             <q-card-section>
-            <q-btn color="primary" icon="print" class=" cursor-pointer z-max float-right" dense flat @click="onReport('top-diagnosticos')" />
+            <q-btn color="primary" icon="download" class=" cursor-pointer z-max float-right" dense flat @click="onReport('top-diagnosticos')" />
               <apexchart type="bar" height="400" :options="diagnosticosOptions" :series="diagnosticosSeries">
               </apexchart>
             </q-card-section>
@@ -159,11 +159,94 @@
         </div>
       </div>
     </div>
+
+
+       <div>
+      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="true" :preview-modal="false"
+        :paginate-elements-by-height="1400" filename="Consulta_del_Mes_CDI" :pdf-quality="2" :manual-pagination="false"
+        pdf-format="a4" :pdf-margin="2" pdf-orientation="landscape" pdf-content-width="1050px"
+        @progress="onProgress($event)" ref="html2PdfConsultaMes">
+        <section slot="pdf-content">
+          <ReporteConsultaMes :data="reporteConsultasDelMes" />
+        </section>
+      </vue-html2pdf>
+    </div>
+
+           <div>
+      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="true" :preview-modal="false"
+        :paginate-elements-by-height="1400" filename="Paciente_Por_Periodo_del_CDI" :pdf-quality="2" :manual-pagination="false"
+        pdf-format="a4" :pdf-margin="2" pdf-orientation="landscape" pdf-content-width="1050px"
+        @progress="onProgress($event)" ref="html2PdfPacientePorPeriodo">
+        <section slot="pdf-content">
+          <ReportePacienteNuevosPeriodo :data="reportePacienteNuevosPeriodoVar" />
+        </section>
+      </vue-html2pdf>
+    </div>
+
+
+               <div>
+      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="true" :preview-modal="false"
+        :paginate-elements-by-height="1400" filename="Consultas_Por_Medico_Por_Periodo_del_CDI" :pdf-quality="2" :manual-pagination="false"
+        pdf-format="a4" :pdf-margin="2" pdf-orientation="landscape" pdf-content-width="1050px"
+        @progress="onProgress($event)" ref="html2PdfConsultasPorMedicoPeriodo">
+        <section slot="pdf-content">
+          <ReporteConsultasPorMedicoPeriodo :data="reporteConsultasPorMedicoPorPeriodo" />
+        </section>
+      </vue-html2pdf>
+    </div>
+
+
+                   <div>
+      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="true" :preview-modal="false"
+        :paginate-elements-by-height="1400" filename="Consultas_Por_Periodo_del_CDI" :pdf-quality="2" :manual-pagination="false"
+        pdf-format="a4" :pdf-margin="2" pdf-orientation="landscape" pdf-content-width="1050px"
+        @progress="onProgress($event)" ref="html2PdfConsultasPeriodo">
+        <section slot="pdf-content">
+          <ReporteConsultasPeriodo :data="reporteConsultasPeriodo" />
+        </section>
+      </vue-html2pdf>
+    </div>
+
+
+                       <div>
+      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="true" :preview-modal="false"
+        :paginate-elements-by-height="1400" filename="Distribucion_Por_Edad_del_CDI" :pdf-quality="2" :manual-pagination="false"
+        pdf-format="a4" :pdf-margin="2" pdf-orientation="landscape" pdf-content-width="1050px"
+        @progress="onProgress($event)" ref="html2PdfDistEdad">
+        <section slot="pdf-content">
+          <ReporteDistEdad :data="reporteDistEdad" />
+        </section>
+      </vue-html2pdf>
+    </div>
+
+                           <div>
+      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="true" :preview-modal="false"
+        :paginate-elements-by-height="1400" filename="Distribucion_Por_Genero_del_CDI" :pdf-quality="2" :manual-pagination="false"
+        pdf-format="a4" :pdf-margin="2" pdf-orientation="landscape" pdf-content-width="1050px"
+        @progress="onProgress($event)" ref="html2PdfDistGenero">
+        <section slot="pdf-content">
+          <ReporteDistGenero :data="reporteDistGenero" />
+        </section>
+      </vue-html2pdf>
+    </div>
+
+                               <div>
+      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="true" :preview-modal="false"
+        :paginate-elements-by-height="1400" filename="Top_Diagnosticos_del_CDI" :pdf-quality="2" :manual-pagination="false"
+        pdf-format="a4" :pdf-margin="2" pdf-orientation="landscape" pdf-content-width="1050px"
+        @progress="onProgress($event)" ref="html2PdfTopDiagnosticos">
+        <section slot="pdf-content">
+          <ReporteTopDiagnosticos :data="reporteTopDiagnosticos" />
+        </section>
+      </vue-html2pdf>
+    </div>
+
   </q-page>
 </template>
 
 <script>
 import VueApexCharts from 'vue-apexcharts';
+import VueHtml2pdf from "vue-html2pdf";
 import { ADMIN_ALL_CDIS_QUERY } from 'src/graphql/user.js';
 
 import {
@@ -177,7 +260,6 @@ import {
 } from '../../../graphql/estadisticas.js';
 
 // PLANTILLAS DE ESTADISTICAS:
-
 import ReporteTotalPacientes from '../../modules/admin/reports/estadisticas/reporteTotalPacientes.vue';
 import ReportePacienteNuevosPeriodo from '../../modules/admin/reports/estadisticas/reportePacienteNuevosPeriodo.vue';
 import ReporteConsultasPeriodo from '../../modules/admin/reports/estadisticas/reporteConsultasPeriodo.vue';
@@ -192,6 +274,7 @@ export default {
   name: 'EstadisticasDashboard',
   components: {
     VueApexCharts,
+    VueHtml2pdf,
     ReporteConsultasPeriodo,
     ReporteTotalPacientes,
     ReportePacienteNuevosPeriodo,
@@ -206,6 +289,15 @@ export default {
       filter: '',
       userId: this.$store.state.user.id,
       showStatsPanel: false,
+
+      reporteConsultasDelMes: {},
+      reportePacienteNuevosPeriodoVar: {},
+      reporteConsultasPorMedicoPorPeriodo: {},
+      reporteConsultasPeriodo: {},
+      reporteDistEdad: {},
+      reporteDistGenero: {},
+      reporteTopDiagnosticos: {},
+
       columns: [
         {
           name: 'name',
@@ -478,7 +570,7 @@ export default {
       const categorias = this.selectedPeriod === 'week'
         ? ['Día 1', 'Día 2', 'Día 3', 'Día 4', 'Día 5', 'Día 6', 'Día 7']
         : ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'];
-      console.log({
+      this.reportePacienteNuevosPeriodoVar = {
         reporte: this.selectedPeriod === 'week' ? 'Pacientes Nuevos (Semana)' : 'Pacientes Nuevos (Mes)',
         id_cdi: this.userId,
         periodo: this.selectedPeriod,
@@ -486,7 +578,9 @@ export default {
         categorias,
         datos,
         total: datos.reduce((a, b) => a + b, 0)
-      });
+      }
+      console.log(this.reportePacienteNuevosPeriodoVar);
+      this.$refs.html2PdfPacientePorPeriodo.generatePdf();
     },
     onReportConsultas() {
       const datos = Array.isArray(this.totalConsultas)
@@ -495,7 +589,7 @@ export default {
       const categorias = this.selectedPeriod === 'week'
         ? ['Día 1', 'Día 2', 'Día 3', 'Día 4', 'Día 5', 'Día 6', 'Día 7']
         : ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'];
-      console.log({
+      this.reporteConsultasDelMes = {
         reporte: this.selectedPeriod === 'week' ? 'Consultas de la Semana' : 'Consultas del Mes',
         id_cdi: this.userId,
         periodo: this.selectedPeriod,
@@ -503,7 +597,8 @@ export default {
         categorias,
         datos,
         total: datos.reduce((a, b) => a + b, 0)
-      });
+      }
+      this.$refs.html2PdfConsultaMes.generatePdf();
     },
     onReportDistribucionGenero() {
       const masculino = typeof this.pacientesPorGenero === 'object' && this.pacientesPorGenero !== null && !Array.isArray(this.pacientesPorGenero)
@@ -512,12 +607,13 @@ export default {
       const femenino = typeof this.pacientesPorGenero === 'object' && this.pacientesPorGenero !== null && !Array.isArray(this.pacientesPorGenero)
         ? (this.pacientesPorGenero.femenino || 0)
         : (Array.isArray(this.pacientesPorGenero) ? (this.pacientesPorGenero[1] || 0) : 0);
-      console.log({
+      this.reporteDistGenero = {
         reporte: 'Distribución por Género',
         id_cdi: this.userId,
         etiquetas: ['Masculino', 'Femenino'],
         datos: [masculino, femenino]
-      });
+      };
+      this.$refs.html2PdfDistGenero.generatePdf();
     },
     onReportDistribucionEdad() {
       const categorias = (this.barChartOptions && this.barChartOptions.xaxis && this.barChartOptions.xaxis.categories)
@@ -526,12 +622,13 @@ export default {
       const datos = Array.isArray(this.distribucionPorEdad)
         ? this.distribucionPorEdad
         : [0, 0, 0, 0];
-      console.log({
+      this.reporteDistEdad = {
         reporte: 'Distribución por Edad',
         id_cdi: this.userId,
         categorias,
         datos
-      });
+      };
+      this.$refs.html2PdfDistEdad.generatePdf();
     },
     onReportConsultasPeriodo() {
       const categorias = (this.consultasPeriodoOptions && this.consultasPeriodoOptions.xaxis && this.consultasPeriodoOptions.xaxis.categories)
@@ -542,7 +639,7 @@ export default {
       const datos = Array.isArray(this.totalConsultas)
         ? this.totalConsultas
         : [this.totalConsultas || 0];
-      console.log({
+      this.reporteConsultasPeriodo = {
         reporte: 'Consultas por Período',
         id_cdi: this.userId,
         periodo: this.selectedPeriod,
@@ -550,7 +647,8 @@ export default {
         categorias,
         datos,
         total: datos.reduce((a, b) => a + b, 0)
-      });
+      };
+      this.$refs.html2PdfConsultasPeriodo.generatePdf();
     },
     onReportConsultasMedico() {
       const categorias = this.totalConsultasMedico && this.totalConsultasMedico.nombresDoctores
@@ -559,14 +657,15 @@ export default {
       const datos = this.totalConsultasMedico && this.totalConsultasMedico.consultasMedico
         ? this.totalConsultasMedico.consultasMedico
         : [];
-      console.log({
+      this.reporteConsultasPorMedicoPorPeriodo = {
         reporte: 'Consultas por Médico',
         id_cdi: this.userId,
         periodo: this.selectedPeriod,
         mes: this.selectedPeriod === 'month' ? this.selectedMonth : undefined,
         medicos: categorias,
         consultas: datos
-      });
+      };
+      this.$refs.html2PdfConsultasPorMedicoPeriodo.generatePdf();
     },
     onReportTopDiagnosticos() {
       const condiciones = this.totalDiagnosticos && this.totalDiagnosticos.condiciones
@@ -575,12 +674,13 @@ export default {
       const totales = this.totalDiagnosticos && this.totalDiagnosticos.totales
         ? this.totalDiagnosticos.totales
         : [];
-      console.log({
+      this.reporteTopDiagnosticos = {
         reporte: 'Top 10 Diagnósticos Más Frecuentes',
         id_cdi: this.userId,
         condiciones,
         totales
-      });
+      };
+      this.$refs.html2PdfTopDiagnosticos.generatePdf();
     },
 
     onPeriodChange(newPeriod) {
