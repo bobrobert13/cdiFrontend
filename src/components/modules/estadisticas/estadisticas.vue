@@ -71,9 +71,9 @@
               </div>
 
               <!-- Botón para actualizar datos -->
-              <div class="col-auto">
+              <!-- <div class="col-auto">
                 <q-btn color="primary" label="Actualizar" @click="updateChartData" :loading="isLoading" />
-              </div>
+              </div> -->
 
               <!-- Indicador del período actual -->
               <div class="col-auto">
@@ -1039,6 +1039,17 @@ export default {
       this.showStatsPanel = false;
       this.userId = null;
     },
+  },
+  watch: {
+    // Observador para actualizar datos cuando cambian los filtros
+    selectedPeriod() {
+      this.updateChartData();
+    },
+    selectedMonth() {
+      if (this.selectedPeriod === 'month') {
+        this.updateChartData();
+      }
+    }
   },
   mounted() {
     this.showStats();
