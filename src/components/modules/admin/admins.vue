@@ -7,9 +7,9 @@
 			<div class="col-12">
 				<span class="text-accent text-h6 text-bold">Listado de usuarios CDIs</span>
 			</div>
-			<div class="row justify-center">
+			<div class="row justify-center ">
 				<div class="col self-center text-right"></div>
-				<div class="col self-center text-right">
+				<div class="col self-center text-right ">
 					<q-icon style="cursor: pointer" @click="workerView('searchUser')" name="mdi-account-search"
 						class="text-primary" size="md"></q-icon>
 					<q-icon style="cursor: pointer" @click="workerView('addWorker')" name="mdi-plus"
@@ -662,7 +662,7 @@ export default {
 				cdi_cuadrante: useFullNameValidation(),
 				cdi_nombre_usuario: useDoctorNombreUsuarioValidation(true, 3, 100),
 				cdi_contrasena: usePasswordValidation(),
-				cdi_numero: useTextFieldValidation(true, 3, 100),
+				cdi_numero: useTextFieldValidation(true, 1, 100),
 			}
 			return isFormValid(formValues, validationRules)
 		},
@@ -688,7 +688,7 @@ export default {
 				cdi_nombre: useFullNameValidation(),
 				cdi_encargado: useFullNameValidation(),
 				cdi_cuadrante:	useFullNameValidation() ,
-				cdi_numero: useTextFieldValidation(true, 3, 100),
+				cdi_numero: useTextFieldValidation(true, 1, 100) && useCdiNumberValidation(),
 			}
 			return isFormValid(formValues, validationRules)
 		}
