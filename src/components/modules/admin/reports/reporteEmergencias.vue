@@ -139,7 +139,7 @@
             <div class="table-cell" :title="e.estado_emergencia || 'No especificado'">{{ e.estado_emergencia || 'No especificado' }}</div>
             <div class="table-cell" :title="e.destino || 'No especificado'">{{ e.destino || 'No especificado' }}</div>
             <div class="table-cell">{{ e.fecha_ingreso ? entradaFecha(e.fecha_ingreso) : '-' }}</div>
-            <div class="table-cell">{{ e.fecha_egreso ? salidaFecha(e.fecha_egreso) : '-' }}</div>
+            <div class="table-cell">{{ e.fecha_egreso ? salidaFecha(e.fecha_egreso) : 'No aplica' }}</div>
           </div>
 
           <div class="table-row" style="grid-template-columns: 1fr;">

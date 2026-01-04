@@ -565,21 +565,7 @@
                     </q-btn>
                   </div>
 
-                  <div class="col-11 q-pa-xs">
-                    <span>Fecha de egreso emergencia:</span>
-                    <q-input filled v-model="emergencia_fechaEgreso" disable label="Fecha de egreso"></q-input>
-                  </div>
-                  <div class="col-1 self-center q-pa-xs q-pt-md">
-                    <q-btn icon="event" round color="primary">
-                      <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                        <q-date v-model="emergencia_fechaEgreso">
-                          <div class="row items-center justify-end">
-                            <q-btn v-close-popup label="Cerrar" color="primary" flat />
-                          </div>
-                        </q-date>
-                      </q-popup-proxy>
-                    </q-btn>
-                  </div>
+
 
 
                 </div>
@@ -594,8 +580,7 @@
                   this.emergencia_tiempoAtencion === '' ||
                   this.emergencia_destino === '' ||
                   this.emergencia_notasDeAtencion === '' ||
-                  this.emergencia_fechaIngreso === '' ||
-                  this.emergencia_fechaEgreso === ''
+                  this.emergencia_fechaIngreso === ''
                   " @click="NuevaEmergencia()">
                   Crear emergencia para paciente
                 </q-btn>
@@ -662,8 +647,9 @@
                             entradaFechaHora(emergencia.fecha_ingreso)
                             }}</q-item-label>
 													<q-item-label><b>Fecha de egreso:</b> {{
-														salidaFechaHora(emergencia.fecha_egreso)
-														}}</q-item-label>
+														salidaFechaHora(emergencia.fecha_egreso) || 'No aplica'
+                            }}</q-item-label>
+
 
                         </q-item-section>
 
@@ -672,7 +658,7 @@
                       <div class="q-ml-md row col-12 items-center self-center no-wrap ">
                         <span v-if="emergencia.estado_emergencia === 'Activo'"
                           @click="ActualizarEstadoEmergencia(emergencia, 'Finalizado')" lines="2"
-                          class=" q-mr-sm cursor-pointer text-primary self-center text-bold">
+                          class=" q-mr-sm cursor-pointer text-primary self-center text-bold q-mt-sm text-red">
                           Finalizar emergencia
                         </span>
                       </div>
@@ -729,21 +715,7 @@
                     </q-btn>
                   </div>
 
-                  <div class="col-11 q-pa-xs">
-                    <span>Fecha de egreso:</span>
-                    <q-input filled v-model="hospitalizacion_fechaEgreso" disable label="Fecha de egreso"></q-input>
-                  </div>
-                  <div class="col-1 self-center q-pa-xs q-pt-md">
-                    <q-btn icon="event" round color="primary">
-                      <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                        <q-date v-model="hospitalizacion_fechaEgreso">
-                          <div class="row items-center justify-end">
-                            <q-btn v-close-popup label="Cerrar" color="primary" flat />
-                          </div>
-                        </q-date>
-                      </q-popup-proxy>
-                    </q-btn>
-                  </div>
+
 
                 </div>
               </q-card-section>
@@ -809,7 +781,7 @@
                           <q-item-label><b>Fecha de ingreso:</b> {{ salidaFechaHora(hospitalizacion.fecha_ingreso)
                             }}</q-item-label>
                           <q-item-label><b>Fecha de egreso:</b> {{ entradaFechaHora(hospitalizacion.fecha_egreso)
-                            }}</q-item-label>
+                            || 'No aplica' }}</q-item-label>
                           <q-item-label><b>Notas médicas:</b> {{ hospitalizacion.notas_medicas
                             }}</q-item-label>
                         </q-item-section>
@@ -2190,13 +2162,13 @@ export default {
       emergencia_notasDeAtencion: "",
       emergencia_destino: "",
 			emergencia_fechaIngreso: '',
-			emergencia_fechaEgreso: '',
+
 
 
       // HOSPITALIZACION
 
       hospitalizacion_fechaIngreso: "",
-      hospitalizacion_fechaEgreso: null,
+
       hospitalizacion_motivoDeHospitalizacion: "",
       hospitalizacion_unidadHospitalaria: "",
       hospitalizacion_estado: "Activo",
@@ -3050,10 +3022,10 @@ export default {
     NuevaEmergencia() {
       this.loader = true;
 
-      // Validar que se hayan ingresado las fechas
-      if (!this.emergencia_fechaIngreso || !this.emergencia_fechaEgreso) {
+      // Validar que se haya ingresado la fecha de ingreso
+      if (!this.emergencia_fechaIngreso) {
         this.$q.notify({
-          message: "Debes ingresar una fecha de ingreso y egreso",
+          message: "Debes ingresar una fecha de ingreso",
           color: "negative",
         });
         return;
@@ -3061,31 +3033,12 @@ export default {
 
       // Crear objetos moment para comparar fechas
       const fechaIngreso = moment(this.emergencia_fechaIngreso).startOf("day");
-      const fechaEgreso = moment(this.emergencia_fechaEgreso).startOf("day");
       const fechaActual = moment().startOf("day");
 
       // Validar que la fecha de ingreso no sea menor a la fecha actual
       if (fechaIngreso.isBefore(fechaActual)) {
         this.$q.notify({
           message: "La fecha de ingreso no puede ser menor a la fecha actual",
-          color: "negative",
-        });
-        return;
-      }
-
-      // Validar que la fecha de ingreso y egreso no sean iguales
-      if (fechaIngreso.isSame(fechaEgreso)) {
-        this.$q.notify({
-          message: "La fecha de ingreso y egreso no pueden ser iguales",
-          color: "negative",
-        });
-        return;
-      }
-
-      // Validar que la fecha de ingreso sea menor a la fecha de egreso
-      if (fechaIngreso.isAfter(fechaEgreso)) {
-        this.$q.notify({
-          message: "La fecha de ingreso no puede ser mayor a la fecha de egreso",
           color: "negative",
         });
         return;
@@ -3098,7 +3051,7 @@ export default {
             input: {
               motivo_emergencia: this.emergencia_motivoEmergencia,
               fecha_ingreso: this.emergencia_fechaIngreso,
-              fecha_egreso: this.emergencia_fechaEgreso,
+              fecha_egreso: null,
               diagnostico_provisional: this.emergencia_diagnosticoProvisional,
               estado_paciente: this.emergencia_estadoPaciente,
               procesamiento_realizado: this.emergencia_procesamientoRealizado,
@@ -3125,7 +3078,6 @@ export default {
           this.emergencia_notasDeAtencion = '';
           this.emergencia_motivoEmergencia = '';
 					this.emergencia_fechaIngreso = '';
-					this.emergencia_fechaEgreso = '';
           this.AllPacientes()
           this.$q.notify({
             message: "Paciente enviado a emergencias",
@@ -3140,10 +3092,10 @@ export default {
     NuevaHospitalizacion() {
       this.loader = true;
 
-      // Validar que se hayan ingresado las fechas
-      if (!this.hospitalizacion_fechaIngreso || !this.hospitalizacion_fechaEgreso) {
+      // Validar que se haya ingresado la fecha de ingreso
+      if (!this.hospitalizacion_fechaIngreso) {
         this.$q.notify({
-          message: "Debes ingresar una fecha de ingreso y egreso",
+          message: "Debes ingresar una fecha de ingreso",
           color: "negative",
         });
         return;
@@ -3151,7 +3103,6 @@ export default {
 
       // Crear objetos moment para comparar fechas
       const fechaIngreso = moment(this.hospitalizacion_fechaIngreso).startOf("day");
-      const fechaEgreso = moment(this.hospitalizacion_fechaEgreso).startOf("day");
       const fechaActual = moment().startOf("day");
 
       // Validar que la fecha de ingreso no sea menor a la fecha actual
@@ -3163,31 +3114,13 @@ export default {
         return;
       }
 
-      // Validar que la fecha de ingreso y egreso no sean iguales
-      if (fechaIngreso.isSame(fechaEgreso)) {
-        this.$q.notify({
-          message: "La fecha de ingreso y egreso no pueden ser iguales",
-          color: "negative",
-        });
-        return;
-      }
-
-      // Validar que la fecha de ingreso sea menor a la fecha de egreso
-      if (fechaIngreso.isAfter(fechaEgreso)) {
-        this.$q.notify({
-          message: "La fecha de ingreso no puede ser mayor a la fecha de egreso",
-          color: "negative",
-        });
-        return;
-      }
-
       return this.$apollo
         .mutate({
           mutation: ADD_HOSPITALIZACION_MUTATION,
           variables: {
             input: {
               fecha_ingreso: this.hospitalizacion_fechaIngreso,
-              fecha_egreso: this.hospitalizacion_fechaEgreso,
+              fecha_egreso: null,
               motivo_de_hospitalizacion: this.hospitalizacion_motivoDeHospitalizacion,
               unidad_hospitalaria: this.hospitalizacion_unidadHospitalaria,
               estado: 'Activo',

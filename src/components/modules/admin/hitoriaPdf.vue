@@ -221,7 +221,7 @@
           <div class="table-cell">{{ emergencia.estado_emergencia }}</div>
           <div class="table-cell">{{ emergencia.destino }}</div>
 					<div class="table-cell">{{ entradaFechaHora(emergencia.fecha_ingreso) || '-' }}</div>
-					<div class="table-cell">{{ salidaFechaHora(emergencia.fecha_egreso) || '-' }}</div>
+					<div class="table-cell">{{ salidaFechaHora(emergencia.fecha_egreso) || 'No aplica' }}</div>
         </div>
       </div>
     </div>
@@ -242,7 +242,7 @@
           <div class="table-cell">{{ hospitalizacion.unidad_hospitalaria }}</div>
           <div class="table-cell">{{ hospitalizacion.estado }}</div>
           <div class="table-cell">{{  entradaFechaHora(hospitalizacion.fecha_ingreso) }}</div>
-					<div class="table-cell">{{ salidaFechaHora(hospitalizacion.fecha_egreso) || '-' }}</div>
+					<div class="table-cell">{{ salidaFechaHora(hospitalizacion.fecha_egreso) || 'No aplica' }}</div>
         </div>
       </div>
     </div>

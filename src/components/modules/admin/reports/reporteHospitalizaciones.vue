@@ -136,7 +136,7 @@
             <div class="table-cell" :title="h.unidad_hospitalaria || 'No especificado'">{{ h.unidad_hospitalaria || 'No especificado' }}</div>
             <div class="table-cell" :title="h.estado || 'No especificado'">{{ h.estado || 'No especificado' }}</div>
             <div class="table-cell">{{ h.fecha_ingreso ? entradaFecha(h.fecha_ingreso) : '-' }}</div>
-            <div class="table-cell">{{ h.fecha_egreso ? salidaFecha(h.fecha_egreso) : '-' }}</div>
+            <div class="table-cell">{{ h.fecha_egreso ? salidaFecha(h.fecha_egreso) : 'No aplica' }}</div>
           </div>
 
           <div class="table-row" style="grid-template-columns: 1fr;">
