@@ -139,6 +139,8 @@ export const PERSONA_POR_CEDULA_QUERY = gql`
 
   fragment PacienteFrag on Paciente {
     id_paciente
+    documento_identidad_representante
+    numero_orden_representante
     vacunas
     antecedentes_familiares
     tipo_de_sangre

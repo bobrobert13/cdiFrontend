@@ -24,8 +24,12 @@
                 <q-item-label class="text-left q-mb-xs" lines="1">
                   <span class="text-weight-medium">Nombre de paciente: {{ user.persona.nombre1 }}</span>
                 </q-item-label>
-                <q-item-label class="text-left q-mb-xs" lines="1">
+                <q-item-label v-if="user.persona.edad >= 18" class="text-left q-mb-xs" lines="1">
                   <span class="text-weight-medium">Documento de identidad: {{ user.persona.cedula_identidad
+                    }}</span>
+                </q-item-label>
+                <q-item-label v-else class="text-left q-mb-xs" lines="1">
+                  <span class="text-weight-medium">Documento de representante: {{ user.documento_identidad_representante
                     }}</span>
                 </q-item-label>
                 <q-item-label class="text-left" lines="1">
@@ -399,7 +403,7 @@ export default {
         });
     },
     buscarUsuario(dni) {
-      const paciente = this.users.filter((paciente) => paciente.persona.cedula_identidad === parseInt(dni))
+      const paciente = this.users.filter((paciente) => paciente.persona.cedula_identidad === parseInt(dni) || paciente.documento_identidad_representante === parseInt(dni))
       if (paciente.length !== 0) {
         this.dataUser = paciente[0];
         this.modalDetailUser = true;

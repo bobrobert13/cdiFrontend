@@ -16,7 +16,7 @@
         </div>
         <div class="info-item">
           <span class="label">Cédula:</span>
-          <span v-if="data.persona" class="value">{{ data.persona.cedula_identidad }}</span>
+          <span v-if="data.persona" class="value">{{ data.persona.cedula_identidad || 'No especificado' }}</span>
         </div>
         <div class="info-item">
           <span class="label">Edad:</span>

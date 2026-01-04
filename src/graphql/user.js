@@ -217,6 +217,8 @@ export const DOCTOR_DETALLES = gql`
       tipo_de_sangre
       alergias
       discapacidad
+      documento_identidad_representante
+      numero_orden_representante
       createdAt
       persona {
         ...personaDetalles
@@ -404,6 +406,8 @@ export const CDI_PACIENTES_QUERY = gql`
   query doCdiPacientes($id_cdi: ID!) {
     pacientesCDI(id_cdi: $id_cdi) {
   	id_paciente
+    documento_identidad_representante
+    numero_orden_representante
     vacunas
     antecedentes_familiares
     tipo_de_sangre
@@ -562,6 +566,8 @@ export const ADMIN_PACIENTES_QUERY = gql`
     vacunas
     antecedentes_familiares
     tipo_de_sangre
+    documento_identidad_representante
+    numero_orden_representante
     alergias
     discapacidad
     doctor {

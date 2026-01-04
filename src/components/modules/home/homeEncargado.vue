@@ -173,9 +173,16 @@
                               <q-item-label class="text-left" lines="1">
                                 <span class="text-weight-medium">Nacionalidad:</span> {{ userPaciente.persona.nacionalidad }}
                               </q-item-label>
-                              <q-item-label class="text-left" lines="1">
+                              <q-item-label  v-if="userPaciente.persona.edad >= 18" class="text-left" lines="1">
                                 <span class="text-weight-medium">Documento:</span>  {{ userPaciente.persona.cedula_identidad }}
                               </q-item-label>
+                              <q-item-label  v-if="userPaciente.persona.edad < 18" class="text-left" lines="1">
+                                <span class="text-weight-medium">Documento de representante:</span>  {{ userPaciente.documento_identidad_representante }}
+                              </q-item-label>
+
+                            <q-item-label v-if="userPaciente.persona.edad < 18" class="text-left q-mt-xs" >
+                              <q-icon name="mdi-human-child" /> <span class="text-weight-medium text-green">Este paciente es menor de edad</span> 
+                            </q-item-label>
                             </div>
                             <div class="col-6 q-mb-xs">
                               <q-item-label class="text-right" lines="1">
@@ -578,9 +585,11 @@
                 <q-card-section v-if="dataUser.persona" class="q-pt-xs q-pb-none no-margin">
                   <div class="text-caption text-bold  ">Paciente: {{ dataUser.persona.nombre1 }}</div>
                   <div class="text-caption  ">Documento de identidad:
-                    {{ dataUser.persona.nacionalidad }} - {{ dataUser.persona.cedula_identidad }}</div>
-                  <div class="text-caption  ">Edad del paciente: {{ dataUser.persona.edad }}</div>
+                    {{ dataUser.persona.nacionalidad }} - {{ dataUser.persona.cedula_identidad || dataUser.documento_identidad_representante }}</div>
+                  <div class="text-caption  ">Edad del paciente: {{ dataUser.persona.edad }} años</div>
                   <div class="text-caption  ">Sexo: {{ dataUser.persona.sexo }}</div>
+                  <div class="text-caption text-green  ">Es menor de edad: {{ dataUser.persona.edad < 18 ? 'Sí' : 'No' }}</div>
+
                 </q-card-section>
               </q-card-section>
 
@@ -1313,7 +1322,7 @@ export default {
     },
 
     buscarPaciente(dni) {
-      const paciente = this.usersPacientes.filter((paciente) => paciente.persona.cedula_identidad === parseInt(dni));
+      const paciente = this.usersPacientes.filter((paciente) => paciente.persona.cedula_identidad === parseInt(dni) || paciente.documento_identidad_representante === parseInt(dni));
       if (paciente.length !== 0) {
         this.dataUser = paciente[0];
         this.modals.searchPaciente = false;

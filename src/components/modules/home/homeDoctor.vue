@@ -40,8 +40,16 @@
                               <span class="text-weight-medium">Nacionalidad:</span> {{ user.persona.nacionalidad }}
                             </q-item-label>
 														 <q-item-label class="text-left" lines="1">
-                              <span class="text-weight-medium">Documento:</span>  {{ user.persona.cedula_identidad }}
+                              <span class="text-weight-medium">Documento:</span>  {{ user.persona.cedula_identidad || 'No especificado'  }}
                             </q-item-label>
+                            <q-item-label v-if="user.documento_identidad_representante" class="text-left" lines="1">
+                              <span class="text-weight-medium">Documento representante:</span>  {{ user.documento_identidad_representante || 'No especificado'  }}
+                            </q-item-label>
+
+                            <q-item-label v-if="user.persona.edad < 18" class="text-left q-mt-xs" >
+                              <q-icon name="mdi-human-child" /> <span class="text-weight-medium text-green">Este paciente es menor de edad</span> 
+                            </q-item-label>
+                            
                           </div>
                           <div class="col-6 q-mb-xs">
                             <q-item-label class="text-right" lines="1">
@@ -143,14 +151,39 @@
                   color="primary" /> Los campos marcados con * son obligatorios</small>
               <div class=" col-7">
                 <div class="column justify-center">
-									                   <div class="row">
+                  <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 ">
+                    <q-input filled color="deep-purple-6" v-model="edad" label="Edad*" type="number"
+                      :rules="ageRules" />
+                  </div>
+
+                  <div v-if="edad < 18 && edad" class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 column ">
+                    <p class=" text-weight-medium text-red q-mb-xs"><b>El paciente es menor de edad *</b></p>
+                    <small>Se necesita información adicional del representante legal.</small>
+                    <div class="row q-mt-sm">
+                      <div class="col-6">
+                        <q-input filled color="deep-purple-6" v-model="documento_identidad_representante"
+                          label="Documento de identidad del representante*" :rules="representativeDniRules" />
+                      </div>
+                      <div class="col-6">
+                        <q-input filled color="deep-purple-6" type="number" v-model="numero_orden_representante"
+                          label="Número de orden del representante*" :rules="orderNumberRules" />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-pb-xs ">
+                    <q-select filled v-model="sexo" :options="sexoPaciente" label="Sexo*" option-label="label"
+                      option-value="value" emit-value :rules="requiredSelectRules" />
+                  </div>
+
+                  <div class="row ">
                       <div class="col-2">
                         <q-select filled v-model="nacionalidad" :options="nacionalidades" option-label="label"
                           option-value="value" emit-value />
                       </div>
                       <div class="col-10">
                         <q-input filled color="deep-purple-6" type="number" v-model="dni" @blur="obtenerInformacionPersonaRegistrada" :rules="dniRules"
-                          label="Cédula*" />
+                           :label="edad !== 0 && edad < 18 ? 'Cédula (Opcional)' : 'Cédula*'" />
                       </div>
                     </div>
                   <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 ">
@@ -196,29 +229,6 @@
                           label="Código postal*" :rules="postalCodeRules" />
                       </div>
                     </div>
-                  </div>
-                  <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-pb-xs ">
-                    <q-select filled v-model="sexo" :options="sexoPaciente" label="Sexo*" option-label="label"
-                      option-value="value" emit-value :rules="requiredSelectRules" />
-                  </div>
-                  <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 ">
-                    <q-input filled color="deep-purple-6" v-model="edad" label="Edad*"
-                      :rules="ageRules" />
-                  </div>
-
-
-                  <div v-if="edad < 18 && edad" class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 column ">
-                    <p class=" text-weight-medium text-red q-mb-xs"><b>El paciente es menor de edad *</b></p>
-                    <small>Se necesita información adicional del representante legal.</small>
-                    <div class="row q-mt-sm"></div>
-                      <div class="col-6">
-                        <q-input filled color="deep-purple-6" v-model="documento_identidad_representante"
-                          label="Documento de identidad del representante*" :rules="dniRules" />
-                      </div>
-                      <div class="col-6">
-                        <q-input filled color="deep-purple-6" type="number" v-model="numero_orden_representante"
-                          label="Número de orden del representante*" :rules="orderNumberRules" />
-                      </div>
                   </div>
 
 
@@ -372,9 +382,11 @@
                 <q-card-section v-if="dataUser.persona" class="q-pt-xs q-pb-none no-margin">
                   <p class="text-subtitle text-bold text-grey-9">Detalles del paciente</p>
                   <div class="text-caption text-bold q-mt-sm q-mb-xs">Paciente: {{ dataUser.persona.nombre1 }}</div>
-                  <div class="text-caption q-mt-sm q-mb-xs">Documento de identidad:
-                    {{ dataUser.persona.nacionalidad }} - {{ dataUser.persona.cedula_identidad }}</div>
-                  <div class="text-caption q-mt-sm q-mb-xs">Edad del paciente: {{ dataUser.persona.edad }}</div>
+                  <div v-if="dataUser.persona.cedula_identidad" class="text-caption q-mt-sm q-mb-xs">Documento de identidad:
+                    {{ dataUser.persona.nacionalidad }} - {{ dataUser.persona.cedula_identidad  }}</div>
+                  <div v-if="dataUser.documento_identidad_representante" class="text-caption q-mt-sm q-mb-xs">Documento de representante:
+                    {{ dataUser.persona.nacionalidad }} - {{ dataUser.documento_identidad_representante  }}</div>
+                  <div class="text-caption q-mt-sm q-mb-xs">Edad del paciente: {{ dataUser.persona.edad }} años</div>
                   <div class="text-caption q-mt-sm q-mb-xs">Sexo: {{ dataUser.persona.sexo }}</div>
                   <!-- <div class="text-caption q-mt-sm q-mb-xs">Diagnostico: {{dataUser.diagnostico}}</div> -->
                 </q-card-section>
@@ -1872,6 +1884,14 @@ export default {
       return useEmailValidation();
     },
     dniRules() {
+      const rules = useDniValidation();
+      if (this.edad < 18) {
+        // Optional for minors: Allow empty, but validate if value exists
+        return rules.map(rule => (val) => !val || rule(val) === true || rule(val));
+      }
+      return rules;
+    },
+    representativeDniRules() {
       return useDniValidation();
     },
     orderNumberRules() {
@@ -1950,7 +1970,7 @@ export default {
       const validationRules = {
         fullName: useFullNameValidation(),
         correo: useEmailValidation(),
-        dni: useDniValidation(),
+        dni: this.dniRules, // Use the computed property for consistency
         calle: useTextFieldValidation(true),
         numero: useHouseNumberValidation(),
         sector: useTextFieldValidation(true),
@@ -2199,7 +2219,6 @@ export default {
 
 
       edad: 0,
-      estado: "",
       direccion: {
         UserId: this.$store.state.user.id,
         CiudadId: 1,
@@ -2418,7 +2437,7 @@ export default {
 					this.limpiarTodoslosCampos();
 					this.llenarCamposDePersonaExistente({correo, telefono, direccion, doctor, paciente, persona: persona});
 				}).catch((err) => {
-					this.limpiarTodoslosCampos();
+					// this.limpiarTodoslosCampos();
           // this.$q.notify({
           //   message: err.message.split("GraphQL error:"),
           //   color: "negative",
@@ -2574,6 +2593,12 @@ export default {
 
     validarDNI(value) {
       let isValid = true;
+      if (this.edad < 18 && (!value || value === '')) {
+         // Si es menor de 18, el DNI es opcional (puede venir vacío)
+         this.valid = true;
+         return;
+      }
+
       if (!/^\d+$/.test(value)) {
         isValid = false;
       }
@@ -2809,8 +2834,8 @@ export default {
               peso: parseInt(this.peso),
               vacunas: this.vacunasSeleccionadas.value,
               discapacidad: this.discapacidad,
-              documento_identidad_representante: parseInt(this.documento_identidad_representante),
-              numero_orden_representante: parseInt(this.numero_orden_representante),
+              documento_identidad_representante: this.documento_identidad_representante ? parseInt(this.documento_identidad_representante) : null,
+              numero_orden_representante: this.numero_orden_representante ? parseInt(this.numero_orden_representante) : null,
               antecedentes_familiares: this.antecedentes_familiares,
               tipo_de_sangre: this.sangreSeleccionada.value,
               alergias: this.alergias,
@@ -2824,7 +2849,7 @@ export default {
                 nombre1: this.fullName,
                 sexo: this.sexo,
                 edad: parseInt(this.edad),
-                cedula_identidad: parseInt(this.dni),
+                cedula_identidad: this.dni ? parseInt(this.dni) : null,
                 telefonoInput: {
                   codigo: this.codigo,
                   numero: this.telefono
@@ -3709,9 +3734,15 @@ export default {
         });
     },
     buscarUsuario(dni) {
-      const paciente = this.users.filter((paciente) => paciente.persona.cedula_identidad === parseInt(dni))
-      if (paciente.length !== 0) {
-        this.dataUser = paciente[0];
+      const cedula = parseInt(dni);
+      const paciente = this.users.find(
+        (p) =>
+          p.persona.cedula_identidad === cedula ||
+          p.documento_identidad_representante === cedula
+      );
+
+      if (paciente) {
+        this.dataUser = paciente;
         this.modalDetailUser = true;
         this.modals.searchUser = false;
       } else {
@@ -3719,7 +3750,7 @@ export default {
           message: "Este paciente no existe",
           color: "negative",
         });
-      };
+      }
       this.dni = "";
     },
   },
