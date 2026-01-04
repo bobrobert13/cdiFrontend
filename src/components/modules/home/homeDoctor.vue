@@ -549,20 +549,32 @@
                     <q-input v-model="emergencia_notasDeAtencion" filled label="Notas de atención" />
                   </div>
 
-									                  <div class="col-11 q-mt-md q-pa-xs">
+									                  <div class="col-12 q-mt-md q-pa-xs">
                     <span>Fecha de ingreso emergencia:</span>
-                    <q-input filled v-model="emergencia_fechaIngreso" disable label="Fecha de ingreso "></q-input>
-                  </div>
-                  <div class="col-1 self-center q-pa-xs q-pt-md">
-                    <q-btn icon="event" round color="primary">
-                      <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                        <q-date v-model="emergencia_fechaIngreso">
-                          <div class="row items-center justify-end">
-                            <q-btn v-close-popup label="Cerrar" color="primary" flat />
-                          </div>
-                        </q-date>
-                      </q-popup-proxy>
-                    </q-btn>
+                    <q-input filled v-model="emergencia_fechaIngreso" label="Fecha de ingreso">
+                      <template v-slot:prepend>
+                        <q-icon name="event" class="cursor-pointer">
+                          <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                            <q-date v-model="emergencia_fechaIngreso" mask="YYYY/MM/DD HH:mm:ss">
+                              <div class="row items-center justify-end">
+                                <q-btn v-close-popup label="Cerrar" color="primary" flat />
+                              </div>
+                            </q-date>
+                          </q-popup-proxy>
+                        </q-icon>
+                      </template>
+                      <template v-slot:append>
+                        <q-icon name="access_time" class="cursor-pointer">
+                          <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                            <q-time v-model="emergencia_fechaIngreso" mask="YYYY/MM/DD HH:mm:ss" format24h>
+                              <div class="row items-center justify-end">
+                                <q-btn v-close-popup label="Cerrar" color="primary" flat />
+                              </div>
+                            </q-time>
+                          </q-popup-proxy>
+                        </q-icon>
+                      </template>
+                    </q-input>
                   </div>
 
 
@@ -699,20 +711,32 @@
                     <q-input v-model="hospitalizacion_notasMedicas" filled label="Notas médicas" type="textarea" />
                   </div>
 
-                  <div class="col-11 q-pa-xs">
+                  <div class="col-12 q-pa-xs">
                     <span>Fecha de ingreso:</span>
-                    <q-input filled v-model="hospitalizacion_fechaIngreso" disable label="Fecha de ingreso "></q-input>
-                  </div>
-                  <div class="col-1 self-center q-pa-xs q-pt-md">
-                    <q-btn icon="event" round color="primary">
-                      <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                        <q-date v-model="hospitalizacion_fechaIngreso">
-                          <div class="row items-center justify-end">
-                            <q-btn v-close-popup label="Cerrar" color="primary" flat />
-                          </div>
-                        </q-date>
-                      </q-popup-proxy>
-                    </q-btn>
+                    <q-input filled v-model="hospitalizacion_fechaIngreso" label="Fecha de ingreso">
+                      <template v-slot:prepend>
+                        <q-icon name="event" class="cursor-pointer">
+                          <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                            <q-date v-model="hospitalizacion_fechaIngreso" mask="YYYY/MM/DD HH:mm:ss">
+                              <div class="row items-center justify-end">
+                                <q-btn v-close-popup label="Cerrar" color="primary" flat />
+                              </div>
+                            </q-date>
+                          </q-popup-proxy>
+                        </q-icon>
+                      </template>
+                      <template v-slot:append>
+                        <q-icon name="access_time" class="cursor-pointer">
+                          <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                            <q-time v-model="hospitalizacion_fechaIngreso" mask="YYYY/MM/DD HH:mm:ss" format24h>
+                              <div class="row items-center justify-end">
+                                <q-btn v-close-popup label="Cerrar" color="primary" flat />
+                              </div>
+                            </q-time>
+                          </q-popup-proxy>
+                        </q-icon>
+                      </template>
+                    </q-input>
                   </div>
 
 
@@ -723,7 +747,6 @@
 
               <q-card-actions align="center">
                 <q-btn flat :disable="this.hospitalizacion_fechaIngreso === '' ||
-                  this.hospitalizacion_fechaEgreso === '' ||
                   this.hospitalizacion_motivoDeHospitalizacion === '' ||
                   this.hospitalizacion_unidadHospitalaria === '' ||
                   this.hospitalizacion_notasMedicas === ''
@@ -2615,11 +2638,13 @@ export default {
     },
     seleccionarUrgencias(paciente, id_paciente) {
       this.pacienteSeleccionado = { ...paciente, id_paciente };
+      this.emergencia_fechaIngreso = moment().format('YYYY/MM/DD HH:mm:ss');
       console.log('paciente seleccionado:', this.pacienteSeleccionado);
       this.modalUrgencias = true;
     },
     seleccionarHospitalizacion(paciente, id_paciente) {
       this.pacienteSeleccionado = { ...paciente, id_paciente };
+      this.hospitalizacion_fechaIngreso = moment().format('YYYY/MM/DD HH:mm:ss');
       console.log('paciente seleccionado:', this.pacienteSeleccionado);
       this.modalHospitalizacion = true;
     },
@@ -2702,29 +2727,13 @@ export default {
 
     salidaFechaHora(salida) {
       if (!salida) return '';
-
-      if (typeof salida === 'string' && /([zZ]|[+-]\d{2}:?\d{2})$/.test(salida)) {
-        const mz = moment.parseZone(salida).local();
-  return mz.isValid() ? mz.format('DD-MM-YYYY hh:mm A') : '';
-      }
-
-      let m = moment.utc(salida, ['YYYY-MM-DD HH:mm:ss', 'YYYY-MM-DDTHH:mm:ss', 'YYYY-MM-DD'], true).local();
-      if (!m.isValid()) {
-        m = moment(salida).local();
-      }
-  return m.isValid() ? m.format('DD-MM-YYYY hh:mm A') : '';
+      const m = moment(salida);
+      return m.isValid() ? m.format('DD-MM-YYYY hh:mm A') : '';
     },
     entradaFechaHora(entrada) {
       if (!entrada) return '';
-
-      if (typeof entrada === 'string' && /([zZ]|[+-]\d{2}:?\d{2})$/.test(entrada)) {
-        const mz = moment.parseZone(entrada).local();
-  return mz.isValid() ? mz.format('DD-MM-YYYY hh:mm A') : '';
-      }
-
-      let m = moment.utc(entrada, ['YYYY-MM-DD HH:mm:ss', 'YYYY-MM-DDTHH:mm:ss', 'YYYY-MM-DD'], true).local();
-      if (!m.isValid()) m = moment(entrada).local();
-  return m.isValid() ? m.format('DD-MM-YYYY hh:mm A') : '';
+      const m = moment(entrada);
+      return m.isValid() ? m.format('DD-MM-YYYY hh:mm A') : '';
     },
 
     workerView(typeView) {
