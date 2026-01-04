@@ -1878,7 +1878,7 @@ export default {
       return useOrderNumberValidation();
     },
     streetRules() {
-      return useTextWithSpecialCharsValidation(true, 3, 200);
+      return useTextFieldValidation(true, 3, 200);
     },
     houseNumberRules() {
       return useHouseNumberValidation();
