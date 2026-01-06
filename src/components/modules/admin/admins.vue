@@ -410,7 +410,7 @@
 
 
 		<div>
-			<vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="true" :preview-modal="false"
+			<vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="false" :preview-modal="true"
 				:paginate-elements-by-height="1400" filename="informacion_de_cdis" :pdf-quality="2"
 				:manual-pagination="false" pdf-format="a4" :pdf-margin="10" pdf-orientation="portrait"
 				pdf-content-width="800px" @progress="onProgress($event)" ref="html2Pdf">
@@ -421,7 +421,7 @@
 		</div>
 
 				<div>
-			<vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="true" :preview-modal="false"
+			<vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="false" :preview-modal="true"
 				:paginate-elements-by-height="1400" filename="Listado_CDIS_STATUS" :pdf-quality="2"
 				:manual-pagination="false" pdf-format="a4" :pdf-margin="10" pdf-orientation="portrait"
 				pdf-content-width="800px" @progress="onProgress($event)" ref="html2Pdfstatus">
@@ -432,7 +432,7 @@
 		</div>
 
 		<div>
-			<vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="true" :preview-modal="false"
+			<vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="false" :preview-modal="true"
 				:paginate-elements-by-height="1400" filename="informacion_de_cdi" :pdf-quality="2"
 				:manual-pagination="false" pdf-format="a4" :pdf-margin="10" pdf-orientation="portrait"
 				pdf-content-width="800px" @progress="onProgress($event)" ref="cdihtml2Pdf">

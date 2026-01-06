@@ -673,7 +673,7 @@
           </q-dialog>
 
     <div>
-      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="true" :preview-modal="false"
+      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="false" :preview-modal="true"
         :paginate-elements-by-height="1400" filename="InformacionDeDoctorCDI" :pdf-quality="2"
         :manual-pagination="false" pdf-format="a4" :pdf-margin="10" pdf-orientation="portrait" pdf-content-width="800px"
         @progress="onProgress($event)" ref="html2Pdf">
@@ -684,7 +684,7 @@
     </div>
 
     <div>
-      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="true" :preview-modal="false"
+      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="false" :preview-modal="true"
         :paginate-elements-by-height="1400" filename="FichaDePacienteCDI" :pdf-quality="2" :manual-pagination="false"
         pdf-format="a4" :pdf-margin="10" pdf-orientation="portrait" pdf-content-width="800px"
         @progress="onProgress($event)" ref="html2PdfPaciente">
@@ -695,7 +695,7 @@
     </div>
     
         <div>
-			<vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="true" :preview-modal="false"
+			<vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="false" :preview-modal="true"
 				:paginate-elements-by-height="1400" filename="Listado_DOCTORES" :pdf-quality="2"
 				:manual-pagination="false" pdf-format="a4" :pdf-margin="10" pdf-orientation="portrait"
 				pdf-content-width="800px" @progress="onProgress($event)" ref="html2Pdfstatus">
@@ -706,7 +706,7 @@
     </div>
 
             <div>
-			<vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="true" :preview-modal="false"
+			<vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="false" :preview-modal="true"
 				:paginate-elements-by-height="1400" filename="Listado_Completo_De_Doctores" :pdf-quality="2"
 				:manual-pagination="false" pdf-format="a4" :pdf-margin="10" pdf-orientation="portrait"
 				pdf-content-width="800px" @progress="onProgress($event)" ref="html2PdfAllDoctors">

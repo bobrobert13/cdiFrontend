@@ -162,7 +162,7 @@
 
 
        <div>
-      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="true" :preview-modal="false"
+      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="false" :preview-modal="true"
         :paginate-elements-by-height="1400" filename="Consulta_del_Mes_CDI" :pdf-quality="2" :manual-pagination="false"
         pdf-format="a4" :pdf-margin="2" pdf-orientation="landscape" pdf-content-width="1050px"
         @progress="onProgress($event)" ref="html2PdfConsultaMes">
@@ -173,7 +173,7 @@
     </div>
 
            <div>
-      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="true" :preview-modal="false"
+      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="false" :preview-modal="true"
         :paginate-elements-by-height="1400" filename="Paciente_Por_Periodo_del_CDI" :pdf-quality="2" :manual-pagination="false"
         pdf-format="a4" :pdf-margin="2" pdf-orientation="landscape" pdf-content-width="1050px"
         @progress="onProgress($event)" ref="html2PdfPacientePorPeriodo">
@@ -185,7 +185,7 @@
 
 
                <div>
-      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="true" :preview-modal="false"
+      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="false" :preview-modal="true"
         :paginate-elements-by-height="1400" filename="Consultas_Por_Medico_Por_Periodo_del_CDI" :pdf-quality="2" :manual-pagination="false"
         pdf-format="a4" :pdf-margin="2" pdf-orientation="landscape" pdf-content-width="1050px"
         @progress="onProgress($event)" ref="html2PdfConsultasPorMedicoPeriodo">
@@ -197,7 +197,7 @@
 
 
                    <div>
-      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="true" :preview-modal="false"
+      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="false" :preview-modal="true"
         :paginate-elements-by-height="1400" filename="Consultas_Por_Periodo_del_CDI" :pdf-quality="2" :manual-pagination="false"
         pdf-format="a4" :pdf-margin="2" pdf-orientation="landscape" pdf-content-width="1050px"
         @progress="onProgress($event)" ref="html2PdfConsultasPeriodo">
@@ -209,7 +209,7 @@
 
 
                        <div>
-      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="true" :preview-modal="false"
+      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="false" :preview-modal="true"
         :paginate-elements-by-height="1400" filename="Distribucion_Por_Edad_del_CDI" :pdf-quality="2" :manual-pagination="false"
         pdf-format="a4" :pdf-margin="2" pdf-orientation="landscape" pdf-content-width="1050px"
         @progress="onProgress($event)" ref="html2PdfDistEdad">
@@ -220,7 +220,7 @@
     </div>
 
                            <div>
-      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="true" :preview-modal="false"
+      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="false" :preview-modal="true"
         :paginate-elements-by-height="1400" filename="Distribucion_Por_Genero_del_CDI" :pdf-quality="2" :manual-pagination="false"
         pdf-format="a4" :pdf-margin="2" pdf-orientation="landscape" pdf-content-width="1050px"
         @progress="onProgress($event)" ref="html2PdfDistGenero">
@@ -231,7 +231,7 @@
     </div>
 
                                <div>
-      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="true" :preview-modal="false"
+      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="false" :preview-modal="true"
         :paginate-elements-by-height="1400" filename="Top_Diagnosticos_del_CDI" :pdf-quality="2" :manual-pagination="false"
         pdf-format="a4" :pdf-margin="2" pdf-orientation="landscape" pdf-content-width="1050px"
         @progress="onProgress($event)" ref="html2PdfTopDiagnosticos">
