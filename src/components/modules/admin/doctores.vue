@@ -642,6 +642,7 @@ import {
   useAgeValidation
 } from "src/utils/validations";
 import { isFormValid } from "src/utils/formUtils";
+import especialidades from "src/data/especialidades";
 export default {
   name: "doctores",
   components: { HistoriaDrPdf, VueHtml2pdf, HistorialDoctoresLista, PdfListaDoctoresCompleta },
@@ -735,17 +736,7 @@ export default {
       user: "",
       valid: false,
       buscador: true,
-      roleUserEspecialidad: [
-        { label: "Enfermería", value: "Enfermeria", id: 1 },
-        { label: "Oftalmología", value: "Oftalmologia", id: 2 },
-        { label: "Rayos x", value: "Rayosx", id: 3 },
-        { label: "Hospitalización", value: "Hospitalizacion", id: 4 },
-        { label: "Emergencias", value: "Emergencias", id: 5 },
-        { label: "Laboratorio", value: "Laboratorio", id: 6 },
-        { label: "Farmacia", value: "Farmacia", id: 7 },
-        { label: "Terapias intensivas", value: "TerapiasIntensivas", id: 8 },
-        { label: "Recepción", value: "Recepcion", id: 9 }
-      ],
+      roleUserEspecialidad: especialidades,
       estados: [
         { label: 'Amazonas', value: 1 },
         { label: 'Anzoátegui', value: 2 },

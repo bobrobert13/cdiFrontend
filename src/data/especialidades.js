@@ -1,0 +1,21 @@
+
+export default [
+        { label: "Enfermería", value: "Enfermeria", id: 1 },
+        { label: "Oftalmología", value: "Oftalmologia", id: 2 },
+        { label: "Rayos x", value: "Rayosx", id: 3 },
+        { label: "Hospitalización", value: "Hospitalizacion", id: 4 },
+        { label: "Emergencias", value: "Emergencias", id: 5 },
+        { label: "Laboratorio", value: "Laboratorio", id: 6 },
+        { label: "Farmacia", value: "Farmacia", id: 7 },
+        { label: "Terapias intensivas", value: "TerapiasIntensivas", id: 8 },
+        { label: "Recepción", value: "Recepcion", id: 9 },
+        { label: "Medicina general", value: "MedicinaGeneral", id: 10 },
+        { label: "Pediatría", value: "Pediatría", id: 11 },
+        { label: "Odontología", value: "Odontología", id: 12 },
+        { label: "Cardiología", value: "Cardiología", id: 17 },
+        { label: "Ortopedia", value: "Ortopedia", id: 18 },
+        { label: "Otorrinolaringología", value: "Otorrinolaringología", id: 19 },
+        { label: "Ecografía", value: "Ecografía", id: 20 },
+        { label: "Electrocardiogramas", value: "Electrocardiogramas", id: 21 },
+        { label: "Fisioterapia", value: "Fisioterapia", id: 22 },
+]
