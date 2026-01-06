@@ -135,11 +135,11 @@ export const useDoctorNombreUsuarioValidation = () => {
 // Validaciones para contraseña (reutilizable para doctores)
 export const usePasswordValidation = () => {
   return [
-    (val) => !!val || 'Este campo es obligatorio',
-    (val) => val.length >= 8 || 'Mínimo 8 caracteres',
-    (val) => val.length <= 50 || 'Máximo 50 caracteres',
-    (val) => /(?=.*[a-z])/.test(val) || 'Debe contener al menos una letra minúscula',
-    (val) => /(?=.*[A-Z])/.test(val) || 'Debe contener al menos una letra mayúscula',
-    (val) => /(?=.*\d)/.test(val) || 'Debe contener al menos un número'
+    (val) => !!val || 'Este campo es obligatorio (ej. Ejemplo123)',
+    (val) => val.length >= 8 || 'Mínimo 8 caracteres (ej. Ejemplo123)',
+    (val) => val.length <= 50 || 'Máximo 50 caracteres (ej. Ejemplo123)',
+    (val) => /(?=.*[a-z])/.test(val) || 'Debe contener al menos una letra minúscula (ej. Ejemplo123)',
+    (val) => /(?=.*[A-Z])/.test(val) || 'Debe contener al menos una letra mayúscula (ej. Ejemplo123)',
+    (val) => /(?=.*\d)/.test(val) || 'Debe contener al menos un número (ej. Ejemplo123)'
   ]
 }
