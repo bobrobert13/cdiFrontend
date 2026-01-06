@@ -365,7 +365,7 @@
 
               <div class="col-7">
                 <div class="column justify-center">
-                  <q-input filled color="deep-purple-6" v-model="fullName" label="Nombre completo*"
+                  <q-input filled color="deep-purple-6" v-model="fullName" label="Nombre completo (Primero nombres y luego apellidos) *"
                     :rules="fullNameRules" />
 
                   <q-select filled class="q-mb-xs" v-model="nacionalidad" :options="nacionalidades" option-label="label"
