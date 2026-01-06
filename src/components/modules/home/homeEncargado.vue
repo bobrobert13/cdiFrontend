@@ -774,7 +774,7 @@ export default {
       return useDniValidation();
     },
     ageRules() {
-      return [...useAgeValidation(), (val) => parseInt(val) >= 18 || 'La edad debe ser mayor a 18', ];
+      return [...useAgeValidation(), (val) => parseInt(val) >= 25 || 'La edad debe ser mayor o igual a 25 años', ];
     },
     anosExperienciaRules() {
       return useDoctorAnosExperienciaValidation();
