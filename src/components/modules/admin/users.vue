@@ -3,16 +3,14 @@
    <slot></slot>
 
     <div class="col-12" v-if="viewType === 'userList'">
-      <span class="text-accent text-h6 text-bold">Todos los pacientes</span>
+      <span class="text-accent text-h6 text-bold">Todos los pacientes ({{ users.length }})</span>
       <div class="row justify-center">
         <div class="col-12 self-center text-right">
 
           <q-icon style="cursor: pointer" @click="workerView('searchUser')" name="mdi-account-search"
             class="text-primary" size="md"></q-icon>
-          <span class="text-bold text-primary" style="cursor: pointer" @click="workerView('searchUser')">Buscar
-            paciente</span>
-
-          <!-- <q-icon style="cursor: pointer" name="mdi-printer-pos" class="text-primary q-ml-lg" size="md"></q-icon> -->
+                      <q-icon style="cursor: pointer" @click="AllUsers()" name="mdi-refresh"
+            class="text-primary q-ml-md" size="sm"></q-icon>
 
         </div>
       </div>
@@ -129,8 +127,10 @@
           <q-card-section v-if="dataUser.persona" class="q-pt-xs q-pb-none no-margin">
             <p class="text-subtitle text-bold text-grey-9">Detalles del paciente</p>
             <div class="text-caption text-bold q-mt-sm q-mb-xs">Paciente: {{ dataUser.persona.nombre1 }}</div>
-            <div class="text-caption q-mt-sm q-mb-xs">Documento de identidad:
+            <div class="text-caption q-mt-sm q-mb-xs" v-if="dataUser.persona.cedula_identidad">Documento de identidad:
               {{ dataUser.persona.cedula_identidad }}</div>
+            <div class="text-caption q-mt-sm q-mb-xs" v-if="dataUser.documento_identidad_representante">Documento del representante:
+              {{ dataUser.documento_identidad_representante }}</div>
             <div class="text-caption q-mt-sm q-mb-xs">Edad del paciente: {{ dataUser.persona.edad }}</div>
             <div class="text-caption q-mt-sm q-mb-xs">Ocupación: {{ dataUser.persona.ocupacion }}</div>
             <div class="text-caption q-mt-sm q-mb-xs">Sexo: {{ dataUser.persona.sexo }}</div>
@@ -403,10 +403,9 @@ export default {
         });
     },
     buscarUsuario(dni) {
-      const paciente = this.users.filter((paciente) => paciente.persona.cedula_identidad === parseInt(dni) || paciente.documento_identidad_representante === parseInt(dni))
-      if (paciente.length !== 0) {
-        this.dataUser = paciente[0];
-        this.modalDetailUser = true;
+      const pacientes = this.users.filter((paciente) => paciente.persona.cedula_identidad === parseInt(dni) || paciente.documento_identidad_representante === parseInt(dni))
+      if (pacientes.length !== 0) {
+        this.users = pacientes;
         this.modals.searchUser = false;
       } else {
         this.$q.notify({

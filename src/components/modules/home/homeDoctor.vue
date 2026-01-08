@@ -2,23 +2,28 @@
   <div class="row justify-center">
 
     <div class="col-12 bg-white" style="min-height: 85vh; border-radius: 20px">
-      <q-scroll-area class=" q-mb-md" :thumb-style="thumbStyle" :bar-style="barStyle" style="height: 80vh">
-        <div class="row justify-center">
-          <div class="col-10" v-if="viewType === 'userList'">
-            <div class="row justify-center">
-              <div class="col self-center text-right">
-              </div>
-              <div class="col q-pa-md self-center text-right">
+                        <div  v-if="viewType === 'userList'" class="col q-pa-md self-center  text-right">
                 <q-icon style="cursor: pointer" @click="workerView('searchUser')" name="mdi-account-search"
                   class="text-primary q-mr-md" size="md"></q-icon>
                 <q-icon style="cursor: pointer" @click="workerView('addWorker')" name="mdi-plus q-mr-md"
                   class="text-primary" size="md"></q-icon>
+                                  <q-icon style="cursor: pointer" @click="AllPacientes()" name="mdi-refresh"
+                  class="text-primary q-ml-lg q-mr-md" size="sm"></q-icon>
+              </div>
 
+      <q-scroll-area class=" q-mb-md" :thumb-style="thumbStyle" :bar-style="barStyle" style="height: 80vh">
+        <div class="column q-pa-xl justify-center">
+
+
+
+          <div class="col-10" v-if="viewType === 'userList'">
+            <div class="row justify-center">
+              <div class="col self-center text-right">
               </div>
             </div>
             <div class="row justify-center" v-if="this.users.length !== 0">
               <div class="col-12 text-left q-mb-md">
-                <p class="text-h6 text-weight-light ">Tu lista de pacientes:</p>
+                <p class="text-h6 text-weight-light ">Tu lista de pacientes ({{ users.length }}):</p>
               </div>
               <div class="col-12 q-mb-sm" v-for="(user, index) in users" :key="index">
                 <q-list class="rounded-borders bg-grey-2" style="border-radius: 15px">
@@ -159,12 +164,16 @@
                   <div v-if="edad < 18 && edad" class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 column ">
                     <p class=" text-weight-medium text-red q-mb-xs"><b>El paciente es menor de edad *</b></p>
                     <small>Se necesita información adicional del representante legal.</small>
-                    <div class="row q-mt-sm">
-                      <div class="col-6">
+                    <div class="row q-mt-sm q-gutter-sm">
+                      <div class="col-2">
+                        <q-select filled v-model="nacionalidad" :options="nacionalidades" option-label="label"
+                          option-value="value" emit-value />
+                      </div>
+                      <div class="col-4">
                         <q-input filled color="deep-purple-6" v-model="documento_identidad_representante"
                           label="Documento de identidad del representante*" :rules="representativeDniRules" />
                       </div>
-                      <div class="col-6">
+                      <div class="col">
                         <q-input filled color="deep-purple-6" type="number" v-model="numero_orden_representante"
                           label="Número de orden del representante*" :rules="orderNumberRules" />
                       </div>
@@ -176,7 +185,7 @@
                       option-value="value" emit-value :rules="requiredSelectRules" />
                   </div>
 
-                  <div class="row ">
+                  <div class="row " v-if="edad >= 18">
                       <div class="col-2">
                         <q-select filled v-model="nacionalidad" :options="nacionalidades" option-label="label"
                           option-value="value" emit-value />
@@ -1895,7 +1904,10 @@ export default {
       return useDniValidation();
     },
     orderNumberRules() {
-      return useOrderNumberValidation();
+      // no puede estar vacio
+      // no puede ser igual al documento de identidad
+      // debe tener maximo 6 caracteres
+      return [useOrderNumberValidation(),   (val) => val !== this.documento_identidad_representante || 'El número de orden no puede ser igual al documento de identidad', (val) => val.length <= 6 || 'El número de orden debe tener máximo 6 caracteres', (val) => val.length >= 1 || 'El número de orden debe tener al menos 1 caracter'];
     },
     streetRules() {
       return useTextFieldValidation(true, 3, 200);
@@ -3735,15 +3747,15 @@ export default {
     },
     buscarUsuario(dni) {
       const cedula = parseInt(dni);
-      const paciente = this.users.find(
+      const pacientes = this.users.filter(
         (p) =>
           p.persona.cedula_identidad === cedula ||
           p.documento_identidad_representante === cedula
       );
-
-      if (paciente) {
-        this.dataUser = paciente;
-        this.modalDetailUser = true;
+      console.log('pacientes encontrados:', pacientes);
+      
+      if (pacientes.length > 0) {
+        this.users = pacientes;
         this.modals.searchUser = false;
       } else {
         this.$q.notify({

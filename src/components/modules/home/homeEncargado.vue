@@ -4,11 +4,8 @@
       <span class="text-bold text-h6  text-accent">Usuarios del CDI</span>
     </div>
     <div class="col-12 self-end bg-white" style="min-height: 85vh; border-radius: 20px">
-      <q-scroll-area class="q-mt-md q-mb-md" :thumb-style="thumbStyle" :bar-style="barStyle" style="height: 75vh">
-        <div class="row justify-center">
-          <div class="col-10" v-if="viewType === 'userList'">
-
-            <div class="row ">
+     
+                  <div class="row q-px-md q-mt-sm">
               <div class="col self-center text-right">
                 <div class="col-4 self-center text-right">
                 </div>
@@ -24,11 +21,19 @@
                   </q-tooltip>
                 </q-icon>
               </div>
-                 <div v-if="tab === 'pacientesCDI'" class="col self-center text-right">
+                 <div v-if="tab === 'pacientesCDI'" class="col self-center items-center text-right">
                 <q-icon style="cursor: pointer" @click="modals.searchPaciente = !modals.searchPaciente" name="mdi-account-search"
                   class="text-primary q-mr-md" size="md"></q-icon>
+                                  <q-icon style="cursor: pointer" @click="AllPacientes()" name="mdi-refresh"
+                  class="text-primary q-mr-md" size="sm"></q-icon>
               </div>
             </div>
+     
+      <q-scroll-area class="q-mt-md q-mb-md" :thumb-style="thumbStyle" :bar-style="barStyle" style="height: 75vh">
+        <div class="row justify-center">
+          <div class="col-10" v-if="viewType === 'userList'">
+
+
 
             <q-tabs v-model="tab" class="text-teal">
               <q-tab name="doctoresCDI" icon="mdi-account-group" label="Doctores del CDI" />
@@ -194,7 +199,10 @@
                             </div>
                           </div>
                           <q-separator spaced color="blue-grey" />
-
+                          
+                            <button type="button"
+                              class="no-outline no-border q-px-md q-mb-xs q-py-xs rounded-borders bg-blue-grey text-white cursor-pointer"
+                             @click="openDetailsPaciente(userPaciente)">Detalles del paciente</button>
                             <button type="button"
                               class="no-outline no-border q-px-md q-py-xs rounded-borders bg-blue-grey text-white cursor-pointer"
                              @click="generatePacientePDF(userPaciente)"><q-icon name="mdi-printer" class="q-mr-sm" />Descargar ficha del paciente</button>
@@ -1138,7 +1146,10 @@ export default {
     },
   },
   methods: {
-
+    openDetailsPaciente(userPaciente) {
+      this.dataUser = userPaciente;
+      this.modals.detallesPaciente = true;
+    },
     validarCampoNombreUsuario(value) {
       let isValid = true;
       if (!value) isValid = false;
@@ -1313,11 +1324,12 @@ export default {
     },
 
     buscarPaciente(dni) {
-      const paciente = this.usersPacientes.filter((paciente) => paciente.persona.cedula_identidad === parseInt(dni) || paciente.documento_identidad_representante === parseInt(dni));
-      if (paciente.length !== 0) {
-        this.dataUser = paciente[0];
+      const pacientes = this.usersPacientes.filter((paciente) => paciente.persona.cedula_identidad === parseInt(dni) || paciente.documento_identidad_representante === parseInt(dni));
+      if (pacientes.length !== 0) {
+        this.usersPacientes = pacientes;
+        // this.dataUser = paciente[0];
         this.modals.searchPaciente = false;
-        this.modals.detallesPaciente = true;
+        // this.modals.detallesPaciente = true;
       } else {
         this.$q.notify({
           message: "Este paciente no existe",
