@@ -34,28 +34,23 @@
 
     </section>
 
-    <div v-else-if="showStatsPanel" class="q-pa-xs">
-      <!-- SECCIÓN DE FILTROS -->
-      <!-- Los filtros permiten cambiar el período de tiempo de los datos mostrados -->
-
-      <div v-if="this.$store.state.user.role === 'admin'" class="row q-mb-sm">
+    <div v-else-if="showStatsPanel" class="q-pa-md">
+      <div v-if="this.$store.state.user.role === 'admin'" class="row q-mb-md">
         <div class="col-12">
           <q-btn color="primary" label="Volver a la lista de CDIs" @click="backToListCdi" icon="arrow_back" />
         </div>
       </div>
 
-      <div class="row q-mb-sm">
+      <div class="row q-mb-md">
         <div class="col-12">
           <q-card class="q-pa-md">
             <div class="text-h6 q-mb-md">Filtros de Período (Semana/Mes)</div>
             <div class="row q-gutter-md items-center">
-              <!-- Selector de período principal -->
               <div class="col-auto">
                 <q-select v-model="selectedPeriod" outlined dense :options="periodOptions" label="Período" emit-value
                   map-options @update:model-value="onPeriodChange" style="min-width: 150px" />
               </div>
 
-              <!-- Selector de mes (solo visible cuando el período es 'Mes') -->
               <div class="col-auto" v-if="selectedPeriod === 'month'">
                 <q-select
                   v-model="selectedMonth"
@@ -70,12 +65,6 @@
                 />
               </div>
 
-              <!-- Botón para actualizar datos -->
-              <!-- <div class="col-auto">
-                <q-btn color="primary" label="Actualizar" @click="updateChartData" :loading="isLoading" />
-              </div> -->
-
-              <!-- Indicador del período actual -->
               <div class="col-auto">
                 <q-chip color="primary" size="md" text-color="white">
                   {{ getCurrentPeriodLabel() }}
@@ -86,11 +75,12 @@
         </div>
       </div>
 
-      <div class="row q-col-gutter-xs q-mb-sm">
-        <div class="col-12 col-md-4" v-for="(stat, index) in stats" :key="index">
+      <!-- Resumen Estadísticas (Cards) -->
+      <div class="row q-col-gutter-md q-mb-md">
+        <div class="col-12 col-sm-4" v-for="(stat, index) in stats" :key="index">
           <q-card class="full-height q-pa-sm">
             <q-card-section>
-            <q-btn v-if="stat.id !== 'stat-pacientes-registrados'" color="primary" icon="download" class=" cursor-pointer float-right" dense flat @click="onReport(stat.id)" />
+              <q-btn v-if="stat.id !== 'stat-pacientes-registrados'" color="primary" icon="download" class="cursor-pointer float-right" dense flat @click="onReport(stat.id)" />
               <div class="row items-center">
                 <q-icon :name="stat.icon" size="lg" class="q-mr-md" :color="stat.color" />
                 <div>
@@ -106,54 +96,61 @@
         </div>
       </div>
 
-      <div class="row q-col-gutter-md q-mb-sm">
-        <div class="col-12 col-md-7">
-          <q-card>
+      <!-- Demografía: Edad y Género -->
+      <div class="row q-col-gutter-md q-mb-md">
+        <div class="col-12 col-md-8">
+          <q-card class="full-height">
             <q-card-section>
-            <q-btn color="primary" icon="download" class=" cursor-pointer z-max float-right" dense flat @click="onReport('dist-edad')" />
+              <q-btn color="primary" icon="download" class="cursor-pointer z-max float-right" dense flat @click="onReport('dist-edad')" />
               <apexchart type="bar" height="350" :options="barChartOptions" :series="barChartSeries"></apexchart>
             </q-card-section>
           </q-card>
         </div>
-        <div class="col-12 col-md-5">
-          <q-card>
-
+        <div class="col-12 col-md-4">
+          <q-card class="full-height">
             <q-card-section>
-            <q-btn color="primary" icon="download" class=" cursor-pointer z-max float-right" dense flat @click="onReport('dist-genero')" />
+              <q-btn color="primary" icon="download" class="cursor-pointer z-max float-right" dense flat @click="onReport('dist-genero')" />
               <apexchart type="donut" height="350" :options="donutChartOptions" :series="donutChartSeries"></apexchart>
             </q-card-section>
           </q-card>
         </div>
       </div>
 
-      <div class="row q-col-gutter-md q-mb-sm">
-        <div class="col-12 col-md-12">
-          <q-card>
+      <!-- Actividad: Consultas por Periodo y Médico -->
+      <div class="row q-col-gutter-md q-mb-md">
+        <div class="col-12 col-md-6">
+          <q-card class="full-height">
             <q-card-section>
-            <q-btn color="primary" icon="download" class=" cursor-pointer z-max float-right" dense flat @click="onReport('consultas-periodo')" />
-              <apexchart type="line" height="350" :options="consultasPeriodoOptions" :series="consultasPeriodoSeries">
-              </apexchart>
+              <q-btn color="primary" icon="download" class="cursor-pointer z-max float-right" dense flat @click="onReport('consultas-periodo')" />
+              <apexchart type="line" height="350" :options="consultasPeriodoOptions" :series="consultasPeriodoSeries"></apexchart>
             </q-card-section>
           </q-card>
         </div>
-        <div class="col-12 col-md-12">
-          <q-card>
+        <div class="col-12 col-md-6">
+          <q-card class="full-height">
             <q-card-section>
-            <q-btn color="primary" icon="download" class=" cursor-pointer z-max float-right" dense flat @click="onReport('consultas-medico')" />
-              <apexchart type="bar" height="350" :options="consultasMedicoOptions" :series="consultasMedicoSeries">
-              </apexchart>
+              <q-btn color="primary" icon="download" class="cursor-pointer z-max float-right" dense flat @click="onReport('consultas-medico')" />
+              <apexchart type="bar" height="350" :options="consultasMedicoOptions" :series="consultasMedicoSeries"></apexchart>
             </q-card-section>
           </q-card>
         </div>
       </div>
 
-      <div class="row q-col-gutter-md q-mb-sm">
-        <div class="col-12">
-          <q-card>
+      <!-- Tops: Diagnósticos y Áreas -->
+      <div class="row q-col-gutter-md q-mb-md">
+        <div class="col-12 col-md-6">
+          <q-card class="full-height">
             <q-card-section>
-            <q-btn color="primary" icon="download" class=" cursor-pointer z-max float-right" dense flat @click="onReport('top-diagnosticos')" />
-              <apexchart type="bar" height="400" :options="diagnosticosOptions" :series="diagnosticosSeries">
-              </apexchart>
+              <q-btn color="primary" icon="download" class="cursor-pointer z-max float-right" dense flat @click="onReport('top-diagnosticos')" />
+              <apexchart type="bar" height="400" :options="diagnosticosOptions" :series="diagnosticosSeries"></apexchart>
+            </q-card-section>
+          </q-card>
+        </div>
+        <div class="col-12 col-md-6">
+          <q-card class="full-height">
+            <q-card-section>
+              <q-btn color="primary" icon="download" class="cursor-pointer z-max float-right" dense flat @click="onReport('pacientes-por-area')" />
+              <apexchart type="bar" height="400" :options="pacientesPorAreaOptions" :series="pacientesPorAreaSeries"></apexchart>
             </q-card-section>
           </q-card>
         </div>
@@ -241,6 +238,17 @@
       </vue-html2pdf>
     </div>
 
+                                   <div>
+      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="false" :preview-modal="true"
+        :paginate-elements-by-height="1400" filename="Pacientes_Por_Area_del_CDI" :pdf-quality="2" :manual-pagination="false"
+        pdf-format="a4" :pdf-margin="2" pdf-orientation="landscape" pdf-content-width="1050px"
+        @progress="onProgress($event)" ref="html2PdfPacientePorArea">
+        <section slot="pdf-content">
+          <ReportePacienteAreaDeTrabajo :data="reportePacienteAreaDeTrabajoVar" />
+        </section>
+      </vue-html2pdf>
+    </div>
+
   </q-page>
 </template>
 
@@ -256,7 +264,8 @@ import {
   ESTADISTICA_PACIENTES_POR_EDAD_QUERY,
   ESTADISTICA_CONSULTAS_POR_PERIODO_QUERY,
   ESTADISTICA_CONSULTAS_POR_DOCTOR_QUERY,
-  ESTADISTICA_TOP_TEN_DIAGNOSTICOS_QUERY
+  ESTADISTICA_TOP_TEN_DIAGNOSTICOS_QUERY,
+  ESTADISTICA_PACIENTES_POR_AREA_QUERY
 } from '../../../graphql/estadisticas.js';
 
 // PLANTILLAS DE ESTADISTICAS:
@@ -268,7 +277,7 @@ import ReporteDistEdad from '../../modules/admin/reports/estadisticas/reporteDis
 import ReporteConsultasPorMedicoPeriodo from '../../modules/admin/reports/estadisticas/reporteConsultasPorMedicoPeriodo.vue';
 import ReporteTopDiagnosticos from '../../modules/admin/reports/estadisticas/reporteTopDiagnosticos.vue';
 import ReporteConsultaMes from '../../modules/admin/reports/estadisticas/reporteConsultaMes.vue';
-
+import ReportePacienteAreaDeTrabajo from '../../modules/admin/reports/estadisticas/reportePacienteAreaDeTrabajo.vue';
 
 export default {
   name: 'EstadisticasDashboard',
@@ -282,7 +291,8 @@ export default {
     ReporteDistEdad,
     ReporteConsultasPorMedicoPeriodo,
     ReporteTopDiagnosticos,
-    ReporteConsultaMes
+    ReporteConsultaMes,
+    ReportePacienteAreaDeTrabajo
   },
   data() {
     return {
@@ -297,6 +307,7 @@ export default {
       reporteDistEdad: {},
       reporteDistGenero: {},
       reporteTopDiagnosticos: {},
+      reportePacienteAreaDeTrabajoVar: {},
 
       columns: [
         {
@@ -346,6 +357,7 @@ export default {
       pacientesPorEdad: [0, 0, 0, 0],
       totalConsultasMedico: 0,
       totalDiagnosticos: 0,
+      totalPacientesPorArea: 0,
       // Arrays para datos de estadísticas
       pacientesNuevosData: [],
       consultasData: [],
@@ -499,6 +511,22 @@ export default {
         name: 'Nro. de Casos',
         data: [450, 380, 320, 280, 250, 210, 180, 150, 120, 100]
       }],
+      pacientesPorAreaOptions: {
+        chart: { id: 'pacientes-por-area', type: 'bar', toolbar: { show: false } },
+        plotOptions: {
+          bar: {
+            horizontal: true,
+          }
+        },
+        title: { text: 'Pacientes por Área de Trabajo' },
+        xaxis: {
+          categories: [],
+        },
+      },
+      pacientesPorAreaSeries: [{
+        name: 'Nro. de Pacientes',
+        data: []
+      }],
     };
   },
 
@@ -551,6 +579,8 @@ export default {
         this.onReportConsultasMedico();
       } else if (typeId === 'top-diagnosticos') {
         this.onReportTopDiagnosticos();
+      } else if (typeId === 'pacientes-por-area') {
+        this.onReportPacientesPorArea();
       } else {
         console.log('Tipo de reporte desconocido');
       }
@@ -682,6 +712,21 @@ export default {
       };
       this.$refs.html2PdfTopDiagnosticos.generatePdf();
     },
+    onReportPacientesPorArea() {
+      const areas = this.totalPacientesPorArea && this.totalPacientesPorArea.areas
+        ? this.totalPacientesPorArea.areas
+        : [];
+      const totales = this.totalPacientesPorArea && this.totalPacientesPorArea.totales
+        ? this.totalPacientesPorArea.totales
+        : [];
+      this.reportePacienteAreaDeTrabajoVar = {
+        reporte: 'Pacientes por Área de Trabajo',
+        id_cdi: this.userId,
+        areas,
+        totales
+      };
+      this.$refs.html2PdfPacientePorArea.generatePdf();
+    },
 
     onPeriodChange(newPeriod) {
       this.selectedPeriod = newPeriod;
@@ -719,6 +764,7 @@ export default {
       await this.fetchConsultasPorPeriodo();
       await this.fetchConsultasPorDoctor();
       await this.fetchTopDiagnosticos();
+      await this.fetchPacientesPorArea();
     },
 
 
@@ -1015,6 +1061,41 @@ export default {
         })
         .catch((err) => {
           console.error("Error fetching top diagnósticos:", err);
+        });
+    },
+
+    fetchPacientesPorArea() {
+      const variables = {
+        id_cdi: this.userId,
+        // periodo: this.selectedPeriod
+      };
+      if (this.selectedPeriod === 'month') variables.mes = this.selectedMonth;
+
+      return this.$apollo
+        .query({
+          query: ESTADISTICA_PACIENTES_POR_AREA_QUERY,
+          variables,
+          fetchPolicy: "network-only",
+        })
+        .then((response) => {
+          this.totalPacientesPorArea = response.data.cantidadPacientesPorAreaDeTrabajo;
+          const areas = this.totalPacientesPorArea.areas || [];
+          const totales = this.totalPacientesPorArea.totales || [];
+
+          this.pacientesPorAreaOptions = {
+            ...this.pacientesPorAreaOptions,
+            xaxis: {
+              categories: areas
+            }
+          };
+
+          this.pacientesPorAreaSeries = [{
+            name: 'Nro. de Pacientes',
+            data: totales
+          }];
+        })
+        .catch((err) => {
+          console.error("Error fetching pacientes por área:", err);
         });
     },
 

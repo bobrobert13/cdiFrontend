@@ -27,6 +27,14 @@ export const ESTADISTICA_PACIENTES_POR_EDAD_QUERY = gql`
   }
 `;
 
+export const ESTADISTICA_PACIENTES_POR_AREA_QUERY = gql`
+  query getCantidadPacientesPorAreaDeTrabajo($id_cdi: ID!) {
+    cantidadPacientesPorAreaDeTrabajo(id_cdi: $id_cdi) {
+      areas
+      totales
+    }
+  }
+`;
 
 export const ESTADISTICA_CONSULTAS_POR_PERIODO_QUERY = gql`
   query getTotalConsultasRealizadasPeriodo($id_cdi: ID!, $periodo: String, $mes: Int) {
