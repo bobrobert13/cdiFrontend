@@ -46,6 +46,11 @@
         <q-scroll-area class="fit">
           <q-list padding>
 
+            <router-link to="/home">
+              <div class="col-xl-5 col-lg-4 col-md-5 col-sm-8 col-xs-11 q-mb-xl q-mt-lg self-center text-center">
+                <q-img src="./assets/MEDRECLOGO.png" style="width: 50%;"></q-img>
+              </div>
+            </router-link>
 
             <q-item clickable v-ripple class="q-mb-md q-mt-lg">
               <q-item-section avatar>
@@ -75,7 +80,7 @@
 
             <q-item clickable v-ripple style="position: fixed; bottom: 0; margin-left: 16.5px">
               <q-item-section avatar>
-                <q-avatar v-on:click="confirm = true" color="white" size="lg" style="cursor: pointer" icon="mdi-logout"
+                <q-avatar v-on:click="confirm = true"  class="q-mb-md" color="white" size="lg" style="cursor: pointer" icon="mdi-logout"
                   text-color="primary">
                 </q-avatar>
               </q-item-section>
@@ -336,7 +341,7 @@
     <q-dialog v-model="confirm" persistent>
       <q-card class="text-white bg-primary">
         <q-card-section>
-          <div class="text-h6">confirmar</div>
+          <div class="text-h6">Confirmar</div>
         </q-card-section>
         <q-card-section class="row items-center text-center">
           <span class="q-ml-sm text-white">¿Estas seguro que deseas salir?</span>

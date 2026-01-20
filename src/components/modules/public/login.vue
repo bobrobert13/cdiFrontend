@@ -4,7 +4,7 @@
       <div class="row justify-end" style="min-height: 100vh; position: relative" :style="this.$q.screen.lt.md ? 'margin-right: -35%' : 'margin-right: -20%'
         ">
         <div class="col-xl-5 col-lg-4 col-md-5 col-sm-8 col-xs-11 self-center text-center">
-          <q-img src="../../../assets/logo.png" style="width: 50%;"></q-img>
+          <q-img src="../../../assets/MEDRECLOGO.png" style="width: 50%;"></q-img>
         </div>
         <div class="col-xl-2 col-lg-2 col-md-2 col-sm-8 col-xs-11 self-center text-center xs-hide sm-hide">
         </div>
