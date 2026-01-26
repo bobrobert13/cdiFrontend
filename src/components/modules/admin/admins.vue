@@ -31,51 +31,54 @@
 					<button @click="GenerateCdisStatusPDF()" class=" cursor-pointer text-primary self-center text-bold"
 						type="button"> <small style="font-size: 12px;">Descargar lista de cdis activos</small></button>
 					<div class="row justify-center q-mt-xl" v-if="this.users.length !== 0">
-						<paginated-card-list :items="cdiActivosList" class="col-12" row-key="id_cdi" :initial-rows-per-page="10">
+						<paginated-card-list :items="cdiActivosList" class="col-12" row-key="id_cdi"
+							:initial-rows-per-page="10">
 							<template v-slot:default="{ user }">
-							<q-list class="rounded-borders bg-secondary" style="border-radius: 15px">
-								<q-item v-on:click="cdiDetails(user)">
-									<q-item-section avatar style="cursor: pointer">
-										<q-avatar color="primary" icon="mdi-hospital-building" text-color="white">
-										</q-avatar>
-									</q-item-section>
+								<q-list class="rounded-borders bg-secondary" @click="cdiDetails(user)"
+									style="border-radius: 15px">
+									<q-item>
+										<q-item-section avatar style="cursor: pointer">
+											<q-avatar color="primary" icon="mdi-hospital-building" text-color="white">
+											</q-avatar>
+										</q-item-section>
 
-									<q-item-section top style="cursor: pointer">
-										<q-item-label class="text-left" lines="1">
-											<span class="text-weight-medium">Nombre de CDI: {{ user.nombre }}</span>
-										</q-item-label>
-										<q-item-label class="text-left" lines="1">
-											<span class="text-weight-medium">Número de CDI: {{ user.numero_cdi }}</span>
-										</q-item-label>
-										<q-item-label class="text-left" lines="1">
-											<span class="text-weight-medium">Encargado: {{ user.encargado }}</span>
-										</q-item-label>
-										<q-item-label class="text-left" lines="1">
-											<span class="text-weight-medium">Cuadrante: {{ user.cuadrante }}</span>
-										</q-item-label>
-										<!-- <q-item-label class="text-left" lines="1">
+										<q-item-section top style="cursor: pointer">
+											<q-item-label class="text-left" lines="1">
+												<span class="text-weight-medium">Nombre de CDI: {{ user.nombre }}</span>
+											</q-item-label>
+											<q-item-label class="text-left" lines="1">
+												<span class="text-weight-medium">Número de CDI: {{ user.numero_cdi
+												}}</span>
+											</q-item-label>
+											<q-item-label class="text-left" lines="1">
+												<span class="text-weight-medium">Encargado: {{ user.encargado }}</span>
+											</q-item-label>
+											<q-item-label class="text-left" lines="1">
+												<span class="text-weight-medium">Cuadrante: {{ user.cuadrante }}</span>
+											</q-item-label>
+											<!-- <q-item-label class="text-left" lines="1">
 									<span class="text-weight-medium">{{ user.role }}</span>
 								</q-item-label> -->
-									</q-item-section>
-									<q-item-section side>
-										<div class="text-grey-8 q-gutter-xs">
-
+										</q-item-section>
+										<q-item-section side>
 											<div class="text-grey-8 q-gutter-xs">
-												<button @click="generatePDF(user)" type="button" lines="2"
-													class=" q-ml-xl q-mr-md cursor-pointer text-primary self-center text-bold"
-													style="cursor: pointer">
-													<q-icon name="mdi-printer-pos" /> Descargar información
-												</button>
 
-												<q-btn
-													@click="actualizarUsuario({ ...user, estado: user.estado === 'activo' ? 'inactivo' : 'activo' })"
-													class="gt-xs text-negative" size="12px" flat dense
-													:label="user.estado === 'activo' ? 'Inhabilitar' : 'Habilitar'" />
+												<div class="text-grey-8 q-gutter-xs">
+													<button @click="generatePDF(user)" type="button" lines="2"
+														class=" q-ml-xl q-mr-md cursor-pointer text-primary self-center text-bold"
+														style="cursor: pointer">
+														<q-icon name="mdi-printer-pos" /> Descargar información
+													</button>
+
+													<q-btn
+														@click="actualizarUsuario({ ...user, estado: user.estado === 'activo' ? 'inactivo' : 'activo' })"
+														class="gt-xs text-negative" size="12px" flat dense
+														:label="user.estado === 'activo' ? 'Inhabilitar' : 'Habilitar'" />
+												</div>
 											</div>
-										</div>
-									</q-item-section>
-								</q-item>
-							</q-list>
+										</q-item-section>
+									</q-item>
+								</q-list>
 							</template>
 						</paginated-card-list>
 					</div>
@@ -88,53 +91,57 @@
 				<q-tab-panel name="cdi_inactivos">
 					<div class="text-h6 text-left">CDIs Inactivos</div>
 					<button @click="GenerateCdisStatusPDF()" class=" cursor-pointer text-primary self-center text-bold"
-						type="button"> <small style="font-size: 12px;">Descargar lista de cdis inactivos</small></button>
+						type="button">
+						<small style="font-size: 12px;">Descargar lista de cdis inactivos</small></button>
 					<div class="row justify-center q-mt-xl" v-if="this.users.length !== 0">
-						<paginated-card-list :items="cdiInactivosList" class="col-12" row-key="id_cdi" :initial-rows-per-page="10">
+						<paginated-card-list :items="cdiInactivosList" class="col-12" row-key="id_cdi"
+							:initial-rows-per-page="10">
 							<template v-slot:default="{ user }">
-							<q-list class="rounded-borders bg-secondary" style="border-radius: 15px">
-								<q-item v-on:click="cdiDetails(user)">
-									<q-item-section avatar style="cursor: pointer">
-										<q-avatar color="primary" icon="mdi-hospital-building" text-color="white">
-										</q-avatar>
-									</q-item-section>
+								<q-list class="rounded-borders bg-secondary" v-on:click="cdiDetails(user)"
+									style="border-radius: 15px">
+									<q-item>
+										<q-item-section avatar style="cursor: pointer">
+											<q-avatar color="primary" icon="mdi-hospital-building" text-color="white">
+											</q-avatar>
+										</q-item-section>
 
-									<q-item-section top style="cursor: pointer">
-										<q-item-label class="text-left" lines="1">
-											<span class="text-weight-medium">Nombre de CDI: {{ user.nombre }}</span>
-										</q-item-label>
-										<q-item-label class="text-left" lines="1">
-											<span class="text-weight-medium">Número de CDI: {{ user.numero_cdi }}</span>
-										</q-item-label>
-										<q-item-label class="text-left" lines="1">
-											<span class="text-weight-medium">Encargado: {{ user.encargado }}</span>
-										</q-item-label>
-										<q-item-label class="text-left" lines="1">
-											<span class="text-weight-medium">Cuadrante: {{ user.cuadrante }}</span>
-										</q-item-label>
-										<!-- <q-item-label class="text-left" lines="1">
+										<q-item-section top style="cursor: pointer">
+											<q-item-label class="text-left" lines="1">
+												<span class="text-weight-medium">Nombre de CDI: {{ user.nombre }}</span>
+											</q-item-label>
+											<q-item-label class="text-left" lines="1">
+												<span class="text-weight-medium">Número de CDI: {{ user.numero_cdi
+												}}</span>
+											</q-item-label>
+											<q-item-label class="text-left" lines="1">
+												<span class="text-weight-medium">Encargado: {{ user.encargado }}</span>
+											</q-item-label>
+											<q-item-label class="text-left" lines="1">
+												<span class="text-weight-medium">Cuadrante: {{ user.cuadrante }}</span>
+											</q-item-label>
+											<!-- <q-item-label class="text-left" lines="1">
 									<span class="text-weight-medium">{{ user.role }}</span>
 								</q-item-label> -->
-									</q-item-section>
-									<q-item-section side>
-										<div class="text-grey-8 q-gutter-xs">
-
+										</q-item-section>
+										<q-item-section side>
 											<div class="text-grey-8 q-gutter-xs">
-												<button @click="generatePDF(user)" type="button" lines="2"
-													class=" q-ml-xl q-mr-md cursor-pointer text-primary self-center text-bold"
-													style="cursor: pointer">
-													<q-icon name="mdi-printer-pos" /> Descargar información
-												</button>
 
-												<q-btn
-													@click="actualizarUsuario({ ...user, estado: user.estado === 'activo' ? 'inactivo' : 'activo' })"
-													class="gt-xs text-negative" size="12px" flat dense
-													:label="user.estado === 'activo' ? 'Inhabilitar' : 'Habilitar'" />
+												<div class="text-grey-8 q-gutter-xs">
+													<button @click="generatePDF(user)" type="button" lines="2"
+														class=" q-ml-xl q-mr-md cursor-pointer text-primary self-center text-bold"
+														style="cursor: pointer">
+														<q-icon name="mdi-printer-pos" /> Descargar información
+													</button>
+
+													<q-btn
+														@click="actualizarUsuario({ ...user, estado: user.estado === 'activo' ? 'inactivo' : 'activo' })"
+														class="gt-xs text-negative" size="12px" flat dense
+														:label="user.estado === 'activo' ? 'Inhabilitar' : 'Habilitar'" />
+												</div>
 											</div>
-										</div>
-									</q-item-section>
-								</q-item>
-							</q-list>
+										</q-item-section>
+									</q-item>
+								</q-list>
 							</template>
 						</paginated-card-list>
 					</div>
@@ -209,20 +216,20 @@
 
 						<div class="row jusitify-center">
 							<div class="col-6 q-pa-sm">
-								<q-input filled  color="deep-purple-6" v-model="dataUser.nombre"
-									label="Nombre de CDI" :rules="cdiNameRules" />
+								<q-input filled color="deep-purple-6" v-model="dataUser.nombre" label="Nombre de CDI"
+									:rules="cdiNameRules" />
 							</div>
 							<div class="col-6 q-pa-sm">
-								<q-input filled color="deep-purple-6" 
-									v-model="dataUser.numero_cdi" label="Número de CDI" :rules="cdiNumberRules" />
+								<q-input filled color="deep-purple-6" v-model="dataUser.numero_cdi"
+									label="Número de CDI" :rules="cdiNumberRules" />
 							</div>
 							<div class="col-6 q-pa-sm">
-								<q-input filled color="deep-purple-6" 
-									v-model="dataUser.encargado" label="Encargado" :rules="cdiEncargadoRules" />
+								<q-input filled color="deep-purple-6" v-model="dataUser.encargado" label="Encargado"
+									:rules="cdiEncargadoRules" />
 							</div>
 							<div class="col-6 q-pa-sm">
-								<q-input filled color="deep-purple-6" 
-									v-model="dataUser.cuadrante" label="Cuadrante" :rules="cdiCuadranteRules" />
+								<q-input filled color="deep-purple-6" v-model="dataUser.cuadrante" label="Cuadrante"
+									:rules="cdiCuadranteRules" />
 							</div>
 
 
@@ -240,19 +247,20 @@
 						<div class="row jusitify-center">
 							<div class="col-6 q-pa-sm">
 								<q-input filled color="deep-purple-6" v-model="dataUser.usuarios.nombre_usuario"
-									 label="Nombre de usuario" :rules="cdiNombreUsuarioRules" />
+									label="Nombre de usuario" :rules="cdiNombreUsuarioRules" />
 							</div>
 
 							<div class="col-6 q-pa-sm">
 								<q-input filled color="deep-purple-6" v-model="dataUser.usuarios.contrasena"
-									 :rules="cdiContrasenaRules" label="Contraseña" />
+									:rules="cdiContrasenaRules" label="Contraseña" />
 							</div>
 
 						</div>
 					</div>
 					<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 q-mt-md">
-						<q-btn unelevated :disabled="!formHasNoErrorsUpdateCdiCredentials" :loading="loader" @click="actualizarCDI(dataUser)"
-							class="fullwidth text-white bg-primary" label="Actualizar credenciales" />
+						<q-btn unelevated :disabled="!formHasNoErrorsUpdateCdiCredentials" :loading="loader"
+							@click="actualizarCDI(dataUser)" class="fullwidth text-white bg-primary"
+							label="Actualizar credenciales" />
 					</div>
 				</div>
 			</div>
@@ -269,10 +277,11 @@
 						<q-avatar color="primary" text-color="white" icon="mdi-account-circle">
 						</q-avatar>
 					</q-card-section>
-										<q-card-section class="col-5 flex flex-center">
-											<button @click="generatePDF(dataUser)" class=" cursor-pointer q-mb-sm text-primary self-center text-bold"
-											type="button"> <small style="font-size: 12px;">Descargar información</small></button>
-										</q-card-section>
+					<q-card-section class="col-5 flex flex-center">
+						<button @click="generatePDF(dataUser)"
+							class=" cursor-pointer q-mb-sm text-primary self-center text-bold" type="button"> <small
+								style="font-size: 12px;">Descargar información</small></button>
+					</q-card-section>
 					<q-card-section class="q-pt-xs">
 						<div class="text-caption text-bold q-mt-sm q-mb-xs">
 							CDI: {{ dataUser.nombre }} | {{ dataUser.numero_cdi }}
@@ -303,14 +312,14 @@
 								<q-item style="cursor:pointer;">
 									<q-item-section>
 										<q-item-label>Nombre del doctor: <b>{{ doctores.persona.nombre1
-												}}</b></q-item-label>
-										<q-item-label>Area de trabajo: <b>{{ doctores.area_de_trabajo
 										}}</b></q-item-label>
+										<q-item-label>Area de trabajo: <b>{{ doctores.area_de_trabajo
+												}}</b></q-item-label>
 										<q-item-label>Horario: <b>{{ doctores.horario }}</b></q-item-label>
 										<q-item-label>Años de experiencia: <b>{{ doctores.anos_experiencia
-												}}</b></q-item-label>
+										}}</b></q-item-label>
 										<q-item-label>Número de carnet: <b>{{ doctores.numero_carnet
-												}}</b></q-item-label>
+										}}</b></q-item-label>
 									</q-item-section>
 
 								</q-item>
@@ -338,18 +347,18 @@
 								<q-item style="cursor:pointer;">
 									<q-item-section>
 										<q-item-label>Nombre del paciente: <b>{{ paciente.persona.nombre1
-												}}</b></q-item-label>
+										}}</b></q-item-label>
 										<q-item-label>Documento de identidad: <b>{{ paciente.persona.cedula_identidad
-												}}</b></q-item-label>
+										}}</b></q-item-label>
 										<q-item-label>Nacionalidad: <b>{{ paciente.persona.nacionalidad
-												}}</b></q-item-label>
+										}}</b></q-item-label>
 										<q-item-label>Fecha de registro: <b>{{ paciente.createdAt || 'No especificado'
-												}}</b></q-item-label>
+										}}</b></q-item-label>
 										<q-item-label>Teléfono: <b>{{ paciente.persona.telefono.numero ||
 											'Noespecificado'
-										}}</b></q-item-label>
-										<q-item-label>Correo: <b>{{ paciente.persona.correo.correo || 'No especificado'
 												}}</b></q-item-label>
+										<q-item-label>Correo: <b>{{ paciente.persona.correo.correo || 'No especificado'
+										}}</b></q-item-label>
 									</q-item-section>
 
 								</q-item>
@@ -414,7 +423,6 @@
 		</q-dialog>
 		<!-- FIN BUSCAR CDI -->
 
-
 		<div>
 			<vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="false" :preview-modal="true"
 				:paginate-elements-by-height="1400" filename="informacion_de_cdis" :pdf-quality="2"
@@ -426,7 +434,7 @@
 			</vue-html2pdf>
 		</div>
 
-				<div>
+		<div>
 			<vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="false" :preview-modal="true"
 				:paginate-elements-by-height="1400" filename="Listado_CDIS_STATUS" :pdf-quality="2"
 				:manual-pagination="false" pdf-format="a4" :pdf-margin="10" pdf-orientation="portrait"
@@ -492,6 +500,7 @@ export default {
 				(val) => /[A-Z]/.test(val) || 'Debes incluir al menos 1 letra mayúscula',
 			],
 			modalDetailUser: false,
+			modalDetailCdi: false,
 			config: config,
 			previewImgs: "",
 			imghightlight: "",
@@ -683,7 +692,7 @@ export default {
 				cdi_contrasena: usePasswordValidation(),
 			}
 			return isFormValid(formValues, validationRules)
-		},	
+		},
 		formHasNoErrorsUpdateCDI() {
 			const formValues = {
 				cdi_nombre: this.dataUser.nombre,
@@ -694,7 +703,7 @@ export default {
 			const validationRules = {
 				cdi_nombre: useFullNameValidation(),
 				cdi_encargado: useFullNameValidation(),
-				cdi_cuadrante:	useFullNameValidation() ,
+				cdi_cuadrante: useFullNameValidation(),
 				cdi_numero: useTextFieldValidation(true, 1, 100) && useCdiNumberValidation(),
 			}
 			return isFormValid(formValues, validationRules)
@@ -833,10 +842,12 @@ export default {
 			this.valid = isValid;
 		},
 
-
 		cdiDetails(user) {
+			console.log('mostrando el cdi', user);
+
 			this.dataUser = user;
-			this.workerView("userDetail");
+			this.modalDetailUser = true;
+			// this.workerView("userDetail");
 		},
 
 		validateUserCredentialsInputs() {
@@ -922,7 +933,7 @@ export default {
 		},
 		generatePDF(user) {
 			this.dataUser = user;
-			if(this.modalDetailUser) this.modalDetailUser = false;
+			if (this.modalDetailUser) this.modalDetailUser = false;
 			console.log("dataUser", this.dataUser);
 			this.$refs.cdihtml2Pdf.generatePdf();
 		},
@@ -967,6 +978,8 @@ export default {
 				.then((response) => {
 					this.loaderUser = false;
 					this.users = Object.assign([], response.data.cdis);
+					console.log('listado de CDIS: ', this.users);
+
 					this.cdiActivos = this.users.filter((user) => user.estado === "activo").length;
 					this.cdiInactivos = this.users.filter((user) => user.estado === "inactivo").length;
 
