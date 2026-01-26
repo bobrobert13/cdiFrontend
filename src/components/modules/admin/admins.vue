@@ -31,10 +31,10 @@
 					<button @click="GenerateCdisStatusPDF()" class=" cursor-pointer text-primary self-center text-bold"
 						type="button"> <small style="font-size: 12px;">Descargar lista de cdis activos</small></button>
 					<div class="row justify-center q-mt-xl" v-if="this.users.length !== 0">
-						<div class="col-12 q-mb-sm" v-for="(user, index) in users" @click="cdiDetails(user)"
-							:key="index">
+						<paginated-card-list :items="cdiActivosList" class="col-12" row-key="id_cdi" :initial-rows-per-page="10">
+							<template v-slot:default="{ user }">
 							<q-list class="rounded-borders bg-secondary" style="border-radius: 15px">
-								<q-item v-if="user.estado === 'activo'">
+								<q-item v-on:click="cdiDetails(user)">
 									<q-item-section avatar style="cursor: pointer">
 										<q-avatar color="primary" icon="mdi-hospital-building" text-color="white">
 										</q-avatar>
@@ -54,8 +54,8 @@
 											<span class="text-weight-medium">Cuadrante: {{ user.cuadrante }}</span>
 										</q-item-label>
 										<!-- <q-item-label class="text-left" lines="1">
-                  <span class="text-weight-medium">{{ user.role }}</span>
-                </q-item-label> -->
+									<span class="text-weight-medium">{{ user.role }}</span>
+								</q-item-label> -->
 									</q-item-section>
 									<q-item-section side>
 										<div class="text-grey-8 q-gutter-xs">
@@ -76,7 +76,8 @@
 									</q-item-section>
 								</q-item>
 							</q-list>
-						</div>
+							</template>
+						</paginated-card-list>
 					</div>
 					<div class="row" v-else>
 						<div class="col-12 q-mt-xl">
@@ -89,10 +90,10 @@
 					<button @click="GenerateCdisStatusPDF()" class=" cursor-pointer text-primary self-center text-bold"
 						type="button"> <small style="font-size: 12px;">Descargar lista de cdis inactivos</small></button>
 					<div class="row justify-center q-mt-xl" v-if="this.users.length !== 0">
-						<div class="col-12 q-mb-sm" v-for="(user, index) in users" @click="cdiDetails(user)"
-							:key="index">
+						<paginated-card-list :items="cdiInactivosList" class="col-12" row-key="id_cdi" :initial-rows-per-page="10">
+							<template v-slot:default="{ user }">
 							<q-list class="rounded-borders bg-secondary" style="border-radius: 15px">
-								<q-item v-if="user.estado === 'inactivo'">
+								<q-item v-on:click="cdiDetails(user)">
 									<q-item-section avatar style="cursor: pointer">
 										<q-avatar color="primary" icon="mdi-hospital-building" text-color="white">
 										</q-avatar>
@@ -112,8 +113,8 @@
 											<span class="text-weight-medium">Cuadrante: {{ user.cuadrante }}</span>
 										</q-item-label>
 										<!-- <q-item-label class="text-left" lines="1">
-                  <span class="text-weight-medium">{{ user.role }}</span>
-                </q-item-label> -->
+									<span class="text-weight-medium">{{ user.role }}</span>
+								</q-item-label> -->
 									</q-item-section>
 									<q-item-section side>
 										<div class="text-grey-8 q-gutter-xs">
@@ -134,7 +135,8 @@
 									</q-item-section>
 								</q-item>
 							</q-list>
-						</div>
+							</template>
+						</paginated-card-list>
 					</div>
 				</q-tab-panel>
 			</q-tab-panels>
@@ -450,6 +452,7 @@ import VueHtml2pdf from "vue-html2pdf";
 import historialEncVue from "./historialEnc.vue";
 import HistorialCdisListaEstado from "./historialCdisListaEstado.vue";
 import historialCDIVue from "./historiaCDIPdf.vue";
+import PaginatedCardList from "../../common/PaginatedCardList.vue";
 
 import { USER_DELETE, ADMIN_CDIS_QUERY, ADD_CDI_USER_MUTATION, UPDATE_CDI_STATUS_MUTATION, UPDDATE_CDI_MUTATION } from "../../../graphql/user";
 
@@ -466,7 +469,7 @@ import { isFormValid } from "src/utils/formUtils";
 
 export default {
 	name: "admins",
-	components: { VueHtml2pdf, historialEncVue, historialCDIVue, HistorialCdisListaEstado },
+	components: { VueHtml2pdf, historialEncVue, historialCDIVue, HistorialCdisListaEstado, PaginatedCardList },
 	data() {
 		return {
 			cdiActivos: 0,
@@ -691,6 +694,14 @@ export default {
 				cdi_numero: useTextFieldValidation(true, 1, 100) && useCdiNumberValidation(),
 			}
 			return isFormValid(formValues, validationRules)
+		},
+		cdiActivosList() {
+			if (!Array.isArray(this.users)) return [];
+			return this.users.filter(user => user.estado === 'activo');
+		},
+		cdiInactivosList() {
+			if (!Array.isArray(this.users)) return [];
+			return this.users.filter(user => user.estado === 'inactivo');
 		}
 	},
 	created() {

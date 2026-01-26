@@ -25,7 +25,9 @@
               <div class="col-12 text-left q-mb-md">
                 <p class="text-h6 text-weight-light ">Tu lista de pacientes ({{ users.length }}):</p>
               </div>
-              <div class="col-12 q-mb-sm" v-for="(user, index) in users" :key="index">
+              <!-- LISTA DE PACIENTES EN EL HOME DOCTOR -->
+              <paginated-card-list :items="users" class="col-12"  row-key="id_paciente" :initial-rows-per-page="10">
+                <template v-slot:default="{ user }">
                 <q-list class="rounded-borders bg-grey-2" style="border-radius: 15px">
                   <q-item v-if="user.persona" >
                     <q-item-section top class=" q-py-md" style="cursor: pointer">
@@ -106,7 +108,8 @@
                   </q-item>
                 </q-list>
 								<hr class="q-my-md ">
-              </div>
+              </template></paginated-card-list>
+              <!-- FIN DE LISTA DE PACIENTE EN EL HOME DOCTOR -->
             </div>
             <div class="row justify-center" v-else>
               <div class="col-12 text-center q-mt-xl">
@@ -1873,6 +1876,7 @@ import ReporteTratamientos from "../admin/reports/reporteTratamientos.vue";
 import ReporteEmergencias from "../admin/reports/reporteEmergencias.vue";
 import ReporteHospitalizaciones from "../admin/reports/reporteHospitalizaciones.vue";
 import ReporteMedicamentos from "../admin/reports/reporteMedicamentos.vue";
+import PaginatedCardList from "../../common/PaginatedCardList.vue";
 export default {
   name: "homeDoctor",
     components: {
@@ -1883,7 +1887,8 @@ export default {
     ReporteHospitalizaciones,
     ReporteMedicamentos,
     historiaDiagPdf,
-    VueHtml2pdf
+    VueHtml2pdf,
+    PaginatedCardList
   },
   computed: {
     fullNameRules() {

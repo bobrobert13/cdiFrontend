@@ -31,8 +31,9 @@
           	<button @click="generateDoctorsPDF()" class=" cursor-pointer q-my-sm text-primary self-center text-bold"
 						type="button"> <small style="font-size: 12px;">Descargar lista de doctores activos</small></button>
           <div class="row justify-center q-mt-sm" v-if="this.users.length !== 0">
-            <div class="col-12 q-mb-sm" v-for="(user, index) in users" :key="index">
-              <q-list v-if="user.usuarios.estado === 'activo'" class="rounded-borders bg-secondary"
+            <paginated-card-list :items="doctoresActivos" class="col-12" row-key="id_doctor" :initial-rows-per-page="10">
+              <template v-slot:default="{ user }">
+              <q-list class="rounded-borders bg-secondary"
                 style="border-radius: 15px">
                 <q-item>
                   <q-item-section avatar @click="userDetail(user)" style="cursor: pointer">
@@ -89,7 +90,8 @@
                   </q-item-section>
                 </q-item>
               </q-list>
-            </div>
+            </template>
+            </paginated-card-list>
           </div>
           <div class="row" v-else>
             <div class="col-12 q-mt-xl">
@@ -101,8 +103,9 @@
           	<button @click="generateDoctorsPDF()" class=" cursor-pointer q-my-sm text-primary self-center text-bold"
 						type="button"> <small style="font-size: 12px;">Descargar lista de doctores inactivos</small></button>
           <div class="row justify-center " v-if="this.users.length !== 0">
-            <div class="col-12 q-mb-xs" v-for="(user, index) in users" :key="index">
-              <q-list v-if="user.usuarios.estado === 'inactivo'" class="rounded-borders bg-secondary"
+            <paginated-card-list :items="doctoresInactivos" class="col-12" row-key="id_doctor" :initial-rows-per-page="10">
+              <template v-slot:default="{ user }">
+              <q-list class="rounded-borders bg-secondary"
                 style="border-radius: 15px">
                 <q-item>
                   <q-item-section avatar @click="userDetail(user)" style="cursor: pointer">
@@ -157,7 +160,8 @@
                   </q-item-section>
                 </q-item>
               </q-list>
-            </div>
+            </template>
+            </paginated-card-list>
           </div>
           <div class="row" v-else>
             <div class="col-12 q-mt-xl">
@@ -621,6 +625,7 @@ import VueHtml2pdf from "vue-html2pdf";
 import HistoriaDrPdf from "./historiaDrPdf.vue";
 import HistorialDoctoresLista from "./historialDoctoresLista.vue";
 import PdfListaDoctoresCompleta from "../admin/pdf-lista-doctores-completa.vue";
+import PaginatedCardList from "../../common/PaginatedCardList.vue";
 
 import { ADMIN_DOCTORES_QUERY, ADMIN_ALL_CDIS_QUERY, UPDATE_USUARIO_MUTATION } from "../../../graphql/user";
 import {
@@ -645,7 +650,7 @@ import { isFormValid } from "src/utils/formUtils";
 import especialidades from "src/data/especialidades";
 export default {
   name: "doctores",
-  components: { HistoriaDrPdf, VueHtml2pdf, HistorialDoctoresLista, PdfListaDoctoresCompleta },
+  components: { HistoriaDrPdf, VueHtml2pdf, HistorialDoctoresLista, PdfListaDoctoresCompleta, PaginatedCardList },
   data() {
     return {
       // DATOS DE DOCTOR:
@@ -966,6 +971,14 @@ export default {
       }
       return isFormValid(formValues, validationRules)
     },
+    doctoresActivos() {
+      if (!Array.isArray(this.users)) return [];
+      return this.users.filter(user => user.usuarios.estado === 'activo');
+    },
+    doctoresInactivos() {
+      if (!Array.isArray(this.users)) return [];
+      return this.users.filter(user => user.usuarios.estado === 'inactivo');
+    }
   },
   created() {
     this.AllDoctores();

@@ -59,8 +59,9 @@
                     <q-tab-panel name="encargadosActivos" class="full-width">
                       					<button @click="generateDoctorsPDF()" class=" cursor-pointer q-mb-sm text-primary self-center text-bold"
 						type="button"> <small style="font-size: 12px;">Descargar lista de doctores activos</small></button>
-                      <div class="full-width q-mb-sm" v-for="(user, index) in users" :key="index">
-                        <q-list v-if="user.usuarios.estado === 'activo'" class="rounded-borders full-width bg-secondary"
+                      <paginated-card-list :items="doctoresActivos" class="col-12" row-key="id_usuario" :initial-rows-per-page="10">
+                        <template v-slot:default="{ user }">
+                        <q-list class="rounded-borders full-width bg-secondary"
                           style="border-radius: 15px">
                           <q-item class="full-width">
                             <q-item-section avatar @click="userDetailC('userDetail', user)" style="cursor: pointer">
@@ -99,14 +100,15 @@
                             </q-item-section>
                           </q-item>
                         </q-list>
-                      </div>
+                      </template>
+                      </paginated-card-list>
                     </q-tab-panel>
                     <q-tab-panel name="encargadosInactivos">
                       <button @click="generateDoctorsPDF()" class=" cursor-pointer q-mb-sm text-primary self-center text-bold"
 						type="button"> <small style="font-size: 12px;">Descargar lista de doctores inactivos</small></button>
-                      <div class="full-width q-mb-sm" v-for="(user, index) in users" :key="index">
-                        <q-list v-if="user.usuarios.estado === 'inactivo'"
-                          class="rounded-borders full-width bg-secondary" style="border-radius: 15px">
+                      <paginated-card-list :items="doctoresInactivos" class="col-12" row-key="id_usuario" :initial-rows-per-page="10">
+                        <template v-slot:default="{ user }">
+                        <q-list class="rounded-borders full-width bg-secondary" style="border-radius: 15px">
                           <q-item class="full-width">
                             <q-item-section avatar @click="userDetailC('userDetail', user)" style="cursor: pointer">
                               <q-avatar color="primary" icon="mdi-doctor" text-color="white">
@@ -142,7 +144,8 @@
                                   :label="user.usuarios.estado === 'activo' ? 'Inhabilitar' : 'Habilitar'" />
                         </q-list>
 
-                      </div>
+                      </template>
+                      </paginated-card-list>
                     </q-tab-panel>
                   </q-tab-panels>
 
@@ -159,56 +162,60 @@
                   Pacientes del CDI</div>
                 Listado de pacientes administrados por los doctores del CDI
                 <div class="row justify-center q-mt-xl" v-if="usersPacientes && this.usersPacientes.length !== 0">
-                  <div class="col-12 q-mb-sm" v-for="(userPaciente, index) in usersPacientes" :key="index">
-                    <q-list class="rounded-borders bg-grey-2" style="border-radius: 15px">
-                      <q-item v-if="userPaciente.persona">
-                        <q-item-section top class=" q-py-md" style="cursor: pointer">
-                          <div class="row">
-                            <div class="col-6 q-mb-xs">
-                              <q-item-label class="text-left" lines="1">
-                                <span class="text-weight-medium">Nombre:</span> {{ userPaciente.persona.nombre1 }} {{ userPaciente.persona.apellido1 }}
-                              </q-item-label>
-                            </div>
-                            <div class="col-6 q-mb-xs">
-                              <q-item-label class="text-right" lines="1">
-                                <span class="text-weight-medium">Edad:</span> {{ userPaciente.persona.edad }} años
-                              </q-item-label>
-                            </div>
-                            <div class="col-6 q-mb-xs">
-                              <q-item-label class="text-left" lines="1">
-                                <span class="text-weight-medium">Nacionalidad:</span> {{ userPaciente.persona.nacionalidad }}
-                              </q-item-label>
-                              <q-item-label  v-if="userPaciente.persona.edad >= 18" class="text-left" lines="1">
-                                <span class="text-weight-medium">Documento:</span>  {{ userPaciente.persona.cedula_identidad }}
-                              </q-item-label>
-                              <q-item-label  v-if="userPaciente.persona.edad < 18" class="text-left" lines="1">
-                                <span class="text-weight-medium">Documento de representante:</span>  {{ userPaciente.documento_identidad_representante }}
-                              </q-item-label>
+                  <div class="col-12 q-mb-sm">
+                    <paginated-card-list :items="usersPacientes" class="col-12" row-key="id_paciente" :initial-rows-per-page="10">
+                      <template v-slot:default="{ user: userPaciente }">
+                        <q-list class="rounded-borders bg-grey-2" style="border-radius: 15px">
+                          <q-item v-if="userPaciente.persona">
+                            <q-item-section top class=" q-py-md" style="cursor: pointer">
+                              <div class="row">
+                                <div class="col-6 q-mb-xs">
+                                  <q-item-label class="text-left" lines="1">
+                                    <span class="text-weight-medium">Nombre:</span> {{ userPaciente.persona.nombre1 }} {{ userPaciente.persona.apellido1 }}
+                                  </q-item-label>
+                                </div>
+                                <div class="col-6 q-mb-xs">
+                                  <q-item-label class="text-right" lines="1">
+                                    <span class="text-weight-medium">Edad:</span> {{ userPaciente.persona.edad }} años
+                                  </q-item-label>
+                                </div>
+                                <div class="col-6 q-mb-xs">
+                                  <q-item-label class="text-left" lines="1">
+                                    <span class="text-weight-medium">Nacionalidad:</span> {{ userPaciente.persona.nacionalidad }}
+                                  </q-item-label>
+                                  <q-item-label  v-if="userPaciente.persona.edad >= 18" class="text-left" lines="1">
+                                    <span class="text-weight-medium">Documento:</span>  {{ userPaciente.persona.cedula_identidad }}
+                                  </q-item-label>
+                                  <q-item-label  v-if="userPaciente.persona.edad < 18" class="text-left" lines="1">
+                                    <span class="text-weight-medium">Documento de representante:</span>  {{ userPaciente.documento_identidad_representante }}
+                                  </q-item-label>
 
-                            <q-item-label v-if="userPaciente.persona.edad < 18" class="text-left q-mt-xs" >
-                              <q-icon name="mdi-human-child" /> <span class="text-weight-medium text-green">Este paciente es menor de edad</span> 
-                            </q-item-label>
-                            </div>
-                            <div class="col-6 q-mb-xs">
-                              <q-item-label class="text-right" lines="1">
-                                <span class="text-weight-medium">Sexo:</span> {{ userPaciente.persona.sexo }}
-                              </q-item-label>
-                              <q-item-label class="text-right" lines="1">
-                                <span class="text-weight-medium">Telefono:</span> {{ userPaciente.persona.telefono.codigo }}-{{ userPaciente.persona.telefono.numero }}
-                              </q-item-label>
-                            </div>
-                          </div>
-                          <q-separator spaced color="blue-grey" />
-                          
-                            <button type="button"
-                              class="no-outline no-border q-px-md q-mb-xs q-py-xs rounded-borders bg-blue-grey text-white cursor-pointer"
-                             @click="openDetailsPaciente(userPaciente)">Detalles del paciente</button>
-                            <button type="button"
-                              class="no-outline no-border q-px-md q-py-xs rounded-borders bg-blue-grey text-white cursor-pointer"
-                             @click="generatePacientePDF(userPaciente)"><q-icon name="mdi-printer" class="q-mr-sm" />Descargar ficha del paciente</button>
-                          </q-item-section>
-                      </q-item>
-                    </q-list>
+                                <q-item-label v-if="userPaciente.persona.edad < 18" class="text-left q-mt-xs" >
+                                  <q-icon name="mdi-human-child" /> <span class="text-weight-medium text-green">Este paciente es menor de edad</span> 
+                                </q-item-label>
+                                </div>
+                                <div class="col-6 q-mb-xs">
+                                  <q-item-label class="text-right" lines="1">
+                                    <span class="text-weight-medium">Sexo:</span> {{ userPaciente.persona.sexo }}
+                                  </q-item-label>
+                                  <q-item-label class="text-right" lines="1">
+                                    <span class="text-weight-medium">Telefono:</span> {{ userPaciente.persona.telefono.codigo }}-{{ userPaciente.persona.telefono.numero }}
+                                  </q-item-label>
+                                </div>
+                              </div>
+                              <q-separator spaced color="blue-grey" />
+                              
+                                <button type="button"
+                                  class="no-outline no-border q-px-md q-mb-xs q-py-xs rounded-borders bg-blue-grey text-white cursor-pointer"
+                                  @click="openDetailsPaciente(userPaciente)">Detalles del paciente</button>
+                                <button type="button"
+                                  class="no-outline no-border q-px-md q-py-xs rounded-borders bg-blue-grey text-white cursor-pointer"
+                                  @click="generatePacientePDF(userPaciente)"><q-icon name="mdi-printer" class="q-mr-sm" />Descargar ficha del paciente</button>
+                              </q-item-section>
+                          </q-item>
+                        </q-list>
+                      </template>
+                    </paginated-card-list>
                   </div>
                 </div>
                 <div class="row" v-else>
@@ -768,9 +775,10 @@ import { isFormValid } from '../../../utils/formUtils'
 import moment from "moment";
 import PdfListaDoctoresCompleta from "../admin/pdf-lista-doctores-completa.vue";
 import especialidades from "src/data/especialidades";
+import PaginatedCardList from "../../common/PaginatedCardList.vue";
 export default {
   name: "homeEncargado",
-  components: { historiaDrPdf, historiaPdf, VueHtml2pdf, HistorialDoctoresLista, PdfListaDoctoresCompleta },
+  components: { historiaDrPdf, historiaPdf, VueHtml2pdf, HistorialDoctoresLista, PdfListaDoctoresCompleta, PaginatedCardList },
   computed: {
     fullNameRules() {
       return useFullNameValidation();
@@ -893,6 +901,15 @@ export default {
         correo: useEmailValidation()
       }
       return isFormValid(formValuesUpdate, validationRulesUpdate)
+      return isFormValid(formValuesUpdate, validationRulesUpdate)
+    },
+    doctoresActivos() {
+      if (!Array.isArray(this.users)) return [];
+      return this.users.filter(user => user.usuarios.estado === 'activo');
+    },
+    doctoresInactivos() {
+      if (!Array.isArray(this.users)) return [];
+      return this.users.filter(user => user.usuarios.estado === 'inactivo');
     }
   },
   data() {

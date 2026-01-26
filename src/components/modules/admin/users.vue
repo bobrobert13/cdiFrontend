@@ -15,55 +15,57 @@
         </div>
       </div>
       <div class="row justify-center q-mt-xl" v-if="this.users.length !== 0">
-        <div class="col-12 q-mb-sm" v-for="(user, index) in users" :key="index">
-          <q-list class="rounded-borders q-pa-md bg-secondary" style="border-radius: 15px">
-            <q-item>
-              <q-item-section top @click="userDetail(user)" style="cursor: pointer">
-                <q-item-label class="text-left q-mb-xs" lines="1">
-                  <span class="text-weight-medium">Nombre de paciente: {{ user.persona.nombre1 }}</span>
-                </q-item-label>
-                <q-item-label v-if="user.persona.edad >= 18" class="text-left q-mb-xs" lines="1">
-                  <span class="text-weight-medium">Documento de identidad: {{ user.persona.cedula_identidad
-                    }}</span>
-                </q-item-label>
-                <q-item-label v-else class="text-left q-mb-xs" lines="1">
-                  <span class="text-weight-medium">Documento de representante: {{ user.documento_identidad_representante
-                    }}</span>
-                </q-item-label>
-                <q-item-label class="text-left" lines="1">
-                  <span class="text-weight-medium">Edad del paciente: {{ user.persona.edad }} años</span>
-                </q-item-label>
-                <q-separator spaced color="blue-grey" />
-                <q-item-label v-if="user.doctor" class="text-left" lines="1">
-                  <small class="text-weight-medium">Registrado por doctor: {{ user.doctor.persona.nombre1 }}</small>
-                </q-item-label>
-                <q-item-label v-if="user.doctor" class="text-left" lines="1">
-                  <small class="text-weight-medium">Carnet: {{ user.doctor.numero_carnet }}</small>
-                </q-item-label>
-                <q-item-label v-if="user.doctor" class="text-left text-primary" lines="1">
-                  <small class="text-weight-medium">Area de trabajo: {{ user.doctor.area_de_trabajo }}</small>
-                </q-item-label>
+        <paginated-card-list :items="users" class="col-12" row-key="id_paciente" :initial-rows-per-page="10">
+          <template v-slot:default="{ user }">
+            <q-list class="rounded-borders q-pa-md bg-secondary" style="border-radius: 15px">
+              <q-item>
+                <q-item-section top @click="userDetail(user)" style="cursor: pointer">
+                  <q-item-label class="text-left q-mb-xs" lines="1">
+                    <span class="text-weight-medium">Nombre de paciente: {{ user.persona.nombre1 }}</span>
+                  </q-item-label>
+                  <q-item-label v-if="user.persona.edad >= 18" class="text-left q-mb-xs" lines="1">
+                    <span class="text-weight-medium">Documento de identidad: {{ user.persona.cedula_identidad
+                      }}</span>
+                  </q-item-label>
+                  <q-item-label v-else class="text-left q-mb-xs" lines="1">
+                    <span class="text-weight-medium">Documento de representante: {{ user.documento_identidad_representante
+                      }}</span>
+                  </q-item-label>
+                  <q-item-label class="text-left" lines="1">
+                    <span class="text-weight-medium">Edad del paciente: {{ user.persona.edad }} años</span>
+                  </q-item-label>
+                  <q-separator spaced color="blue-grey" />
+                  <q-item-label v-if="user.doctor" class="text-left" lines="1">
+                    <small class="text-weight-medium">Registrado por doctor: {{ user.doctor.persona.nombre1 }}</small>
+                  </q-item-label>
+                  <q-item-label v-if="user.doctor" class="text-left" lines="1">
+                    <small class="text-weight-medium">Carnet: {{ user.doctor.numero_carnet }}</small>
+                  </q-item-label>
+                  <q-item-label v-if="user.doctor" class="text-left text-primary" lines="1">
+                    <small class="text-weight-medium">Area de trabajo: {{ user.doctor.area_de_trabajo }}</small>
+                  </q-item-label>
 
-                <q-item-label v-if="user.cdi" class="text-left q-mt-md" lines="1">
-                  <small class="text-weight-medium">Pertenece al CDI: {{ user.cdi.nombre }}</small>
-                </q-item-label>
-                <q-item-label v-if="user.cdi" class="text-left" lines="1">
-                  <small class="text-weight-medium">Encargado: {{ user.cdi.encargado }}</small>
-                </q-item-label>
+                  <q-item-label v-if="user.cdi" class="text-left q-mt-md" lines="1">
+                    <small class="text-weight-medium">Pertenece al CDI: {{ user.cdi.nombre }}</small>
+                  </q-item-label>
+                  <q-item-label v-if="user.cdi" class="text-left" lines="1">
+                    <small class="text-weight-medium">Encargado: {{ user.cdi.encargado }}</small>
+                  </q-item-label>
 
-                <small class="text-weight-bold text-primary ">Ver detalles</small>
+                  <small class="text-weight-bold text-primary ">Ver detalles</small>
 
-              </q-item-section>
+                </q-item-section>
 
-              <q-item-section side>
-                <div class="text-grey-8 q-gutter-xs">
-                  <q-btn @click="generatePDF(user)" class="gt-xs text-positive" size="22px" flat dense round
-                    icon="mdi-printer-pos" />
-                </div>
-              </q-item-section>
-            </q-item>
-          </q-list>
-        </div>
+                <q-item-section side>
+                  <div class="text-grey-8 q-gutter-xs">
+                    <q-btn @click="generatePDF(user)" class="gt-xs text-positive" size="22px" flat dense round
+                      icon="mdi-printer-pos" />
+                  </div>
+                </q-item-section>
+              </q-item>
+            </q-list>
+          </template>
+        </paginated-card-list>
       </div>
       <div class="row" v-else>
         <div class="col-12 q-mt-xl">
@@ -260,11 +262,13 @@ import config from "../../../config";
 import VueHtml2pdf from "vue-html2pdf";
 import historiaPdf from "./hitoriaPdf.vue";
 import moment from 'moment'
+import PaginatedCardList from "../../common/PaginatedCardList.vue";
 export default {
   name: "users",
   components: {
     VueHtml2pdf,
-    historiaPdf
+    historiaPdf,
+    PaginatedCardList
   },
   data() {
     return {
