@@ -386,11 +386,19 @@
                 <q-card-section class="col-5 flex flex-center no-padding">
                   <div class="text-overline text-h6 text-grey-9">Historia clinica</div>
                 </q-card-section>
+
                 <q-card-section class="col-5 flex flex-center">
                   <q-avatar>
                     <q-icon size="xl" name="mdi-doctor"></q-icon>
                   </q-avatar>
                 </q-card-section>
+
+                <q-card-section class="col-5 flex flex-center">
+                  <button @click="generatePacientePDF(dataUser)" class=" cursor-pointer q-mb-sm text-primary self-center text-bold"
+                    type="button"> <small style="font-size: 12px;">Descargar información</small></button>
+                </q-card-section>
+
+
                 <q-card-section v-if="dataUser.persona" class="q-pt-xs q-pb-none no-margin">
                   <p class="text-subtitle text-bold text-grey-9">Detalles del paciente</p>
                   <div class="text-caption text-bold q-mt-sm q-mb-xs">Paciente: {{ dataUser.persona.nombre1 }}</div>
@@ -2729,6 +2737,7 @@ export default {
     },
     generatePacientePDF(paciente) {
       this.dataUser = paciente;
+      if (this.modalDetailUser) this.modalDetailUser = false;
       this.$refs.html2Pdf.generatePdf();
     },
     downloadDiagnosticsReport(dataUser) {

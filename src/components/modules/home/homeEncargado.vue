@@ -241,7 +241,10 @@
                 <div class="row text-center justify-center">
                   <div class="col-12 q-mt-xs">
                     <p class="text-subtitle text-medium">Información del doctor</p>
-
+          									<q-card-section class="col-5 flex flex-center no-padding no-margin">
+											<button @click="generatePDF(dataUser)" class=" cursor-pointer q-mb-sm text-primary self-center text-bold"
+											type="button"> <small style="font-size: 12px;">Descargar información</small></button>
+										</q-card-section>
                     <div class="row ">
                       <div class="col-6 q-pa-sm">
                         <q-input filled color="deep-purple-6" v-model="dataUser.persona.nombre1" label="Nombre completo"
@@ -597,6 +600,10 @@
                 <q-card-section class="col-5 flex flex-center no-padding">
                   <div class="text-overline text-h6 text-grey-9">Informacion del paciente</div>
                 </q-card-section>
+                          									<q-card-section class="col-5 flex flex-center">
+											<button @click="generatePacientePDF(dataUser)" class=" cursor-pointer q-mb-sm text-primary self-center text-bold"
+											type="button"> <small style="font-size: 12px;">Descargar información</small></button>
+										</q-card-section>
                 <q-card-section v-if="dataUser.persona" class="q-pt-xs q-pb-none no-margin">
                   <div class="text-caption text-bold  ">Paciente: {{ dataUser.persona.nombre1 }}</div>
                   <div class="text-caption  ">Documento de identidad:
@@ -1283,6 +1290,7 @@ export default {
     generatePacientePDF(user) {
       this.pdfDoctor = false;
       this.pdfData = user;
+      if (this.modals.detallesPaciente) this.modals.detallesPaciente = false;
       this.$refs.html2PdfPaciente.generatePdf();
       this.pdfDoctor = true;
     },

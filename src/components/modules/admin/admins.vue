@@ -269,6 +269,10 @@
 						<q-avatar color="primary" text-color="white" icon="mdi-account-circle">
 						</q-avatar>
 					</q-card-section>
+										<q-card-section class="col-5 flex flex-center">
+											<button @click="generatePDF(dataUser)" class=" cursor-pointer q-mb-sm text-primary self-center text-bold"
+											type="button"> <small style="font-size: 12px;">Descargar información</small></button>
+										</q-card-section>
 					<q-card-section class="q-pt-xs">
 						<div class="text-caption text-bold q-mt-sm q-mb-xs">
 							CDI: {{ dataUser.nombre }} | {{ dataUser.numero_cdi }}
@@ -918,6 +922,7 @@ export default {
 		},
 		generatePDF(user) {
 			this.dataUser = user;
+			if(this.modalDetailUser) this.modalDetailUser = false;
 			console.log("dataUser", this.dataUser);
 			this.$refs.cdihtml2Pdf.generatePdf();
 		},
