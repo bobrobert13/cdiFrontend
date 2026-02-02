@@ -2,14 +2,14 @@
   <div class="row justify-center">
 
     <div class="col-12 bg-white" style="min-height: 85vh; border-radius: 20px">
-                        <div  v-if="viewType === 'userList'" class="col q-pa-md self-center  text-right">
-                <q-icon style="cursor: pointer" @click="workerView('searchUser')" name="mdi-account-search"
-                  class="text-primary q-mr-md" size="md"></q-icon>
-                <q-icon style="cursor: pointer" @click="workerView('addWorker')" name="mdi-plus q-mr-md"
-                  class="text-primary" size="md"></q-icon>
-                                  <q-icon style="cursor: pointer" @click="AllPacientes()" name="mdi-refresh"
-                  class="text-primary q-ml-lg q-mr-md" size="sm"></q-icon>
-              </div>
+      <div v-if="viewType === 'userList'" class="col q-pa-md self-center  text-right">
+        <q-icon style="cursor: pointer" @click="workerView('searchUser')" name="mdi-account-search"
+          class="text-primary q-mr-md" size="md"></q-icon>
+        <q-icon style="cursor: pointer" @click="workerView('addWorker')" name="mdi-plus q-mr-md" class="text-primary"
+          size="md"></q-icon>
+        <q-icon style="cursor: pointer" @click="AllPacientes()" name="mdi-refresh" class="text-primary q-ml-lg q-mr-md"
+          size="sm"></q-icon>
+      </div>
 
       <q-scroll-area class=" q-mb-md" :thumb-style="thumbStyle" :bar-style="barStyle" style="height: 80vh">
         <div class="column q-pa-xl justify-center">
@@ -26,15 +26,16 @@
                 <p class="text-h6 text-weight-light ">Tu lista de pacientes ({{ users.length }}):</p>
               </div>
               <!-- LISTA DE PACIENTES EN EL HOME DOCTOR -->
-              <paginated-card-list :items="users" class="col-12"  row-key="id_paciente" :initial-rows-per-page="10">
+              <paginated-card-list :items="users" class="col-12" row-key="id_paciente" :initial-rows-per-page="10">
                 <template v-slot:default="{ user }">
-                <q-list class="rounded-borders bg-grey-2" style="border-radius: 15px">
-                  <q-item v-if="user.persona" >
-                    <q-item-section top class=" q-py-md" style="cursor: pointer">
+                  <q-list class="rounded-borders bg-grey-2" style="border-radius: 15px">
+                    <q-item v-if="user.persona">
+                      <q-item-section top class=" q-py-md" style="cursor: pointer">
                         <div class="row">
                           <div class="col-6 q-mb-xs">
                             <q-item-label class="text-left" lines="1">
-                              <span class="text-weight-medium">Nombre:</span> {{ user.persona.nombre1 }} {{ user.persona.apellido1 }}
+                              <span class="text-weight-medium">Nombre:</span> {{ user.persona.nombre1 }} {{
+                                user.persona.apellido1 }}
                             </q-item-label>
                           </div>
                           <div class="col-6 q-mb-xs">
@@ -46,69 +47,75 @@
                             <q-item-label class="text-left" lines="1">
                               <span class="text-weight-medium">Nacionalidad:</span> {{ user.persona.nacionalidad }}
                             </q-item-label>
-														 <q-item-label class="text-left" lines="1">
-                              <span class="text-weight-medium">Documento:</span>  {{ user.persona.cedula_identidad || 'No especificado'  }}
+                            <q-item-label class="text-left" lines="1">
+                              <span class="text-weight-medium">Documento:</span> user.persona.cedula_identidad
                             </q-item-label>
                             <q-item-label v-if="user.documento_identidad_representante" class="text-left" lines="1">
-                              <span class="text-weight-medium">Documento representante:</span>  {{ user.documento_identidad_representante || 'No especificado'  }}
+                              <span class="text-weight-medium">Documento representante:</span> {{
+                                user.documento_identidad_representante || 'No especificado' }}
                             </q-item-label>
 
-                            <q-item-label v-if="user.persona.edad < 18" class="text-left q-mt-xs" >
-                              <q-icon name="mdi-human-child" /> <span class="text-weight-medium text-green">Este paciente es menor de edad</span> 
+                            <q-item-label v-if="user.persona.edad < 18" class="text-left q-mt-xs">
+                              <q-icon name="mdi-human-child" /> <span class="text-weight-medium text-green">Este
+                                paciente es menor de edad</span>
                             </q-item-label>
-                            
+
                           </div>
                           <div class="col-6 q-mb-xs">
                             <q-item-label class="text-right" lines="1">
                               <span class="text-weight-medium">Sexo:</span> {{ user.persona.sexo }}
                             </q-item-label>
                             <q-item-label class="text-right" lines="1">
-                              <span class="text-weight-medium">Telefono:</span> {{ user.persona.telefono.codigo }}-{{ user.persona.telefono.numero }}
+                              <span class="text-weight-medium">Telefono:</span> {{ user.persona.telefono.codigo }}-{{
+                                user.persona.telefono.numero }}
                             </q-item-label>
                           </div>
                         </div>
-                      <q-separator spaced color="blue-grey" />
-                      <q-item-label class="text-left" lines="1">
-                        <div class="row col-12 items-center self-center no-wrap ">
+                        <q-separator spaced color="blue-grey" />
+                        <q-item-label class="text-left" lines="1">
+                          <div class="row col-12 items-center self-center no-wrap ">
 
-                          <small v-if="!estadoEmergenciaPaciente(user.emergencias)"
-                            @click="seleccionarUrgencias(user.persona, user.id_paciente)" lines="2"
-                            class=" q-mr-lg cursor-pointer text-red-9 self-center text-bold" style="cursor: pointer">
-                            <q-icon name="mdi-alert" /> Enviar a emergencias
-                          </small>
-                          <small v-else @click="verDetallesDeEmergencia(user.emergencias)" lines="2"
-                            class=" q-mr-sm cursor-pointer text-red-9  self-center text-bold" style="cursor: pointer">
-                            <q-icon name="mdi-information" /> Paciente en emergencias
-                          </small>
-                          <small v-if="!estadoHospitalizadoPaciente(user.hospitalizaciones)"
-                            @click="seleccionarHospitalizacion(user.persona, user.id_paciente)" lines="2"
-                            class=" q-mr-sm cursor-pointer text-primary self-center text-bold" style="cursor: pointer">
-                            <q-icon name="mdi-hospital" /> Marcar como hospitalizado
-                          </small>
+                            <small v-if="!estadoEmergenciaPaciente(user.emergencias)"
+                              @click="seleccionarUrgencias(user.persona, user.id_paciente)" lines="2"
+                              class=" q-mr-lg cursor-pointer text-red-9 self-center text-bold" style="cursor: pointer">
+                              <q-icon name="mdi-alert" /> Enviar a emergencias
+                            </small>
+                            <small v-else @click="verDetallesDeEmergencia(user.emergencias)" lines="2"
+                              class=" q-mr-sm cursor-pointer text-red-9  self-center text-bold" style="cursor: pointer">
+                              <q-icon name="mdi-information" /> Paciente en emergencias
+                            </small>
+                            <small v-if="!estadoHospitalizadoPaciente(user.hospitalizaciones)"
+                              @click="seleccionarHospitalizacion(user.persona, user.id_paciente)" lines="2"
+                              class=" q-mr-sm cursor-pointer text-primary self-center text-bold"
+                              style="cursor: pointer">
+                              <q-icon name="mdi-hospital" /> Marcar como hospitalizado
+                            </small>
 
-                          <small v-else @click="verDetallesDeHospitalizacion(user.hospitalizaciones)" lines="2"
-                            class=" q-mr-sm cursor-pointer text-orange-9 self-center text-bold" style="cursor: pointer">
-                            <q-icon name="mdi-information" /> Paciente hospitalizado
-                          </small>
+                            <small v-else @click="verDetallesDeHospitalizacion(user.hospitalizaciones)" lines="2"
+                              class=" q-mr-sm cursor-pointer text-orange-9 self-center text-bold"
+                              style="cursor: pointer">
+                              <q-icon name="mdi-information" /> Paciente hospitalizado
+                            </small>
 
-                        </div>
-                      </q-item-label>
-                      <q-item-section  class="q-mt-md row no-wrap q-gutter-y-xs">
-                        <button type="button"
-                          class="no-outline no-border q-px-md q-py-xs rounded-borders bg-primary text-white cursor-pointer"
-                          @click="userDetail(user)"><q-icon name="mdi-eye" class="q-mr-sm" /> Inspeccionar
-                          paciente</button>
+                          </div>
+                        </q-item-label>
+                        <q-item-section class="q-mt-md row no-wrap q-gutter-y-xs">
+                          <button type="button"
+                            class="no-outline no-border q-px-md q-py-xs rounded-borders bg-primary text-white cursor-pointer"
+                            @click="userDetail(user)"><q-icon name="mdi-eye" class="q-mr-sm" /> Inspeccionar
+                            paciente</button>
 
-													<button type="button"
-                          class="no-outline no-border q-px-md q-py-xs rounded-borders bg-blue-grey text-white cursor-pointer"
-                         @click="generatePacientePDF(user)"><q-icon name="mdi-printer" class="q-mr-sm" />Descargar ficha del paciente</button>
+                          <button type="button"
+                            class="no-outline no-border q-px-md q-py-xs rounded-borders bg-blue-grey text-white cursor-pointer"
+                            @click="generatePacientePDF(user)"><q-icon name="mdi-printer" class="q-mr-sm" />Descargar
+                            ficha del paciente</button>
+                        </q-item-section>
                       </q-item-section>
-                    </q-item-section>
 
-                  </q-item>
-                </q-list>
-								<hr class="q-my-md ">
-              </template></paginated-card-list>
+                    </q-item>
+                  </q-list>
+                  <hr class="q-my-md ">
+                </template></paginated-card-list>
               <!-- FIN DE LISTA DE PACIENTE EN EL HOME DOCTOR -->
             </div>
             <div class="row justify-center" v-else>
@@ -153,7 +160,8 @@
                 <q-icon style="cursor: pointer" @click="workerView('userList')" name="mdi-arrow-left"
                   class="text-primary" size="md"></q-icon>
                 <span style="cursor: pointer" class="text-bold text-accent text-h6"
-                  @click="workerView('userList')">Crear nuevo paciente</span>
+                  @click="workerView('userList')">Crear nuevo
+                  paciente</span>
               </div>
               <small class="q-my-md block text-red text-bold"> <q-icon name="mdi-information" class="q-mr-xs" size="sm"
                   color="primary" /> Los campos marcados con * son obligatorios</small>
@@ -189,18 +197,19 @@
                   </div>
 
                   <div class="row " v-if="edad >= 18">
-                      <div class="col-2">
-                        <q-select filled v-model="nacionalidad" :options="nacionalidades" option-label="label"
-                          option-value="value" emit-value />
-                      </div>
-                      <div class="col-10">
-                        <q-input filled color="deep-purple-6" type="number" v-model="dni" @blur="obtenerInformacionPersonaRegistrada" :rules="dniRules"
-                           :label="edad !== 0 && edad < 18 ? 'Cédula (Opcional)' : 'Cédula*'" />
-                      </div>
+                    <div class="col-2">
+                      <q-select filled v-model="nacionalidad" :options="nacionalidades" option-label="label"
+                        option-value="value" emit-value />
                     </div>
+                    <div class="col-10">
+                      <q-input filled color="deep-purple-6" type="number" v-model="dni"
+                        @blur="obtenerInformacionPersonaRegistrada" :rules="dniRules"
+                        :label="edad !== 0 && edad < 18 ? 'Cédula (Opcional)' : 'Cédula*'" />
+                    </div>
+                  </div>
                   <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 ">
-                    <q-input filled color="deep-purple-6" v-model="fullName" label="Nombre completo (Primero nombres y luego apellidos) *"
-                      :rules="fullNameRules" />
+                    <q-input filled color="deep-purple-6" v-model="fullName"
+                      label="Nombre completo (Primero nombres y luego apellidos) *" :rules="fullNameRules" />
                   </div>
                   <div class="row q-pb-xs">
                     <div class="col-12">
@@ -394,18 +403,22 @@
                 </q-card-section>
 
                 <q-card-section class="col-5 flex flex-center">
-                  <button @click="generatePacientePDF(dataUser)" class=" cursor-pointer q-mb-sm text-primary self-center text-bold"
-                    type="button"> <small style="font-size: 12px;">Descargar información</small></button>
+                  <button @click="generatePacientePDF(dataUser)"
+                    class=" cursor-pointer q-mb-sm text-primary self-center text-bold" type="button"> <small
+                      style="font-size: 12px;">Descargar información</small></button>
                 </q-card-section>
 
 
                 <q-card-section v-if="dataUser.persona" class="q-pt-xs q-pb-none no-margin">
                   <p class="text-subtitle text-bold text-grey-9">Detalles del paciente</p>
                   <div class="text-caption text-bold q-mt-sm q-mb-xs">Paciente: {{ dataUser.persona.nombre1 }}</div>
-                  <div v-if="dataUser.persona.cedula_identidad" class="text-caption q-mt-sm q-mb-xs">Documento de identidad:
-                    {{ dataUser.persona.nacionalidad }} - {{ dataUser.persona.cedula_identidad  }}</div>
-                  <div v-if="dataUser.documento_identidad_representante" class="text-caption q-mt-sm q-mb-xs">Documento de representante:
-                    {{ dataUser.persona.nacionalidad }} - {{ dataUser.documento_identidad_representante  }}</div>
+                  <div v-if="dataUser.persona.cedula_identidad" class="text-caption q-mt-sm q-mb-xs">Documento de
+                    identidad:
+                    {{ dataUser.persona.nacionalidad }} - {{ dataUser.persona.cedula_identidad }}</div>
+                  <div v-if="dataUser.documento_identidad_representante" class="text-caption q-mt-sm q-mb-xs">Documento
+                    de
+                    representante:
+                    {{ dataUser.persona.nacionalidad }} - {{ dataUser.documento_identidad_representante }}</div>
                   <div class="text-caption q-mt-sm q-mb-xs">Edad del paciente: {{ dataUser.persona.edad }} años</div>
                   <div class="text-caption q-mt-sm q-mb-xs">Sexo: {{ dataUser.persona.sexo }}</div>
                   <!-- <div class="text-caption q-mt-sm q-mb-xs">Diagnostico: {{dataUser.diagnostico}}</div> -->
@@ -581,7 +594,7 @@
                     <q-input v-model="emergencia_notasDeAtencion" filled label="Notas de atención" />
                   </div>
 
-									                  <div class="col-12 q-mt-md q-pa-xs">
+                  <div class="col-12 q-mt-md q-pa-xs">
                     <span>Fecha de ingreso emergencia:</span>
                     <q-input filled v-model="emergencia_fechaIngreso" label="Fecha de ingreso">
                       <template v-slot:prepend>
@@ -652,8 +665,9 @@
               <q-card-section class="q-pt-md">
                 <div class="row items-center q-px-sm justify-center">
                   <div class="col-6 column">
-                   
-                   <p @click="downloadEmergenciesReport(user)" class=" cursor-pointer no-padding no-margin"> <q-icon name="mdi-cloud-print" size="20px" color="primary"  /> Descargar lista de emergencias </p>
+
+                    <p @click="downloadEmergenciesReport(user)" class=" cursor-pointer no-padding no-margin"> <q-icon
+                        name="mdi-cloud-print" size="20px" color="primary" /> Descargar lista de emergencias </p>
 
                     <span class="text-caption text-bold q-mt-sm q-mb-xs">Historial de emergencias</span>
                   </div>
@@ -686,13 +700,13 @@
                           <q-item-label><b>Notas de atención:</b> {{ emergencia.notas_de_atencion
                             }}</q-item-label>
 
-														<br>
+                          <br>
                           <q-item-label><b>Fecha de ingreso:</b> {{
                             entradaFechaHora(emergencia.fecha_ingreso)
                             }}</q-item-label>
-													<q-item-label><b>Fecha de egreso:</b> {{
-														salidaFechaHora(emergencia.fecha_egreso) || 'No aplica'
-                            }}</q-item-label>
+                          <q-item-label><b>Fecha de egreso:</b> {{
+                            salidaFechaHora(emergencia.fecha_egreso) || 'No aplica'
+                          }}</q-item-label>
 
 
                         </q-item-section>
@@ -810,7 +824,8 @@
               <q-card-section class="q-pt-md">
                 <div class="row items-center q-px-sm justify-center">
                   <div class="col-6 column">
-                    <p @click="downloadHospitalizationReport()" class=" cursor-pointer no-padding no-margin"> <q-icon name="mdi-cloud-print" size="20px" color="primary"  /> Descargar lista de hospitalizaciones </p>
+                    <p @click="downloadHospitalizationReport()" class=" cursor-pointer no-padding no-margin"> <q-icon
+                        name="mdi-cloud-print" size="20px" color="primary" /> Descargar lista de hospitalizaciones </p>
                     <span class="text-caption text-bold q-mt-sm q-mb-xs">Historial de hospitalización</span>
                   </div>
                 </div>
@@ -1448,7 +1463,7 @@
                   </q-avatar>
                 </q-card-section>
                 <q-card-section class="col-5 no-margin flex flex-center no-padding">
-             
+
                   <div class="text-overline text-h6 text-grey-9">Dianosticos al paciente </div>
                 </q-card-section>
                 <div v-if="dataUser.persona" class="col-5 no-margin flex flex-center no-padding">
@@ -1458,7 +1473,9 @@
               <q-card-section class="q-pt-md">
                 <div class="row items-center q-px-sm justify-center">
                   <div class="col-6 column">
-                     <p @click="downloadDiagnosticsReport(dataUser)" class=" cursor-pointer no-padding no-margin"> <q-icon name="mdi-cloud-print" size="20px" color="primary"  /> Descargar lista de diagnosticos </p>
+                    <p @click="downloadDiagnosticsReport(dataUser)" class=" cursor-pointer no-padding no-margin">
+                      <q-icon name="mdi-cloud-print" size="20px" color="primary" /> Descargar lista de diagnosticos
+                    </p>
                     <span class="text-caption text-bold q-mt-sm q-mb-xs">Historial de diagnosticos</span>
                   </div>
                   <div class="col-6 text-right">
@@ -1521,7 +1538,8 @@
               <q-card-section class="q-pt-md">
                 <div class="row items-center q-px-sm justify-center">
                   <div class="col-6 column">
-                    <p @click="downloadExamsReport()" class=" cursor-pointer no-padding no-margin"> <q-icon name="mdi-cloud-print" size="20px" color="primary"  /> Descargar lista de exámenes </p>
+                    <p @click="downloadExamsReport()" class=" cursor-pointer no-padding no-margin"> <q-icon
+                        name="mdi-cloud-print" size="20px" color="primary" /> Descargar lista de exámenes </p>
                     <span class="text-caption text-bold q-mt-sm q-mb-xs">Historial de exámenes</span>
                   </div>
                   <div class="col-6 text-right">
@@ -1600,7 +1618,8 @@
               <q-card-section class="q-pt-md">
                 <div class="row items-center q-px-sm justify-center">
                   <div class="col-6 column">
-                                         <p @click="downloadTreatmentsReport()" class=" cursor-pointer no-padding no-margin"> <q-icon name="mdi-cloud-print" size="20px" color="primary"  /> Descargar lista de tratamientos </p>
+                    <p @click="downloadTreatmentsReport()" class=" cursor-pointer no-padding no-margin"> <q-icon
+                        name="mdi-cloud-print" size="20px" color="primary" /> Descargar lista de tratamientos </p>
 
                     <span class="text-caption text-bold q-mt-sm q-mb-xs">Historial de tratamientos</span>
                   </div>
@@ -1674,7 +1693,8 @@
               <q-card-section class="q-pt-md">
                 <div class="row items-center q-px-sm justify-center">
                   <div class="col-6 column">
-                    <p @click="downloadMedicationsReport()" class=" cursor-pointer no-padding no-margin"> <q-icon name="mdi-cloud-print" size="20px" color="primary"  /> Descargar lista de medicamentos </p>
+                    <p @click="downloadMedicationsReport()" class=" cursor-pointer no-padding no-margin"> <q-icon
+                        name="mdi-cloud-print" size="20px" color="primary" /> Descargar lista de medicamentos </p>
                     <span class="text-caption text-bold q-mt-sm q-mb-xs">Historial de medicamentos</span>
                   </div>
                   <div class="col-6 text-right">
@@ -1755,18 +1775,18 @@
       </vue-html2pdf>
     </div>
 
-        <div>
+    <div>
       <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="false" :preview-modal="true"
-        :paginate-elements-by-height="1400" filename="Diagnosticos_del_Paciente" :pdf-quality="2" :manual-pagination="false"
-        pdf-format="a4" :pdf-margin="2" pdf-orientation="landscape" pdf-content-width="1050px"
-        @progress="onProgress($event)" ref="downloadDiagnosticsReport">
+        :paginate-elements-by-height="1400" filename="Diagnosticos_del_Paciente" :pdf-quality="2"
+        :manual-pagination="false" pdf-format="a4" :pdf-margin="2" pdf-orientation="landscape"
+        pdf-content-width="1050px" @progress="onProgress($event)" ref="downloadDiagnosticsReport">
         <section slot="pdf-content">
           <historiaDiagPdf :data="dataUser" />
         </section>
       </vue-html2pdf>
     </div>
 
-            <div>
+    <div>
       <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="false" :preview-modal="true"
         :paginate-elements-by-height="1400" filename="Examenes_del_Paciente" :pdf-quality="2" :manual-pagination="false"
         pdf-format="a4" :pdf-margin="2" pdf-orientation="landscape" pdf-content-width="1050px"
@@ -1777,11 +1797,11 @@
       </vue-html2pdf>
     </div>
 
-                <div>
+    <div>
       <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="false" :preview-modal="true"
-        :paginate-elements-by-height="1400" filename="Tratamientos_del_Paciente" :pdf-quality="2" :manual-pagination="false"
-        pdf-format="a4" :pdf-margin="2" pdf-orientation="landscape" pdf-content-width="1050px"
-        @progress="onProgress($event)" ref="downloadTratamientosReport">
+        :paginate-elements-by-height="1400" filename="Tratamientos_del_Paciente" :pdf-quality="2"
+        :manual-pagination="false" pdf-format="a4" :pdf-margin="2" pdf-orientation="landscape"
+        pdf-content-width="1050px" @progress="onProgress($event)" ref="downloadTratamientosReport">
         <section slot="pdf-content">
           <ReporteTratamientos :data="dataUser" />
         </section>
@@ -1789,22 +1809,22 @@
     </div>
 
 
-              <div>
+    <div>
       <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="false" :preview-modal="true"
-        :paginate-elements-by-height="1400" filename="Medicamentos_del_Paciente" :pdf-quality="2" :manual-pagination="false"
-        pdf-format="a4" :pdf-margin="2" pdf-orientation="landscape" pdf-content-width="1050px"
-        @progress="onProgress($event)" ref="downloadMedicamentosReport">
+        :paginate-elements-by-height="1400" filename="Medicamentos_del_Paciente" :pdf-quality="2"
+        :manual-pagination="false" pdf-format="a4" :pdf-margin="2" pdf-orientation="landscape"
+        pdf-content-width="1050px" @progress="onProgress($event)" ref="downloadMedicamentosReport">
         <section slot="pdf-content">
           <ReporteMedicamentos :data="dataUser" />
         </section>
       </vue-html2pdf>
     </div>
 
-                  <div>
+    <div>
       <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="false" :preview-modal="true"
-        :paginate-elements-by-height="1400" filename="Emergencias_del_Paciente" :pdf-quality="2" :manual-pagination="false"
-        pdf-format="a4" :pdf-margin="2" pdf-orientation="landscape" pdf-content-width="1050px"
-        @progress="onProgress($event)" ref="downloadEmergenciasReport">
+        :paginate-elements-by-height="1400" filename="Emergencias_del_Paciente" :pdf-quality="2"
+        :manual-pagination="false" pdf-format="a4" :pdf-margin="2" pdf-orientation="landscape"
+        pdf-content-width="1050px" @progress="onProgress($event)" ref="downloadEmergenciasReport">
         <section slot="pdf-content">
           <ReporteEmergencias :data="dataUser" />
         </section>
@@ -1812,11 +1832,11 @@
     </div>
 
 
-                      <div>
+    <div>
       <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="false" :preview-modal="true"
-        :paginate-elements-by-height="1400" filename="Hospitalizaciones_del_Paciente" :pdf-quality="2" :manual-pagination="false"
-        pdf-format="a4" :pdf-margin="2" pdf-orientation="landscape" pdf-content-width="1050px"
-        @progress="onProgress($event)" ref="downloadHospitalizacionesReport">
+        :paginate-elements-by-height="1400" filename="Hospitalizaciones_del_Paciente" :pdf-quality="2"
+        :manual-pagination="false" pdf-format="a4" :pdf-margin="2" pdf-orientation="landscape"
+        pdf-content-width="1050px" @progress="onProgress($event)" ref="downloadHospitalizacionesReport">
         <section slot="pdf-content">
           <ReporteHospitalizaciones :data="dataUser" />
         </section>
@@ -1887,7 +1907,7 @@ import ReporteMedicamentos from "../admin/reports/reporteMedicamentos.vue";
 import PaginatedCardList from "../../common/PaginatedCardList.vue";
 export default {
   name: "homeDoctor",
-    components: {
+  components: {
     historiaPdf,
     ReporteExamenes,
     ReporteTratamientos,
@@ -1920,7 +1940,7 @@ export default {
       // no puede estar vacio
       // no puede ser igual al documento de identidad
       // debe tener maximo 6 caracteres
-      return [useOrderNumberValidation(),   (val) => val !== this.documento_identidad_representante || 'El número de orden no puede ser igual al documento de identidad', (val) => val.length <= 6 || 'El número de orden debe tener máximo 6 caracteres', (val) => val.length >= 1 || 'El número de orden debe tener al menos 1 caracter'];
+      return [useOrderNumberValidation(), (val) => val !== this.documento_identidad_representante || 'El número de orden no puede ser igual al documento de identidad', (val) => val.length <= 6 || 'El número de orden debe tener máximo 6 caracteres', (val) => val.length >= 1 || 'El número de orden debe tener al menos 1 caracter'];
     },
     streetRules() {
       return useTextFieldValidation(true, 3, 200);
@@ -2229,7 +2249,7 @@ export default {
       emergencia_tiempoAtencion: null,
       emergencia_notasDeAtencion: "",
       emergencia_destino: "",
-			emergencia_fechaIngreso: '',
+      emergencia_fechaIngreso: '',
 
 
 
@@ -2444,78 +2464,78 @@ export default {
     medicamento_duracion: 'actualizarFechasMedicamento'
   },
   methods: {
-		 obtenerInformacionPersonaRegistrada() {
-			console.log('dni:', this.dni);
-			let dniRules = useDniValidation();
-			let validDni = dniRules.every(rule => rule(this.dni) === true);
-			console.log('dni valido?', validDni);
-			if(!validDni) return;
-			this.$apollo
+    obtenerInformacionPersonaRegistrada() {
+      console.log('dni:', this.dni);
+      let dniRules = useDniValidation();
+      let validDni = dniRules.every(rule => rule(this.dni) === true);
+      console.log('dni valido?', validDni);
+      if (!validDni) return;
+      this.$apollo
         .query({
-					query: PERSONA_POR_CEDULA_QUERY,
-					          variables: {
+          query: PERSONA_POR_CEDULA_QUERY,
+          variables: {
             cedula_identidad: parseFloat(this.dni)
           }
-				}).then((response) => {
-					const datosPersona = response.data.personaPorCedula;
-					const { correo, telefono, direccion, doctor, paciente, ...persona} = datosPersona;
-					this.limpiarTodoslosCampos();
-					this.llenarCamposDePersonaExistente({correo, telefono, direccion, doctor, paciente, persona: persona});
-				}).catch((err) => {
-					// this.limpiarTodoslosCampos();
+        }).then((response) => {
+          const datosPersona = response.data.personaPorCedula;
+          const { correo, telefono, direccion, doctor, paciente, ...persona } = datosPersona;
+          this.limpiarTodoslosCampos();
+          this.llenarCamposDePersonaExistente({ correo, telefono, direccion, doctor, paciente, persona: persona });
+        }).catch((err) => {
+          // this.limpiarTodoslosCampos();
           // this.$q.notify({
           //   message: err.message.split("GraphQL error:"),
           //   color: "negative",
           // });
         });
-		},
-		llenarCamposDePersonaExistente({correo, telefono, direccion, doctor, paciente, persona}) {
-			this.fullName = persona.nombre1;
-			this.ocupacion = persona.ocupacion;
-			this.estadoCivilSeleccionado = persona.estado_civil;
-			this.correo = correo.correo;
-			this.ciudad = direccion.parroquia;
-			this.calle = direccion.calle;
-			this.numero = direccion.numero_casa;
-			this.punto_referencia = direccion.punto_referencia;
-			this.sector = direccion.sector;
-			this.codigo_postal = direccion.codigo_postal;
-			this.sexo = persona.sexo;
-			this.edad = persona.edad.toString();
-			this.codigo = telefono.codigo;
-			this.telefono = telefono.numero;
-			if (!paciente) return;
-			this.vacunasSeleccionadas = paciente.vacunas;
-			this.sangreSeleccionada = paciente.tipo_de_sangre;
-			this.enfermedades_cronicas = paciente.enfermedades_cronicas;
-			this.discapacidad = paciente.discapacidad;
-			this.antecedentes_familiares = paciente.antecedentes_familiares;
-			this.alergias = paciente.alergias;
-			this.peso = paciente.peso.toString();
-		},
-		limpiarTodoslosCampos(){
-			this.fullName = "";
-			this.ocupacion = "";
-			this.estadoCivilSeleccionado = "";
-			this.correo = "";
-			this.ciudad = "";
-			this.calle = "";
-			this.numero = "";
-			this.punto_referencia = "";
-			this.sector = "";
-			this.codigo_postal = "";
-			this.sexo = "Masculino";
-			this.edad = 0;
-			this.codigo = 414;
-			this.telefono = "";
-			this.vacunasSeleccionadas = "";
-			this.sangreSeleccionada = "";
-			this.enfermedades_cronicas = "";
-			this.discapacidad = "";
-			this.antecedentes_familiares = "";
-			this.alergias = "";
-			this.peso = null;
-		},
+    },
+    llenarCamposDePersonaExistente({ correo, telefono, direccion, doctor, paciente, persona }) {
+      this.fullName = persona.nombre1;
+      this.ocupacion = persona.ocupacion;
+      this.estadoCivilSeleccionado = persona.estado_civil;
+      this.correo = correo.correo;
+      this.ciudad = direccion.parroquia;
+      this.calle = direccion.calle;
+      this.numero = direccion.numero_casa;
+      this.punto_referencia = direccion.punto_referencia;
+      this.sector = direccion.sector;
+      this.codigo_postal = direccion.codigo_postal;
+      this.sexo = persona.sexo;
+      this.edad = persona.edad.toString();
+      this.codigo = telefono.codigo;
+      this.telefono = telefono.numero;
+      if (!paciente) return;
+      this.vacunasSeleccionadas = paciente.vacunas;
+      this.sangreSeleccionada = paciente.tipo_de_sangre;
+      this.enfermedades_cronicas = paciente.enfermedades_cronicas;
+      this.discapacidad = paciente.discapacidad;
+      this.antecedentes_familiares = paciente.antecedentes_familiares;
+      this.alergias = paciente.alergias;
+      this.peso = paciente.peso.toString();
+    },
+    limpiarTodoslosCampos() {
+      this.fullName = "";
+      this.ocupacion = "";
+      this.estadoCivilSeleccionado = "";
+      this.correo = "";
+      this.ciudad = "";
+      this.calle = "";
+      this.numero = "";
+      this.punto_referencia = "";
+      this.sector = "";
+      this.codigo_postal = "";
+      this.sexo = "Masculino";
+      this.edad = 0;
+      this.codigo = 414;
+      this.telefono = "";
+      this.vacunasSeleccionadas = "";
+      this.sangreSeleccionada = "";
+      this.enfermedades_cronicas = "";
+      this.discapacidad = "";
+      this.antecedentes_familiares = "";
+      this.alergias = "";
+      this.peso = null;
+    },
     actualizarFechasMedicamento(newVal) {
       if (!newVal) {
         this.medicamento_fechaInicio = '';
@@ -2619,9 +2639,9 @@ export default {
     validarDNI(value) {
       let isValid = true;
       if (this.edad < 18 && (!value || value === '')) {
-         // Si es menor de 18, el DNI es opcional (puede venir vacío)
-         this.valid = true;
-         return;
+        // Si es menor de 18, el DNI es opcional (puede venir vacío)
+        this.valid = true;
+        return;
       }
 
       if (!/^\d+$/.test(value)) {
@@ -2789,10 +2809,10 @@ export default {
 
     workerView(typeView) {
       if (typeView === 'searchUser') return this.modals.searchUser = true;
-			if(typeView === 'workersList') {
-				this.AllWorkers();
-				this.limpiarTodoslosCampos();
-			}
+      if (typeView === 'workersList') {
+        this.AllWorkers();
+        this.limpiarTodoslosCampos();
+      }
       this.viewType = typeView
     },
     userDetail(user) {
@@ -2829,7 +2849,7 @@ export default {
           query: MIS_PACIENTES_QUERY,
           fetchPolicy: "network-only",
           variables: {
-            id_doctor: this.$store.state.user.doctor_id
+            id_doctor: this.$store.state.user.cdi_id
           }
         })
         .then((response) => {
@@ -2918,7 +2938,7 @@ export default {
           this.$emit("updateUsers", {
             users: true,
           });
-					setTimeout(() => window.location.reload(), 2000);
+          setTimeout(() => window.location.reload(), 2000);
         })
         .catch((err) => {
           this.loader = false;
@@ -3137,7 +3157,7 @@ export default {
           this.emergencia_tiempoAtencion = null;
           this.emergencia_notasDeAtencion = '';
           this.emergencia_motivoEmergencia = '';
-					this.emergencia_fechaIngreso = '';
+          this.emergencia_fechaIngreso = '';
           this.AllPacientes()
           this.$q.notify({
             message: "Paciente enviado a emergencias",
@@ -3767,7 +3787,7 @@ export default {
           p.documento_identidad_representante === cedula
       );
       console.log('pacientes encontrados:', pacientes);
-      
+
       if (pacientes.length > 0) {
         this.users = pacientes;
         this.modals.searchUser = false;
