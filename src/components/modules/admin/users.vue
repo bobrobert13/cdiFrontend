@@ -1,6 +1,6 @@
 <template>
   <div class="row justify-center">
-   <slot></slot>
+    <slot></slot>
 
     <div class="col-12" v-if="viewType === 'userList'">
       <span class="text-accent text-h6 text-bold">Todos los pacientes ({{ users.length }})</span>
@@ -9,8 +9,8 @@
 
           <q-icon style="cursor: pointer" @click="workerView('searchUser')" name="mdi-account-search"
             class="text-primary" size="md"></q-icon>
-                      <q-icon style="cursor: pointer" @click="AllUsers()" name="mdi-refresh"
-            class="text-primary q-ml-md" size="sm"></q-icon>
+          <q-icon style="cursor: pointer" @click="AllUsers()" name="mdi-refresh" class="text-primary q-ml-md"
+            size="sm"></q-icon>
 
         </div>
       </div>
@@ -28,8 +28,9 @@
                       }}</span>
                   </q-item-label>
                   <q-item-label v-else class="text-left q-mb-xs" lines="1">
-                    <span class="text-weight-medium">Documento de representante: {{ user.documento_identidad_representante
-                      }}</span>
+                    <span class="text-weight-medium">Documento de representante: {{
+                      user.documento_identidad_representante
+                    }}</span>
                   </q-item-label>
                   <q-item-label class="text-left" lines="1">
                     <span class="text-weight-medium">Edad del paciente: {{ user.persona.edad }} años</span>
@@ -126,12 +127,20 @@
             </q-avatar>
           </q-card-section>
 
+          <q-card-section class="col-5 flex flex-center">
+            <button @click="generatePDF(dataUser)" type="button" lines="2"
+              class=" q-ml-xl q-mr-md cursor-pointer text-primary self-center text-bold" style="cursor: pointer">
+              <q-icon name="mdi-printer-pos" /> Descargar información
+            </button>
+          </q-card-section>
+
           <q-card-section v-if="dataUser.persona" class="q-pt-xs q-pb-none no-margin">
             <p class="text-subtitle text-bold text-grey-9">Detalles del paciente</p>
             <div class="text-caption text-bold q-mt-sm q-mb-xs">Paciente: {{ dataUser.persona.nombre1 }}</div>
             <div class="text-caption q-mt-sm q-mb-xs" v-if="dataUser.persona.cedula_identidad">Documento de identidad:
               {{ dataUser.persona.cedula_identidad }}</div>
-            <div class="text-caption q-mt-sm q-mb-xs" v-if="dataUser.documento_identidad_representante">Documento del representante:
+            <div class="text-caption q-mt-sm q-mb-xs" v-if="dataUser.documento_identidad_representante">Documento del
+              representante:
               {{ dataUser.documento_identidad_representante }}</div>
             <div class="text-caption q-mt-sm q-mb-xs">Edad del paciente: {{ dataUser.persona.edad }}</div>
             <div class="text-caption q-mt-sm q-mb-xs">Ocupación: {{ dataUser.persona.ocupacion }}</div>
@@ -139,10 +148,12 @@
             <div class="text-caption q-mt-sm q-mb-xs">Estado civil: {{ dataUser.persona.estado_civil }}</div>
             <div class="text-caption q-mt-sm q-mb-xs">Número de teléfono: {{ dataUser.persona.telefono.codigo }}{{
               dataUser.persona.telefono.numero }}</div>
-            <div class="text-caption q-mt-sm q-mb-xs" v-if="dataUser.persona.direccion">Dirección: {{ dataUser.persona.direccion.sector }} - {{
-              dataUser.persona.direccion.calle }} - {{ dataUser.persona.direccion.parroquia }} - {{
+            <div class="text-caption q-mt-sm q-mb-xs" v-if="dataUser.persona.direccion">Dirección: {{
+              dataUser.persona.direccion.sector }} - {{
+                dataUser.persona.direccion.calle }} - {{ dataUser.persona.direccion.parroquia }} - {{
                 dataUser.persona.direccion.municipio }} - {{ dataUser.persona.direccion.codigo_postal }}</div>
-            <div class="text-caption q-mt-sm q-mb-xs" v-if="dataUser.persona.correo">Correo electrónico: {{ dataUser.persona.correo.correo }}</div>
+            <div class="text-caption q-mt-sm q-mb-xs" v-if="dataUser.persona.correo">Correo electrónico: {{
+              dataUser.persona.correo.correo }}</div>
 
           </q-card-section>
 
@@ -166,7 +177,7 @@
             </div>
           </q-card-section>
 
-                    <q-card-section v-if="dataUser.cdi" class="q-pt-md q-pb-none no-margin">
+          <q-card-section v-if="dataUser.cdi" class="q-pt-md q-pb-none no-margin">
             <p class="text-subtitle text-bold text-grey-9">Pertenece al CDI: </p>
             <div class=" row full-width no-wrap">
               <div class=" column col-6">
@@ -227,27 +238,27 @@
       </q-card>
     </q-dialog>
 
-    		<!-- BUSCAR PACIENTE -->
-		<q-dialog v-model="modals.searchUser" style="min-width: 460px">
-			<q-card style="min-width: 460px" class="text-white">
-				<q-bar class="bg-primary">
-					<q-space />
-					<q-btn dense flat icon="close" v-close-popup>
-					</q-btn>
-				</q-bar>
-				<q-card-section>
-					<div class="text-h6 text-primary">Buscar paciente</div>
-				</q-card-section>
-				<q-card-section class="q-pt-none">
-					<q-input v-model="dni" label="Escribe el DNI del paciente" />
-				</q-card-section>
-				<q-card-actions align="right" class="text-primary">
-					<q-btn flat label="Cancelar" v-close-popup />
-					<q-btn flat label="Buscar" :disable="!dni.length" @click="buscarUsuario(dni)" />
-				</q-card-actions>
-			</q-card>
-		</q-dialog>
-		<!-- FIN BUSCAR PACIENTE -->
+    <!-- BUSCAR PACIENTE -->
+    <q-dialog v-model="modals.searchUser" style="min-width: 460px">
+      <q-card style="min-width: 460px" class="text-white">
+        <q-bar class="bg-primary">
+          <q-space />
+          <q-btn dense flat icon="close" v-close-popup>
+          </q-btn>
+        </q-bar>
+        <q-card-section>
+          <div class="text-h6 text-primary">Buscar paciente</div>
+        </q-card-section>
+        <q-card-section class="q-pt-none">
+          <q-input v-model="dni" label="Escribe el DNI del paciente" />
+        </q-card-section>
+        <q-card-actions align="right" class="text-primary">
+          <q-btn flat label="Cancelar" v-close-popup />
+          <q-btn flat label="Buscar" :disable="!dni.length" @click="buscarUsuario(dni)" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+    <!-- FIN BUSCAR PACIENTE -->
 
 
   </div>
@@ -330,7 +341,7 @@ export default {
     },
     generatePDF(user) {
       this.dataUser = user;
-      console.log("generatePDF", this.dataUser);
+      if (this.modalDetailUser) this.modalDetailUser = false;
       this.$refs.html2Pdf.generatePdf();
     },
     workerView(typeView) {
