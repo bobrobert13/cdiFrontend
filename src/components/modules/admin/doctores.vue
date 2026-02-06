@@ -12,12 +12,12 @@
         </div>
         <div class="col self-center text-right">
           <!-- <span class="text-bold text-primary" style="cursor: pointer" @click="workerView('addWorker')">Añadir doctor</span> -->
-                <q-icon style="cursor: pointer" @click="workerView('searchUser')" name="mdi-account-search"
-                  class="text-primary q-mr-md" size="md"></q-icon>
+          <q-icon style="cursor: pointer" @click="workerView('searchUser')" name="mdi-account-search"
+            class="text-primary q-mr-md" size="md"></q-icon>
           <q-icon style="cursor: pointer" @click="workerView('addWorker')" name="mdi-plus" class="text-primary"
             size="md"></q-icon>
-            					<q-icon @click="doctorsInformationsPDF()" style="cursor: pointer" name="mdi-printer-pos"
-						class="text-primary q-ml-sm" size="md"></q-icon>
+          <q-icon @click="doctorsInformationsPDF()" style="cursor: pointer" name="mdi-printer-pos"
+            class="text-primary q-ml-sm" size="md"></q-icon>
         </div>
       </div>
 
@@ -28,69 +28,72 @@
 
       <q-tab-panels v-model="tabDrEstado" animated>
         <q-tab-panel name="dr_activos">
-          	<button @click="generateDoctorsPDF()" class=" cursor-pointer q-my-sm text-primary self-center text-bold"
-						type="button"> <small style="font-size: 12px;">Descargar lista de doctores activos</small></button>
+          <button @click="generateDoctorsPDF()" class=" cursor-pointer q-my-sm text-primary self-center text-bold"
+            type="button"> <small style="font-size: 12px;">Descargar lista de doctores activos</small></button>
           <div class="row justify-center q-mt-sm" v-if="this.users.length !== 0">
-            <paginated-card-list :items="doctoresActivos" class="col-12" row-key="id_doctor" :initial-rows-per-page="10">
+            <paginated-card-list :items="doctoresActivos" class="col-12" row-key="id_doctor"
+              :initial-rows-per-page="10">
               <template v-slot:default="{ user }">
-              <q-list class="rounded-borders bg-secondary"
-                style="border-radius: 15px">
-                <q-item>
-                  <q-item-section avatar @click="userDetail(user)" style="cursor: pointer">
-                    <q-avatar color="primary" icon="mdi-doctor" text-color="white">
-                    </q-avatar>
-                  </q-item-section>
+                <q-list class="rounded-borders bg-secondary" style="border-radius: 15px">
+                  <q-item>
+                    <q-item-section avatar @click="userDetail(user)" style="cursor: pointer">
+                      <q-avatar color="primary" icon="mdi-doctor" text-color="white">
+                      </q-avatar>
+                    </q-item-section>
 
-                  <q-item-section v-if="user.persona" top @click="userDetail(user)" style="cursor: pointer">
-                    <q-item-label class="text-left q-mb-xs" lines="1">
-                      <span class="text-weight-medium">Nombre de doctor: <b>{{
-                        user.persona.nombre1
-                          }}</b></span>
-                    </q-item-label>
-                    <small class="text-weight-medium text-left">usuario: {{ user.usuarios.nombre_usuario
-                      }}</small>
-                    <small class="text-weight-medium text-left">Rol: {{ user.usuarios.rol }}</small>
-                    <small class="text-weight-medium text-left">Documento de identidad: {{
-                      user.persona.cedula_identidad
-                      }}</small>
-                    <small v-if="user.persona.telefono" class="text-weight-medium text-left">Número de teléfono: {{
-                      user.persona.telefono.codigo
-                      }}-{{
-                      user.persona.telefono.numero
-                      }}</small>
-                    <small class="text-weight-medium text-left">Estatus de usuario: <b>{{
-                      user.usuarios.estado
-                        }}</b></small>
-                    <q-separator spaced />
-                    <div v-if="user.usuarios.cdi" class="text-left column">
-                      <small class="text-weight-medium text-left">Corresponde al CDI: {{
-                        user.usuarios.cdi.nombre }}</small>
-                      <small class="text-weight-medium text-left">Código de CDI: {{
-                        user.usuarios.cdi.numero_cdi }}</small>
-                      <small class="text-weight-medium text-left">Estatus del CDI: <b>{{
-                        user.usuarios.estado }}</b></small>
-                    </div>
-                  </q-item-section>
-                  <q-item-section side>
-                    <div class="text-grey-8 q-gutter-xs">
-                      <button @click="generatePDF(user)" type="button" lines="2"
-                        class=" q-ml-xl q-mr-md cursor-pointer text-primary self-center text-bold"
-                        style="cursor: pointer">
-                        <q-icon name="mdi-printer-pos" /> Descargar información
-                      </button>
-                      <q-btn
-                        @click="actualizarUsuario({ ...user.usuarios, estado: user.usuarios.estado === 'activo' ? 'inactivo' : 'activo' })"
-                        class="gt-xs text-negative" size="12px" flat dense
-                        :label="user.usuarios.estado === 'activo' ? 'Inhabilitar' : 'Habilitar'" />
+                    <q-item-section v-if="user.persona" top @click="userDetail(user)" style="cursor: pointer">
+                      <q-item-label class="text-left q-mb-xs" lines="1">
+                        <span class="text-weight-medium">Nombre de doctor: <b>{{
+                          user.persona.nombre1
+                            }}</b></span>
+                      </q-item-label>
+                      <q-item-label class="text-left q-mb-xs" lines="1">
+                        <small class="text-weight-medium text-left">Edad del doctor: <b>{{
+                          user.persona.edad || 'No disponible'
+                            }}</b></small>
+                      </q-item-label>
+                      <small class="text-weight-medium text-left">usuario: {{ user.usuarios.nombre_usuario
+                        }}</small>
+                      <small class="text-weight-medium text-left">Rol: {{ user.usuarios.rol }}</small>
+                      <small class="text-weight-medium text-left">Documento de identidad: {{
+                        user.persona.cedula_identidad
+                        }}</small>
+                      <small v-if="user.persona.telefono" class="text-weight-medium text-left">Número de teléfono: {{
+                        user.persona.telefono.codigo
+                        }}-{{
+                          user.persona.telefono.numero
+                        }}</small>
+                      <small class="text-weight-medium text-left">Estatus de usuario: <b>{{
+                        user.usuarios.estado
+                          }}</b></small>
+                      <q-separator spaced />
+                      <div v-if="user.usuarios.cdi" class="text-left column">
+                        <small class="text-weight-medium text-left">Corresponde al CDI: {{
+                          user.usuarios.cdi.nombre }}</small>
+                        <small class="text-weight-medium text-left">Código de CDI: {{
+                          user.usuarios.cdi.numero_cdi }}</small>
+                        <small class="text-weight-medium text-left">Estatus del CDI: <b>{{
+                          user.usuarios.estado }}</b></small>
+                      </div>
+                    </q-item-section>
+                    <q-item-section side>
+                      <div class="text-grey-8 q-gutter-xs">
+                        <button @click="generatePDF(user)" type="button" lines="2"
+                          class=" q-ml-xl q-mr-md cursor-pointer text-primary self-center text-bold"
+                          style="cursor: pointer">
+                          <q-icon name="mdi-printer-pos" /> Descargar información
+                        </button>
                         <q-btn
-                        @click="setUpdateWorkerData(user)"
-                        class=" text-primary" size="12px" flat dense
-                        label="Editar" />
-                    </div>
-                  </q-item-section>
-                </q-item>
-              </q-list>
-            </template>
+                          @click="actualizarUsuario({ ...user.usuarios, estado: user.usuarios.estado === 'activo' ? 'inactivo' : 'activo' })"
+                          class="gt-xs text-negative" size="12px" flat dense
+                          :label="user.usuarios.estado === 'activo' ? 'Inhabilitar' : 'Habilitar'" />
+                        <q-btn @click="setUpdateWorkerData(user)" class=" text-primary" size="12px" flat dense
+                          label="Editar" />
+                      </div>
+                    </q-item-section>
+                  </q-item>
+                </q-list>
+              </template>
             </paginated-card-list>
           </div>
           <div class="row" v-else>
@@ -100,67 +103,65 @@
           </div>
         </q-tab-panel>
         <q-tab-panel name="dr_inactivos">
-          	<button @click="generateDoctorsPDF()" class=" cursor-pointer q-my-sm text-primary self-center text-bold"
-						type="button"> <small style="font-size: 12px;">Descargar lista de doctores inactivos</small></button>
+          <button @click="generateDoctorsPDF()" class=" cursor-pointer q-my-sm text-primary self-center text-bold"
+            type="button"> <small style="font-size: 12px;">Descargar lista de doctores inactivos</small></button>
           <div class="row justify-center " v-if="this.users.length !== 0">
-            <paginated-card-list :items="doctoresInactivos" class="col-12" row-key="id_doctor" :initial-rows-per-page="10">
+            <paginated-card-list :items="doctoresInactivos" class="col-12" row-key="id_doctor"
+              :initial-rows-per-page="10">
               <template v-slot:default="{ user }">
-              <q-list class="rounded-borders bg-secondary"
-                style="border-radius: 15px">
-                <q-item>
-                  <q-item-section avatar @click="userDetail(user)" style="cursor: pointer">
-                    <q-avatar color="primary" icon="mdi-doctor" text-color="white">
-                    </q-avatar>
-                  </q-item-section>
+                <q-list class="rounded-borders bg-secondary" style="border-radius: 15px">
+                  <q-item>
+                    <q-item-section avatar @click="userDetail(user)" style="cursor: pointer">
+                      <q-avatar color="primary" icon="mdi-doctor" text-color="white">
+                      </q-avatar>
+                    </q-item-section>
 
-                  <q-item-section v-if="user.persona" top @click="userDetail(user)" style="cursor: pointer">
-                    <q-item-label class="text-left q-mb-xs" lines="1">
-                      <span class="text-weight-medium">Nombre de doctor: <b>{{
-                        user.persona.nombre1
-                          }}</b></span>
-                    </q-item-label>
-                    <small class="text-weight-medium text-left">usuario: {{ user.usuarios.nombre_usuario
-                      }}</small>
-                    <small class="text-weight-medium text-left">Rol: {{ user.usuarios.rol }}</small>
-                    <small class="text-weight-medium text-left">Documento de identidad: {{
-                      user.persona.cedula_identidad
-                      }}</small>
-                    <small v-if="user.persona.telefono" class="text-weight-medium text-left">Número de teléfono: {{
-                      user.persona.telefono.numero
-                      }}</small>
-                    <small class="text-weight-medium text-left">Estatus de usuario: <b>{{
-                      user.usuarios.estado
-                        }}</b></small>
-                    <q-separator spaced />
-                    <div v-if="user.usuarios.cdi" class="text-left column">
-                      <small class="text-weight-medium text-left">Corresponde al CDI: {{
-                        user.usuarios.cdi.nombre }}</small>
-                      <small class="text-weight-medium text-left">Código de CDI: {{
-                        user.usuarios.cdi.numero_cdi }}</small>
-                      <small class="text-weight-medium text-left">Estatus del CDI: <b>{{
-                        user.usuarios.estado }}</b></small>
-                    </div>
-                  </q-item-section>
-                  <q-item-section side>
-                    <div class="text-grey-8 q-gutter-xs">
-                      <button @click="generatePDF(user)" type="button" lines="2"
-                        class=" q-ml-xl q-mr-md cursor-pointer text-primary self-center text-bold"
-                        style="cursor: pointer">
-                        <q-icon name="mdi-printer-pos" /> Descargar información
-                      </button>
-                      <q-btn
-                        @click="actualizarUsuario({ ...user.usuarios, estado: user.usuarios.estado === 'activo' ? 'inactivo' : 'activo' })"
-                        class="gt-xs text-negative" size="12px" flat dense
-                        :label="user.usuarios.estado === 'activo' ? 'Inhabilitar' : 'Habilitar'" />
+                    <q-item-section v-if="user.persona" top @click="userDetail(user)" style="cursor: pointer">
+                      <q-item-label class="text-left q-mb-xs" lines="1">
+                        <span class="text-weight-medium">Nombre de doctor: <b>{{
+                          user.persona.nombre1
+                            }}</b></span>
+                      </q-item-label>
+                      <small class="text-weight-medium text-left">usuario: {{ user.usuarios.nombre_usuario
+                        }}</small>
+                      <small class="text-weight-medium text-left">Rol: {{ user.usuarios.rol }}</small>
+                      <small class="text-weight-medium text-left">Documento de identidad: {{
+                        user.persona.cedula_identidad
+                        }}</small>
+                      <small v-if="user.persona.telefono" class="text-weight-medium text-left">Número de teléfono: {{
+                        user.persona.telefono.numero
+                        }}</small>
+                      <small class="text-weight-medium text-left">Estatus de usuario: <b>{{
+                        user.usuarios.estado
+                          }}</b></small>
+                      <q-separator spaced />
+                      <div v-if="user.usuarios.cdi" class="text-left column">
+                        <small class="text-weight-medium text-left">Corresponde al CDI: {{
+                          user.usuarios.cdi.nombre }}</small>
+                        <small class="text-weight-medium text-left">Código de CDI: {{
+                          user.usuarios.cdi.numero_cdi }}</small>
+                        <small class="text-weight-medium text-left">Estatus del CDI: <b>{{
+                          user.usuarios.estado }}</b></small>
+                      </div>
+                    </q-item-section>
+                    <q-item-section side>
+                      <div class="text-grey-8 q-gutter-xs">
+                        <button @click="generatePDF(user)" type="button" lines="2"
+                          class=" q-ml-xl q-mr-md cursor-pointer text-primary self-center text-bold"
+                          style="cursor: pointer">
+                          <q-icon name="mdi-printer-pos" /> Descargar información
+                        </button>
                         <q-btn
-                        @click="setUpdateWorkerData(user)"
-                        class=" text-primary" size="12px" flat dense
-                        label="Editar" />
-                    </div>
-                  </q-item-section>
-                </q-item>
-              </q-list>
-            </template>
+                          @click="actualizarUsuario({ ...user.usuarios, estado: user.usuarios.estado === 'activo' ? 'inactivo' : 'activo' })"
+                          class="gt-xs text-negative" size="12px" flat dense
+                          :label="user.usuarios.estado === 'activo' ? 'Inhabilitar' : 'Habilitar'" />
+                        <q-btn @click="setUpdateWorkerData(user)" class=" text-primary" size="12px" flat dense
+                          label="Editar" />
+                      </div>
+                    </q-item-section>
+                  </q-item>
+                </q-list>
+              </template>
             </paginated-card-list>
           </div>
           <div class="row" v-else>
@@ -200,169 +201,180 @@
     </div>
 
 
-            <!-- CREAR UN NUEVO DOCTOR -->
-            <div  v-if="viewType === 'addWorker'">
-              <div class="col-12  text-left row items-center q-mt-md q-mb-md">
-                <q-icon style="cursor: pointer" @click="workerView('userList')" name="mdi-arrow-left"
-                  class="text-primary" size="md"></q-icon>
-                <span style="cursor: pointer" class="text-bold text-accent text-h6"
-                  @click="workerView('userList')">Crear nuevo
-                  doctor</span>
+    <!-- CREAR UN NUEVO DOCTOR -->
+    <div v-if="viewType === 'addWorker'">
+      <div class="col-12  text-left row items-center q-mt-md q-mb-md">
+        <q-icon style="cursor: pointer" @click="workerView('userList')" name="mdi-arrow-left" class="text-primary"
+          size="md"></q-icon>
+        <span style="cursor: pointer" class="text-bold text-accent text-h6" @click="workerView('userList')">Crear nuevo
+          doctor</span>
+      </div>
+      <small class="q-my-md block text-red text-bold"> <q-icon name="mdi-information" class="q-mr-xs" size="sm"
+          color="primary" />Los campos marcados con * son obligatorios</small>
+
+      <div class="col-7">
+        <div class="column justify-center">
+          <q-input filled color="deep-purple-6" v-model="fullName"
+            label="Nombre completo (Primero nombres y luego apellidos) *" :rules="fullNameRules" />
+
+          <q-select filled class="q-mb-xs" v-model="nacionalidad" :options="nacionalidades" option-label="label"
+            option-value="value" emit-value label="Nacionalidad*" />
+
+          <q-input filled color="deep-purple-6" type="number" v-model="dni" :rules="dniRules" label="Cédula*" />
+
+          <q-input type="email" filled v-model="email" label="Correo electrónico*" :rules="emailRules" />
+
+          <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-pb-xs ">
+            <q-select filled v-model="sexo" :options="sexoDoctor" label="Sexo*" option-label="label"
+              option-value="value" emit-value :rules="requiredSelectRules" />
+          </div>
+          <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-pb-xs ">
+            <q-select filled label="Estado civil*" v-model="estadoCivilSeleccionado" :options="estado_civil"
+              :rules="requiredSelectRules" />
+          </div>
+
+          <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-pb-xs ">
+            <q-input type="text" filled v-model="edad" label="Edad*" :rules="ageRules" />
+          </div>
+
+
+          <div class="row q-mb-xs">
+            <div class="col-8">
+              <q-select filled label="Estado*" v-model="estado" :options="estados" option-label="label"
+                option-value="value" :rules="requiredSelectRules" />
+            </div>
+            <div class="col-4">
+              <q-select filled label="Ciudad*" v-model="ciudad" :options="ciudades[estado.value]" option-label="label"
+                option-value="value" emit-value :rules="requiredSelectRules" />
+            </div>
+          </div>
+          <div class="row q-mb-xs">
+            <div class="col-8">
+              <q-input filled color="deep-purple-6" v-model="calle" label="Calle*" :rules="requiredSelectRules" />
+            </div>
+            <div class="col-4">
+              <q-input filled color="deep-purple-6" v-model="numero" label="Número de casa*" type="number"
+                :rules="houseNumberRules" />
+            </div>
+          </div>
+          <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-mb-xs">
+            <q-input filled color="deep-purple-6" v-model="sector" label="Sector*" :rules="requiredSelectRules" />
+          </div>
+          <div class="col-xl-8 col-lg-8 col-md-8 q-pb-xs col-sm-12 col-xs-12 ">
+            <q-input filled color="deep-purple-6" v-model="punto_referencia" label="Punto de referencia*"
+              :rules="requiredSelectRules" />
+          </div>
+          <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-mb-xs">
+            <q-input filled color="deep-purple-6" type="number" :rules="postalCodeRules" v-model="codigo_postal"
+              label="Código postal*" />
+          </div>
+          <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-mb-xs">
+            <div class="row">
+              <div class="col-4">
+                <q-select filled v-model="codigo" :options="codigoTel" label="Codigo*" option-label="label"
+                  option-value="value" emit-value />
               </div>
-              <small class="q-my-md block text-red text-bold"> <q-icon name="mdi-information" class="q-mr-xs" size="sm"
-                  color="primary" />Los campos marcados con * son obligatorios</small>
-
-              <div class="col-7">
-                <div class="column justify-center">
-                  <q-input filled color="deep-purple-6" v-model="fullName" label="Nombre completo (Primero nombres y luego apellidos) *" :rules="fullNameRules" />
-
-                  <q-select filled class="q-mb-xs" v-model="nacionalidad" :options="nacionalidades" option-label="label"
-                    option-value="value" emit-value label="Nacionalidad*" />
-
-                  <q-input filled color="deep-purple-6" type="number" v-model="dni" :rules="dniRules" label="Cédula*" />
-
-                  <q-input type="email" filled v-model="email" label="Correo electrónico*" :rules="emailRules" />
-
-                                                      <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-pb-xs ">
-                    <q-select filled v-model="sexo" :options="sexoDoctor" label="Sexo*" option-label="label"
-                      option-value="value" emit-value :rules="requiredSelectRules" />
-                  </div>
-                                    <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-pb-xs ">
-                                          <q-select filled label="Estado civil*" v-model="estadoCivilSeleccionado" :options="estado_civil"
-                          :rules="requiredSelectRules" />
-                          </div>
-
-                          <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-pb-xs ">
-         <q-input type="text" filled v-model="edad" label="Edad*" :rules="ageRules" />
-                          </div>
-
-
-                  <div class="row q-mb-xs">
-                    <div class="col-8">
-                      <q-select filled label="Estado*" v-model="estado" :options="estados" option-label="label"
-                        option-value="value" :rules="requiredSelectRules" />
-                    </div>
-                    <div class="col-4">
-                      <q-select filled label="Ciudad*" v-model="ciudad" :options="ciudades[estado.value]"
-                        option-label="label" option-value="value" emit-value :rules="requiredSelectRules" />
-                    </div>
-                  </div>
-                  <div class="row q-mb-xs">
-                    <div class="col-8">
-                      <q-input filled color="deep-purple-6" v-model="calle" label="Calle*" :rules="requiredSelectRules" />
-                    </div>
-                    <div class="col-4">
-                      <q-input filled color="deep-purple-6" v-model="numero" label="Número de casa*" type="number" :rules="houseNumberRules" />
-                    </div>
-                  </div>
-                  <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-mb-xs">
-                    <q-input filled color="deep-purple-6" v-model="sector" label="Sector*" :rules="requiredSelectRules" />
-                  </div>
-                  <div class="col-xl-8 col-lg-8 col-md-8 q-pb-xs col-sm-12 col-xs-12 ">
-                    <q-input filled color="deep-purple-6" v-model="punto_referencia" label="Punto de referencia*" :rules="requiredSelectRules" />
-                  </div>
-                  <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-mb-xs">
-                    <q-input filled color="deep-purple-6" type="number" :rules="postalCodeRules" v-model="codigo_postal" label="Código postal*" />
-                  </div>
-                  <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-mb-xs">
-                    <div class="row">
-                      <div class="col-4">
-                        <q-select filled v-model="codigo" :options="codigoTel" label="Codigo*" option-label="label"
-                          option-value="value" emit-value  />
-                      </div>
-                      <div class="col-8">
-                        <q-input filled color="deep-purple-6" :rules="telefonoRules" v-model="telefono" type="number" label="Número de telefono*" />
-                      </div>
-                    </div>
-                  </div>
-
-                </div>
+              <div class="col-8">
+                <q-input filled color="deep-purple-6" :rules="telefonoRules" v-model="telefono" type="number"
+                  label="Número de telefono*" />
               </div>
-              <div class="col-7" style="border-left: 10px solid white;">
-                <div class="column justify-center">
-                  <p class="text-h6 q-my-md text-weight-medium text-accent">Información del doctor</p>
-                  <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 ">
-                    <q-input filled color="deep-purple-6" type="text" class="q-mb-xs" v-model="doctor_numero_carnet"
-                      label="Número de carnet*" :rules="carnetRules" />
-                    <q-input filled color="deep-purple-6" type="text" class="q-mb-xs hidden" v-model="doctor_ocupacion"
-                      label="Ocupación*" :rules="ocupacionRules" />
-                    <q-select filled color="deep-purple-6" type="text" class="q-mb-xs" v-model="doctor_horario"
-                      label="Horario*" :options="[
-                        'Lunes a Viernes 8:00 am - 6:00 pm',
-                        'Lunes a Viernes 9:00 am - 5:00 pm',
-                        'Lunes a Viernes 10:00 am - 4:00 pm',
-                        'Sábados 9:00 am - 1:00 pm',
-                        'Sábados 10:00 am - 2:00 pm',
-                        'Domingos 10:00 am - 2:00 pm',
-                        'Lunes, Miércoles y Viernes 8:00 am - 5:00 pm',
-                        'Martes y Jueves 10:00 am - 6:00 pm',
-                        'Lunes a Viernes 8:00 am - 12:00 pm y 1:00 pm - 5:00 pm'
-                      ]" :rules="horarioRules" />
-                    <q-input filled color="deep-purple-6" type="number" class="q-mb-xs"
-                      v-model="doctor_anos_experiencia" label="Años de experiencia*" :rules="anosExperienciaRules" />
-                    <q-select filled v-model="roleEspecialidad" :options="roleUserEspecialidad" label="Area de trabajo*"
-                      option-label="label" option-value="id" :rules="especialidadRules" />
+            </div>
+          </div>
 
-                                  <q-select filled color="deep-purple-6" class="q-mb-xs" v-model="cdiSeleccionado" label="Asignar al CDI*"
+        </div>
+      </div>
+      <div class="col-7" style="border-left: 10px solid white;">
+        <div class="column justify-center">
+          <p class="text-h6 q-my-md text-weight-medium text-accent">Información del doctor</p>
+          <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 ">
+            <q-input filled color="deep-purple-6" type="text" class="q-mb-xs" v-model="doctor_numero_carnet"
+              label="Número de carnet*" :rules="carnetRules" />
+            <q-input filled color="deep-purple-6" type="text" class="q-mb-xs hidden" v-model="doctor_ocupacion"
+              label="Ocupación*" :rules="ocupacionRules" />
+            <q-select filled color="deep-purple-6" type="text" class="q-mb-xs" v-model="doctor_horario" label="Horario*"
+              :options="[
+                'Lunes a Viernes 8:00 am - 6:00 pm',
+                'Lunes a Viernes 9:00 am - 5:00 pm',
+                'Lunes a Viernes 10:00 am - 4:00 pm',
+                'Sábados 9:00 am - 1:00 pm',
+                'Sábados 10:00 am - 2:00 pm',
+                'Domingos 10:00 am - 2:00 pm',
+                'Lunes, Miércoles y Viernes 8:00 am - 5:00 pm',
+                'Martes y Jueves 10:00 am - 6:00 pm',
+                'Lunes a Viernes 8:00 am - 12:00 pm y 1:00 pm - 5:00 pm'
+              ]" :rules="horarioRules" />
+            <q-input filled color="deep-purple-6" type="number" class="q-mb-xs" v-model="doctor_anos_experiencia"
+              label="Años de experiencia*" :rules="anosExperienciaRules" />
+            <q-select filled v-model="roleEspecialidad" :options="roleUserEspecialidad" label="Area de trabajo*"
+              option-label="label" option-value="id" :rules="especialidadRules" />
+
+            <q-select filled color="deep-purple-6" class="q-mb-xs" v-model="cdiSeleccionado" label="Asignar al CDI*"
               :options="cdisList" :rules="requiredSelectRules" />
-                  </div>
+          </div>
 
 
-                  <p class="text-h6 q-my-md text-weight-medium text-accent">Credenciales de acceso</p>
-                  <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 ">
+          <p class="text-h6 q-my-md text-weight-medium text-accent">Credenciales de acceso</p>
+          <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 ">
 
-                    <q-select filled v-model="role" :options="roleUser" class="q-mb-sm" label="Tipo de usuario*"
-                      option-label="label" option-value="value" emit-value disable />
-                    <q-input filled color="deep-purple-6" class="" type="text" autocomplete="off"
-                      v-model="doctor_nombre_usuario" label="Nombre de usuario*" :rules="nombreUsuarioRules" />
+            <q-select filled v-model="role" :options="roleUser" class="q-mb-sm" label="Tipo de usuario*"
+              option-label="label" option-value="value" emit-value disable />
+            <q-input filled color="deep-purple-6" class="" type="text" autocomplete="off"
+              v-model="doctor_nombre_usuario" label="Nombre de usuario*" :rules="nombreUsuarioRules" />
 
-                    <q-input filled class="q-mt-md" autocomplete="off" :type="isPwd ? 'password' : 'text'"
-                      color="deep-purple-6" v-model="password" label="Password*" :rules="passwordRules">
-                      <template v-slot:append>
-                        <q-icon :name="isPwd ? 'visibility_off' : 'visibility'" class="cursor-pointer"
-                          @click="isPwd = !isPwd" />
-                      </template>
-                    </q-input>
+            <q-input filled class="q-mt-md" autocomplete="off" :type="isPwd ? 'password' : 'text'" color="deep-purple-6"
+              v-model="password" label="Password*" :rules="passwordRules">
+              <template v-slot:append>
+                <q-icon :name="isPwd ? 'visibility_off' : 'visibility'" class="cursor-pointer"
+                  @click="isPwd = !isPwd" />
+              </template>
+            </q-input>
 
-                  </div>
+          </div>
 
-                </div>
-              </div>
+        </div>
+      </div>
 
-              <div class="col-xl-5 col-lg-5 col-md-5 col-sm-12 col-xs-12 q-mb-xs ">
-              <q-btn unelevated type='submit' :loading="loader" @click="addDoctor()" :disable="!formHasNoErrors" class="full-width text-white bg-primary" label="Añadir doctor" />
-            </div>
-            </div>
-            <!-- FIN CREAR NUEVO DOCTOR -->
+      <div class="col-xl-5 col-lg-5 col-md-5 col-sm-12 col-xs-12 q-mb-xs ">
+        <q-btn unelevated type='submit' :loading="loader" @click="addDoctor()" :disable="!formHasNoErrors"
+          class="full-width text-white bg-primary" label="Añadir doctor" />
+      </div>
+    </div>
+    <!-- FIN CREAR NUEVO DOCTOR -->
 
 
 
 
-                        <!-- ACTUALIZAR EL DOCTOR -->
-            <div  v-if="viewType === 'updateWorker'">
-              <div class="col-12  text-left row items-center q-mt-md q-mb-md">
-                <q-icon style="cursor: pointer" @click="workerView('userList')" name="mdi-arrow-left"
-                  class="text-primary" size="md"></q-icon>
-                <span style="cursor: pointer" class="text-bold text-accent text-h6"
-                  @click="workerView('userList')">Actualizar
-                  doctor</span>
-              </div>
-              <small class="q-my-md block text-red text-bold"> <q-icon name="mdi-information" class="q-mr-xs" size="sm"
-                  color="primary" />Los campos marcados con * son obligatorios</small>
+    <!-- ACTUALIZAR EL DOCTOR -->
+    <div v-if="viewType === 'updateWorker'">
+      <div class="col-12  text-left row items-center q-mt-md q-mb-md">
+        <q-icon style="cursor: pointer" @click="workerView('userList')" name="mdi-arrow-left" class="text-primary"
+          size="md"></q-icon>
+        <span style="cursor: pointer" class="text-bold text-accent text-h6" @click="workerView('userList')">Actualizar
+          doctor</span>
+      </div>
+      <small class="q-my-md block text-red text-bold"> <q-icon name="mdi-information" class="q-mr-xs" size="sm"
+          color="primary" />Los campos marcados con * son obligatorios</small>
 
-                <div class="col-7">
-                <div class="column justify-center">
-                  <q-input filled color="deep-purple-6" v-model="dataUser.persona.nombre1" label="Nombre completo (Primero nombres y luego apellidos) *" :rules="fullNameRules" />
+      <div class="col-7">
+        <div class="column justify-center">
+          <q-input filled color="deep-purple-6" v-model="dataUser.persona.nombre1"
+            label="Nombre completo (Primero nombres y luego apellidos) *" :rules="fullNameRules" />
 
-                  <q-select filled class="q-mb-xs" v-model="dataUser.persona.nacionalidad" :options="nacionalidades" option-label="label"
-                  option-value="value" emit-value label="Nacionalidad*" />
+          <q-select filled class="q-mb-xs" v-model="dataUser.persona.nacionalidad" :options="nacionalidades"
+            option-label="label" option-value="value" emit-value label="Nacionalidad*" />
 
-                  <q-input filled color="deep-purple-6" type="number" v-model="dataUser.persona.cedula_identidad" :rules="dniRules" label="Cédula*" />
+          {{ dataUser }}
 
-                  <q-input type="email" filled v-model="dataUser.persona.correo.correo" label="Correo electrónico*" :rules="emailRules" />
+          <q-input filled color="deep-purple-6" type="number" v-model="dataUser.persona.cedula_identidad"
+            :rules="dniRules" label="Cédula*" />
 
-                  <div class="row q-mb-xs">
-                  <!-- <div class="col-8">
+          <q-input filled color="deep-purple-6 q-mb-md" type="number" v-model="dataUser.persona.edad" label="Edad*" />
+
+          <q-input type="email" filled v-model="dataUser.persona.correo.correo" label="Correo electrónico*"
+            :rules="emailRules" />
+
+          <div class="row q-mb-xs">
+            <!-- <div class="col-8">
                     <q-select filled label="Estado*" v-model="dataUser.persona.direccion.estado" :options="estados" option-label="label"
                     option-value="value" emit-value :rules="requiredSelectRules" />
                   </div>
@@ -370,72 +382,79 @@
                     <q-select filled label="Ciudad*" v-model="dataUser.persona.direccion.parroquia"
                     :options="ciudades[dataUser.persona.direccion.estado]" emit-value :rules="requiredSelectRules" />
                   </div> -->
-                  </div>
-                  <div class="row q-mb-xs">
-                  <div class="col-8">
-                    <q-input filled color="deep-purple-6" v-model="dataUser.persona.direccion.calle" label="Calle*" :rules="requiredSelectRules" />
-                  </div>
-                  <div class="col-4">
-                    <q-input filled color="deep-purple-6" v-model="dataUser.persona.direccion.numero_casa" label="Número de casa*" type="number" :rules="houseNumberRules" />
-                  </div>
-                  </div>
-                  <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-mb-xs">
-                  <q-input filled color="deep-purple-6" v-model="dataUser.persona.direccion.sector" label="Sector*" :rules="requiredSelectRules" />
-                  </div>
-                  <div class="col-xl-8 col-lg-8 col-md-8 q-pb-xs col-sm-12 col-xs-12 ">
-                  <q-input filled color="deep-purple-6" v-model="dataUser.persona.direccion.punto_referencia" label="Punto de referencia*" :rules="requiredSelectRules" />
-                  </div>
-                  <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-mb-xs">
-                  <q-input filled color="deep-purple-6" type="number" :rules="postalCodeRules" v-model="dataUser.persona.direccion.codigo_postal" label="Código postal*" />
-                  </div>
-                  <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-mb-xs">
-                  <div class="row">
-                    <div class="col-4">
-                    <q-select filled v-model="dataUser.persona.telefono.codigo" :options="codigoTel" label="Codigo*" option-label="label"
-                      option-value="value" emit-value  />
-                    </div>
-                    <div class="col-8">
-                    <q-input filled color="deep-purple-6" :rules="telefonoRules" v-model="dataUser.persona.telefono.numero" type="number" label="Número de telefono*" />
-                    </div>
-                  </div>
-                  </div>
-
-                </div>
-                </div>
-                <div class="col-7" style="border-left: 10px solid white;">
-                <div class="column justify-center">
-                  <p class="text-h6 q-my-md text-weight-medium text-accent">Información del doctor</p>
-                  <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 ">
-                  <q-input filled color="deep-purple-6" type="text" class="q-mb-xs" v-model="dataUser.numero_carnet"
-                    label="Número de carnet*" :rules="carnetRules" />
-                  <q-input filled color="deep-purple-6" type="text" class="q-mb-xs hidden" v-model="dataUser.ocupacion"
-                    label="Ocupación*" :rules="ocupacionRules" />
-                  <q-select filled color="deep-purple-6" type="text" class="q-mb-xs" v-model="dataUser.horario"
-                    label="Horario*" :options="[
-                    'Lunes a Viernes 8:00 am - 6:00 pm',
-                    'Lunes a Viernes 9:00 am - 5:00 pm',
-                    'Lunes a Viernes 10:00 am - 4:00 pm',
-                    'Sábados 9:00 am - 1:00 pm',
-                    'Sábados 10:00 am - 2:00 pm',
-                    'Domingos 10:00 am - 2:00 pm',
-                    'Lunes, Miércoles y Viernes 8:00 am - 5:00 pm',
-                    'Martes y Jueves 10:00 am - 6:00 pm',
-                    'Lunes a Viernes 8:00 am - 12:00 pm y 1:00 pm - 5:00 pm'
-                    ]" :rules="horarioRules" />
-                  <q-input filled color="deep-purple-6" type="number" class="q-mb-xs"
-                    v-model="dataUser.anos_experiencia" label="Años de experiencia*" :rules="anosExperienciaRules" />
-                  <q-select filled v-model="dataUser.area_de_trabajo" :options="roleUserEspecialidad" label="Area de trabajo*"
-                    option-label="label" option-value="value" emit-value :rules="especialidadRules" />
-                  </div>
-
-                </div>
-                </div>
-
-              <div class="col-xl-5 col-lg-5 col-md-5 col-sm-12 col-xs-12 q-mb-xs ">
-              <q-btn unelevated type='submit' :loading="loader" @click="actualizarDoctor(dataUser)" :disable="!formUpdateHasNoErrors" class="full-width text-white bg-primary" label="Añadir doctor" />
+          </div>
+          <div class="row q-mb-xs">
+            <div class="col-8">
+              <q-input filled color="deep-purple-6" v-model="dataUser.persona.direccion.calle" label="Calle*"
+                :rules="requiredSelectRules" />
             </div>
+            <div class="col-4">
+              <q-input filled color="deep-purple-6" v-model="dataUser.persona.direccion.numero_casa"
+                label="Número de casa*" type="number" :rules="houseNumberRules" />
             </div>
-            <!-- FIN ACTUALIZAR DOCTOR -->
+          </div>
+          <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-mb-xs">
+            <q-input filled color="deep-purple-6" v-model="dataUser.persona.direccion.sector" label="Sector*"
+              :rules="requiredSelectRules" />
+          </div>
+          <div class="col-xl-8 col-lg-8 col-md-8 q-pb-xs col-sm-12 col-xs-12 ">
+            <q-input filled color="deep-purple-6" v-model="dataUser.persona.direccion.punto_referencia"
+              label="Punto de referencia*" :rules="requiredSelectRules" />
+          </div>
+          <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-mb-xs">
+            <q-input filled color="deep-purple-6" type="number" :rules="postalCodeRules"
+              v-model="dataUser.persona.direccion.codigo_postal" label="Código postal*" />
+          </div>
+          <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-mb-xs">
+            <div class="row">
+              <div class="col-4">
+                <q-select filled v-model="dataUser.persona.telefono.codigo" :options="codigoTel" label="Codigo*"
+                  option-label="label" option-value="value" emit-value />
+              </div>
+              <div class="col-8">
+                <q-input filled color="deep-purple-6" :rules="telefonoRules" v-model="dataUser.persona.telefono.numero"
+                  type="number" label="Número de telefono*" />
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="col-7" style="border-left: 10px solid white;">
+        <div class="column justify-center">
+          <p class="text-h6 q-my-md text-weight-medium text-accent">Información del doctor</p>
+          <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 ">
+            <q-input filled color="deep-purple-6" type="text" class="q-mb-xs" v-model="dataUser.numero_carnet"
+              label="Número de carnet*" :rules="carnetRules" />
+            <q-input filled color="deep-purple-6" type="text" class="q-mb-xs hidden" v-model="dataUser.ocupacion"
+              label="Ocupación*" :rules="ocupacionRules" />
+            <q-select filled color="deep-purple-6" type="text" class="q-mb-xs" v-model="dataUser.horario"
+              label="Horario*" :options="[
+                'Lunes a Viernes 8:00 am - 6:00 pm',
+                'Lunes a Viernes 9:00 am - 5:00 pm',
+                'Lunes a Viernes 10:00 am - 4:00 pm',
+                'Sábados 9:00 am - 1:00 pm',
+                'Sábados 10:00 am - 2:00 pm',
+                'Domingos 10:00 am - 2:00 pm',
+                'Lunes, Miércoles y Viernes 8:00 am - 5:00 pm',
+                'Martes y Jueves 10:00 am - 6:00 pm',
+                'Lunes a Viernes 8:00 am - 12:00 pm y 1:00 pm - 5:00 pm'
+              ]" :rules="horarioRules" />
+            <q-input filled color="deep-purple-6" type="number" class="q-mb-xs" v-model="dataUser.anos_experiencia"
+              label="Años de experiencia*" :rules="anosExperienciaRules" />
+            <q-select filled v-model="dataUser.area_de_trabajo" :options="roleUserEspecialidad" label="Area de trabajo*"
+              option-label="label" option-value="value" emit-value :rules="especialidadRules" />
+          </div>
+
+        </div>
+      </div>
+
+      <div class="col-xl-5 col-lg-5 col-md-5 col-sm-12 col-xs-12 q-mb-xs ">
+        <q-btn unelevated type='submit' :loading="loader" @click="actualizarDoctor(dataUser)"
+          :disable="!formUpdateHasNoErrors" class="full-width text-white bg-primary" label="Añadir doctor" />
+      </div>
+    </div>
+    <!-- FIN ACTUALIZAR DOCTOR -->
 
 
 
@@ -450,14 +469,14 @@
             <q-avatar color="primary" icon="mdi-doctor" text-color="white">
             </q-avatar>
           </q-card-section>
-          									<q-card-section class="col-5 flex flex-center">
-											<button @click="generatePDF(dataUser)" class=" cursor-pointer q-mb-sm text-primary self-center text-bold"
-											type="button"> <small style="font-size: 12px;">Descargar información</small></button>
-										</q-card-section>
+          <q-card-section class="col-5 flex flex-center">
+            <button @click="generatePDF(dataUser)" class=" cursor-pointer q-mb-sm text-primary self-center text-bold"
+              type="button"> <small style="font-size: 12px;">Descargar información</small></button>
+          </q-card-section>
           <q-card-section class="q-pt-xs">
             <div class="text-caption text-bold q-mt-sm q-mb-xs">Doctor: {{ dataUser.persona.nombre1 }} | {{
               dataUser.area_de_trabajo
-              }}
+            }}
             </div>
             <div class="text-caption q-mt-sm q-mb-xs">CI: {{ dataUser.persona.cedula_identidad }}</div>
             <div class="text-caption q-mt-sm q-mb-xs">Número de carnet: {{ dataUser.numero_carnet }}</div>
@@ -481,7 +500,7 @@
             <div v-if="dataUser.usuarios.cdi" class="text-caption q-mt-sm q-mb-xs">Cuadrante: {{
               dataUser.usuarios.cdi.cuadrante }}</div>
 
-             <div v-if="dataUser.usuarios.cdi" class="text-caption q-mt-sm q-mb-xs">Encargado: {{
+            <div v-if="dataUser.usuarios.cdi" class="text-caption q-mt-sm q-mb-xs">Encargado: {{
               dataUser.usuarios.cdi.encargado }}</div>
 
             <!-- <div class="text-caption q-mt-sm q-mb-xs">Télefono: {{ dataUser.persona.telefono.codigo }}{{ dataUser.persona.telefono.numero }}</div> -->
@@ -507,7 +526,7 @@
               <div class="text-caption q-mt-sm q-mb-xs">Teléfono: {{ paciente.persona && paciente.persona.telefono ?
                 paciente.persona.telefono.numero : 'N/A' }}</div>
               <div class="text-caption q-mt-sm q-mb-xs">Correo electrónico: {{ paciente.persona.correo.correo || 'N/A'
-                }}
+              }}
               </div>
             </div>
 
@@ -532,26 +551,26 @@
 
 
     <!-- BUSCAR PACIENTE -->
-		<q-dialog v-model="modals.searchUser" style="min-width: 460px">
-			<q-card style="min-width: 460px" class="text-white">
-				<q-bar class="bg-primary">
-					<q-space />
-					<q-btn dense flat icon="close" v-close-popup>
-					</q-btn>
-				</q-bar>
-				<q-card-section>
-					<div class="text-h6 text-primary">Buscar doctor</div>
-				</q-card-section>
-				<q-card-section class="q-pt-none">
-					<q-input v-model="dni" label="Escribe el DNI del doctor" />
-				</q-card-section>
-				<q-card-actions align="right" class="text-primary">
-					<q-btn flat label="Cancelar" v-close-popup />
-					<q-btn flat label="Buscar" :disable="!dni.length" @click="buscarUsuario(dni)" />
-				</q-card-actions>
-			</q-card>
-		</q-dialog>
-		<!-- FIN BUSCAR PACIENTE -->
+    <q-dialog v-model="modals.searchUser" style="min-width: 460px">
+      <q-card style="min-width: 460px" class="text-white">
+        <q-bar class="bg-primary">
+          <q-space />
+          <q-btn dense flat icon="close" v-close-popup>
+          </q-btn>
+        </q-bar>
+        <q-card-section>
+          <div class="text-h6 text-primary">Buscar doctor</div>
+        </q-card-section>
+        <q-card-section class="q-pt-none">
+          <q-input v-model="dni" label="Escribe el DNI del doctor" />
+        </q-card-section>
+        <q-card-actions align="right" class="text-primary">
+          <q-btn flat label="Cancelar" v-close-popup />
+          <q-btn flat label="Buscar" :disable="!dni.length" @click="buscarUsuario(dni)" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+    <!-- FIN BUSCAR PACIENTE -->
 
 
     <!-- ELIMINAR USUARIO -->
@@ -590,26 +609,26 @@
       </vue-html2pdf>
     </div>
 
-            <div>
-			<vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="false" :preview-modal="true"
-				:paginate-elements-by-height="1400" filename="Listado_Completo_De_Doctores" :pdf-quality="2"
-				:manual-pagination="false" pdf-format="a4" :pdf-margin="10" pdf-orientation="portrait"
-				pdf-content-width="800px" @progress="onProgress($event)" ref="html2PdfAllDoctors">
-				<section slot="pdf-content">
-					<PdfListaDoctoresCompleta :data="users"  />
-				</section>
-			</vue-html2pdf>
+    <div>
+      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="false" :preview-modal="true"
+        :paginate-elements-by-height="1400" filename="Listado_Completo_De_Doctores" :pdf-quality="2"
+        :manual-pagination="false" pdf-format="a4" :pdf-margin="10" pdf-orientation="portrait" pdf-content-width="800px"
+        @progress="onProgress($event)" ref="html2PdfAllDoctors">
+        <section slot="pdf-content">
+          <PdfListaDoctoresCompleta :data="users" />
+        </section>
+      </vue-html2pdf>
     </div>
 
-            <div>
-			<vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="false" :preview-modal="true"
-				:paginate-elements-by-height="1400" filename="Listado_DOCTORES_STATUS" :pdf-quality="2"
-				:manual-pagination="false" pdf-format="a4" :pdf-margin="10" pdf-orientation="portrait"
-				pdf-content-width="800px" @progress="onProgress($event)" ref="html2Pdfstatus">
-				<section slot="pdf-content">
-					<HistorialDoctoresLista :data="users" :isActive="tabDrEstado === 'dr_activos'" />
-				</section>
-			</vue-html2pdf>
+    <div>
+      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="false" :preview-modal="true"
+        :paginate-elements-by-height="1400" filename="Listado_DOCTORES_STATUS" :pdf-quality="2"
+        :manual-pagination="false" pdf-format="a4" :pdf-margin="10" pdf-orientation="portrait" pdf-content-width="800px"
+        @progress="onProgress($event)" ref="html2Pdfstatus">
+        <section slot="pdf-content">
+          <HistorialDoctoresLista :data="users" :isActive="tabDrEstado === 'dr_activos'" />
+        </section>
+      </vue-html2pdf>
     </div>
 
 
@@ -666,14 +685,14 @@ export default {
       codigo_postal: '',
       doctor_ocupacion: 'Doctor',
 
-            estadoCivilSeleccionado: '',
+      estadoCivilSeleccionado: '',
       estado_civil: [
         { label: "Soltero", value: "Soltero" },
         { label: "Casado", value: "Casado" },
         { label: "Divorciado", value: "Divorciado" },
         { label: "Viudo", value: "Viudo" },
         { label: "Unión libre", value: "Unión libre" }
-      ],  
+      ],
       edad: 0,
 
       sexoDoctor: [
@@ -693,7 +712,7 @@ export default {
       cdisList: [],
       cdiSeleccionado: null,
 
-            // MODALES
+      // MODALES
       modals: {
         searchUser: false,
       },
@@ -842,14 +861,14 @@ export default {
     fullNameRules() {
       return useFullNameValidation();
     },
-        emailRules() {
+    emailRules() {
       return useEmailValidation();
     },
     dniRules() {
       return useDniValidation();
     },
     ageRules() {
-      return [...useAgeValidation(), (val) => parseInt(val) >= 25 || 'La edad debe ser mayor o igual a 25 años', ];
+      return [...useAgeValidation(), (val) => parseInt(val) >= 25 || 'La edad debe ser mayor o igual a 25 años',];
     },
     anosExperienciaRules() {
       return useDoctorAnosExperienciaValidation();
@@ -936,7 +955,7 @@ export default {
       }
       return isFormValid(formValues, validationRules)
     },
-        formUpdateHasNoErrors() {
+    formUpdateHasNoErrors() {
       const formValues = {
         fullName: this.dataUser.persona.nombre1,
         email: this.dataUser.persona.correo ? this.dataUser.persona.correo.correo : '',
@@ -1075,7 +1094,7 @@ export default {
   },
   methods: {
     workerView(typeView) {
-      if(typeView === 'searchUser') return this.modals.searchUser = true;
+      if (typeView === 'searchUser') return this.modals.searchUser = true;
       this.viewType = typeView
     },
     setUpdateWorkerData(doctor) {
@@ -1121,13 +1140,13 @@ export default {
     },
     generatePDF(user) {
       this.dataUser = user;
-      if(this.modalDetailUser) this.modalDetailUser = false;
+      if (this.modalDetailUser) this.modalDetailUser = false;
       this.$refs.html2Pdf.generatePdf();
     },
-    		doctorsInformationsPDF() {
-			this.$refs.html2PdfAllDoctors.generatePdf();
-		},
-        generateDoctorsPDF() {
+    doctorsInformationsPDF() {
+      this.$refs.html2PdfAllDoctors.generatePdf();
+    },
+    generateDoctorsPDF() {
       this.pdfData = this.users;
       this.$refs.html2Pdfstatus.generatePdf();
     },
@@ -1284,6 +1303,7 @@ export default {
         .then((response) => {
           this.loaderUser = false;
           this.users = Object.assign([], response.data.doctores);
+
           this.drActivos = this.users.filter((user) => user.usuarios.estado === 'activo').length;
           this.drInactivos = this.users.filter((user) => user.usuarios.estado === 'inactivo').length;
         })
@@ -1418,14 +1438,14 @@ export default {
                   correo: doctorUpdate.persona.correo.correo
                 },
                 direccionInput: {
-                   parroquia: doctorUpdate.persona.direccion.parroquia,
-                   calle: doctorUpdate.persona.direccion.calle,
-                   numero_casa: doctorUpdate.persona.direccion.numero_casa,
-                   sector: doctorUpdate.persona.direccion.sector,
-                   punto_referencia: doctorUpdate.persona.direccion.punto_referencia,
-                   codigo_postal: doctorUpdate.persona.direccion.codigo_postal
+                  parroquia: doctorUpdate.persona.direccion.parroquia,
+                  calle: doctorUpdate.persona.direccion.calle,
+                  numero_casa: doctorUpdate.persona.direccion.numero_casa,
+                  sector: doctorUpdate.persona.direccion.sector,
+                  punto_referencia: doctorUpdate.persona.direccion.punto_referencia,
+                  codigo_postal: doctorUpdate.persona.direccion.codigo_postal
                 }
-       
+
               },
             },
           },

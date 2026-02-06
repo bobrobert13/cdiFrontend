@@ -74,6 +74,10 @@
 														@click="actualizarUsuario({ ...user, estado: user.estado === 'activo' ? 'inactivo' : 'activo' })"
 														class="gt-xs text-negative" size="12px" flat dense
 														:label="user.estado === 'activo' ? 'Inhabilitar' : 'Habilitar'" />
+
+													<q-btn @click="() => workerView('userDetailEdit')"
+														class="gt-xs z-top text-primary" size="12px" flat dense
+														label="Editar" />
 												</div>
 											</div>
 										</q-item-section>
@@ -137,6 +141,10 @@
 														@click="actualizarUsuario({ ...user, estado: user.estado === 'activo' ? 'inactivo' : 'activo' })"
 														class="gt-xs text-negative" size="12px" flat dense
 														:label="user.estado === 'activo' ? 'Inhabilitar' : 'Habilitar'" />
+
+													<q-btn @click="() => workerView('userDetailEdit')"
+														class="gt-xs z-top text-primary" size="12px" flat dense
+														label="Editar" />
 												</div>
 											</div>
 										</q-item-section>
@@ -200,7 +208,7 @@
 		</div>
 
 
-		<div class="row justify-center" v-if="viewType === 'userDetail'">
+		<div class="row justify-center" v-if="viewType === 'userDetailEdit'">
 			<div class="col-12 text-left">
 				<q-icon style="cursor: pointer" @click="workerView('userList')" name="mdi-arrow-left"
 					class="text-primary" size="md"></q-icon>
