@@ -1077,7 +1077,14 @@
                   this.examen_estadoExamen === '' ||
                   this.examen_descripcion === '' ||
                   this.examen_laboratorioCentro === ''
-                  " @click="añadirExamen()">
+                  " @click="añadirExamen(true)">
+                  Guardar y agregar nuevo
+                </q-btn>
+                <q-btn flat :disable="this.examen_tipoDeExamen === '' ||
+                  this.examen_estadoExamen === '' ||
+                  this.examen_descripcion === '' ||
+                  this.examen_laboratorioCentro === ''
+                  " @click="añadirExamen(false)">
                   Crear examen para paciente
                 </q-btn>
                 <q-btn flat v-close-popup>
@@ -1217,7 +1224,14 @@
                   this.tratamiento_detalles === '' ||
                   this.tratamiento_fechaInicio === '' ||
                   this.tratamiento_fechaCulminacion === ''
-                  " @click="añadirTratamiento()">
+                  " @click="añadirTratamiento(true)">
+                  Guardar y agregar nuevo
+                </q-btn>
+                <q-btn flat :disable="this.tratamiento_tipoDeTratamiento === '' ||
+                  this.tratamiento_detalles === '' ||
+                  this.tratamiento_fechaInicio === '' ||
+                  this.tratamiento_fechaCulminacion === ''
+                  " @click="añadirTratamiento(false)">
                   Añadir tratamiento para el paciente
                 </q-btn>
                 <q-btn flat v-close-popup>
@@ -1382,7 +1396,23 @@
                   this.medicamento_observaciones === '' ||
                   this.medicamento_fechaInicio === '' ||
                   this.medicamento_fechaFin === ''
-                  " @click="añadirMedicamento()">
+                  " @click="añadirMedicamento(true)">
+                  Guardar y agregar nuevo
+                </q-btn>
+                <q-btn flat :disable="this.medicamento_nombre === '' ||
+                  this.medicamento_dosis === '' ||
+                  this.medicamento_viaAdministracion === '' ||
+                  this.medicamento_frecuencia === '' ||
+                  this.medicamento_duracion === '' ||
+                  this.medicamento_principioActivo === '' ||
+                  this.medicamento_estadoTratamiento === '' ||
+                  this.medicamento_tipoMedicamento === '' ||
+                  this.medicamento_contraindicaciones === '' ||
+                  this.medicamento_efectosSecundarios === '' ||
+                  this.medicamento_observaciones === '' ||
+                  this.medicamento_fechaInicio === '' ||
+                  this.medicamento_fechaFin === ''
+                  " @click="añadirMedicamento(false)">
                   Añadir medicamento para el paciente
                 </q-btn>
                 <q-btn flat v-close-popup>
@@ -3422,7 +3452,7 @@ export default {
           });
         });
     },
-    añadirExamen() {
+    añadirExamen(continuar = false) {
       this.loader = true;
       this.$apollo
         .mutate({
@@ -3443,10 +3473,6 @@ export default {
         })
         .then((response) => {
           this.loader = false;
-          this.modalAddDiagnostico = false;
-          this.modalDetailUser = false;
-          this.modalAddExamen = false;
-          this.modalExamenes = false;
           this.examen_tipoDeExamen = '';
           this.examen_descripcion = '';
           this.examen_resultados = '';
@@ -3454,9 +3480,17 @@ export default {
           this.examen_laboratorioCentro = '';
           this.examen_valoresReferencia = '';
           this.examen_observaciones = '';
+
+          if (!continuar) {
+            this.modalAddExamen = false;
+            this.modalExamenes = false;
+            this.modalAddDiagnostico = false;
+            this.modalDetailUser = false;
+          }
+
           this.AllPacientes()
           this.$q.notify({
-            message: "Has agregado un nuevo examen",
+            message: continuar ? "Examen agregado. Puede agregar otro." : "Has agregado un nuevo examen",
             color: "positive",
           });
         })
@@ -3512,7 +3546,7 @@ export default {
           });
         });
     },
-    añadirTratamiento() {
+    añadirTratamiento(continuar = false) {
       this.loader = true;
 
       // Validar que se hayan ingresado las fechas
@@ -3563,19 +3597,23 @@ export default {
         })
         .then((response) => {
           this.loader = false;
-          this.modalAddDiagnostico = false;
-          this.modalDetailUser = false;
-          this.modalDiagnosticos = false;
-          this.modalAddTratamiento = false;
-          this.modalTratamientos = false;
           this.tratamiento_tipoDeTratamiento = '';
           this.tratamiento_fechaInicio = '';
           this.tratamiento_fechaCulminacion = '';
           this.tratamiento_estado = '';
           this.tratamiento_detalles = '';
+
+          if (!continuar) {
+            this.modalAddDiagnostico = false;
+            this.modalDetailUser = false;
+            this.modalDiagnosticos = false;
+            this.modalAddTratamiento = false;
+            this.modalTratamientos = false;
+          }
+
           this.AllPacientes()
           this.$q.notify({
-            message: "Tratamiento agregado",
+            message: continuar ? "Tratamiento agregado. Puede agregar otro." : "Tratamiento agregado",
             color: "positive",
           });
         })
@@ -3587,7 +3625,7 @@ export default {
           });
         });
     },
-    añadirMedicamento() {
+    añadirMedicamento(continuar = false) {
       this.loader = true;
 
       // Validar que se hayan ingresado las fechas
@@ -3646,11 +3684,6 @@ export default {
         })
         .then((response) => {
           this.loader = false;
-          this.modalAddDiagnostico = false;
-          this.modalDetailUser = false;
-          this.modalDiagnosticos = false;
-          this.modalAddMedicamento = false;
-          this.modalMedicamentos = false;
           this.medicamento_nombre = '';
           this.medicamento_dosis = '';
           this.medicamento_viaAdministracion = '';
@@ -3665,9 +3698,17 @@ export default {
           this.medicamento_fechaInicio = '';
           this.medicamento_fechaFin = '';
 
+          if (!continuar) {
+            this.modalAddDiagnostico = false;
+            this.modalDetailUser = false;
+            this.modalDiagnosticos = false;
+            this.modalAddMedicamento = false;
+            this.modalMedicamentos = false;
+          }
+
           this.AllPacientes()
           this.$q.notify({
-            message: "Medicamento asignado",
+            message: continuar ? "Medicamento asignado. Puede agregar otro." : "Medicamento asignado",
             color: "positive",
           });
         })
