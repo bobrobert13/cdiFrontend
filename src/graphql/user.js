@@ -301,7 +301,7 @@ export const ADMIN_DOCTORES_QUERY = gql`
     numero_carnet
     area_de_trabajo
     horario
-        persona {
+    persona {
       ...personaDetalles
     }
     pacientes {

@@ -363,12 +363,12 @@
           <q-select filled class="q-mb-xs" v-model="dataUser.persona.nacionalidad" :options="nacionalidades"
             option-label="label" option-value="value" emit-value label="Nacionalidad*" />
 
-          {{ dataUser }}
+          
 
           <q-input filled color="deep-purple-6" type="number" v-model="dataUser.persona.cedula_identidad"
             :rules="dniRules" label="Cédula*" />
 
-          <q-input filled color="deep-purple-6 q-mb-md" type="number" v-model="dataUser.persona.edad" label="Edad*" />
+          <q-input filled color="deep-purple-6 q-mb-md" type="number" v-model="dataUser.persona.edad" :rules="ageRules" label="Edad*" />
 
           <q-input type="email" filled v-model="dataUser.persona.correo.correo" label="Correo electrónico*"
             :rules="emailRules" />
@@ -451,7 +451,7 @@
 
       <div class="col-xl-5 col-lg-5 col-md-5 col-sm-12 col-xs-12 q-mb-xs ">
         <q-btn unelevated type='submit' :loading="loader" @click="actualizarDoctor(dataUser)"
-          :disable="!formUpdateHasNoErrors" class="full-width text-white bg-primary" label="Añadir doctor" />
+          :disable="!formUpdateHasNoErrors" class="full-width text-white bg-primary" label="Actualizar doctor" />
       </div>
     </div>
     <!-- FIN ACTUALIZAR DOCTOR -->
@@ -960,6 +960,7 @@ export default {
         fullName: this.dataUser.persona.nombre1,
         email: this.dataUser.persona.correo ? this.dataUser.persona.correo.correo : '',
         dni: this.dataUser.persona.cedula_identidad,
+        edad: this.dataUser.persona.edad,
         // estado: this.estado,
         // ciudad: this.dataUser.direccion.ciudad,
         calle: this.dataUser.persona.direccion.calle,
@@ -978,6 +979,7 @@ export default {
         fullName: useFullNameValidation(),
         email: useEmailValidation(),
         dni: useDniValidation(),
+        edad: useAgeValidation(),
         // estado: useRequiredSelectValidation(),
         // ciudad: useRequiredSelectValidation(),
         calle: useRequiredSelectValidation(),
@@ -1115,6 +1117,7 @@ export default {
         persona: {
           nombre1: doctor.persona.nombre1,
           nombre2: doctor.persona.nombre2,
+          edad: doctor.persona.edad || 0,
           apellido1: doctor.persona.apellido1,
           apellido2: doctor.persona.apellido2,
           cedula_identidad: doctor.persona.cedula_identidad,
@@ -1428,6 +1431,7 @@ export default {
               },
               personaInput: {
                 nombre1: doctorUpdate.persona.nombre1,
+                edad: parseInt(doctorUpdate.persona.edad),
                 cedula_identidad: doctorUpdate.persona.cedula_identidad,
                 nacionalidad: this.nacionalidadUser,
                 telefonoInput: {
