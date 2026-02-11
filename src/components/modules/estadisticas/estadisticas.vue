@@ -449,6 +449,12 @@ export default {
       barChartOptions: {
         chart: { id: 'dist-edad', toolbar: { show: false } },
         title: { text: 'Distribución por Edad' },
+        colors: ['#2196F3', '#4CAF50', '#F44336', '#9C27B0'],
+        plotOptions: {
+          bar: {
+            distributed: true
+          }
+        },
         xaxis: { categories: ['Niños (0-12)', 'Adolescentes (13-18)', 'Adultos (19-64)', 'Mayores (65+)'] },
       },
       barChartSeries: [{
