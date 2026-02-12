@@ -110,7 +110,7 @@
           <q-card class="full-height">
             <q-card-section>
               <q-btn color="primary" icon="download" class="cursor-pointer z-max float-right" dense flat @click="onReport('dist-genero')" />
-              <apexchart type="donut" height="350" :options="donutChartOptions" :series="donutChartSeries"></apexchart>
+              <apexchart type="bar" height="350" :options="donutChartOptions" :series="donutChartSeries"></apexchart>
             </q-card-section>
           </q-card>
         </div>
@@ -463,10 +463,32 @@ export default {
       }],
       donutChartOptions: {
         chart: { id: 'dist-genero', toolbar: { show: false } },
-        title: { text: 'Distribución por Género' },
-        labels: ['Masculino', 'Femenino'],
+        title: { text: 'Distribución por Género y Edad' },
+        xaxis: { categories: ['Niños (0-12)', 'Adolescentes (13-18)', 'Adultos (19-64)', 'Mayores (65+)'] },
+        colors: ['#1976D2', '#E91E63'],
+        plotOptions: {
+          bar: {
+            horizontal: false,
+            columnWidth: '55%',
+            endingShape: 'rounded'
+          },
+        },
+        dataLabels: {
+          enabled: false
+        },
+        stroke: {
+          show: true,
+          width: 2,
+          colors: ['transparent']
+        },
       },
-      donutChartSeries: [0, 0],
+      donutChartSeries: [{
+        name: 'Masculino',
+        data: [0, 0, 0, 0]
+      }, {
+        name: 'Femenino',
+        data: [0, 0, 0, 0]
+      }],
 
       consultasPeriodoOptions: {
         chart: { id: 'consultas-periodo', toolbar: { show: false } },
@@ -982,10 +1004,30 @@ export default {
         })
         .then((response) => {
           this.pacientesPorGenero = response.data.distribucionPorGenero;
+          
+          this.donutChartSeries = [
+            {
+              name: 'Masculino',
+              data: [
+                this.pacientesPorGenero.masculinoNinos || 0,
+                this.pacientesPorGenero.masculinoAdolescentes || 0,
+                this.pacientesPorGenero.masculinoAdultos || 0,
+                this.pacientesPorGenero.masculinoMayores || 0
+              ]
+            },
+            {
+              name: 'Femenino',
+              data: [
+                this.pacientesPorGenero.femeninoNinas || 0,
+                this.pacientesPorGenero.femeninoAdolescentes || 0,
+                this.pacientesPorGenero.femeninoAdultas || 0,
+                this.pacientesPorGenero.femeninoMayores || 0
+              ]
+            }
+          ];
         })
         .catch((err) => {
           console.error("Error fetching distribución por género:", err);
-
         });
     },
 

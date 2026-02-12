@@ -17,6 +17,14 @@ export const ESTADISTICA_PACIENTES_POR_GENERO_QUERY = gql`
     distribucionPorGenero(id_cdi: $id_cdi) {
     masculino
     femenino
+    masculinoNinos
+    masculinoAdolescentes
+    masculinoAdultos
+    masculinoMayores
+    femeninoNinas
+    femeninoAdolescentes
+    femeninoAdultas
+    femeninoMayores
     }
   }
 `;
