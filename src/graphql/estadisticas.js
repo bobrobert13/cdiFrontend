@@ -7,8 +7,8 @@ export const ESTADISTICA_PACIENTES_TOTALES_QUERY = gql`
 `;
 
 export const ESTADISTICA_PACIENTES_NUEVOS_QUERY = gql`
-  query getCantidadPacientesNuevos($id_cdi: ID!, $periodo: String, $mes: Int) {
-    cantidadPacientesNuevos(id_cdi: $id_cdi, periodo: $periodo, mes: $mes)
+  query getCantidadPacientesNuevos($id_cdi: ID!, $periodo: String, $mes: Int, $anio: Int) {
+    cantidadPacientesNuevos(id_cdi: $id_cdi, periodo: $periodo, mes: $mes, anio: $anio)
   }
 `;
 
@@ -45,14 +45,14 @@ export const ESTADISTICA_PACIENTES_POR_AREA_QUERY = gql`
 `;
 
 export const ESTADISTICA_CONSULTAS_POR_PERIODO_QUERY = gql`
-  query getTotalConsultasRealizadasPeriodo($id_cdi: ID!, $periodo: String, $mes: Int) {
-    totalConsultasRealizadasPeriodo(id_cdi: $id_cdi, periodo: $periodo, mes: $mes)
+  query getTotalConsultasRealizadasPeriodo($id_cdi: ID!, $periodo: String, $mes: Int, $anio: Int) {
+    totalConsultasRealizadasPeriodo(id_cdi: $id_cdi, periodo: $periodo, mes: $mes, anio: $anio)
   }
 `;
 
 export const ESTADISTICA_CONSULTAS_POR_DOCTOR_QUERY = gql`
-  query getTotalConsultasRealizadasPorMedico($id_cdi: ID!, $periodo: String, $mes: Int) {
-    totalConsultasRealizadasPorMedico(id_cdi: $id_cdi, periodo: $periodo, mes: $mes) {
+  query getTotalConsultasRealizadasPorMedico($id_cdi: ID!, $periodo: String, $mes: Int, $anio: Int) {
+    totalConsultasRealizadasPorMedico(id_cdi: $id_cdi, periodo: $periodo, mes: $mes, anio: $anio) {
     nombresDoctores
     consultasMedico
     }
@@ -60,8 +60,8 @@ export const ESTADISTICA_CONSULTAS_POR_DOCTOR_QUERY = gql`
 `;
 
 export const ESTADISTICA_TOP_TEN_DIAGNOSTICOS_QUERY = gql`
-  query getTop10DiagnosticosMasComunes($id_cdi: ID!, $periodo: String, $mes: Int) {
-    top10DiagnosticosMasComunes(id_cdi: $id_cdi, periodo: $periodo, mes: $mes) {
+  query getTop10DiagnosticosMasComunes($id_cdi: ID!, $periodo: String, $mes: Int, $anio: Int) {
+    top10DiagnosticosMasComunes(id_cdi: $id_cdi, periodo: $periodo, mes: $mes, anio: $anio) {
     condiciones
     totales
     }
