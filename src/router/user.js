@@ -21,4 +21,14 @@ export default [
     },
     props: true
   },
+  {
+    path: "/respaldos",
+    name: "respaldos",
+    components: { default: lazyLoad("/modules/respaldos/respaldos") },
+    meta: {
+      requiresAuth: true,
+      roles: ["admin"]
+    },
+    props: true
+  },
 ];
