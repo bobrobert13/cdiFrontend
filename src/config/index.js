@@ -1,6 +1,6 @@
 const urls = {
   development: "http://localhost:4000",
-  production: ""
+  production: "https://api.medrec.online"
 };
 
 let env = process.env.NODE_ENV;
