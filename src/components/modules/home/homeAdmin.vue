@@ -1,14 +1,14 @@
 <template>
   <div class="row justify-center">
     <div class="col-12 self-end">
-      <span class="text-bold no-padding no-margin text-h6 text-accent">Panel de administrador</span>
+      <span class="text-bold xs-hide sm-hide text-h6 text-accent">Panel de administrador</span>
     </div>
     <div class="col-12 self-end bg-white" style="min-height: 85vh; border-radius: 20px">
-      <q-scroll-area class="q-mt-md q-mb-md" :thumb-style="thumbStyle" :bar-style="barStyle" style="height: 75vh">
-        <div class="row q-ma-md justify-center" v-if="controlLista === true">
+      <q-scroll-area class="q-mt-md q-mb-md" :thumb-style="thumbStyle" :bar-style="barStyle" style="height: 80vh">
+        <div class="row justify-center" v-if="controlLista === true">
           <div class="col-9">
-            <div class="row justify-center full-width no-wrap">
-              <div class="col-xl-5 col-lg-5 col-md-5 col-sm-6 col-xs-10 text-white q-pa-md">
+            <div class="row justify-center full-width no-wrap-md no-wrap-lg no-wrap-xl">
+              <div class="col-xl-5 col-lg-5 col-md-5 col-sm-6 col-xs-12 text-white q-pa-md">
                 <div @click="userControl()" class="row bg-primary"
                   style="min-height: 150px; border-radius: 20px; cursor: pointer">
                   <div class="col-12 text-center self-center">
@@ -18,7 +18,7 @@
                   </div>
                 </div>
               </div>
-              <div class="col-xl-5 col-lg-5 col-md-5 col-sm-6 col-xs-10 text-white q-pa-md">
+              <div class="col-xl-5 col-lg-5 col-md-5 col-sm-6 col-xs-12 text-white q-pa-md">
                 <div @click="adminControl()" class="row bg-primary"
                   style="min-height: 150px; border-radius: 20px; cursor: pointer">
                   <div class="col-12 text-center self-center">
@@ -28,7 +28,7 @@
                   </div>
                 </div>
               </div>
-              <div class="col-xl-5 col-lg-5 col-md-5 col-sm-6 col-xs-10 text-white q-pa-md">
+              <div class="col-xl-5 col-lg-5 col-md-5 col-sm-6 col-xs-12 text-white q-pa-md">
                 <div @click="doctorControl()" class="row bg-primary"
                   style="min-height: 150px; border-radius: 20px; cursor: pointer">
                   <div class="col-12 text-center self-center">
@@ -42,14 +42,14 @@
           </div>
         </div>
         <div class="row  justify-center" v-if="usersView === true">
-          <div class="col-10 q-mb-xl text-right">
-            <span class="text-bold text-h6 text-accent" style="cursor: pointer"
+          <div class="col-12 q-px-sm q-mb-xs-sm q-mb-sm-sm q-mb-md-xl q-mb-lg-xl q-mb-xl-xl text-left">
+            <span class="text-bold text-subtitle1 text-accent" style="cursor: pointer"
               @click="(usersView = false), (controlLista = true)">Volver</span>
           </div>
-          <div class="col-10 q-mb-xl text-center">
+          <div class="col-12 q-mb-xs-sm q-mb-sm-sm q-mb-md-xl q-mb-lg-xl q-mb-xl-xl text-center">
             <!-- PARA PACIENTES -->
             <users>
-    <section class=" row  no-wrap full-width q-gutter-x-xl justify-start">
+    <section class=" row  no-wrap full-width q-gutter-xs-x-md q-gutter-sm-x-md q-gutter-md-x-xl q-gutter-lg-x-xl q-gutter-xl-x-xl q-mb-lg  justify-start">
         <div @click="adminControl()" class="cursor-pointer column justify-center items-center">
           <q-icon name="mdi-account-group" color="primary" size="55px" />
           <span>Ir a CDIS</span>
@@ -63,14 +63,16 @@
           </div>
         </div>
         <div class="row justify-center" v-if="adminsView === true">
-          <div class="col-10 q-mb-xl text-right">
-            <span class="text-bold text-h6 text-accent" style="cursor: pointer"
+ 				<div class="col-12 q-px-sm q-mb-xs-sm q-mb-sm-sm q-mb-md-xl q-mb-lg-xl q-mb-xl-xl text-left">
+            <span class="text-bold text-subtitle1 text-accent" style="cursor: pointer"
               @click="(adminsView = false), (controlLista = true)">Volver</span>
           </div>
-          <div class="col-10 q-mb-xl text-center">
+					<div class="col-12 q-mb-xs-sm q-mb-sm-sm q-mb-md-xl q-mb-lg-xl q-mb-xl-xl text-center">
             <!-- PARA CDIS -->
             <admins>
-    <section class=" row  no-wrap full-width q-gutter-x-xl justify-start">
+							<section
+								class=" row  no-wrap full-width q-px-sm q-gutter-xs-x-md q-gutter-sm-x-md q-gutter-md-x-xl q-gutter-lg-x-xl q-gutter-xl-x-xl q-mb-lg  justify-start">
+
         <div @click="userControl()" class="cursor-pointer column justify-center items-center">
           <q-icon name="mdi-account-group" color="primary" size="55px" />
           <span>Ir a pacientes</span>
@@ -85,15 +87,16 @@
           </div>
         </div>
         <div class="row  justify-center" v-if="doctoresView === true">
-          <div class="col-10 q-mb-xl text-right">
-            <span class="text-bold text-h6 text-accent" style="cursor: pointer"
+ 				<div class="col-12 q-px-sm q-mb-xs-sm q-mb-sm-sm q-mb-md-xl q-mb-lg-xl q-mb-xl-xl text-left">
+     	<span class="text-bold text-subtitle1 text-accent" style="cursor: pointer"
               @click="(doctoresView = false), (controlLista = true)">Volver</span>
           </div>
             <!-- PARA DOCTORES -->
-          <div class="col-10 q-mb-xl text-center">
+					<div class="col-12 q-mb-xs-sm q-mb-sm-sm q-mb-md-xl q-mb-lg-xl q-mb-xl-xl text-center">
             <doctores>
 
-                  <section class=" row  no-wrap full-width q-gutter-x-xl justify-start">
+                 <section
+								class=" row  no-wrap full-width q-px-sm q-gutter-xs-x-md q-gutter-sm-x-md q-gutter-md-x-xl q-gutter-lg-x-xl q-gutter-xl-x-xl q-mb-lg  justify-start">
         <div @click="adminControl()" class="cursor-pointer column justify-center items-center">
           <q-icon name="mdi-account-group" color="primary" size="55px" />
           <span>Ir a CDIS</span>

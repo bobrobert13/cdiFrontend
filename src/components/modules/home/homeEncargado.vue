@@ -1,7 +1,7 @@
 <template>
   <div class="row justify-center">
     <div class="col-12 self-end">
-      <span class="text-bold text-h6 no-padding no-margin  text-accent">Usuarios del CDI</span>
+      <span class="text-bold text-h6 xs-hide sm-hide text-accent">Usuarios del CDI</span>
     </div>
     <div class="col-12 self-end bg-white" style="min-height: 85vh; border-radius: 20px">
 
@@ -30,8 +30,8 @@
             </div>
 
       <q-scroll-area class="q-mt-md q-mb-md" :thumb-style="thumbStyle" :bar-style="barStyle" style="height: 75vh">
-        <div class="row justify-center">
-          <div class="col-10" v-if="viewType === 'userList'">
+        <div class="row q-px-xs-sm q-px-sm-md q-px-md-lg q-px-lg-lg q-px-xl-lg justify-center">
+          <div class="col-12" v-if="viewType === 'userList'">
 
 
 
@@ -43,11 +43,11 @@
 
             <q-tab-panels v-model="tab" animated>
               <q-tab-panel name="doctoresCDI">
-                <div class="text-h6 "><span v-if="users && users.length !== 0">{{ users.length }}</span> Doctores del CDI
+                <div class="text-subtitle1 q-mt-sm "><span v-if="users && users.length !== 0">{{ users.length }}</span> Doctores del CDI
                 </div>
                 Listado de usuarios doctores pertenecientes al CDI
 
-                <div class=" row q-mt-sm">
+                <div class=" row q-mt-xs">
                   <q-tabs v-model="tabEstadoEncargado" class="text-teal no-padding no-margin">
                     <q-tab name="encargadosActivos" :label="`Activos (${cantidadDoctoresActivos})`" />
                     <q-tab name="encargadosInactivos" :label="`Inactivos (${cantidadDoctoresInactivos})`" />
@@ -63,38 +63,45 @@
                         <template v-slot:default="{ user }">
                         <q-list class="rounded-borders full-width bg-secondary"
                           style="border-radius: 15px">
-                          <q-item class="full-width">
-                            <q-item-section avatar @click="userDetailC('userDetail', user)" style="cursor: pointer">
-                              <q-avatar color="primary" icon="mdi-doctor" text-color="white">
-                              </q-avatar>
-                            </q-item-section>
+                          <q-item class="full-width column-xs column-sm row-md row-lg row-xl q-gutter-xs-xs ">
+														<div class="row no-wrap">
+																<q-item-section avatar @click="userDetailC('userDetail', user)" style="cursor: pointer">
+																	<q-avatar color="primary" icon="mdi-doctor" text-color="white">
+																	</q-avatar>
+																</q-item-section>
 
-                            <q-item-section top @click="userDetailC('userDetail', user)" style="cursor: pointer">
-                              <q-item-label class="text-left " lines="1">
-                                <span class="text-weight-medium">Nombre: <b>{{ user.persona.nombre1
-                                }}</b></span>
-                              </q-item-label>
-                              <q-item-label class="text-left q-mb-xs" lines="1">
-                                <span class="text-weight-medium">Nombre de usuario: <b>{{ user.usuarios.nombre_usuario
-                                }}</b></span>
-                              </q-item-label>
-                              <small class="text-weight-medium">Rol: {{ user.usuarios.rol }}</small>
-                              <small class="text-weight-medium">Documento de identidad: <b> {{ user.persona.cedula_identidad }}</b></small>
-                              <small class="text-weight-medium">Estatus de usuario: <b>{{ user.usuarios.estado
-                              }}</b></small>
-                              <small class="text-weight-medium text-primary">Area de trabajo: <b>{{ user.area_de_trabajo
-                              }}</b></small>
-                            </q-item-section>
-                            <q-item-section >
-                                <button @click="generateDoctorPDF(user)" type="button" lines="2"
-                                  class=" q-ml-xl q-mr-md cursor-pointer text-primary self-center text-bold"
+																<q-item-section top @click="userDetailC('userDetail', user)" style="cursor: pointer">
+																	<q-item-label class="text-left " lines="1">
+																		<span class="text-weight-medium">Nombre: <b>{{ user.persona.nombre1
+																		}}</b></span>
+																	</q-item-label>
+																	<q-item-label class="text-left q-mb-xs" lines="1">
+																		<span class="text-weight-medium">Nombre de usuario: <b>{{
+																			user.usuarios.nombre_usuario
+																				}}</b></span>
+																	</q-item-label>
+																	<small class="text-weight-medium">Rol: {{ user.usuarios.rol }}</small>
+																	<small class="text-weight-medium">Documento de identidad: <b> {{
+																		user.persona.cedula_identidad }}</b></small>
+																	<small class="text-weight-medium">Estatus de usuario: <b>{{ user.usuarios.estado
+																	}}</b></small>
+																	<small class="text-weight-medium text-primary">Area de trabajo: <b>{{
+																		user.area_de_trabajo
+																			}}</b></small>
+																</q-item-section>
+
+														</div>
+
+                            <q-item-section class=" row q-gutter-xs" >
+                                <button @click="generateDoctorPDF(user)" type="button"
+                                  class="  cursor-pointer text-primary self-md-end self-lg-end self-xl-end text-bold"
                                   style="cursor: pointer">
                                   <q-icon name="mdi-printer-pos" /> Descargar información del doctor
                                 </button>
 
                                 <q-btn
                                   @click="actualizarUsuario({ ...user.usuarios, estado: user.usuarios.estado === 'activo' ? 'inactivo' : 'activo' })"
-                                  class="gt-xs text-negative" size="12px" flat dense
+                                  class="self-md-end self-lg-end self-xl-end text-negative" size="12px" flat dense
                                   :label="user.usuarios.estado === 'activo' ? 'Inhabilitar' : 'Habilitar'" />
 
                             </q-item-section>
@@ -109,39 +116,51 @@
                       <paginated-card-list :items="doctoresInactivos" class="col-12" row-key="id_usuario" :initial-rows-per-page="10">
                         <template v-slot:default="{ user }">
                         <q-list class="rounded-borders full-width bg-secondary" style="border-radius: 15px">
-                          <q-item class="full-width">
-                            <q-item-section avatar @click="userDetailC('userDetail', user)" style="cursor: pointer">
-                              <q-avatar color="primary" icon="mdi-doctor" text-color="white">
-                              </q-avatar>
-                            </q-item-section>
+                          <q-item class="full-width column-xs column-sm row-md row-lg row-xl q-gutter-xs-xs ">
+<div class=" row no-wrap">
+																<q-item-section avatar @click="userDetailC('userDetail', user)" style="cursor: pointer">
+																	<q-avatar color="primary" icon="mdi-doctor" text-color="white">
+																	</q-avatar>
+																</q-item-section>
 
-                            <q-item-section top @click="userDetailC('userDetail', user)" style="cursor: pointer">
-                              <q-item-label class="text-left " lines="1">
-                                <span class="text-weight-medium">Nombre: <b>{{ user.persona.nombre1
-                                }}</b></span>
-                              </q-item-label>
-                              <q-item-label class="text-left q-mb-xs" lines="1">
-                                <span class="text-weight-medium">Nombre de usuario: <b>{{ user.usuarios.nombre_usuario
-                                }}</b></span>
-                              </q-item-label>
-                              <small class="text-weight-medium">Rol: {{ user.usuarios.rol }}</small>
-                              <small class="text-weight-medium">Estatus de usuario: <b>{{ user.usuarios.estado
-                              }}</b></small>
-                              <small class="text-weight-medium text-primary">Area de trabajo: <b>{{ user.area_de_trabajo
-                              }}</b></small>
-                            </q-item-section>
+																<q-item-section top @click="userDetailC('userDetail', user)" style="cursor: pointer">
+																	<q-item-label class="text-left " lines="1">
+																		<span class="text-weight-medium">Nombre: <b>{{ user.persona.nombre1
+																		}}</b></span>
+																	</q-item-label>
+																	<q-item-label class="text-left q-mb-xs" lines="1">
+																		<span class="text-weight-medium">Nombre de usuario: <b>{{
+																			user.usuarios.nombre_usuario
+																				}}</b></span>
+																	</q-item-label>
+																	<small class="text-weight-medium">Rol: {{ user.usuarios.rol }}</small>
+																	<small class="text-weight-medium">Estatus de usuario: <b>{{ user.usuarios.estado
+																	}}</b></small>
+																	<small class="text-weight-medium text-primary">Area de trabajo: <b>{{
+																		user.area_de_trabajo
+																			}}</b></small>
+																</q-item-section>
+
+</div>
+
+<q-item-section class=" row q-gutter-xs" >
+																<button @click="generateDoctorPDF(user)" type="button" lines="2"
+																	class="  cursor-pointer text-primary self-md-end self-lg-end self-xl-end text-bold"
+																	style="cursor: pointer">
+																	<q-icon name="mdi-printer-pos" /> Descargar información del doctor
+																</button>
+
+																<q-btn
+																	@click="actualizarUsuario({ ...user.usuarios, estado: user.usuarios.estado === 'activo' ? 'inactivo' : 'activo' })"
+																	class="self-md-end self-lg-end self-xl-end text-negative" size="12px" flat dense
+																	:label="user.usuarios.estado === 'activo' ? 'Inhabilitar' : 'Habilitar'" />
+
+
+
+</q-item-section>
 
                           </q-item>
-                                                          <button @click="generateDoctorPDF(user)" type="button" lines="2"
-                                  class=" q-ml-xl q-mr-md cursor-pointer text-primary self-center text-bold"
-                                  style="cursor: pointer">
-                                  <q-icon name="mdi-printer-pos" /> Descargar información del doctor
-                                </button>
 
-                                <q-btn
-                                  @click="actualizarUsuario({ ...user.usuarios, estado: user.usuarios.estado === 'activo' ? 'inactivo' : 'activo' })"
-                                  class="gt-xs text-negative" size="12px" flat dense
-                                  :label="user.usuarios.estado === 'activo' ? 'Inhabilitar' : 'Habilitar'" />
                         </q-list>
 
                       </template>
@@ -157,11 +176,11 @@
                 </div>
               </q-tab-panel>
               <q-tab-panel name="pacientesCDI">
-                <div class="text-h6"><span v-if="usersPacientes && usersPacientes.length !== 0">{{ usersPacientes.length
+                <div class="text-subtitle1 q-mt-sm "><span v-if="usersPacientes && usersPacientes.length !== 0">{{ usersPacientes.length
                     }}</span>
                   Pacientes del CDI</div>
                 Listado de pacientes administrados por los doctores del CDI
-                <div class="row justify-center q-mt-xl" v-if="usersPacientes && this.usersPacientes.length !== 0">
+                <div class="row justify-center q-mt-sm" v-if="usersPacientes && this.usersPacientes.length !== 0">
                   <div class="col-12 q-mb-sm">
                     <paginated-card-list :items="usersPacientes" class="col-12" row-key="id_paciente" :initial-rows-per-page="10">
                       <template v-slot:default="{ user: userPaciente }">
@@ -516,8 +535,8 @@
 
 
           <!-- BUSCAR DOCTOR -->
-          <q-dialog v-model="modals.searchUser" style="min-width: 460px">
-            <q-card style="min-width: 460px" class="text-white">
+          <q-dialog v-model="modals.searchUser">
+            <q-card class="text-white full-width">
               <q-bar class="bg-primary">
                 <q-space />
                 <q-btn dense flat icon="close" v-close-popup>
@@ -540,8 +559,8 @@
 
 
           <!-- BUSCAR PACIENTE -->
-          <q-dialog v-model="modals.searchPaciente" style="min-width: 460px">
-            <q-card style="min-width: 460px" class="text-white">
+          <q-dialog v-model="modals.searchPaciente" >
+            <q-card  class="text-white full-width">
               <q-bar class="bg-primary">
                 <q-space />
                 <q-btn dense flat icon="close" v-close-popup>
@@ -595,7 +614,7 @@
 
 
               <q-dialog v-model="modals.detallesPaciente">
-            <q-card class="my-card" flat bordered style="min-width: 450px">
+            <q-card class="my-card full-width" flat bordered >
               <q-card-section>
                 <q-card-section class="col-5 flex flex-center no-padding">
                   <div class="text-overline text-h6 text-grey-9">Informacion del paciente</div>
@@ -695,7 +714,7 @@
           </q-dialog>
 
     <div>
-      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="false" :preview-modal="true"
+      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="this.$q.screen.lt.md ? true : false" 	:preview-modal="this.$q.screen.gt.sm ? true : false"
         :paginate-elements-by-height="1400" filename="InformacionDeDoctorCDI" :pdf-quality="2"
         :manual-pagination="false" pdf-format="a4" :pdf-margin="10" pdf-orientation="portrait" pdf-content-width="800px"
         @progress="onProgress($event)" ref="html2Pdf">
@@ -706,7 +725,7 @@
     </div>
 
     <div>
-      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="false" :preview-modal="true"
+      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="this.$q.screen.lt.md ? true : false" 	:preview-modal="this.$q.screen.gt.sm ? true : false"
         :paginate-elements-by-height="1400" filename="FichaDePacienteCDI" :pdf-quality="2" :manual-pagination="false"
         pdf-format="a4" :pdf-margin="10" pdf-orientation="portrait" pdf-content-width="800px"
         @progress="onProgress($event)" ref="html2PdfPaciente">
@@ -717,7 +736,7 @@
     </div>
 
         <div>
-			<vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="false" :preview-modal="true"
+			<vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="this.$q.screen.lt.md ? true : false" 	:preview-modal="this.$q.screen.gt.sm ? true : false"
 				:paginate-elements-by-height="1400" filename="Listado_DOCTORES" :pdf-quality="2"
 				:manual-pagination="false" pdf-format="a4" :pdf-margin="10" pdf-orientation="portrait"
 				pdf-content-width="800px" @progress="onProgress($event)" ref="html2Pdfstatus">
@@ -728,7 +747,7 @@
     </div>
 
             <div>
-			<vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="false" :preview-modal="true"
+			<vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="this.$q.screen.lt.md ? true : false" 	:preview-modal="this.$q.screen.gt.sm ? true : false"
 				:paginate-elements-by-height="1400" filename="Listado_Completo_De_Doctores" :pdf-quality="2"
 				:manual-pagination="false" pdf-format="a4" :pdf-margin="10" pdf-orientation="portrait"
 				pdf-content-width="800px" @progress="onProgress($event)" ref="html2PdfAllDoctors">

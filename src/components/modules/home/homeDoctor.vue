@@ -1795,7 +1795,7 @@
     </div>
 
     <div>
-      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="false" :preview-modal="true"
+      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="this.$q.screen.lt.md ? true : false" 	:preview-modal="this.$q.screen.gt.sm ? true : false"
         :paginate-elements-by-height="1400" filename="FichaDePacienteDoctor" :pdf-quality="2" :manual-pagination="false"
         pdf-format="a4" :pdf-margin="2" pdf-orientation="landscape" pdf-content-width="1050px"
         @progress="onProgress($event)" ref="html2Pdf">
@@ -1806,7 +1806,7 @@
     </div>
 
     <div>
-      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="false" :preview-modal="true"
+      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="this.$q.screen.lt.md ? true : false" 	:preview-modal="this.$q.screen.gt.sm ? true : false"
         :paginate-elements-by-height="1400" filename="Diagnosticos_del_Paciente" :pdf-quality="2"
         :manual-pagination="false" pdf-format="a4" :pdf-margin="2" pdf-orientation="landscape"
         pdf-content-width="1050px" @progress="onProgress($event)" ref="downloadDiagnosticsReport">
@@ -1817,7 +1817,7 @@
     </div>
 
     <div>
-      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="false" :preview-modal="true"
+      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="this.$q.screen.lt.md ? true : false" 	:preview-modal="this.$q.screen.gt.sm ? true : false"
         :paginate-elements-by-height="1400" filename="Examenes_del_Paciente" :pdf-quality="2" :manual-pagination="false"
         pdf-format="a4" :pdf-margin="2" pdf-orientation="landscape" pdf-content-width="1050px"
         @progress="onProgress($event)" ref="downloadExamsReport">
@@ -1828,7 +1828,7 @@
     </div>
 
     <div>
-      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="false" :preview-modal="true"
+      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="this.$q.screen.lt.md ? true : false" 	:preview-modal="this.$q.screen.gt.sm ? true : false"
         :paginate-elements-by-height="1400" filename="Tratamientos_del_Paciente" :pdf-quality="2"
         :manual-pagination="false" pdf-format="a4" :pdf-margin="2" pdf-orientation="landscape"
         pdf-content-width="1050px" @progress="onProgress($event)" ref="downloadTratamientosReport">
@@ -1840,7 +1840,7 @@
 
 
     <div>
-      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="false" :preview-modal="true"
+      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="this.$q.screen.lt.md ? true : false" 	:preview-modal="this.$q.screen.gt.sm ? true : false"
         :paginate-elements-by-height="1400" filename="Medicamentos_del_Paciente" :pdf-quality="2"
         :manual-pagination="false" pdf-format="a4" :pdf-margin="2" pdf-orientation="landscape"
         pdf-content-width="1050px" @progress="onProgress($event)" ref="downloadMedicamentosReport">
@@ -1851,7 +1851,7 @@
     </div>
 
     <div>
-      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="false" :preview-modal="true"
+      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="this.$q.screen.lt.md ? true : false" 	:preview-modal="this.$q.screen.gt.sm ? true : false"
         :paginate-elements-by-height="1400" filename="Emergencias_del_Paciente" :pdf-quality="2"
         :manual-pagination="false" pdf-format="a4" :pdf-margin="2" pdf-orientation="landscape"
         pdf-content-width="1050px" @progress="onProgress($event)" ref="downloadEmergenciasReport">
@@ -1863,7 +1863,7 @@
 
 
     <div>
-      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="false" :preview-modal="true"
+      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="this.$q.screen.lt.md ? true : false" 	:preview-modal="this.$q.screen.gt.sm ? true : false"
         :paginate-elements-by-height="1400" filename="Hospitalizaciones_del_Paciente" :pdf-quality="2"
         :manual-pagination="false" pdf-format="a4" :pdf-margin="2" pdf-orientation="landscape"
         pdf-content-width="1050px" @progress="onProgress($event)" ref="downloadHospitalizacionesReport">

@@ -4,13 +4,9 @@
     <slot></slot>
 
     <div class="col-12" v-if="viewType === 'userList'">
-      <div class="col-12">
-        <span class="text-accent text-h6 text-bold">Control de Doctores</span>
-      </div>
-      <div class="row justify-center">
-        <div class="col-4 self-center text-right">
-        </div>
-        <div class="col self-center text-right">
+        <p class="text-accent text-subtitle1 text-bold ">Control de Doctores</p>
+      <div class="row justify-center q-mb-sm">
+        <div class="col self-center text-right q-px-md">
           <!-- <span class="text-bold text-primary" style="cursor: pointer" @click="workerView('addWorker')">Añadir doctor</span> -->
           <q-icon style="cursor: pointer" @click="workerView('searchUser')" name="mdi-account-search"
             class="text-primary q-mr-md" size="md"></q-icon>
@@ -28,7 +24,7 @@
 
       <q-tab-panels v-model="tabDrEstado" animated>
         <q-tab-panel name="dr_activos">
-          <button @click="generateDoctorsPDF()" class=" cursor-pointer q-my-sm text-primary self-center text-bold"
+          <button @click="generateDoctorsPDF()" class=" cursor-pointer q-my-md text-primary self-center text-bold"
             type="button"> <small style="font-size: 12px;">Descargar lista de doctores activos</small></button>
           <div class="row justify-center q-mt-sm" v-if="this.users.length !== 0">
             <paginated-card-list :items="doctoresActivos" class="col-12" row-key="id_doctor"
@@ -75,21 +71,21 @@
                         <small class="text-weight-medium text-left">Estatus del CDI: <b>{{
                           user.usuarios.estado }}</b></small>
                       </div>
-                    </q-item-section>
-                    <q-item-section side>
-                      <div class="text-grey-8 q-gutter-xs">
-                        <button @click="generatePDF(user)" type="button" lines="2"
-                          class=" q-ml-xl q-mr-md cursor-pointer text-primary self-center text-bold"
-                          style="cursor: pointer">
-                          <q-icon name="mdi-printer-pos" /> Descargar información
-                        </button>
-                        <q-btn
-                          @click="actualizarUsuario({ ...user.usuarios, estado: user.usuarios.estado === 'activo' ? 'inactivo' : 'activo' })"
-                          class="gt-xs text-negative" size="12px" flat dense
-                          :label="user.usuarios.estado === 'activo' ? 'Inhabilitar' : 'Habilitar'" />
-                        <q-btn @click="setUpdateWorkerData(user)" class=" text-primary" size="12px" flat dense
-                          label="Editar" />
-                      </div>
+
+											<div class=" row no-wrap q-mt-sm ">
+												<div class="text-grey-8 q-gutter-xs-md row items-center ">
+													<button @click.stop="generatePDF(user)" type="button" lines="2"
+														class="  cursor-pointer text-primary text-bold" style="cursor: pointer">
+														<q-icon name="mdi-printer-pos" /> Descargar información
+													</button>
+													<q-btn
+														@click.stop="actualizarUsuario({ ...user.usuarios, estado: user.usuarios.estado === 'activo' ? 'inactivo' : 'activo' })"
+														class=" text-negative" size="12px" flat dense
+														:label="user.usuarios.estado === 'activo' ? 'Inhabilitar' : 'Habilitar'" />
+													<q-btn @click="setUpdateWorkerData(user)" class=" text-primary" size="12px" flat dense
+														label="Editar" />
+												</div>
+											</div>
                     </q-item-section>
                   </q-item>
                 </q-list>
@@ -143,22 +139,26 @@
                         <small class="text-weight-medium text-left">Estatus del CDI: <b>{{
                           user.usuarios.estado }}</b></small>
                       </div>
+
+											<div class="text-grey-8 row no-wrap q-mt-sm ">
+
+												<div class="text-grey-8 q-gutter-xs-md row items-center ">
+
+													<button @click.stop="generatePDF(user)" type="button" lines="2"
+														class="  cursor-pointer text-primary text-bold"
+														style="cursor: pointer">
+														<q-icon name="mdi-printer-pos" /> Descargar información
+													</button>
+													<q-btn
+														@click.stop="actualizarUsuario({ ...user.usuarios, estado: user.usuarios.estado === 'activo' ? 'inactivo' : 'activo' })"
+														class="text-negative" size="12px" flat dense
+														:label="user.usuarios.estado === 'activo' ? 'Inhabilitar' : 'Habilitar'" />
+													<q-btn @click="setUpdateWorkerData(user)" class=" text-primary" size="12px" flat dense
+														label="Editar" />
+												</div>
+											</div>
                     </q-item-section>
-                    <q-item-section side>
-                      <div class="text-grey-8 q-gutter-xs">
-                        <button @click="generatePDF(user)" type="button" lines="2"
-                          class=" q-ml-xl q-mr-md cursor-pointer text-primary self-center text-bold"
-                          style="cursor: pointer">
-                          <q-icon name="mdi-printer-pos" /> Descargar información
-                        </button>
-                        <q-btn
-                          @click="actualizarUsuario({ ...user.usuarios, estado: user.usuarios.estado === 'activo' ? 'inactivo' : 'activo' })"
-                          class="gt-xs text-negative" size="12px" flat dense
-                          :label="user.usuarios.estado === 'activo' ? 'Inhabilitar' : 'Habilitar'" />
-                        <q-btn @click="setUpdateWorkerData(user)" class=" text-primary" size="12px" flat dense
-                          label="Editar" />
-                      </div>
-                    </q-item-section>
+
                   </q-item>
                 </q-list>
               </template>
@@ -345,11 +345,11 @@
 
 
     <!-- ACTUALIZAR EL DOCTOR -->
-    <div v-if="viewType === 'updateWorker'">
+    <div class=" q-pa-md q-my-xl" v-if="viewType === 'updateWorker'">
       <div class="col-12  text-left row items-center q-mt-md q-mb-md">
         <q-icon style="cursor: pointer" @click="workerView('userList')" name="mdi-arrow-left" class="text-primary"
           size="md"></q-icon>
-        <span style="cursor: pointer" class="text-bold text-accent text-h6" @click="workerView('userList')">Actualizar
+        <span style="cursor: pointer" class="text-bold text-accent text-subtitle1" @click="workerView('userList')">Actualizar
           doctor</span>
       </div>
       <small class="q-my-md block text-red text-bold"> <q-icon name="mdi-information" class="q-mr-xs" size="sm"
@@ -363,7 +363,7 @@
           <q-select filled class="q-mb-xs" v-model="dataUser.persona.nacionalidad" :options="nacionalidades"
             option-label="label" option-value="value" emit-value label="Nacionalidad*" />
 
-          
+
 
           <q-input filled color="deep-purple-6" type="number" v-model="dataUser.persona.cedula_identidad"
             :rules="dniRules" label="Cédula*" />
@@ -460,7 +460,7 @@
 
     <!-- DETALLES DEL USUARIO SELECCIONADO -->
     <q-dialog v-model="modalDetailUser">
-      <q-card class="my-card" flat bordered style="min-width: 350px">
+      <q-card class="my-card full-width" flat bordered>
         <q-card-section v-if="dataUser">
           <q-card-section class="col-5 flex flex-center">
             <div class="text-overline">Detalle del doctor</div>
@@ -599,7 +599,7 @@
     <!-- FIN ELIMINAR USUARIO -->
 
     <div>
-      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="false" :preview-modal="true"
+      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="this.$q.screen.lt.md ? true : false" 	:preview-modal="this.$q.screen.gt.sm ? true : false"
         :paginate-elements-by-height="1400" filename="informacionDeDoctor" :pdf-quality="2" :manual-pagination="false"
         pdf-format="a4" :pdf-margin="10" pdf-orientation="portrait" pdf-content-width="800px"
         @progress="onProgress($event)" ref="html2Pdf">
@@ -610,7 +610,7 @@
     </div>
 
     <div>
-      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="false" :preview-modal="true"
+      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="this.$q.screen.lt.md ? true : false" 	:preview-modal="this.$q.screen.gt.sm ? true : false"
         :paginate-elements-by-height="1400" filename="Listado_Completo_De_Doctores" :pdf-quality="2"
         :manual-pagination="false" pdf-format="a4" :pdf-margin="10" pdf-orientation="portrait" pdf-content-width="800px"
         @progress="onProgress($event)" ref="html2PdfAllDoctors">
@@ -621,7 +621,7 @@
     </div>
 
     <div>
-      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="false" :preview-modal="true"
+      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="this.$q.screen.lt.md ? true : false" 	:preview-modal="this.$q.screen.gt.sm ? true : false"
         :paginate-elements-by-height="1400" filename="Listado_DOCTORES_STATUS" :pdf-quality="2"
         :manual-pagination="false" pdf-format="a4" :pdf-margin="10" pdf-orientation="portrait" pdf-content-width="800px"
         @progress="onProgress($event)" ref="html2Pdfstatus">

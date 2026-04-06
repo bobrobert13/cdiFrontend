@@ -1,15 +1,12 @@
 <template>
-	<div class="row justify-center">
+	<div>
 
 		<slot></slot>
 
-		<div class="col-12" v-if="viewType === 'userList'">
-			<div class="col-12">
-				<span class="text-accent text-h6 text-bold">Listado de usuarios CDIs</span>
-			</div>
+		<div class="col-12 full-width q-pa-sm" v-if="viewType === 'userList'">
+				<p class="text-accent text-subtitle1 text-bold">Listado de usuarios CDIs</p>
 			<div class="row justify-center ">
-				<div class="col self-center text-right"></div>
-				<div class="col self-center text-right ">
+				<div class=" self-center text-right  ">
 					<q-icon style="cursor: pointer" @click="workerView('searchUser')" name="mdi-account-search"
 						class="text-primary" size="md"></q-icon>
 					<q-icon style="cursor: pointer" @click="workerView('addWorker')" name="mdi-plus"
@@ -20,18 +17,18 @@
 			</div>
 
 
-			<q-tabs v-model="tab" class="text-teal">
+			<q-tabs v-model="tab" class="text-teal q-mb-sm">
 				<q-tab :name="'cdi_activos'" :icon="'mdi-account-group'" :label="`Activos (${cdiActivos})`" />
 				<q-tab name="cdi_inactivos" icon="mdi-account-off" :label="`Inactivos (${cdiInactivos})`" />
 			</q-tabs>
 
 			<q-tab-panels v-model="tab" animated>
 				<q-tab-panel name="cdi_activos">
-					<div class="text-h6 text-left row no-wrap">CDIs Activos </div>
+					<div class="text-subtitle1 text-left row no-wra">CDIs Activos </div>
 					<button @click="GenerateCdisStatusPDF()" class=" cursor-pointer text-primary self-center text-bold"
 						type="button"> <small style="font-size: 12px;">Descargar lista de cdis activos</small></button>
 					<div class="row justify-center q-mt-xl" v-if="this.users.length !== 0">
-						<paginated-card-list :items="cdiActivosList" class="col-12" row-key="id_cdi"
+						<paginated-card-list :items="cdiActivosList"  row-key="id_cdi"
 							:initial-rows-per-page="10">
 							<template v-slot:default="{ user }">
 								<q-list class="rounded-borders bg-secondary" @click="cdiDetails(user)"
@@ -56,31 +53,28 @@
 											<q-item-label class="text-left" lines="1">
 												<span class="text-weight-medium">Cuadrante: {{ user.cuadrante }}</span>
 											</q-item-label>
-											<!-- <q-item-label class="text-left" lines="1">
-									<span class="text-weight-medium">{{ user.role }}</span>
-								</q-item-label> -->
-										</q-item-section>
-										<q-item-section side>
-											<div class="text-grey-8 q-gutter-xs">
 
-												<div class="text-grey-8 q-gutter-xs">
-													<button @click="generatePDF(user)" type="button" lines="2"
-														class=" q-ml-xl q-mr-md cursor-pointer text-primary self-center text-bold"
+											<div class="text-grey-8 row no-wrap q-mt-sm ">
+
+												<div class="text-grey-8 q-gutter-xs-md row items-center ">
+													<button @click.stop="generatePDF(user)" type="button" lines="2"
+														class="  cursor-pointer text-primary text-bold"
 														style="cursor: pointer">
 														<q-icon name="mdi-printer-pos" /> Descargar información
 													</button>
 
 													<q-btn
-														@click="actualizarUsuario({ ...user, estado: user.estado === 'activo' ? 'inactivo' : 'activo' })"
-														class="gt-xs text-negative" size="12px" flat dense
+														@click.stop="actualizarUsuario({ ...user, estado: user.estado === 'activo' ? 'inactivo' : 'activo' })"
+														class=" text-negative" size="12px" flat dense
 														:label="user.estado === 'activo' ? 'Inhabilitar' : 'Habilitar'" />
 
-													<q-btn @click="() => workerView('userDetailEdit')"
-														class="gt-xs z-top text-primary" size="12px" flat dense
+													<q-btn @click.stop="() => workerView('userDetailEdit')"
+														class="  text-primary" size="12px" flat dense
 														label="Editar" />
 												</div>
 											</div>
 										</q-item-section>
+
 									</q-item>
 								</q-list>
 							</template>
@@ -93,7 +87,7 @@
 					</div>
 				</q-tab-panel>
 				<q-tab-panel name="cdi_inactivos">
-					<div class="text-h6 text-left">CDIs Inactivos</div>
+					<div class="text-subtitle1 q-mb-sm text-left">CDIs Inactivos</div>
 					<button @click="GenerateCdisStatusPDF()" class=" cursor-pointer text-primary self-center text-bold"
 						type="button">
 						<small style="font-size: 12px;">Descargar lista de cdis inactivos</small></button>
@@ -123,27 +117,23 @@
 											<q-item-label class="text-left" lines="1">
 												<span class="text-weight-medium">Cuadrante: {{ user.cuadrante }}</span>
 											</q-item-label>
-											<!-- <q-item-label class="text-left" lines="1">
-									<span class="text-weight-medium">{{ user.role }}</span>
-								</q-item-label> -->
-										</q-item-section>
-										<q-item-section side>
-											<div class="text-grey-8 q-gutter-xs">
 
-												<div class="text-grey-8 q-gutter-xs">
-													<button @click="generatePDF(user)" type="button" lines="2"
-														class=" q-ml-xl q-mr-md cursor-pointer text-primary self-center text-bold"
+											<div class="text-grey-8  row no-wrap q-mt-sm ">
+
+												<div class="text-grey-8 q-gutter-xs-md row items-center ">
+													<button @click.stop="generatePDF(user)" type="button" lines="2"
+														class="  cursor-pointer text-primary text-bold"
 														style="cursor: pointer">
 														<q-icon name="mdi-printer-pos" /> Descargar información
 													</button>
 
 													<q-btn
-														@click="actualizarUsuario({ ...user, estado: user.estado === 'activo' ? 'inactivo' : 'activo' })"
-														class="gt-xs text-negative" size="12px" flat dense
+														@click.stop="actualizarUsuario({ ...user, estado: user.estado === 'activo' ? 'inactivo' : 'activo' })"
+														class=" text-negative" size="12px" flat dense
 														:label="user.estado === 'activo' ? 'Inhabilitar' : 'Habilitar'" />
 
-													<q-btn @click="() => workerView('userDetailEdit')"
-														class="gt-xs z-top text-primary" size="12px" flat dense
+													<q-btn @click.stop="() => workerView('userDetailEdit')"
+														class=" text-primary" size="12px" flat dense
 														label="Editar" />
 												</div>
 											</div>
@@ -157,7 +147,7 @@
 			</q-tab-panels>
 		</div>
 
-		<div class="row justify-center" v-if="viewType === 'addWorker'">
+		<div class="row justify-center q-pa-md q-my-xl" v-if="viewType === 'addWorker'">
 			<div class="col-12 text-left row items-center text-left q-mb-lg">
 				<q-icon style="cursor: pointer" @click="workerView('userList')" name="mdi-arrow-left"
 					class="text-primary" size="md"></q-icon>
@@ -208,7 +198,7 @@
 		</div>
 
 
-		<div class="row justify-center" v-if="viewType === 'userDetailEdit'">
+		<div class="row justify-center q-pa-md q-my-xl" v-if="viewType === 'userDetailEdit'">
 			<div class="col-12 text-left">
 				<q-icon style="cursor: pointer" @click="workerView('userList')" name="mdi-arrow-left"
 					class="text-primary" size="md"></q-icon>
@@ -276,7 +266,7 @@
 
 
 		<q-dialog v-model="modalDetailUser">
-			<q-card class="my-card" flat bordered style="min-width: 460px">
+			<q-card class="my-card full-width" flat bordered >
 				<q-card-section>
 					<q-card-section class="col-5 flex flex-center">
 						<div class="text-overline">Detalle del CDI</div>
@@ -410,8 +400,8 @@
 		<!-- FIN ELIMINAR ENCARGADO -->
 
 		<!-- BUSCAR CDI -->
-		<q-dialog v-model="modals.searchUser" style="min-width: 460px">
-			<q-card style="min-width: 460px" class="text-white">
+		<q-dialog v-model="modals.searchUser" >
+			<q-card  class="text-white full-width">
 				<q-bar class="bg-primary">
 					<q-space />
 					<q-btn dense flat icon="close" v-close-popup>
@@ -432,7 +422,7 @@
 		<!-- FIN BUSCAR CDI -->
 
 		<div>
-			<vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="false" :preview-modal="true"
+			<vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="this.$q.screen.lt.md ? true : false" 	:preview-modal="this.$q.screen.gt.sm ? true : false"
 				:paginate-elements-by-height="1400" filename="informacion_de_cdis" :pdf-quality="2"
 				:manual-pagination="false" pdf-format="a4" :pdf-margin="10" pdf-orientation="portrait"
 				pdf-content-width="800px" @progress="onProgress($event)" ref="html2Pdf">
@@ -443,7 +433,7 @@
 		</div>
 
 		<div>
-			<vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="false" :preview-modal="true"
+			<vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="this.$q.screen.lt.md ? true : false" 	:preview-modal="this.$q.screen.gt.sm ? true : false"
 				:paginate-elements-by-height="1400" filename="Listado_CDIS_STATUS" :pdf-quality="2"
 				:manual-pagination="false" pdf-format="a4" :pdf-margin="10" pdf-orientation="portrait"
 				pdf-content-width="800px" @progress="onProgress($event)" ref="html2Pdfstatus">
@@ -454,7 +444,7 @@
 		</div>
 
 		<div>
-			<vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="false" :preview-modal="true"
+			<vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="this.$q.screen.lt.md ? true : false" 	:preview-modal="this.$q.screen.gt.sm ? true : false"
 				:paginate-elements-by-height="1400" filename="informacion_de_cdi" :pdf-quality="2"
 				:manual-pagination="false" pdf-format="a4" :pdf-margin="10" pdf-orientation="portrait"
 				pdf-content-width="800px" @progress="onProgress($event)" ref="cdihtml2Pdf">

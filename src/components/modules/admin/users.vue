@@ -2,10 +2,10 @@
   <div class="row justify-center">
     <slot></slot>
 
-    <div class="col-12" v-if="viewType === 'userList'">
-      <span class="text-accent text-h6 text-bold">Todos los pacientes ({{ users.length }})</span>
+    <div class="col-12 q-pa-sm" v-if="viewType === 'userList'">
+      <span class="text-accent text-subtitle1 text-bold">Todos los pacientes ({{ users.length }})</span>
       <div class="row justify-center">
-        <div class="col-12 self-center text-right">
+        <div class="col-12 self-center q-px-md text-right">
 
           <q-icon style="cursor: pointer" @click="workerView('searchUser')" name="mdi-account-search"
             class="text-primary" size="md"></q-icon>
@@ -17,7 +17,7 @@
       <div class="row justify-center q-mt-xl" v-if="this.users.length !== 0">
         <paginated-card-list :items="users" class="col-12" row-key="id_paciente" :initial-rows-per-page="10">
           <template v-slot:default="{ user }">
-            <q-list class="rounded-borders q-pa-md bg-secondary" style="border-radius: 15px">
+            <q-list class="rounded-borders q-pa-sm bg-secondary" style="border-radius: 15px">
               <q-item>
                 <q-item-section top @click="userDetail(user)" style="cursor: pointer">
                   <q-item-label class="text-left q-mb-xs" lines="1">
@@ -53,11 +53,15 @@
                     <small class="text-weight-medium">Encargado: {{ user.cdi.encargado }}</small>
                   </q-item-label>
 
-                  <small class="text-weight-bold text-primary ">Ver detalles</small>
+                  <div class=" row no-wrap q-gutter-sm items-center q-mt-xs">
+										<small class="text-weight-bold text-primary  ">Ver detalles</small>
+										<q-btn @click.stop="generatePDF(user)" class=" md-hide lg-hide xl-hide text-positive" size="14px" flat dense round
+											icon="mdi-printer-pos" />
+									</div>
 
                 </q-item-section>
 
-                <q-item-section side>
+                <q-item-section side class=" xs-hide sm-hide">
                   <div class="text-grey-8 q-gutter-xs">
                     <q-btn @click="generatePDF(user)" class="gt-xs text-positive" size="22px" flat dense round
                       icon="mdi-printer-pos" />
@@ -102,7 +106,7 @@
     <div>
 
 
-      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="false" :preview-modal="true"
+      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="this.$q.screen.lt.md ? true : false" 	:preview-modal="this.$q.screen.gt.sm ? true : false"
         :paginate-elements-by-height="1400" filename="InformacionDePacientePDF" :pdf-quality="2"
         :manual-pagination="false" pdf-format="a4" :pdf-margin="10" pdf-orientation="portrait" pdf-content-width="800px"
         @progress="onProgress($event)" ref="html2Pdf">
@@ -116,7 +120,7 @@
 
 
     <q-dialog v-model="modalDetailUser">
-      <q-card class="my-card" flat bordered style="min-width: 540px">
+      <q-card class="my-card full-width" flat bordered >
         <q-card-section>
           <q-card-section class="col-5 flex flex-center">
             <div class="text-overline">Sobre el paciente</div>
@@ -129,7 +133,7 @@
 
           <q-card-section class="col-5 flex flex-center">
             <button @click="generatePDF(dataUser)" type="button" lines="2"
-              class=" q-ml-xl q-mr-md cursor-pointer text-primary self-center text-bold" style="cursor: pointer">
+              class="cursor-pointer text-primary self-center text-bold" style="cursor: pointer">
               <q-icon name="mdi-printer-pos" /> Descargar información
             </button>
           </q-card-section>
@@ -207,9 +211,9 @@
             </q-item-section>
             <q-scroll-area v-else style="height: 250px; max-width: 100%;">
               <div v-for="(consulta, index) in dataUser.consultas" :key="index" class="q-py-xs">
-                <q-list>
-                  <q-item style="cursor:pointer;">
-                    <q-item-section>
+                <q-list >
+                  <q-item style="cursor:pointer;" >
+                    <q-item-section >
                       <q-item-label caption>Paciente debe asistir el: <b>{{ entradaFecha(consulta.fecha_consulta)
                       }}</b></q-item-label>
                       <span class="q-my-sm"> <q-icon name="mdi-information" color="primary" /> Estado actual: <b>{{
@@ -239,8 +243,8 @@
     </q-dialog>
 
     <!-- BUSCAR PACIENTE -->
-    <q-dialog v-model="modals.searchUser" style="min-width: 460px">
-      <q-card style="min-width: 460px" class="text-white">
+    <q-dialog v-model="modals.searchUser">
+      <q-card class="text-white full-width">
         <q-bar class="bg-primary">
           <q-space />
           <q-btn dense flat icon="close" v-close-popup>

@@ -1,222 +1,254 @@
 <template>
   <div class="pdf-container">
-    <img src="../../../assets/membrete.png" class="full-width q-mb-sm" style="max-height: 80px; object-fit: contain;" />
-
-    <!-- Título del documento -->
-    <div class="text-center q-mb-md">
-      <h6 class="text-primary no-padding no-margin q-mb-none">DOCTORES</h6>
-      <p class="text-grey-6 no-padding q-mt-sm">Información Personal y Profesional</p>
+    <!-- Membrete / Encabezado -->
+    <div class="header-logo">
+      <img src="../../../assets/membrete.png" class="full-width" style="max-height: 80px; object-fit: contain;" />
     </div>
 
-    <!-- LISTADO DE DOCTORES separado en dos columnas: Activos / Inactivos -->
+    <!-- Título del documento -->
+    <div class="text-center q-mb-lg header-title">
+      <h5 class="text-primary no-padding no-margin text-bold">LISTADO GENERAL DE DOCTORES</h5>
+      <p class="text-grey-7 no-padding q-mt-xs">Control de Personal Médico y Profesional - CDI</p>
+    </div>
+
+    <!-- LISTADO DE DOCTORES -->
     <div class="info-section">
-      <div class="section-title">DOCTORES REGISTRADOS ({{ totalCount }})</div>
+      <div class="section-title">
+        <span>DOCTORES REGISTRADOS</span>
+        <span class="count-badge">Total: {{ totalCount }}</span>
+      </div>
 
-      <div class="two-columns">
-        <div  class="column">
-          <div class="compact-table small">
-            <div class="table-header">
-              <div class="header-cell">Nombre</div>
-              <div class="header-cell">Nacionalidad</div>
-              <div class="header-cell">Cédula</div>
-              <div class="header-cell">Teléfono</div>
-              <div class="header-cell">Correo</div>
-              <div class="header-cell">Estado</div>
-            </div>
-            <div v-for="(doctor, index) in doctores" :key="'act-'+index" class="table-row">
-               <span class="value"  >{{ doctor.persona.nombre1 || 'No especificado' }}</span>
-              <div class="table-cell">{{ doctor.persona.nacionalidad || 'No especificado' }}</div>
-              <div class="table-cell">{{ doctor.persona.cedula_identidad || 'No especificado' }}</div>
-              <div class="table-cell">{{ doctor.persona.telefono.codigo + ' ' + (doctor.persona.telefono.numero || 'No especificado') }}</div>
-              <div class="table-cell">{{ doctor.persona.correo.correo || 'No especificado' }}</div>
-                <div class="table-cell">{{ doctor.usuarios.estado || 'No especificado' }}</div>
-            </div>
-          </div>
-        </div>
-
+      <div class="table-wrapper">
+        <table class="styled-table">
+          <thead>
+            <tr>
+              <th class="text-left" style="width: 25%;">Nombre y Apellido</th>
+              <th style="width: 15%;">Nacionalidad</th>
+              <th style="width: 15%;">Cédula</th>
+              <th style="width: 15%;">Teléfono</th>
+              <th style="width: 20%;">Correo Electrónico</th>
+              <th style="width: 10%;">Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(doctor, index) in doctores" :key="'dr-' + index">
+              <td class="text-left text-bold text-primary">
+                {{ (doctor.persona && doctor.persona.nombre1) || 'No especificado' }}
+              </td>
+              <td class="text-center">{{ (doctor.persona && doctor.persona.nacionalidad) || 'No especificado' }}</td>
+              <td class="text-center">{{ (doctor.persona && doctor.persona.cedula_identidad) || 'No especificado' }}</td>
+              <td class="text-center">
+                {{ (doctor.persona && doctor.persona.telefono) ? (doctor.persona.telefono.codigo + ' ' + (doctor.persona.telefono.numero || '')) : 'N/A' }}
+              </td>
+              <td class="text-center text-lowercase">
+                {{ (doctor.persona && doctor.persona.correo && doctor.persona.correo.correo) || 'No especificado' }}
+              </td>
+              <td class="text-center">
+                <span :class="['status-chip', doctor.usuarios && doctor.usuarios.estado]">
+                  {{ (doctor.usuarios && doctor.usuarios.estado) || 'N/A' }}
+                </span>
+              </td>
+            </tr>
+            <tr v-if="doctores.length === 0">
+              <td colspan="6" class="text-center q-pa-md text-grey">
+                No se encontraron doctores registrados.
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
 
     <!-- Pie de página -->
-    <div class="text-center q-pa-sm q-mt-md">
-      <p class="text-grey-6 q-mb-none">
-        Documento generado el {{ fechaActual() }} - Sistema CDI
+    <div class="pdf-footer">
+      <div class="divider"></div>
+      <p class="text-grey-6">
+        Documento oficial generado por el Sistema CDI el {{ fechaActual() }}
       </p>
+      <p class="text-grey-5 page-number">Página 1 de 1</p>
     </div>
   </div>
 </template>
 
 <script>
 import moment from 'moment'
+
 export default {
   name: "historiaPdfListaDoctor",
-  props: ["data"], // isActive: true para activos, false para inactivos
-  created() {
-    console.log('lista de doctores: ', this.data);
-    
-  },
+  props: ["data"],
   computed: {
-    // total general
     doctores() {
       return Array.isArray(this.data) ? this.data : [];
     },
     totalCount() {
-      return Array.isArray(this.data) ? this.data.length : 0;
+      return this.doctores.length;
     },
   },
   methods: {
-    salidaFecha(salida) {
-      return moment(salida).format('DD-MM-YYYY')
-    },
-    entradaFecha(entrada) {
-      return moment(entrada).format('DD-MM-YYYY')
-    },
     fechaActual() {
-      return moment().format('DD-MM-YYYY HH:mm:ss')
+      return moment().format('DD/MM/YYYY hh:mm A')
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
+/* Configuraciones base para PDF */
 .pdf-container {
-  padding: 10px;
-  font-family: Arial, sans-serif;
-  font-size: 10px;
-  line-height: 1.2;
-  max-width: 210mm;
-  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 11px;
+  color: #333;
+  background-color: white;
+  min-height: 297mm; /* A4 height */
+}
+
+.header-logo {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.header-title {
+  border-bottom: 2px solid #1976d2;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+  
+  h5 {
+    letter-spacing: 1px;
+    font-size: 18px;
+  }
 }
 
 .info-section {
-  margin-bottom: 15px;
-  page-break-inside: avoid;
+  margin-bottom: 30px;
 }
 
 .section-title {
   background-color: #1976d2;
   color: white;
-  padding: 4px 8px;
+  padding: 8px 12px;
   font-weight: bold;
-  font-size: 11px;
-  margin-bottom: 5px;
-  border-radius: 3px;
-}
-
-.compact-table {
-  border: 1px solid #ddd;
-  border-radius: 3px;
-  overflow-x: auto;
-  margin-top: 5px;
-  width: 100%;
-}
-
-.table-header, .table-row {
-  display: grid;
-  grid-template-columns: repeat(6, minmax(100px, 1fr));
-  background-color: #1976d2;
-  font-weight: bold;
-  font-size: 9px;
-  min-width: 600px;
-}
-
-.table-row {
-  background-color: #fff;
-  font-weight: normal;
-  border-top: 1px solid #ddd;
-  font-size: 9px;
-}
-
-.table-row:nth-child(even) {
-  background-color: #f9f9f9;
-}
-
-.header-cell, .table-cell, .value {
-  padding: 3px 4px;
-  border-right: 1px solid #ddd;
-  text-align: center;
-  color: #333;
-  word-break: break-word;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.header-cell {
-  color: white;
-  background-color: #1976d2;
-}
-
-.header-cell:last-child, .table-cell:last-child, .value:last-child {
-  border-right: none;
-}
-
-/* Responsive: stack columns on small screens */
-@media (max-width: 900px) {
-  .pdf-container {
-    font-size: 9px;
-  }
-  .table-header, .table-row {
-    grid-template-columns: repeat(6, minmax(80px, 1fr));
-    min-width: 480px;
-  }
-}
-
-@media (max-width: 600px) {
-  .pdf-container {
-    font-size: 8px;
-    padding: 2px;
-  }
-  .section-title {
-    font-size: 9px;
-    padding: 2px 4px;
-  }
-  .compact-table {
-    margin-top: 2px;
-  }
-  .table-header, .table-row {
-    grid-template-columns: 1fr;
-    display: block;
-    min-width: unset;
-  }
-  .table-header, .table-row {
-    background-color: transparent;
-  }
-  .header-cell, .table-cell, .value {
-    display: block;
-    border-right: none;
-    border-bottom: 1px solid #eee;
-    text-align: left;
-    white-space: normal;
-    padding: 4px 2px;
-  }
-  .header-cell:last-child, .table-cell:last-child, .value:last-child {
-    border-bottom: none;
-  }
-}
-
-/* Two column layout for active/inactive lists */
-.two-columns {
+  font-size: 12px;
   display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 4px 4px 0 0;
 }
-.column {
-  flex: 1 1 50%;
-  min-width: 200px;
-}
-.sub-title {
-  font-weight: bold;
-  margin-bottom: 6px;
+
+.count-badge {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 2px 8px;
+  border-radius: 10px;
   font-size: 10px;
 }
-.compact-table.small .table-header {
-  font-size: 8px;
+
+/* Tabla Estilizada */
+.table-wrapper {
+  border: 1px solid #e0e0e0;
+  border-top: none;
+  border-radius: 0 0 4px 4px;
 }
-.compact-table.small .table-row {
-  font-size: 8px;
+
+.styled-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+
+  thead tr {
+    background-color: #f5f5f5;
+    color: #555;
+    text-align: center;
+    font-weight: bold;
+  }
+
+  th {
+    padding: 10px 8px;
+    border-bottom: 2px solid #e0e0e0;
+    font-size: 10px;
+    text-transform: uppercase;
+  }
+
+  td {
+    padding: 8px;
+    border-bottom: 1px solid #eee;
+    font-size: 10px;
+    vertical-align: middle;
+  }
+
+  tbody tr:nth-of-type(even) {
+    background-color: #fafafa;
+  }
+
+  tbody tr:last-of-type {
+    border-bottom: 2px solid #1976d2;
+  }
+
+  tbody tr:hover {
+    background-color: #f1f1f1;
+  }
 }
-.compact-table.small .table-cell {
-  padding: 2px 4px;
+
+/* Status Chips */
+.status-chip {
+  padding: 2px 6px;
+  border-radius: 12px;
+  font-size: 9px;
+  font-weight: bold;
+  text-transform: uppercase;
+  display: inline-block;
+  min-width: 60px;
+}
+
+.status-chip.activo {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+  border: 1px solid #c8e6c9;
+}
+
+.status-chip.inactivo {
+  background-color: #ffebee;
+  color: #c62828;
+  border: 1px solid #ffcdd2;
+}
+
+/* Footer Styling */
+.pdf-footer {
+  margin-top: auto;
+  padding-top: 20px;
+  text-align: center;
+  position: relative;
+}
+
+.divider {
+  height: 1px;
+  background-color: #e0e0e0;
+  margin-bottom: 10px;
+}
+
+.page-number {
+  font-size: 9px;
+  margin-top: 5px;
+}
+
+/* Helpers */
+.text-left { text-align: left !important; }
+.text-center { text-align: center !important; }
+.text-bold { font-weight: bold; }
+.text-primary { color: #1976d2; }
+.text-lowercase { text-transform: lowercase; }
+
+/* Impresión */
+@media print {
+  .pdf-container {
+    padding: 0;
+  }
+  .styled-table {
+    page-break-inside: auto;
+  }
+  tr {
+    page-break-inside: avoid;
+    page-break-after: auto;
+  }
 }
 </style>
+
