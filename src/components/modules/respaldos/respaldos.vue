@@ -5,177 +5,109 @@
 		<div
 			class="column"
 		>
-			<div
-				class="row items-center justify-between q-mb-md"
-			>
-				<h4
-					class="q-my-sm text-primary"
-				>
-					Respaldos
-					del
-					Sistema
+			<div class="row items-center justify-between q-mb-md q-gutter-sm">
+				<h4 class="q-my-sm text-primary col-12 col-sm-auto text-center text-sm-left">
+					Respaldos del Sistema
 				</h4>
 				<q-btn
 					color="primary"
 					icon="mdi-database-plus"
 					label="Crear Respaldo"
-					:loading="
-						creando
-					"
-					@click="
-						crearRespaldo
-					"
+					:loading="creando"
+					@click="crearRespaldo"
+					class="col-12 col-sm-auto"
 				/>
 			</div>
 
-			<p
-				class="text-grey-7"
-			>
-				Administra
-				los
-				respaldos
-				de
-				la
-				base
-				de
-				datos.
-				Puedes
-				crear
-				nuevos
-				respaldos,
-				restaurar
-				respaldos
-				anteriores
-				o
-				eliminar
-				los
-				que
-				ya
-				no
-				necesites.
+			<p class="text-grey-7 text-center text-sm-left">
+				Administra los respaldos de la base de datos. Puedes crear nuevos respaldos, restaurar respaldos anteriores o eliminar los que ya no necesites.
 			</p>
 
 			<q-table
 				flat
 				bordered
 				dense
-				:data="
-					respaldos
-				"
-				:columns="
-					columns
-				"
+				:data="respaldos"
+				:columns="columns"
 				row-key="filename"
-				:loading="
-					loading
-				"
-				:filter="
-					filter
-				"
+				:loading="loading"
+				:filter="filter"
 				rows-per-page-label="Registros por página"
 				no-data-label="No hay respaldos disponibles"
-				class="text-primary"
+				class="text-primary full-width"
+				:grid="$q.screen.lt.md"
 			>
-				<template
-					v-slot:top-right
-				>
-					<q-input
-						dense
-						color="primary"
-						filled
-						v-model="
-							filter
-						"
-						placeholder="Buscar respaldo"
-					>
-						<template
-							v-slot:append
+				<template v-slot:top>
+					<div class="row full-width items-center q-gutter-sm q-px-sm q-py-xs">
+						<div class="text-h6 text-primary" v-if="$q.screen.gt.xs">Lista de Respaldos</div>
+						<q-space v-if="$q.screen.gt.xs" />
+						<q-input
+							dense
+							outlined
+							color="primary"
+							v-model="filter"
+							placeholder="Buscar respaldo..."
+							:class="$q.screen.lt.sm ? 'full-width' : ''"
+							style="min-width: 250px"
 						>
-							<q-icon
-								name="search"
-							/>
-						</template>
-					</q-input>
+							<template v-slot:append>
+								<q-icon name="search" />
+							</template>
+						</q-input>
+					</div>
 				</template>
 
-				<template
-					v-slot:body="props"
-				>
-					<tr>
-						<td
-							class="text-left"
-						>
-							<q-icon
-								name="mdi-file-document"
-								class="q-mr-sm"
-								color="primary"
-							/>
-							{{
-								props
-									.row
-									.filename
-							}}
+				<template v-slot:body="props">
+					<tr class="text-primary">
+						<td class="text-left">
+							<q-icon name="mdi-file-document" class="q-mr-sm" color="primary" />
+							{{ props.row.filename }}
 						</td>
-						<td
-							class="text-center"
-						>
-							{{
-								props
-									.row
-									.size
-							}}
+						<td class="text-center">
+							{{ props.row.size }}
 						</td>
-						<td
-							class="text-center"
-						>
-							{{
-								formatDate(
-									props
-										.row
-										.createdAt
-								)
-							}}
+						<td class="text-center text-body2">
+							{{ formatDate(props.row.createdAt) }}
 						</td>
-						<td
-							class="text-center"
-						>
-							<q-btn
-								flat
-								dense
-								round
-								icon="mdi-backup-restore"
-								color="positive"
-								@click="
-									confirmarRestaurar(
-										props.row
-									)
-								"
-							>
-								<q-tooltip
-									>Restaurar
-									este
-									respaldo</q-tooltip
-								>
+						<td class="text-center">
+							<q-btn flat dense round icon="mdi-backup-restore" color="positive" @click="confirmarRestaurar(props.row)">
+								<q-tooltip>Restaurar este respaldo</q-tooltip>
 							</q-btn>
-							<q-btn
-								flat
-								dense
-								round
-								icon="mdi-delete"
-								color="negative"
-								@click="
-									confirmarEliminar(
-										props.row
-									)
-								"
-							>
-								<q-tooltip
-									>Eliminar
-									respaldo</q-tooltip
-								>
+							<q-btn flat dense round icon="mdi-delete" color="negative" @click="confirmarEliminar(props.row)">
+								<q-tooltip>Eliminar respaldo</q-tooltip>
 							</q-btn>
 						</td>
 					</tr>
+				</template>
+
+				<template v-slot:item="props">
+					<div class="q-pa-xs col-xs-12 col-sm-6">
+						<q-card flat bordered class="q-hoverable">
+							<q-card-section>
+								<div class="row items-center no-wrap">
+									<div class="col">
+										<div class="text-subtitle1 text-weight-bold text-primary ellipsis">
+											<q-icon name="mdi-file-document" class="q-mr-xs" />
+											{{ props.row.filename }}
+										</div>
+										<div class="text-caption text-grey-8">
+											Tamaño: {{ props.row.size }}
+										</div>
+									</div>
+								</div>
+							</q-card-section>
+							<q-separator />
+							<q-card-section class="q-py-sm">
+								<div class="text-caption text-grey-7">Fecha de Creación:</div>
+								<div class="text-body2">{{ formatDate(props.row.createdAt) }}</div>
+							</q-card-section>
+							<q-separator />
+							<q-card-actions align="around" class="q-pa-sm">
+								<q-btn flat dense color="positive" icon="mdi-backup-restore" label="Restaurar" @click="confirmarRestaurar(props.row)" />
+								<q-btn flat dense color="negative" icon="mdi-delete" label="Eliminar" @click="confirmarEliminar(props.row)" />
+							</q-card-actions>
+						</q-card>
+					</div>
 				</template>
 			</q-table>
 		</div>
@@ -641,6 +573,20 @@ export default {
 						}
 					);
 			},
-		},
+	},
 };
 </script>
+
+<style scoped>
+.ellipsis {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+@media (max-width: 600px) {
+	h4 {
+		font-size: 1.5rem;
+	}
+}
+</style>

@@ -463,10 +463,7 @@
 				myInfoD
 			"
 		>
-			<q-card
-				style="
-					width: 500px;
-				"
+			<q-card class="full-width"
 			>
 				<q-card-section>
 					<div
@@ -478,7 +475,7 @@
 								.role ===
 							'cdi'
 						"
-						class="text-h6 text-grey-8"
+						class="text-subtitle1 text-grey-8"
 					>
 						Cuenta
 						CDI
@@ -492,7 +489,7 @@
 								.role ===
 							'doctor'
 						"
-						class="text-h6 text-grey-8"
+						class="text-subtitle1 text-grey-8"
 					>
 						Cuenta
 						doctor
@@ -506,7 +503,7 @@
 								.role ===
 							'admin'
 						"
-						class="text-h6 text-grey-8"
+						class="text-subtitle1 text-grey-8"
 					>
 						Cuenta
 						Administrador
@@ -918,7 +915,7 @@
 							.role ===
 						'admin'
 					"
-					class="scroll text-center"
+					class=" text-center"
 				>
 					<q-scroll-area
 						v-if="
@@ -931,7 +928,7 @@
 							barStyle
 						"
 						style="
-							height: 60vh;
+						height: 300px;
 						"
 					>
 						<div
@@ -1071,6 +1068,7 @@
 			v-model="
 				confirm
 			"
+			class="full-width"
 			persistent
 		>
 			<q-card
@@ -1124,6 +1122,7 @@
 			v-model="
 				addCorreoM
 			"
+			class="full-width"
 			persistent
 		>
 			<q-card
@@ -1251,6 +1250,7 @@
 			v-model="
 				seguridadModal
 			"
+			class="full-width"
 		>
 			<q-card
 				class="q-pa-md"
@@ -1335,6 +1335,7 @@
 			v-model="
 				pinModal
 			"
+			class="full-width"
 		>
 			<q-card
 				class="q-pa-md"
