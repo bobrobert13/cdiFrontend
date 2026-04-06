@@ -1,14 +1,5 @@
 <template>
-	<q-page v-bind="this
-			.$q
-			.screen
-			.lt
-			.md
-			? {}
-			: {
-				padding,
-			}
-		">
+	<q-page padding>
 		<section v-if="
 			this
 				.$store
@@ -18,12 +9,12 @@
 			'admin' &&
 			!showStatsPanel
 		" class="column">
-			<h4 class="q-my-sm text-primary">
+			<h4 class="q-my-sm text-primary xs-hide sm-hide">
 				Estadisticas
 				de
 				CDIs
 			</h4>
-			<p>
+			<p class="xs-hide sm-hide">
 				A
 				continuación
 				se
@@ -44,66 +35,108 @@
 				estadisticas.
 			</p>
 
-			<q-table flat bordered dense :data="rows
-				" :columns="columns
-					" row-key="id" :filter="filter
-					" rows-per-page-label="Registros por página" no-data-label="No hay datos disponibles"
-				class="text-primary full-height" style="
-					min-height: 80vh;
-				">
-				<template v-slot:top-right>
-					<div class="q-px-lg q-py-sm">
-						<q-input dense color="primary" filled v-model="filter
-							" placeholder="Buscar">
-							<template v-slot:append>
-								<q-icon name="search" />
-							</template>
-						</q-input>
-					</div>
-				</template>
+				<q-table
+					flat
+					bordered
+					dense
+					:data="rows"
+					:columns="columns"
+					row-key="id"
+					:filter="filter"
+					rows-per-page-label="Registros por página"
+					no-data-label="No hay datos disponibles"
+					class="text-primary full-width sticky-last-column-table"
+					style="min-height: 80vh;"
+					:grid="$q.screen.lt.md"
+					binary-state-sort
+				>
+					<template v-slot:top>
+						<div class="row full-width items-center q-px-sm q-py-sm q-gutter-sm">
+							<div class="text-h6 text-primary q-my-none" v-if="$q.screen.gt.xs">
+								CDIs Registrados
+							</div>
+							<q-space v-if="$q.screen.gt.xs" />
+							<q-input
+								dense
+								outlined
+								color="primary"
+								v-model="filter"
+								placeholder="Buscar CDI..."
+								:class="$q.screen.lt.sm ? 'full-width' : ''"
+								style="min-width: 250px"
+							>
+								<template v-slot:append>
+									<q-icon name="search" />
+								</template>
+							</q-input>
+						</div>
+					</template>
 
-				<template v-slot:body="props">
-					<tr class="q-px-md">
-						<td class="text-left">
-							{{
-								props
-									.row
-									.name
-							}}
-						</td>
-						<td class="text-center">
-							{{
-								props
-									.row
-									.numero_cdi
-							}}
-						</td>
-						<td class="text-left">
-							{{
-								props
-									.row
-									.encargado
-							}}
-						</td>
-						<td class="text-center">
-							{{
-								props
-									.row
-									.cuadrante
-							}}
-						</td>
-						<td class="text-center">
-							<q-btn color="primary" @click="
-								showStats(
-									props
-										.row
-										.id
-								)
-								" label="Ver Estadísticas" size="sm" />
-						</td>
-					</tr>
-				</template>
-			</q-table>
+					<template v-slot:body="props">
+						<tr class="text-primary">
+							<td class="text-left">
+								{{ props.row.name }}
+							</td>
+							<td class="text-center">
+								{{ props.row.numero_cdi }}
+							</td>
+							<td class="text-left">
+								{{ props.row.encargado }}
+							</td>
+							<td class="text-center">
+								{{ props.row.cuadrante }}
+							</td>
+							<td class="text-center">
+								<q-btn
+									color="primary"
+									outline
+									@click="showStats(props.row.id)"
+									label="Ver Estadísticas"
+									size="sm"
+									icon-right="analytics"
+								/>
+							</td>
+						</tr>
+					</template>
+
+					<template v-slot:item="props">
+						<div class="q-pa-xs col-xs-12 col-sm-6">
+							<q-card flat bordered class="q-hoverable cursor-pointer" @click="showStats(props.row.id)">
+								<q-card-section>
+									<div class="row items-center no-wrap">
+										<div class="col">
+											<div class="text-subtitle1 text-weight-bold text-primary">{{ props.row.name }}</div>
+											<div class="text-caption text-grey-8">CDI: #{{ props.row.numero_cdi }}</div>
+										</div>
+										<div class="col-auto">
+											<q-btn flat round color="primary" icon="analytics" />
+										</div>
+									</div>
+								</q-card-section>
+								<q-separator />
+								<q-card-section class="q-py-sm">
+									<div class="row q-col-gutter-xs">
+										<div class="col-12">
+											<q-icon name="person" color="grey-7" class="q-mr-xs" />
+											<span class="text-caption text-grey-7">Encargado: </span>
+											<span class="text-body2">{{ props.row.encargado }}</span>
+										</div>
+										<div class="col-12">
+											<q-icon name="map" color="grey-7" class="q-mr-xs" />
+											<span class="text-caption text-grey-7">Cuadrante: </span>
+											<span class="text-body2">{{ props.row.cuadrante }}</span>
+										</div>
+									</div>
+								</q-card-section>
+								<q-separator />
+								<q-card-actions align="right" class="q-pa-sm">
+									<q-btn flat color="primary" label="Ver Estadísticas" icon="visibility" />
+								</q-card-actions>
+							</q-card>
+						</div>
+					</template>
+				</q-table>
+
 		</section>
 
 		<div v-else-if="
@@ -128,61 +161,28 @@
 				<div class="col-12">
 					<q-card class="q-pa-md">
 						<div class="text-subtitle1 q-mb-md">
-							Filtros
-							de
-							Período
-							(Semana/Mes/Año)
+							Filtros de Período (Semana/Mes/Año)
 						</div>
-						<div class="row q-gutter-md items-center">
-							<div class="col-auto">
-								<q-select v-model="selectedPeriod
-									" outlined dense :options="periodOptions
-										" label="Período" emit-value map-options @update:model-value="
-										onPeriodChange
-									" style="
-										min-width: 150px;
-									" />
+						<div class="row q-col-gutter-sm items-center">
+							<div class="col-12 col-sm-auto">
+								<q-select v-model="selectedPeriod" outlined dense :options="periodOptions" label="Período" emit-value map-options @update:model-value="onPeriodChange" style="min-width: 150px;" class="full-width-xs" />
 							</div>
 
-							<div class="col-auto" v-if="
-								selectedPeriod ===
-								'month' ||
-								selectedPeriod ===
-								'year'
-							">
-								<div class="row items-center no-wrap">
-									<q-btn flat dense round icon="chevron_left" @click="
-										prevYear
-									" />
-									<q-chip color="secondary" text-color="white" class="q-mx-xs">{{
-										selectedYear
-									}}</q-chip>
-									<q-btn flat dense round icon="chevron_right" @click="
-										nextYear
-									" :disable="selectedYear >=
-											currentYear
-											" />
+							<div class="col-12 col-sm-auto" v-if="selectedPeriod === 'month' || selectedPeriod === 'year'">
+								<div class="row items-center no-wrap justify-center bg-grey-2 q-pa-xs rounded-borders">
+									<q-btn flat dense round icon="chevron_left" @click="prevYear" />
+									<q-chip color="secondary" text-color="white" class="q-mx-xs">{{ selectedYear }}</q-chip>
+									<q-btn flat dense round icon="chevron_right" @click="nextYear" :disable="selectedYear >= currentYear" />
 								</div>
 							</div>
 
-							<div class="col-auto" v-if="
-								selectedPeriod ===
-								'month'
-							">
-								<q-select v-model="selectedMonth
-									" outlined dense :options="monthOptions
-										" label="Mes" emit-value map-options @update:model-value="
-										onMonthChange
-									" style="
-										min-width: 170px;
-									" />
+							<div class="col-12 col-sm-auto" v-if="selectedPeriod === 'month'">
+								<q-select v-model="selectedMonth" outlined dense :options="monthOptions" label="Mes" emit-value map-options @update:model-value="onMonthChange" style="min-width: 170px;" class="full-width-xs" />
 							</div>
 
-							<div class="col-auto">
-								<q-chip color="primary" size="md" text-color="white">
-									{{
-										getCurrentPeriodLabel()
-									}}
+							<div class="col-12 col-sm-auto text-center">
+								<q-chip color="primary" size="md" text-color="white" class="q-ma-none">
+									{{ getCurrentPeriodLabel() }}
 								</q-chip>
 							</div>
 						</div>
@@ -3104,5 +3104,23 @@ export default {
 <style scoped>
 .full-height {
 	height: 100%;
+}
+
+.sticky-last-column-table {
+	max-width: 100%;
+}
+
+@media (max-width: 600px) {
+	.sticky-last-column-table {
+		border: none;
+	}
+	.full-width-xs {
+		width: 100%;
+	}
+}
+
+/* Ajustes para scroll horizontal en tablas si no se usa el modo grid */
+.q-table__container {
+	overflow-x: auto !important;
 }
 </style>
