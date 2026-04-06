@@ -185,9 +185,9 @@ export default {
       passwordRules: [
         (val) => val.length >= 8 || 'Mínimo 8 caracteres',
         (val) => val.length <= 20 || 'Máximo 20 caracteres',
-        (val) => /[0-9]/.test(val) || 'Debes incluir al menos 1 número',
-        (val) => /[!@#$%^&*(),.?" :{}|<>]/.test(val) || 'Debes incluir al menos 1 carácter especial',
-        (val) => /[A-Z]/.test(val) || 'Debes incluir al menos 1 letra mayúscula',
+        (val) => /[0-9]/.test(val) || 'Formato inválido de contraseña',
+        (val) => /[!@#$%^&*(),.?" :{}|<>]/.test(val) || 'Formato inválido de contraseña',
+        (val) => /[A-Z]/.test(val) || 'Formato inválido de contraseña',
       ],
       loader: false,
       email: "",
