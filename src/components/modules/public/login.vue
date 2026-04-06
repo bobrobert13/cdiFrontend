@@ -230,12 +230,12 @@ export default {
       const errors = this.passwordRules
         .map(rule => rule(newValue))
         .filter(result => result !== true);
-        if (errors.length === 0) {
-          this.valid = false;
-        } else {
-          this.valid = true ;
-        }
-      
+      if (errors.length === 0) {
+        this.valid = false;
+      } else {
+        this.valid = true;
+      }
+
     },
   },
   methods: {

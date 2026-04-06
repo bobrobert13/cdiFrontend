@@ -80,6 +80,7 @@ module.exports = function (/* ctx */) {
       iconSet: 'material-icons', // Quasar icon set
       lang: 'en-us', // Quasar language pack
       plugins: ['Notify'],
+      cssAddon: true,
       config: {
         notify: {
           /* Notify defaults */

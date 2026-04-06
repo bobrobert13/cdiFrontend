@@ -19,7 +19,7 @@
         </div>
 
         <div
-          class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 q-mt-xl"
+          class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 q-mt-xs-none q-mt-sm-md q-mt-md-xl q-mt-lg-xl q-mt-xl-xl"
           v-if="workersView === false"
         >
           <homeAdmin v-if="this.$store.state.user.role === 'admin'"></homeAdmin>

@@ -1,7 +1,7 @@
 <template>
   <div class="row justify-center">
     <div class="col-12 self-end">
-      <span class="text-bold text-h6 text-accent">Panel de administrador</span>
+      <span class="text-bold no-padding no-margin text-h6 text-accent">Panel de administrador</span>
     </div>
     <div class="col-12 self-end bg-white" style="min-height: 85vh; border-radius: 20px">
       <q-scroll-area class="q-mt-md q-mb-md" :thumb-style="thumbStyle" :bar-style="barStyle" style="height: 75vh">
@@ -56,7 +56,7 @@
         </div>
         <div @click="doctorControl()" class="cursor-pointer column justify-center items-center">
         <q-icon name="mdi-doctor" color="primary" size="55px" />
-      <span>Ir a Doctores</span>  
+      <span>Ir a Doctores</span>
       </div>
     </section>
             </users>
@@ -77,11 +77,11 @@
         </div>
         <div @click="doctorControl()" class="cursor-pointer column justify-center items-center">
         <q-icon name="mdi-doctor" color="primary" size="55px" />
-      <span>Ir a Doctores</span>  
+      <span>Ir a Doctores</span>
       </div>
     </section>
 
-            </admins> 
+            </admins>
           </div>
         </div>
         <div class="row  justify-center" v-if="doctoresView === true">
@@ -100,7 +100,7 @@
         </div>
         <div @click="userControl()" class="cursor-pointer column justify-center items-center">
         <q-icon name="mdi-doctor" color="primary" size="55px" />
-      <span>Ir a pacientes</span>  
+      <span>Ir a pacientes</span>
       </div>
     </section>
 

@@ -1,10 +1,10 @@
 <template>
   <div class="row justify-center">
     <div class="col-12 self-end">
-      <span class="text-bold text-h6  text-accent">Usuarios del CDI</span>
+      <span class="text-bold text-h6 no-padding no-margin  text-accent">Usuarios del CDI</span>
     </div>
     <div class="col-12 self-end bg-white" style="min-height: 85vh; border-radius: 20px">
-     
+
                   <div class="row q-px-md q-mt-sm">
               <div class="col self-center text-right">
                 <div class="col-4 self-center text-right">
@@ -28,7 +28,7 @@
                   class="text-primary q-mr-md" size="sm"></q-icon>
               </div>
             </div>
-     
+
       <q-scroll-area class="q-mt-md q-mb-md" :thumb-style="thumbStyle" :bar-style="barStyle" style="height: 75vh">
         <div class="row justify-center">
           <div class="col-10" v-if="viewType === 'userList'">
@@ -43,7 +43,7 @@
 
             <q-tab-panels v-model="tab" animated>
               <q-tab-panel name="doctoresCDI">
-                <div class="text-h6"><span v-if="users && users.length !== 0">{{ users.length }}</span> Doctores del CDI
+                <div class="text-h6 "><span v-if="users && users.length !== 0">{{ users.length }}</span> Doctores del CDI
                 </div>
                 Listado de usuarios doctores pertenecientes al CDI
 
@@ -191,7 +191,7 @@
                                   </q-item-label>
 
                                 <q-item-label v-if="userPaciente.persona.edad < 18" class="text-left q-mt-xs" >
-                                  <q-icon name="mdi-human-child" /> <span class="text-weight-medium text-green">Este paciente es menor de edad</span> 
+                                  <q-icon name="mdi-human-child" /> <span class="text-weight-medium text-green">Este paciente es menor de edad</span>
                                 </q-item-label>
                                 </div>
                                 <div class="col-6 q-mb-xs">
@@ -204,7 +204,7 @@
                                 </div>
                               </div>
                               <q-separator spaced color="blue-grey" />
-                              
+
                                 <button type="button"
                                   class="no-outline no-border q-px-md q-mb-xs q-py-xs rounded-borders bg-blue-grey text-white cursor-pointer"
                                   @click="openDetailsPaciente(userPaciente)">Detalles del paciente</button>
@@ -538,7 +538,7 @@
           <!-- FIN BUSCAR DOCTOR -->
 
 
-          
+
           <!-- BUSCAR PACIENTE -->
           <q-dialog v-model="modals.searchPaciente" style="min-width: 460px">
             <q-card style="min-width: 460px" class="text-white">
@@ -659,7 +659,7 @@
                       <q-item style="cursor:pointer;">
                       <q-item-section>
                         <span class="q-my-sm">
-                        <q-icon name="mdi-information" color="primary" /> 
+                        <q-icon name="mdi-information" color="primary" />
                         Condición: <b>{{ diagnostico.condicion }}</b>
                         </span>
                         <q-item-label>
@@ -715,7 +715,7 @@
         </section>
       </vue-html2pdf>
     </div>
-    
+
         <div>
 			<vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="false" :preview-modal="true"
 				:paginate-elements-by-height="1400" filename="Listado_DOCTORES" :pdf-quality="2"
@@ -996,7 +996,7 @@ export default {
         { label: "Divorciado", value: "Divorciado" },
         { label: "Viudo", value: "Viudo" },
         { label: "Unión libre", value: "Unión libre" }
-      ],  
+      ],
       edad: 0,
 
       sexoDoctor: [

@@ -12,7 +12,7 @@
       </div>
 
       <q-scroll-area class=" q-mb-md" :thumb-style="thumbStyle" :bar-style="barStyle" style="height: 80vh">
-        <div class="column q-pa-xl justify-center">
+        <div class="column q-pa-xs-md q-pa-sm-md q-pa-md-xl q-pa-lg-xl q-pa-xl-xl  justify-center">
 
 
 
@@ -23,7 +23,7 @@
             </div>
             <div class="row justify-center" v-if="this.users.length !== 0">
               <div class="col-12 text-left q-mb-md">
-                <p class="text-h6 text-weight-light ">Tu lista de pacientes ({{ users.length }}):</p>
+                <p class="text-h6 no-padding no-margin text-weight-light ">Tu lista de pacientes ({{ users.length }}):</p>
               </div>
               <!-- LISTA DE PACIENTES EN EL HOME DOCTOR -->
               <paginated-card-list :items="users" class="col-12" row-key="id_paciente" :initial-rows-per-page="10">
@@ -390,7 +390,7 @@
 
 
           <q-dialog v-model="modalDetailUser">
-            <q-card class="my-card" flat bordered style="min-width: 450px">
+            <q-card class="my-card full-width" flat bordered >
               <q-card-section>
                 <q-card-section class="col-5 flex flex-center no-padding">
                   <div class="text-overline text-h6 text-grey-9">Historia clinica</div>
@@ -429,8 +429,8 @@
                 <q-avatar>
                   <q-icon size="xl" name="mdi-badge-account-alert"></q-icon>
                 </q-avatar>
-                <span class=" q-mt-xs">Más información respecto al estado del paciente:</span>
-                <div class=" row wrap q-px-md q-mt-sm ">
+                <span class=" q-mt-xs text-center">Más información respecto al estado del paciente:</span>
+                <div class=" row wrap justify-xs-between justify-sm-between justify-md-center justify-lg-center justify-xl-center q-gutter-sm q-px-md q-mt-sm ">
                   <button @click="openModals('diagnosticos', true)" type="button"
                     class="no-outline q-mr-xs no-border q-px-md q-py-xs rounded-borders bg-blue-grey-9 text-white cursor-pointer">Diagnosticos</button>
                   <button @click="openModals('examenes', true)" type="button"
@@ -442,8 +442,8 @@
                 </div>
               </q-card-section>
               <q-card-section class="no-padding column items-center full-width q-ml-md q-mb-md">
-                <span class=" q-mt-xs">Emergencias y Hospitalizaciones:</span>
-                <div class=" row wrap q-px-md q-mt-sm ">
+                <span class=" q-mt-xs text-center">Emergencias y Hospitalizaciones:</span>
+                <div class=" row wrap justify-xs-between justify-sm-between justify-md-center justify-lg-center justify-xl-center q-gutter-sm q-px-md q-mt-sm ">
                   <button @click="verDetallesDeEmergencia(dataUser.emergencias)" type="button"
                     class="no-outline q-mr-xs no-border q-px-md q-py-xs rounded-borders bg-blue-grey-9 text-white cursor-pointer">Emergencias</button>
                   <button @click="verDetallesDeHospitalizacion(dataUser.hospitalizaciones)" type="button"
@@ -514,8 +514,8 @@
 
 
           <!-- BUSCAR PACIENTE -->
-          <q-dialog v-model="modals.searchUser" style="min-width: 460px">
-            <q-card style="min-width: 460px" class="text-white">
+          <q-dialog v-model="modals.searchUser">
+            <q-card style="" class="text-white full-width">
               <q-bar class="bg-primary">
                 <q-space />
                 <q-btn dense flat icon="close" v-close-popup>
@@ -651,22 +651,22 @@
 
           <!-- DETALLES DE EMERGENCIAS -->
           <q-dialog v-model="modalDetallesEmergencias" position="right">
-            <q-card class="my-card" flat bordered style="min-width: 550px">
+            <q-card class="my-card full-width" flat bordered >
               <q-card-section>
                 <q-card-section class="col-5 no-padding no-margin flex flex-center">
                   <q-avatar>
                     <q-icon size="lg" name="mdi-text-box-search"></q-icon>
                   </q-avatar>
                 </q-card-section>
-                <q-card-section class="col-5 no-margin flex flex-center no-padding">
+                <q-card-section class="col-12 no-margin flex flex-center no-padding">
                   <div class="text-overline text-h6 text-grey-9">Historial de emergencias</div>
                 </q-card-section>
               </q-card-section>
               <q-card-section class="q-pt-md">
                 <div class="row items-center q-px-sm justify-center">
-                  <div class="col-6 column">
+                  <div class="col-12 column">
 
-                    <p @click="downloadEmergenciesReport(user)" class=" cursor-pointer no-padding no-margin"> <q-icon
+                    <p @click="downloadEmergenciesReport(user)" class=" cursor-pointer no-padding q-mb-sm"> <q-icon
                         name="mdi-cloud-print" size="20px" color="primary" /> Descargar lista de emergencias </p>
 
                     <span class="text-caption text-bold q-mt-sm q-mb-xs">Historial de emergencias</span>
@@ -677,7 +677,7 @@
                     El paciente aún no tiene historia de emergencias
                   </q-item-section>
                 </q-item-section>
-                <q-scroll-area style="height: 600px; max-width: 100%;">
+                <q-scroll-area style="height: 400px; max-width: 100%;">
                   <div v-for="(emergencia, index) in emegenciasPaciente" :key="index" class="q-py-xs">
                     <q-list>
                       <q-item style="cursor:pointer;">
@@ -810,20 +810,20 @@
 
           <!-- DETALLES DE HOSPITALIZACION -->
           <q-dialog v-model="modalDetallesHospitalizacion" position="right">
-            <q-card class="my-card" flat bordered style="min-width: 550px">
+            <q-card class="my-card full-width" flat bordered >
               <q-card-section>
                 <q-card-section class="col-5 no-padding no-margin flex flex-center">
                   <q-avatar>
                     <q-icon size="lg" name="mdi-text-box-search"></q-icon>
                   </q-avatar>
                 </q-card-section>
-                <q-card-section class="col-5 no-margin flex flex-center no-padding">
+                <q-card-section class="col-12 no-margin flex flex-center no-padding">
                   <div class="text-overline text-h6 text-grey-9">Historial de hospitalización</div>
                 </q-card-section>
               </q-card-section>
               <q-card-section class="q-pt-md">
                 <div class="row items-center q-px-sm justify-center">
-                  <div class="col-6 column">
+                  <div class="col-12 column">
                     <p @click="downloadHospitalizationReport()" class=" cursor-pointer no-padding no-margin"> <q-icon
                         name="mdi-cloud-print" size="20px" color="primary" /> Descargar lista de hospitalizaciones </p>
                     <span class="text-caption text-bold q-mt-sm q-mb-xs">Historial de hospitalización</span>
@@ -834,7 +834,7 @@
                     El paciente aún no tiene historia de hospitalización
                   </q-item-section>
                 </q-item-section>
-                <q-scroll-area style="height: 600px; max-width: 100%;">
+                <q-scroll-area style="height: 400px; max-width: 100%;">
                   <div v-for="(hospitalizacion, index) in hospitalizacionesPaciente" :key="index" class="q-py-xs">
                     <q-list>
                       <q-item style="cursor:pointer;">
@@ -879,9 +879,9 @@
 
           <!-- AGREGAR CONSULTA -->
           <q-dialog v-model="modalAddConsulta">
-            <q-card class="my-card" flat bordered style="min-width: 350px">
+            <q-card class="my-card full-width" flat bordered >
               <q-card-section>
-                Añadir consulta
+                Nueva consulta
               </q-card-section>
               <q-card-section>
                 <div class="row">
@@ -1161,7 +1161,7 @@
 
           <!-- AGREGAR NUEVO tratamiento -->
           <q-dialog v-model="modalAddTratamiento">
-            <q-card class="my-card" flat bordered style="min-width: 350px">
+            <q-card class="my-card full-width" flat bordered >
               <q-card-section>
                 Nuevo Tratamiento
               </q-card-section>
@@ -1245,7 +1245,7 @@
 
           <!-- AGREGAR NUEVO MEDICAMENTO -->
           <q-dialog v-model="modalAddMedicamento">
-            <q-card class="my-card" flat bordered style="min-width: 350px">
+            <q-card class="my-card full-width" flat bordered >
               <q-card-section>
                 Nuevo medicamento
               </q-card-section>
@@ -1485,7 +1485,7 @@
           <!-- FIN ACTUALIZAR CONSULTA -->
 
           <q-dialog v-model="modalDiagnosticos" position="left">
-            <q-card class="my-card" flat bordered style="min-width: 550px">
+            <q-card class="my-card full-width" flat bordered >
               <q-card-section>
                 <q-card-section class="col-5 no-padding no-margin flex flex-center">
                   <q-avatar>
@@ -1551,7 +1551,7 @@
           </q-dialog>
 
           <q-dialog v-model="modalExamenes" position="right">
-            <q-card class="my-card" flat bordered style="min-width: 550px">
+            <q-card class="my-card full-width" flat bordered >
               <q-card-section>
                 <q-card-section class="col-5 no-padding no-margin flex flex-center">
                   <q-avatar>
@@ -1631,7 +1631,7 @@
           </q-dialog>
 
           <q-dialog v-model="modalTratamientos" position="right">
-            <q-card class="my-card" flat bordered style="min-width: 550px">
+            <q-card class="my-card full-width" flat bordered >
               <q-card-section>
                 <q-card-section class="col-5 no-padding no-margin flex flex-center">
                   <q-avatar>
@@ -1706,7 +1706,7 @@
           </q-dialog>
 
           <q-dialog v-model="modalMedicamentos" position="right">
-            <q-card class="my-card" flat bordered style="min-width: 550px">
+            <q-card class="my-card full-width" flat bordered >
               <q-card-section>
                 <q-card-section class="col-5 no-padding no-margin flex flex-center">
                   <q-avatar>
@@ -3296,7 +3296,7 @@ export default {
           this.fecha = "";
           this.AllPacientes()
           this.$q.notify({
-            message: "Nueva consulta añadida",
+            message: "Datos de consulta actualizados",
             color: "positive",
           });
         })

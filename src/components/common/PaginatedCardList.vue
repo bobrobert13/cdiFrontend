@@ -15,7 +15,7 @@
         <slot name="default" :user="props.row" :index="props.rowIndex"></slot>
       </div>
     </template>
-    
+
     <template v-slot:no-data>
       <div class="full-width row flex-center q-pa-md text-grey-8">
         <slot name="no-data">
