@@ -65,7 +65,7 @@ export const useTextFieldValidation = (required = false, minLength = 3, maxLengt
 export const useHouseNumberValidation = () => {
   return [
     (val) => !!val || 'Este campo es obligatorio',
-    (val) => /^\d+$/.test(val) || 'Solo se permiten números',
+    (val) => /^[a-zA-Z0-9\s\-_]+$/.test(val) || 'Solo se permiten letras, números y símbolos básicos',
     (val) => val.length <= 16 || 'Máximo 16 caracteres'
   ]
 }

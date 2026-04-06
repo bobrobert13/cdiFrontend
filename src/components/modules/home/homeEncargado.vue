@@ -428,22 +428,22 @@
          </div>
 
                   <div class="row q-mb-xs">
-                    <div class="col-8">
+                    <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 col-xl-8">
                       <q-select filled label="Estado*" v-model="estado" :options="estados" option-label="label"
                         option-value="value" :rules="requiredSelectRules" />
                     </div>
-                    <div class="col-4">
+                    <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
                       <q-select filled label="Ciudad*" v-model="ciudad" :options="ciudades[estado.value]"
                         option-label="label" option-value="value" emit-value :rules="requiredSelectRules" />
                     </div>
                   </div>
                   <div class="row q-mb-xs">
-                    <div class="col-8">
+                    <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 col-xl-8">
                       <q-input filled color="deep-purple-6" v-model="calle" label="Calle*"
                         :rules="requiredSelectRules" />
                     </div>
-                    <div class="col-4">
-                      <q-input filled color="deep-purple-6" v-model="numero" label="Número de casa*" type="number"
+                    <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+                      <q-input filled color="deep-purple-6" v-model="numero" label="Número de casa*" type="text"
                         :rules="houseNumberRules" />
                     </div>
                   </div>
