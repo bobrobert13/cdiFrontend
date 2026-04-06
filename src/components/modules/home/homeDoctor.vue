@@ -234,7 +234,7 @@
                           <q-input filled color="deep-purple-6" v-model="calle" label="Calle*" :rules="streetRules" />
                         </div>
                         <div class="col-4">
-                          <q-input filled color="deep-purple-6" v-model="numero" label="Número de casa*" type="number"
+                          <q-input filled color="deep-purple-6" v-model="numero" label="Número de casa*" type="text"
                             :rules="houseNumberRules" />
                         </div>
                       </div>
@@ -276,8 +276,11 @@
                   </div>
                   <div class="row q-pb-xs">
                     <div class="col-12">
-                      <q-select filled label="Vacunas*" v-model="vacunasSeleccionadas" :options="vacunas"
-                        option-label="label" option-value="value" :rules="requiredSelectRules" />
+											<q-input type="textarea" rows="4" :rules="referencePointRules" autogrow filled color="deep-purple-6"
+											v-model="vacunasSeleccionadas" label="Vacunas*"
+												 />
+                      <!-- <q-select filled label="Vacunas*" v-model="vacunasSeleccionadas" :options="vacunas"
+                        option-label="label" option-value="value" :rules="requiredSelectRules" /> -->
                     </div>
 
                   </div>
@@ -2908,7 +2911,7 @@ export default {
             input: {
               enfermedades_cronicas: this.enfermedades_cronicas,
               peso: parseInt(this.peso),
-              vacunas: this.vacunasSeleccionadas.value,
+              vacunas: this.vacunasSeleccionadas,
               discapacidad: this.discapacidad,
               documento_identidad_representante: this.documento_identidad_representante ? parseInt(this.documento_identidad_representante) : null,
               numero_orden_representante: this.numero_orden_representante ? parseInt(this.numero_orden_representante) : null,
