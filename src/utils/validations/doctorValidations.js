@@ -41,7 +41,7 @@ export const usePhoneValidation = () => {
   return [
     (val) => !!val || 'Este campo es obligatorio',
     (val) => /^\d+$/.test(val) || 'Solo se permiten números',
-    (val) => val.length <= 11 || 'Máximo 11 caracteres'
+    (val) => /^0[24]\d{9}$/.test(val) || 'Formato inválido (Ej: 04161234567)'
   ]
 }
 
