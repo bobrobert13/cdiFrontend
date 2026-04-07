@@ -24,10 +24,9 @@
 
 			<q-tab-panels v-model="tab" animated>
 				<q-tab-panel name="cdi_activos">
-					<div class="text-subtitle1 text-left row no-wra">CDIs Activos </div>
 					<button @click="GenerateCdisStatusPDF()" class=" cursor-pointer text-primary self-center text-bold"
 						type="button"> <small style="font-size: 12px;">Descargar lista de cdis activos</small></button>
-					<div class="row justify-center q-mt-xl" v-if="this.users.length !== 0">
+					<div class="row q-px-md-xl q-px-lg-xl q-px-xl-xl justify-center q-mt-xl" v-if="this.users.length !== 0">
 						<paginated-card-list :items="cdiActivosList"  row-key="id_cdi"
 							:initial-rows-per-page="10">
 							<template v-slot:default="{ user }">
@@ -87,11 +86,10 @@
 					</div>
 				</q-tab-panel>
 				<q-tab-panel name="cdi_inactivos">
-					<div class="text-subtitle1 q-mb-sm text-left">CDIs Inactivos</div>
 					<button @click="GenerateCdisStatusPDF()" class=" cursor-pointer text-primary self-center text-bold"
 						type="button">
 						<small style="font-size: 12px;">Descargar lista de cdis inactivos</small></button>
-					<div class="row justify-center q-mt-xl" v-if="this.users.length !== 0">
+					<div class="row  q-px-md-xl q-px-lg-xl q-px-xl-xl justify-center q-mt-xl" v-if="this.users.length !== 0">
 						<paginated-card-list :items="cdiInactivosList" class="col-12" row-key="id_cdi"
 							:initial-rows-per-page="10">
 							<template v-slot:default="{ user }">

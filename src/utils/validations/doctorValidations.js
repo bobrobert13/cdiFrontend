@@ -1,19 +1,19 @@
 // Validaciones para nombre completo
 export const useFullNameValidation = () => {
   return [
-    (val) => !!val || 'Este campo es obligatorio',
-    (val) => val.length >= 3 || 'Mínimo 3 caracteres',
-    (val) => val.length <= 200 || 'Máximo 200 caracteres',
-    (val) => /^([\sa-zA-ZñÑáéíóúÁÉÍÓÚ]{3,40})*$/.test(val) || 'Solo se permiten caracteres'
+    (val) => (val !== null && val !== undefined && val !== '') || 'Este campo es obligatorio',
+    (val) => String(val || '').length >= 3 || 'Mínimo 3 caracteres',
+    (val) => String(val || '').length <= 200 || 'Máximo 200 caracteres',
+    (val) => /^[a-zA-ZñÑáéíóúÁÉÍÓÚ\s.,\-]+$/.test(String(val || '')) || 'Solo se permiten caracteres'
   ]
 }
 
 // Validaciones para correo electrónico
 export const useEmailValidation = () => {
   return [
-    (val) => !!val || 'Este campo es obligatorio',
-    (val) => val.length >= 3 || 'Mínimo 3 caracteres',
-    (val) => val.length <= 200 || 'Máximo 200 caracteres',
+    (val) => (val !== null && val !== undefined && val !== '') || 'Este campo es obligatorio',
+    (val) => String(val || '').length >= 3 || 'Mínimo 3 caracteres',
+    (val) => String(val || '').length <= 200 || 'Máximo 200 caracteres',
     (val) => /.+@.+\..+/.test(val) || 'Formato de correo electrónico inválido'
   ]
 }
@@ -21,27 +21,27 @@ export const useEmailValidation = () => {
 // Validaciones para DNI/Cédula
 export const useDniValidation = () => {
   return [
-    (val) => !!val || 'Este campo es obligatorio',
+    (val) => (val !== null && val !== undefined && val !== '') || 'Este campo es obligatorio',
     (val) => /^\d+$/.test(val) || 'Solo se permiten números',
-    (val) => val.length <= 8 || 'Máximo 8 caracteres'
+    (val) => String(val || '').length <= 8 || 'Máximo 8 caracteres'
   ]
 }
 
 // Validaciones para código postal
 export const usePostalCodeValidation = () => {
   return [
-    (val) => !!val || 'Este campo es obligatorio',
+    (val) => (val !== null && val !== undefined && val !== '') || 'Este campo es obligatorio',
     (val) => /^\d+$/.test(val) || 'Solo se permiten números',
-    (val) => val.length <= 8 || 'Máximo 8 caracteres'
+    (val) => String(val || '').length <= 8 || 'Máximo 8 caracteres'
   ]
 }
 
 // Validaciones para teléfono
 export const usePhoneValidation = () => {
   return [
-    (val) => !!val || 'Este campo es obligatorio',
+    (val) => (val !== null && val !== undefined && val !== '') || 'Este campo es obligatorio',
     (val) => /^\d+$/.test(val) || 'Solo se permiten números',
-    (val) => /^\d{7}$/.test(val) || 'Debe tener exactamente 7 dígitos'
+    (val) => /^\d{7,15}$/.test(val) || 'Debe tener entre 7 y 15 dígitos'
   ]
 }
 
@@ -54,8 +54,8 @@ export const useTextFieldValidation = (required = false, minLength = 3, maxLengt
   }
 
   rules.push(
-    (val) => !val || val.length >= minLength || `Mínimo ${minLength} caracteres`,
-    (val) => !val || val.length <= maxLength || `Máximo ${maxLength} caracteres`
+    (val) => !val || String(val).length >= minLength || `Mínimo ${minLength} caracteres`,
+    (val) => !val || String(val).length <= maxLength || `Máximo ${maxLength} caracteres`
   )
 
   return rules
@@ -64,9 +64,9 @@ export const useTextFieldValidation = (required = false, minLength = 3, maxLengt
 // Validaciones para número de casa
 export const useHouseNumberValidation = () => {
   return [
-    (val) => !!val || 'Este campo es obligatorio',
+    (val) => (val !== null && val !== undefined && val !== '') || 'Este campo es obligatorio',
     (val) => /^[a-zA-Z0-9\s\-_]+$/.test(val) || 'Solo se permiten letras, números y símbolos básicos',
-    (val) => val.length <= 16 || 'Máximo 16 caracteres'
+    (val) => String(val || '').length <= 16 || 'Máximo 16 caracteres'
   ]
 }
 
@@ -82,19 +82,19 @@ export const useRequiredSelectValidation = () => {
 // Validaciones para número de carnet del doctor
 export const useDoctorCarnetValidation = () => {
   return [
-    (val) => !!val || 'Este campo es obligatorio',
-    (val) => val.length >= 3 || 'Mínimo 3 caracteres',
-    (val) => val.length <= 50 || 'Máximo 50 caracteres'
+    (val) => (val !== null && val !== undefined && val !== '') || 'Este campo es obligatorio',
+    (val) => String(val || '').length >= 3 || 'Mínimo 3 caracteres',
+    (val) => String(val || '').length <= 50 || 'Máximo 50 caracteres'
   ]
 }
 
 // Validaciones para ocupación del doctor
 export const useDoctorOcupacionValidation = () => {
   return [
-    (val) => !!val || 'Este campo es obligatorio',
-    (val) => val.length >= 3 || 'Mínimo 3 caracteres',
-    (val) => val.length <= 200 || 'Máximo 200 caracteres',
-    (val) => /^([\sa-zA-ZñÑáéíóúÁÉÍÓÚ]{3,40})*$/.test(val) || 'Solo se permiten caracteres'
+    (val) => (val !== null && val !== undefined && val !== '') || 'Este campo es obligatorio',
+    (val) => String(val || '').length >= 3 || 'Mínimo 3 caracteres',
+    (val) => String(val || '').length <= 200 || 'Máximo 200 caracteres',
+    (val) => /^[a-zA-ZñÑáéíóúÁÉÍÓÚ\s.,\-]+$/.test(String(val || '')) || 'Solo se permiten caracteres'
   ]
 }
 
@@ -108,7 +108,7 @@ export const useDoctorHorarioValidation = () => {
 // Validaciones para años de experiencia del doctor
 export const useDoctorAnosExperienciaValidation = () => {
   return [
-    (val) => !!val || 'Este campo es obligatorio',
+    (val) => (val !== null && val !== undefined && val !== '') || 'Este campo es obligatorio',
     (val) => /^\d{1,2}$/.test(val) || 'Solo se permiten números (máximo 2 dígitos)',
     (val) => parseInt(val, 10) >= 0 || 'Los años de experiencia deben ser mayor o igual a 0',
     (val) => parseInt(val, 10) <= 50 || 'Los años de experiencia deben ser menor o igual a 50 años'
@@ -126,8 +126,8 @@ export const useDoctorEspecialidadValidation = () => {
 export const useDoctorNombreUsuarioValidation = () => {
   return [
     (val) => !!val || 'Este campo es obligatorio',
-    (val) => val.length >= 5 || 'Mínimo 5 caracteres',
-    (val) => val.length <= 20 || 'Máximo 20 caracteres',
+    (val) => String(val || '').length >= 5 || 'Mínimo 5 caracteres',
+    (val) => String(val || '').length <= 20 || 'Máximo 20 caracteres',
     (val) => /^[a-zA-ZñÑáéíóúÁÉÍÓÚ]+$/.test(val) || 'Solo se permiten letras (sin números ni caracteres especiales)'
   ]
 }
@@ -136,8 +136,8 @@ export const useDoctorNombreUsuarioValidation = () => {
 export const usePasswordValidation = () => {
   return [
     (val) => !!val || 'Este campo es obligatorio (ej. Ejemplo123)',
-    (val) => val.length >= 8 || 'Mínimo 8 caracteres (ej. Ejemplo123)',
-    (val) => val.length <= 50 || 'Máximo 50 caracteres (ej. Ejemplo123)',
+    (val) => String(val || '').length >= 8 || 'Mínimo 8 caracteres (ej. Ejemplo123)',
+    (val) => String(val || '').length <= 50 || 'Máximo 50 caracteres (ej. Ejemplo123)',
     (val) => /(?=.*[a-z])/.test(val) || 'Debe contener al menos una letra minúscula (ej. Ejemplo123)',
     (val) => /(?=.*[A-Z])/.test(val) || 'Debe contener al menos una letra mayúscula (ej. Ejemplo123)',
     (val) => /(?=.*\d)/.test(val) || 'Debe contener al menos un número (ej. Ejemplo123)'

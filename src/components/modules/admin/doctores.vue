@@ -26,7 +26,7 @@
         <q-tab-panel name="dr_activos">
           <button @click="generateDoctorsPDF()" class=" cursor-pointer q-my-md text-primary self-center text-bold"
             type="button"> <small style="font-size: 12px;">Descargar lista de doctores activos</small></button>
-          <div class="row justify-center q-mt-sm" v-if="this.users.length !== 0">
+          <div class="row q-px-md-xl q-px-lg-xl q-px-xl-xl justify-center q-mt-xl" v-if="this.users.length !== 0">
             <paginated-card-list :items="doctoresActivos" class="col-12" row-key="id_doctor"
               :initial-rows-per-page="10">
               <template v-slot:default="{ user }">
@@ -101,7 +101,7 @@
         <q-tab-panel name="dr_inactivos">
           <button @click="generateDoctorsPDF()" class=" cursor-pointer q-my-sm text-primary self-center text-bold"
             type="button"> <small style="font-size: 12px;">Descargar lista de doctores inactivos</small></button>
-          <div class="row justify-center " v-if="this.users.length !== 0">
+          <div class="row q-px-md-xl q-px-lg-xl q-px-xl-xl justify-center " v-if="this.users.length !== 0">
             <paginated-card-list :items="doctoresInactivos" class="col-12" row-key="id_doctor"
               :initial-rows-per-page="10">
               <template v-slot:default="{ user }">
@@ -203,7 +203,7 @@
 
     <!-- CREAR UN NUEVO DOCTOR -->
     <div v-if="viewType === 'addWorker'">
-      <div class="col-12  text-left row items-center q-mt-md q-mb-md">
+      <div class="col-12 q-px-lg  text-left row items-center q-mt-md q-mb-md">
         <q-icon style="cursor: pointer" @click="workerView('userList')" name="mdi-arrow-left" class="text-primary"
           size="md"></q-icon>
         <span style="cursor: pointer" class="text-bold text-accent text-h6" @click="workerView('userList')">Crear nuevo
@@ -211,8 +211,7 @@
       </div>
       <small class="q-my-md block text-red text-bold"> <q-icon name="mdi-information" class="q-mr-xs" size="sm"
           color="primary" />Los campos marcados con * son obligatorios</small>
-
-      <div class="col-7">
+      <div class="col-7 q-px-lg">
         <div class="column justify-center">
           <q-input filled color="deep-purple-6" v-model="fullName"
             label="Nombre completo (Primero nombres y luego apellidos) *" :rules="fullNameRules" />
@@ -956,32 +955,34 @@ export default {
       return isFormValid(formValues, validationRules)
     },
     formUpdateHasNoErrors() {
+      if (!this.dataUser || !this.dataUser.persona) return false;
+      const persona = this.dataUser.persona;
+      const direccion = persona.direccion || {};
+      const telefono = persona.telefono || {};
+      const correo = persona.correo || {};
+
       const formValues = {
-        fullName: this.dataUser.persona.nombre1,
-        email: this.dataUser.persona.correo ? this.dataUser.persona.correo.correo : '',
-        dni: this.dataUser.persona.cedula_identidad,
-        edad: this.dataUser.persona.edad,
-        // estado: this.estado,
-        // ciudad: this.dataUser.direccion.ciudad,
-        calle: this.dataUser.persona.direccion.calle,
-        numero_casa: this.dataUser.persona.direccion.numero_casa,
-        sector: this.dataUser.persona.direccion.sector,
-        punto_referencia: this.dataUser.persona.direccion.punto_referencia,
-        codigo_postal: this.dataUser.persona.direccion.codigo_postal,
-        telefono: this.dataUser.persona.telefono ? this.dataUser.persona.telefono.numero : '',
-        doctor_numero_carnet: this.dataUser.numero_carnet,
+        fullName: persona.nombre1 || '',
+        email: correo.correo || '',
+        dni: persona.cedula_identidad || '',
+        edad: persona.edad || '',
+        calle: direccion.calle || '',
+        numero_casa: direccion.numero_casa || '',
+        sector: direccion.sector || '',
+        punto_referencia: direccion.punto_referencia || '',
+        codigo_postal: direccion.codigo_postal || '',
+        telefono: telefono.numero || '',
+        doctor_numero_carnet: this.dataUser.numero_carnet || '',
         doctor_ocupacion: 'Doctor',
-        doctor_horario: this.dataUser.horario,
-        doctor_anos_experiencia: this.dataUser.anos_experiencia,
-        roleEspecialidad: this.dataUser.area_de_trabajo,
+        doctor_horario: this.dataUser.horario || '',
+        doctor_anos_experiencia: this.dataUser.anos_experiencia !== undefined ? this.dataUser.anos_experiencia : '',
+        roleEspecialidad: this.dataUser.area_de_trabajo || '',
       }
       const validationRules = {
         fullName: useFullNameValidation(),
         email: useEmailValidation(),
         dni: useDniValidation(),
         edad: useAgeValidation(),
-        // estado: useRequiredSelectValidation(),
-        // ciudad: useRequiredSelectValidation(),
         calle: useRequiredSelectValidation(),
         numero_casa: useHouseNumberValidation(),
         sector: useRequiredSelectValidation(),
@@ -1100,7 +1101,6 @@ export default {
       this.viewType = typeView
     },
     setUpdateWorkerData(doctor) {
-      // console.log('loc', doctor);
       this.dataUser = {
         id_doctor: doctor.id_doctor,
         numero_carnet: doctor.numero_carnet,
