@@ -23,7 +23,8 @@
             </div>
             <div class="row justify-center" v-if="this.users.length !== 0">
               <div class="col-12 text-left q-mb-md">
-                <p class="text-h6 no-padding no-margin text-weight-light ">Tu lista de pacientes ({{ users.length }}):</p>
+                <p class="text-h6 no-padding no-margin text-weight-light ">Tu lista de pacientes ({{ users.length }}):
+                </p>
               </div>
               <!-- LISTA DE PACIENTES EN EL HOME DOCTOR -->
               <paginated-card-list :items="users" class="col-12" row-key="id_paciente" :initial-rows-per-page="10">
@@ -48,7 +49,7 @@
                               <span class="text-weight-medium">Nacionalidad:</span> {{ user.persona.nacionalidad }}
                             </q-item-label>
                             <q-item-label class="text-left" lines="1">
-                              <span class="text-weight-medium">Documento:</span> user.persona.cedula_identidad
+                              <span class="text-weight-medium">Documento:</span> {{ user.persona.cedula_identidad }}
                             </q-item-label>
                             <q-item-label v-if="user.documento_identidad_representante" class="text-left" lines="1">
                               <span class="text-weight-medium">Documento representante:</span> {{
@@ -276,9 +277,8 @@
                   </div>
                   <div class="row q-pb-xs">
                     <div class="col-12">
-											<q-input type="textarea" rows="4" :rules="referencePointRules" autogrow filled color="deep-purple-6"
-											v-model="vacunasSeleccionadas" label="Vacunas*"
-												 />
+                      <q-input type="textarea" rows="4" :rules="referencePointRules" autogrow filled
+                        color="deep-purple-6" v-model="vacunasSeleccionadas" label="Vacunas*" />
                       <!-- <q-select filled label="Vacunas*" v-model="vacunasSeleccionadas" :options="vacunas"
                         option-label="label" option-value="value" :rules="requiredSelectRules" /> -->
                     </div>
@@ -393,7 +393,7 @@
 
 
           <q-dialog v-model="modalDetailUser">
-            <q-card class="my-card full-width" flat bordered >
+            <q-card class="my-card full-width" flat bordered>
               <q-card-section>
                 <q-card-section class="col-5 flex flex-center no-padding">
                   <div class="text-overline text-h6 text-grey-9">Historia clinica</div>
@@ -433,7 +433,8 @@
                   <q-icon size="xl" name="mdi-badge-account-alert"></q-icon>
                 </q-avatar>
                 <span class=" q-mt-xs text-center">Más información respecto al estado del paciente:</span>
-                <div class=" row wrap justify-xs-between justify-sm-between justify-md-center justify-lg-center justify-xl-center q-gutter-sm q-px-md q-mt-sm ">
+                <div
+                  class=" row wrap justify-xs-between justify-sm-between justify-md-center justify-lg-center justify-xl-center q-gutter-sm q-px-md q-mt-sm ">
                   <button @click="openModals('diagnosticos', true)" type="button"
                     class="no-outline q-mr-xs no-border q-px-md q-py-xs rounded-borders bg-blue-grey-9 text-white cursor-pointer">Diagnosticos</button>
                   <button @click="openModals('examenes', true)" type="button"
@@ -446,7 +447,8 @@
               </q-card-section>
               <q-card-section class="no-padding column items-center full-width q-ml-md q-mb-md">
                 <span class=" q-mt-xs text-center">Emergencias y Hospitalizaciones:</span>
-                <div class=" row wrap justify-xs-between justify-sm-between justify-md-center justify-lg-center justify-xl-center q-gutter-sm q-px-md q-mt-sm ">
+                <div
+                  class=" row wrap justify-xs-between justify-sm-between justify-md-center justify-lg-center justify-xl-center q-gutter-sm q-px-md q-mt-sm ">
                   <button @click="verDetallesDeEmergencia(dataUser.emergencias)" type="button"
                     class="no-outline q-mr-xs no-border q-px-md q-py-xs rounded-borders bg-blue-grey-9 text-white cursor-pointer">Emergencias</button>
                   <button @click="verDetallesDeHospitalizacion(dataUser.hospitalizaciones)" type="button"
@@ -654,7 +656,7 @@
 
           <!-- DETALLES DE EMERGENCIAS -->
           <q-dialog v-model="modalDetallesEmergencias" position="right">
-            <q-card class="my-card full-width" flat bordered >
+            <q-card class="my-card full-width" flat bordered>
               <q-card-section>
                 <q-card-section class="col-5 no-padding no-margin flex flex-center">
                   <q-avatar>
@@ -813,7 +815,7 @@
 
           <!-- DETALLES DE HOSPITALIZACION -->
           <q-dialog v-model="modalDetallesHospitalizacion" position="right">
-            <q-card class="my-card full-width" flat bordered >
+            <q-card class="my-card full-width" flat bordered>
               <q-card-section>
                 <q-card-section class="col-5 no-padding no-margin flex flex-center">
                   <q-avatar>
@@ -882,7 +884,7 @@
 
           <!-- AGREGAR CONSULTA -->
           <q-dialog v-model="modalAddConsulta">
-            <q-card class="my-card full-width" flat bordered >
+            <q-card class="my-card full-width" flat bordered>
               <q-card-section>
                 Nueva consulta
               </q-card-section>
@@ -1164,7 +1166,7 @@
 
           <!-- AGREGAR NUEVO tratamiento -->
           <q-dialog v-model="modalAddTratamiento">
-            <q-card class="my-card full-width" flat bordered >
+            <q-card class="my-card full-width" flat bordered>
               <q-card-section>
                 Nuevo Tratamiento
               </q-card-section>
@@ -1248,7 +1250,7 @@
 
           <!-- AGREGAR NUEVO MEDICAMENTO -->
           <q-dialog v-model="modalAddMedicamento">
-            <q-card class="my-card full-width" flat bordered >
+            <q-card class="my-card full-width" flat bordered>
               <q-card-section>
                 Nuevo medicamento
               </q-card-section>
@@ -1488,7 +1490,7 @@
           <!-- FIN ACTUALIZAR CONSULTA -->
 
           <q-dialog v-model="modalDiagnosticos" position="left">
-            <q-card class="my-card full-width" flat bordered >
+            <q-card class="my-card full-width" flat bordered>
               <q-card-section>
                 <q-card-section class="col-5 no-padding no-margin flex flex-center">
                   <q-avatar>
@@ -1554,7 +1556,7 @@
           </q-dialog>
 
           <q-dialog v-model="modalExamenes" position="right">
-            <q-card class="my-card full-width" flat bordered >
+            <q-card class="my-card full-width" flat bordered>
               <q-card-section>
                 <q-card-section class="col-5 no-padding no-margin flex flex-center">
                   <q-avatar>
@@ -1634,7 +1636,7 @@
           </q-dialog>
 
           <q-dialog v-model="modalTratamientos" position="right">
-            <q-card class="my-card full-width" flat bordered >
+            <q-card class="my-card full-width" flat bordered>
               <q-card-section>
                 <q-card-section class="col-5 no-padding no-margin flex flex-center">
                   <q-avatar>
@@ -1709,7 +1711,7 @@
           </q-dialog>
 
           <q-dialog v-model="modalMedicamentos" position="right">
-            <q-card class="my-card full-width" flat bordered >
+            <q-card class="my-card full-width" flat bordered>
               <q-card-section>
                 <q-card-section class="col-5 no-padding no-margin flex flex-center">
                   <q-avatar>
@@ -1798,10 +1800,10 @@
     </div>
 
     <div>
-      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="this.$q.screen.lt.md ? true : false" 	:preview-modal="this.$q.screen.gt.sm ? true : false"
-        :paginate-elements-by-height="1400" filename="FichaDePacienteDoctor" :pdf-quality="2" :manual-pagination="false"
-        pdf-format="a4" :pdf-margin="2" pdf-orientation="landscape" pdf-content-width="1050px"
-        @progress="onProgress($event)" ref="html2Pdf">
+      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="this.$q.screen.lt.md ? true : false"
+        :preview-modal="this.$q.screen.gt.sm ? true : false" :paginate-elements-by-height="1400"
+        filename="FichaDePacienteDoctor" :pdf-quality="2" :manual-pagination="false" pdf-format="a4" :pdf-margin="2"
+        pdf-orientation="landscape" pdf-content-width="1050px" @progress="onProgress($event)" ref="html2Pdf">
         <section slot="pdf-content">
           <historiaPdf :data="dataUser" />
         </section>
@@ -1809,10 +1811,11 @@
     </div>
 
     <div>
-      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="this.$q.screen.lt.md ? true : false" 	:preview-modal="this.$q.screen.gt.sm ? true : false"
-        :paginate-elements-by-height="1400" filename="Diagnosticos_del_Paciente" :pdf-quality="2"
-        :manual-pagination="false" pdf-format="a4" :pdf-margin="2" pdf-orientation="landscape"
-        pdf-content-width="1050px" @progress="onProgress($event)" ref="downloadDiagnosticsReport">
+      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="this.$q.screen.lt.md ? true : false"
+        :preview-modal="this.$q.screen.gt.sm ? true : false" :paginate-elements-by-height="1400"
+        filename="Diagnosticos_del_Paciente" :pdf-quality="2" :manual-pagination="false" pdf-format="a4" :pdf-margin="2"
+        pdf-orientation="landscape" pdf-content-width="1050px" @progress="onProgress($event)"
+        ref="downloadDiagnosticsReport">
         <section slot="pdf-content">
           <historiaDiagPdf :data="dataUser" />
         </section>
@@ -1820,10 +1823,10 @@
     </div>
 
     <div>
-      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="this.$q.screen.lt.md ? true : false" 	:preview-modal="this.$q.screen.gt.sm ? true : false"
-        :paginate-elements-by-height="1400" filename="Examenes_del_Paciente" :pdf-quality="2" :manual-pagination="false"
-        pdf-format="a4" :pdf-margin="2" pdf-orientation="landscape" pdf-content-width="1050px"
-        @progress="onProgress($event)" ref="downloadExamsReport">
+      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="this.$q.screen.lt.md ? true : false"
+        :preview-modal="this.$q.screen.gt.sm ? true : false" :paginate-elements-by-height="1400"
+        filename="Examenes_del_Paciente" :pdf-quality="2" :manual-pagination="false" pdf-format="a4" :pdf-margin="2"
+        pdf-orientation="landscape" pdf-content-width="1050px" @progress="onProgress($event)" ref="downloadExamsReport">
         <section slot="pdf-content">
           <ReporteExamenes :data="dataUser" />
         </section>
@@ -1831,10 +1834,11 @@
     </div>
 
     <div>
-      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="this.$q.screen.lt.md ? true : false" 	:preview-modal="this.$q.screen.gt.sm ? true : false"
-        :paginate-elements-by-height="1400" filename="Tratamientos_del_Paciente" :pdf-quality="2"
-        :manual-pagination="false" pdf-format="a4" :pdf-margin="2" pdf-orientation="landscape"
-        pdf-content-width="1050px" @progress="onProgress($event)" ref="downloadTratamientosReport">
+      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="this.$q.screen.lt.md ? true : false"
+        :preview-modal="this.$q.screen.gt.sm ? true : false" :paginate-elements-by-height="1400"
+        filename="Tratamientos_del_Paciente" :pdf-quality="2" :manual-pagination="false" pdf-format="a4" :pdf-margin="2"
+        pdf-orientation="landscape" pdf-content-width="1050px" @progress="onProgress($event)"
+        ref="downloadTratamientosReport">
         <section slot="pdf-content">
           <ReporteTratamientos :data="dataUser" />
         </section>
@@ -1843,10 +1847,11 @@
 
 
     <div>
-      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="this.$q.screen.lt.md ? true : false" 	:preview-modal="this.$q.screen.gt.sm ? true : false"
-        :paginate-elements-by-height="1400" filename="Medicamentos_del_Paciente" :pdf-quality="2"
-        :manual-pagination="false" pdf-format="a4" :pdf-margin="2" pdf-orientation="landscape"
-        pdf-content-width="1050px" @progress="onProgress($event)" ref="downloadMedicamentosReport">
+      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="this.$q.screen.lt.md ? true : false"
+        :preview-modal="this.$q.screen.gt.sm ? true : false" :paginate-elements-by-height="1400"
+        filename="Medicamentos_del_Paciente" :pdf-quality="2" :manual-pagination="false" pdf-format="a4" :pdf-margin="2"
+        pdf-orientation="landscape" pdf-content-width="1050px" @progress="onProgress($event)"
+        ref="downloadMedicamentosReport">
         <section slot="pdf-content">
           <ReporteMedicamentos :data="dataUser" />
         </section>
@@ -1854,10 +1859,11 @@
     </div>
 
     <div>
-      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="this.$q.screen.lt.md ? true : false" 	:preview-modal="this.$q.screen.gt.sm ? true : false"
-        :paginate-elements-by-height="1400" filename="Emergencias_del_Paciente" :pdf-quality="2"
-        :manual-pagination="false" pdf-format="a4" :pdf-margin="2" pdf-orientation="landscape"
-        pdf-content-width="1050px" @progress="onProgress($event)" ref="downloadEmergenciasReport">
+      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="this.$q.screen.lt.md ? true : false"
+        :preview-modal="this.$q.screen.gt.sm ? true : false" :paginate-elements-by-height="1400"
+        filename="Emergencias_del_Paciente" :pdf-quality="2" :manual-pagination="false" pdf-format="a4" :pdf-margin="2"
+        pdf-orientation="landscape" pdf-content-width="1050px" @progress="onProgress($event)"
+        ref="downloadEmergenciasReport">
         <section slot="pdf-content">
           <ReporteEmergencias :data="dataUser" />
         </section>
@@ -1866,10 +1872,11 @@
 
 
     <div>
-      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="this.$q.screen.lt.md ? true : false" 	:preview-modal="this.$q.screen.gt.sm ? true : false"
-        :paginate-elements-by-height="1400" filename="Hospitalizaciones_del_Paciente" :pdf-quality="2"
-        :manual-pagination="false" pdf-format="a4" :pdf-margin="2" pdf-orientation="landscape"
-        pdf-content-width="1050px" @progress="onProgress($event)" ref="downloadHospitalizacionesReport">
+      <vue-html2pdf :show-layout="false" :float-layout="true" :enable-download="this.$q.screen.lt.md ? true : false"
+        :preview-modal="this.$q.screen.gt.sm ? true : false" :paginate-elements-by-height="1400"
+        filename="Hospitalizaciones_del_Paciente" :pdf-quality="2" :manual-pagination="false" pdf-format="a4"
+        :pdf-margin="2" pdf-orientation="landscape" pdf-content-width="1050px" @progress="onProgress($event)"
+        ref="downloadHospitalizacionesReport">
         <section slot="pdf-content">
           <ReporteHospitalizaciones :data="dataUser" />
         </section>
