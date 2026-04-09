@@ -252,7 +252,7 @@
               <q-input filled color="deep-purple-6" v-model="calle" label="Calle*" :rules="requiredSelectRules" />
             </div>
             <div class="col-4">
-              <q-input filled color="deep-purple-6" v-model="numero" label="Número de casa*" type="number"
+              <q-input filled color="deep-purple-6" v-model="numero" label="Número de casa*" type="text"
                 :rules="houseNumberRules" />
             </div>
           </div>
@@ -306,7 +306,8 @@
               label="Años de experiencia*" :rules="anosExperienciaRules" />
             <q-select filled v-model="roleEspecialidad" :options="roleUserEspecialidad" label="Area de trabajo*"
               option-label="label" option-value="id" :rules="especialidadRules" />
-
+            <q-input type="textarea" filled color="deep-purple-6" v-model="doctor_especialidad" label="Especialidad*"
+              :rules="requiredSelectRules" />
             <q-select filled color="deep-purple-6" class="q-mb-xs" v-model="cdiSeleccionado" label="Asignar al CDI*"
               :options="cdisList" :rules="requiredSelectRules" />
           </div>
@@ -443,6 +444,10 @@
               label="Años de experiencia*" :rules="anosExperienciaRules" />
             <q-select filled v-model="dataUser.area_de_trabajo" :options="roleUserEspecialidad" label="Area de trabajo*"
               option-label="label" option-value="value" emit-value :rules="especialidadRules" />
+              <div class="col-6 ">
+              <q-input type="textarea" filled v-model="dataUser.especialidad" label="Especialidad*"
+                :rules="requiredSelectRules" />
+            </div>
           </div>
 
         </div>
@@ -484,6 +489,7 @@
             <div v-else class="text-caption q-mt-sm q-mb-xs">Número de teléfono: No registrado</div>
 
             <div class="text-caption q-mt-sm q-mb-xs">Área de trabajo: {{ dataUser.area_de_trabajo }}</div>
+            <div class="text-caption q-mt-sm q-mb-xs">Especialidad: {{ dataUser.especialidad || 'No registrado' }}</div>
             <div class="text-caption q-mt-sm q-mb-xs">Años de experiencia: {{ dataUser.anos_experiencia }}
             </div>
             <div class="text-caption q-mt-sm q-mb-xs">Horario: {{ dataUser.horario }}</div>
@@ -744,6 +750,7 @@ export default {
       ciudad: "",
       especialidadDoctor: "",
       roleEspecialidad: { label: "Enfermería", value: "Enfermeria", id: 1 },
+      doctor_especialidad: "",
       credAdd: false,
       isPwd: true,
       fullName: "",
@@ -926,6 +933,7 @@ export default {
         doctor_horario: this.doctor_horario,
         doctor_anos_experiencia: this.doctor_anos_experiencia,
         roleEspecialidad: this.roleEspecialidad,
+        doctor_especialidad: this.doctor_especialidad,
         doctor_nombre_usuario: this.doctor_nombre_usuario,
         password: this.password
       }
@@ -949,6 +957,7 @@ export default {
         doctor_horario: useDoctorHorarioValidation(),
         doctor_anos_experiencia: useDoctorAnosExperienciaValidation(),
         roleEspecialidad: useDoctorEspecialidadValidation(),
+        doctor_especialidad: useRequiredSelectValidation(),
         doctor_nombre_usuario: useDoctorNombreUsuarioValidation(),
         password: usePasswordValidation()
       }
@@ -977,6 +986,7 @@ export default {
         doctor_horario: this.dataUser.horario || '',
         doctor_anos_experiencia: this.dataUser.anos_experiencia !== undefined ? this.dataUser.anos_experiencia : '',
         roleEspecialidad: this.dataUser.area_de_trabajo || '',
+        doctor_especialidad: this.dataUser.especialidad || '',
       }
       const validationRules = {
         fullName: useFullNameValidation(),
@@ -994,6 +1004,7 @@ export default {
         doctor_horario: useDoctorHorarioValidation(),
         doctor_anos_experiencia: useDoctorAnosExperienciaValidation(),
         roleEspecialidad: useDoctorEspecialidadValidation(),
+        doctor_especialidad: useRequiredSelectValidation(),
       }
       return isFormValid(formValues, validationRules)
     },
@@ -1107,6 +1118,7 @@ export default {
         ocupacion: doctor.ocupacion,
         horario: doctor.horario,
         anos_experiencia: parseFloat(doctor.anos_experiencia),
+        especialidad: doctor.especialidad || '',
         area_de_trabajo: doctor.area_de_trabajo,
         usuarios: {
           id: doctor.usuarios.id,
@@ -1332,6 +1344,7 @@ export default {
                 anos_experiencia: parseInt(this.doctor_anos_experiencia),
                 numero_carnet: this.doctor_numero_carnet,
                 area_de_trabajo: this.roleEspecialidad.value,
+                especialidad: this.doctor_especialidad,
                 horario: this.doctor_horario,
                 fk_cdi_id: this.cdiSeleccionado.value,
               },
@@ -1426,6 +1439,7 @@ export default {
                 anos_experiencia: parseInt(doctorUpdate.anos_experiencia),
                 numero_carnet: doctorUpdate.numero_carnet,
                 area_de_trabajo: doctorUpdate.area_de_trabajo,
+                especialidad: doctorUpdate.especialidad,
                 horario: doctorUpdate.horario,
                 fk_cdi_id: this.$store.state.user.cdi_id,
               },

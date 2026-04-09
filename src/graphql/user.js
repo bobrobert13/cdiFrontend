@@ -301,6 +301,7 @@ export const ADMIN_DOCTORES_QUERY = gql`
     anos_experiencia
     numero_carnet
     area_de_trabajo
+    especialidad
     horario
     persona {
       ...personaDetalles
@@ -355,6 +356,7 @@ export const ADMIN_CDIS_QUERY = gql`
     anos_experiencia
     numero_carnet
     area_de_trabajo
+    especialidad
     horario
     persona {
       ...personaDetalles
