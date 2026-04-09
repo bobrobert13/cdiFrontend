@@ -79,6 +79,10 @@
           <span class="value">{{ data.area_de_trabajo || 'No especificado' }}</span>
         </div>
         <div class="info-item">
+          <span class="label">Especialidad:</span>
+          <span class="value">{{ data.especialidad || 'No especificado' }}</span>
+        </div>
+        <div class="info-item">
           <span class="label">Horario:</span>
           <span class="value">{{ data.horario || 'No especificado' }}</span>
         </div>

@@ -1460,10 +1460,6 @@ export default {
             color: "positive",
           });
           this.AllDoctores();
-
-          // this.$emit("updateUsers", {
-          //   users: true,
-          // });
         })
         .catch((err) => {
           this.loader = false;
