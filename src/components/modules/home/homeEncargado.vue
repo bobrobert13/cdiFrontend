@@ -1454,22 +1454,7 @@ export default {
         })
         .then((response) => {
           this.viewType = "userList"
-          console.log('update doctor response: ', response);
           this.loader = false;
-          // this.fullName = "";
-          // this.calle = "";
-          // this.numero = "";
-          // this.dataUser = null;
-          // this.sector = "";
-          // this.estado = { label: 'Anzoátegui', value: 2 }
-          // this.ciudad = ""
-          // this.email = "";
-          // this.password = "";
-          // this.dni = "";
-          // this.telefono = "";
-          // this.direccion = "";
-          // this.highlight = "";
-          // this.doctorEspecialidad = '';
           this.$q.notify({
             message: "Doctor actualizado",
             color: "positive",
