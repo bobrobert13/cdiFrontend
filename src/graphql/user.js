@@ -264,6 +264,7 @@ export const CDI_DOCTORES_QUERY = gql`
     doctoresCDI(id_cdi: $id_cdi) {
   	id_doctor
     anos_experiencia
+    especialidad
     numero_carnet
     area_de_trabajo
     horario

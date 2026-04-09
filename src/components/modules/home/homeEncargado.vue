@@ -285,6 +285,12 @@
                         <q-input filled color="deep-purple-6" v-model="dataUser.area_de_trabajo" label="Area de trabajo"
                           :rules="ocupacionRules" />
                       </div>
+
+                      <div class="col-6 q-pa-sm">
+                        <q-input type="textarea" filled v-model="dataUser.especialidad" label="Especialidad*"
+                          :rules="requiredSelectRules" />
+                      </div>
+
                       <div class="col-6 q-pa-sm">
                         <q-select filled color="deep-purple-6" v-model="dataUser.horario" label="Horario de trabajo"
                           :rules="horarioRules" />
@@ -498,6 +504,8 @@
                       v-model="doctor_anos_experiencia" label="Años de experiencia*" :rules="anosExperienciaRules" />
                     <q-select filled v-model="roleEspecialidad" :options="roleUserEspecialidad" label="Area de trabajo*"
                       option-label="label" option-value="id" :rules="especialidadRules" />
+                      <q-input type="textarea" filled v-model="doctorEspecialidad" label="Especialidad*"
+                      :rules="requiredSelectRules" />
                   </div>
 
 
@@ -763,9 +771,7 @@
 <script>
 import config from "../../../config";
 import {
-  ADDUSER_MUTATION,
   USER_DELETE,
-  BUSCAR_USER_QUERY,
   ADD_DOCTOR_USER_MUTATION,
   CDI_DOCTORES_QUERY,
   CDI_PACIENTES_QUERY,
@@ -876,6 +882,7 @@ export default {
         doctor_horario: this.doctor_horario,
         doctor_anos_experiencia: this.doctor_anos_experiencia,
         roleEspecialidad: this.roleEspecialidad,
+        doctorEspecialidad: this.doctorEspecialidad,
         doctor_nombre_usuario: this.doctor_nombre_usuario,
         password: this.password
       }
@@ -900,6 +907,7 @@ export default {
         doctor_horario: useDoctorHorarioValidation(),
         doctor_anos_experiencia: useDoctorAnosExperienciaValidation(),
         roleEspecialidad: useDoctorEspecialidadValidation(),
+        doctorEspecialidad: useRequiredSelectValidation(),
         doctor_nombre_usuario: useDoctorNombreUsuarioValidation(),
         password: usePasswordValidation()
       }
@@ -974,6 +982,7 @@ export default {
       estado: { label: 'Anzoátegui', value: 2 },
       ciudad: "",
       roleEspecialidad: { label: "Enfermería", value: "Enfermeria", id: 1 },
+      doctorEspecialidad: '',
       deleteUserModal: false,
       credAdd: false,
       isPwd: true,
@@ -1412,7 +1421,7 @@ export default {
         });
     },
     actualizarDoctor(doctorUpdate) {
-      // console.log('editando la informacion del doctor:', doctorUpdate);
+      console.log('editando la informacion del doctor:', doctorUpdate);
 
       this.loader = true;
       this.$apollo
@@ -1425,6 +1434,7 @@ export default {
                 anos_experiencia: parseInt(doctorUpdate.anos_experiencia),
                 numero_carnet: doctorUpdate.numero_carnet,
                 area_de_trabajo: doctorUpdate.area_de_trabajo,
+                especialidad: doctorUpdate.especialidad,
                 horario: doctorUpdate.horario,
                 fk_cdi_id: this.$store.state.user.cdi_id,
               },
@@ -1443,29 +1453,32 @@ export default {
           },
         })
         .then((response) => {
-          this.loader = false;
-          this.fullName = "";
-          this.calle = "";
-          this.numero = "";
-          this.dataUser = null;
-          this.sector = "";
-          this.estado = { label: 'Anzoátegui', value: 2 }
-          this.ciudad = ""
-          this.email = "";
-          this.password = "";
-          this.dni = "";
-          this.telefono = "";
-          this.direccion = "";
-          this.highlight = "";
           this.viewType = "userList"
-          this.AllDoctores();
+          console.log('update doctor response: ', response);
+          this.loader = false;
+          // this.fullName = "";
+          // this.calle = "";
+          // this.numero = "";
+          // this.dataUser = null;
+          // this.sector = "";
+          // this.estado = { label: 'Anzoátegui', value: 2 }
+          // this.ciudad = ""
+          // this.email = "";
+          // this.password = "";
+          // this.dni = "";
+          // this.telefono = "";
+          // this.direccion = "";
+          // this.highlight = "";
+          // this.doctorEspecialidad = '';
           this.$q.notify({
             message: "Doctor actualizado",
             color: "positive",
           });
-          this.$emit("updateUsers", {
-            users: true,
-          });
+          this.AllDoctores();
+
+          // this.$emit("updateUsers", {
+          //   users: true,
+          // });
         })
         .catch((err) => {
           this.loader = false;
@@ -1512,6 +1525,7 @@ export default {
                 anos_experiencia: parseInt(this.doctor_anos_experiencia),
                 numero_carnet: this.doctor_numero_carnet,
                 area_de_trabajo: this.roleEspecialidad.value,
+                especialidad: this.doctorEspecialidad,
                 horario: this.doctor_horario,
                 fk_cdi_id: this.$store.state.user.cdi_id,
               },
@@ -1570,6 +1584,7 @@ export default {
           this.direccion = "";
           this.highlight = "";
           this.viewType = "userList"
+          this.doctorEspecialidad = '';
           this.AllDoctores();
           this.$q.notify({
             message: "Doctor añadido",
