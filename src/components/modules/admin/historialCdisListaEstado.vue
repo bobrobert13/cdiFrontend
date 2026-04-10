@@ -26,7 +26,7 @@
               <div class="table-cell">{{ cdi.numero_cdi }}</div>
               <div class="table-cell">{{ cdi.nombre }}</div>
               <div class="table-cell">{{ cdi.encargado }}</div>
-              <div class="table-cell">{{ salidaFecha(cdi.createdAt) }}</div>
+              <div class="table-cell">{{ entradaFecha(cdi.createdAt) }}</div>
 
             </div>
           </div>
@@ -103,7 +103,7 @@ export default {
       return moment(salida).format('DD-MM-YYYY')
     },
     entradaFecha(entrada) {
-      return moment(entrada).format('DD-MM-YYYY')
+      return moment(entrada).format('DD-MM-YYYY HH:mm:ss')
     },
     fechaActual() {
       return moment().format('DD-MM-YYYY HH:mm:ss')

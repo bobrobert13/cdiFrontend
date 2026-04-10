@@ -52,6 +52,9 @@
 											<q-item-label class="text-left" lines="1">
 												<span class="text-weight-medium">Cuadrante: {{ user.cuadrante }}</span>
 											</q-item-label>
+											<q-item-label class="text-left" lines="1">
+												<span class="text-weight-medium">F. Registrado: {{ entradaFecha(user.createdAt) }}</span>
+											</q-item-label>
 
 											<div class="text-grey-8 row no-wrap q-mt-sm ">
 
@@ -976,8 +979,6 @@ export default {
 				.then((response) => {
 					this.loaderUser = false;
 					this.users = Object.assign([], response.data.cdis);
-					console.log('listado de CDIS: ', this.users);
-
 					this.cdiActivos = this.users.filter((user) => user.estado === "activo").length;
 					this.cdiInactivos = this.users.filter((user) => user.estado === "inactivo").length;
 

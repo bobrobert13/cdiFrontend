@@ -345,6 +345,7 @@ export const ADMIN_CDIS_QUERY = gql`
     nombre
     encargado
     cuadrante
+    createdAt
     estado
     usuarios {
       id_usuario

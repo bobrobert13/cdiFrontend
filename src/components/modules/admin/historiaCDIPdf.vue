@@ -25,6 +25,10 @@
                     <span class="label">Encargado:</span>
                     <span class="value">{{ data.encargado || 'No especificado' }}</span>
                 </div>
+                <div class="info-item">
+                    <span class="label">Fecha de registro:</span>
+                    <span class="value">{{ entradaFecha(data.createdAt) || 'No especificado' }}</span>
+                </div>
             </div>
         </div>
 
