@@ -51,9 +51,17 @@
                             <q-item-label class="text-left" lines="1">
                               <span class="text-weight-medium">Documento:</span> {{ user.persona.cedula_identidad }}
                             </q-item-label>
+                            <q-item-label class="text-left" lines="1">
+                              <span class="text-weight-medium">Paciente ingresado el:</span> {{ entradaFecha(user.createdAt) || 'No disponible' }}
+                            </q-item-label>
                             <q-item-label v-if="user.documento_identidad_representante" class="text-left" lines="1">
                               <span class="text-weight-medium">Documento representante:</span> {{
                                 user.documento_identidad_representante || 'No especificado' }}
+                            </q-item-label>
+
+                            <q-item-label v-if="user.telefono_representante" class="text-left" lines="1">
+                              <span class="text-weight-medium">Telefono representante:</span> {{
+                                user.telefono_representante || 'No especificado' }}
                             </q-item-label>
 
                             <q-item-label v-if="user.persona.edad < 18" class="text-left q-mt-xs">
@@ -176,18 +184,30 @@
                   <div v-if="edad < 18 && edad" class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 column ">
                     <p class=" text-weight-medium text-red q-mb-xs"><b>El paciente es menor de edad *</b></p>
                     <small>Se necesita información adicional del representante legal.</small>
-                    <div class="row q-mt-sm q-gutter-sm">
-                      <div class="col-2">
-                        <q-select filled v-model="nacionalidad" :options="nacionalidades" option-label="label"
-                          option-value="value" emit-value />
+                    <div class="column q-mt-sm ">
+                      <div class="row q-gutter-sm">
+                        <div class="col-1">
+                          <q-select filled v-model="nacionalidad" :options="nacionalidades" option-label="label"
+                            option-value="value" emit-value />
+                        </div>
+                        <div class="col-4">
+                          <q-input filled color="deep-purple-6" v-model="documento_identidad_representante"
+                            label="Documento de identidad del representante*" :rules="representativeDniRules" />
+                        </div>
+                        <div class="col">
+                          <q-input filled color="deep-purple-6" type="number" v-model="numero_orden_representante"
+                            label="Número de orden del representante*" :rules="orderNumberRules" />
+                        </div>
                       </div>
-                      <div class="col-4">
-                        <q-input filled color="deep-purple-6" v-model="documento_identidad_representante"
-                          label="Documento de identidad del representante*" :rules="representativeDniRules" />
-                      </div>
-                      <div class="col">
-                        <q-input filled color="deep-purple-6" type="number" v-model="numero_orden_representante"
-                          label="Número de orden del representante*" :rules="orderNumberRules" />
+                      <div class="row q-gutter-sm">
+                        <div class=" col-sm-6 col-xs-6 col-md-2 col-lg-2 col-xl-2">
+                          <q-select filled v-model="codigo" :options="codigoTel" label="Codigo*" option-label="label"
+                            option-value="value" emit-value />
+                        </div>
+                        <div class="col">
+                         <q-input filled color="deep-purple-6" v-model="telefono_representante" type="number"
+                            label="Telefono del representante*" :rules="phoneRules" />
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -2048,6 +2068,7 @@ export default {
         enfermedades_cronicas: this.enfermedades_cronicas,
         discapacidad: this.discapacidad,
         documento_identidad_representante: this.documento_identidad_representante,
+        telefono_representante: this.telefono_representante,
         numero_orden_representante: this.numero_orden_representante,
         antecedentes_familiares: this.antecedentes_familiares,
         alergias: this.alergias,
@@ -2071,6 +2092,7 @@ export default {
         ...(this.edad < 18 && {
           documento_identidad_representante: useDniValidation(),
           numero_orden_representante: useOrderNumberValidation(),
+          telefono_representante: usePhoneValidation(),
         }),
         telefono: usePhoneValidation(),
         vacunasSeleccionadas: useRequiredSelectValidation(),
@@ -2190,6 +2212,7 @@ export default {
       role: "Paciente",
       dni: "",
       telefono: "",
+      telefono_representante: "",
       sexo: "Masculino",
 
       // PACIENTE EN URGENCIAS
@@ -2837,7 +2860,7 @@ export default {
       return moment(salida).format('DD-MM-YYYY')
     },
     entradaFecha(entrada) {
-      return moment(entrada).format('DD-MM-YYYY')
+      return moment(entrada).format('DD-MM-YYYY HH:mm:ss')
     },
 
     salidaFechaHora(salida) {
@@ -2886,8 +2909,6 @@ export default {
       });
     },
     AllPacientes() {
-      // console.log('id doctoez;',   this.$store.state.user);
-
       this.$apollo
         .query({
           query: MIS_PACIENTES_QUERY,
@@ -2898,7 +2919,6 @@ export default {
         })
         .then((response) => {
           this.loaderUser = false;
-          // console.log(response.data.doctorPacientes);
           this.users = Object.assign([], response.data.doctorPacientes.pacientes);
         })
         .catch((err) => {
@@ -2915,6 +2935,9 @@ export default {
       else if (this.nacionalidad === 'J') this.nacionalidadUser = 'Jurídico';
       else this.nacionalidadUser = 'Extranjero/a';
 
+      if (this.telefono_representante) {
+        this.telefono_representante = this.codigo + this.telefono_representante;
+      }
       this.$apollo
         .mutate({
           mutation: ADDPACIENTE_MUTATION,
@@ -2924,8 +2947,9 @@ export default {
               peso: parseInt(this.peso),
               vacunas: this.vacunasSeleccionadas,
               discapacidad: this.discapacidad,
-              documento_identidad_representante: this.documento_identidad_representante ? parseInt(this.documento_identidad_representante) : null,
-              numero_orden_representante: this.numero_orden_representante ? parseInt(this.numero_orden_representante) : null,
+              documento_identidad_representante: this.documento_identidad_representante || null,
+              numero_orden_representante: this.numero_orden_representante || null,
+              telefono_representante: this.telefono_representante || null,
               antecedentes_familiares: this.antecedentes_familiares,
               tipo_de_sangre: this.sangreSeleccionada.value,
               alergias: this.alergias,
@@ -2939,7 +2963,7 @@ export default {
                 nombre1: this.fullName,
                 sexo: this.sexo,
                 edad: parseInt(this.edad),
-                cedula_identidad: this.dni ? parseInt(this.dni) : null,
+                cedula_identidad: this.dni || null,
                 telefonoInput: {
                   codigo: this.codigo,
                   numero: this.telefono

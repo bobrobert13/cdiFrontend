@@ -18,6 +18,11 @@
           <span class="label">Cédula Representante:</span>
           <span v-if="data.persona" class="value">{{ data.documento_identidad_representante || 'No especificado' }}</span>
         </div>
+        <div v-if="data.telefono_representante" class="info-item">
+          <span class="label">Teléfono Representante:</span>
+          <span v-if="data.persona" class="value">{{ data.telefono_representante || 'No especificado'
+            }}</span>
+        </div>
         <div v-if="data.documento_identidad_representante" class="info-item">
           <span class="label">El paciente es menor de edad:</span>
           <span v-if="data.persona" class="value">{{ data.persona.edad < 18 ? 'Sí' : 'No' }}</span>
@@ -46,7 +51,7 @@
       <div class="section-title">CONTACTO</div>
       <div class="info-grid">
         <div class="info-item">
-          <span class="label">Teléfono:</span>
+          <span class="label">Teléfono (paciente):</span>
           <span class="value">{{ data.persona.telefono.codigo || 'No especificado' }} {{ data.persona.telefono.numero || 'No especificado' }}</span>
         </div>
         <div class="info-item">
@@ -271,7 +276,7 @@ export default {
       return moment(salida).format('DD-MM-YYYY')
     },
     entradaFecha(entrada) {
-      return moment(entrada).format('DD-MM-YYYY')
+      return moment(entrada).format('DD-MM-YYYY HH:mm:ss')
     },
     
     salidaFechaHora(salida) {

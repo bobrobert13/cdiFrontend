@@ -218,6 +218,7 @@ export const DOCTOR_DETALLES = gql`
       alergias
       discapacidad
       documento_identidad_representante
+      telefono_representante
       numero_orden_representante
       createdAt
       persona {
@@ -410,6 +411,7 @@ export const CDI_PACIENTES_QUERY = gql`
     pacientesCDI(id_cdi: $id_cdi) {
   	id_paciente
     documento_identidad_representante
+    telefono_representante
     numero_orden_representante
     vacunas
     antecedentes_familiares
@@ -570,6 +572,7 @@ export const ADMIN_PACIENTES_QUERY = gql`
     antecedentes_familiares
     tipo_de_sangre
     documento_identidad_representante
+    telefono_representante
     numero_orden_representante
     alergias
     discapacidad
