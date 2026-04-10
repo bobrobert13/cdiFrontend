@@ -348,7 +348,7 @@
 										}}</b></q-item-label>
 										<q-item-label>Nacionalidad: <b>{{ paciente.persona.nacionalidad
 										}}</b></q-item-label>
-										<q-item-label>Fecha de registro: <b>{{ paciente.createdAt || 'No especificado'
+										<q-item-label>Fecha de registro: <b>{{ entradaFecha(paciente.createdAt) || 'No especificado'
 										}}</b></q-item-label>
 										<q-item-label>Teléfono: <b>{{ paciente.persona.telefono.numero ||
 											'Noespecificado'
@@ -456,7 +456,7 @@
 <script>
 import config from "../../../config";
 import VueHtml2pdf from "vue-html2pdf";
-
+import moment from "moment";
 import historialEncVue from "./historialEnc.vue";
 import HistorialCdisListaEstado from "./historialCdisListaEstado.vue";
 import historialCDIVue from "./historiaCDIPdf.vue";
@@ -837,7 +837,9 @@ export default {
 
 			this.valid = isValid;
 		},
-
+		entradaFecha(entrada) {
+			return moment(entrada).format('DD-MM-YYYY HH:mm:ss')
+		},
 		cdiDetails(user) {
 			console.log('mostrando el cdi', user);
 

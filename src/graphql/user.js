@@ -370,6 +370,9 @@ export const ADMIN_CDIS_QUERY = gql`
     tipo_de_sangre
     alergias
     discapacidad
+    documento_identidad_representante
+    telefono_representante
+    numero_orden_representante
     createdAt
     persona {
       ...personaDetalles

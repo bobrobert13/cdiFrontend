@@ -31,61 +31,87 @@
         <!-- DOCTORES DEL CDI -->
         <div v-if="data.doctores && data.doctores.length > 0" class="info-section">
             <div class="section-title">Doctores ({{ data.doctores.length }})</div>
-            <div class="compact-table">
-                <div class="table-header">
-                    <div class="header-cell">Nombre</div>
-                    <div class="header-cell">Especialidad</div>
-                    <div class="header-cell">Horario</div>
-                    <div class="header-cell">Años de experiencia</div>
-                    <div class="header-cell">Número de carnet</div>
-                </div>
-                <div v-for="(doctor, index) in data.doctores" :key="index" class="table-row">
-                    <div class="table-cell">{{ doctor.persona.nombre1 }}</div>
-                    <div class="table-cell">{{ doctor.area_de_trabajo }}</div>
-                    <div class="table-cell">{{ doctor.horario }}</div>
-                    <div class="table-cell">{{ doctor.anos_experiencia }}</div>
-                    <div class="table-cell">{{ doctor.numero_carnet }}</div>
-                </div>
-            </div>
+            <table class="compact-table">
+                <thead>
+                    <tr>
+                        <th class="header-cell">Nombre</th>
+                        <th class="header-cell">Cédula</th>
+                        <th class="header-cell">Especialidad</th>
+                        <th class="header-cell">Horario</th>
+                        <th class="header-cell">Experiencia</th>
+                        <th class="header-cell">Carnet</th>
+                        <th class="header-cell">N. Teléfono</th>
+                        <th class="header-cell">Correo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(doctor, index) in data.doctores" :key="index" class="table-row">
+                        <td class="table-cell">{{ doctor.persona ? doctor.persona.nombre1 : 'N/A' }}</td>
+                        <td class="table-cell">{{ doctor.persona ? doctor.persona.cedula_identidad : 'N/A' }}</td>
+                        <td class="table-cell">{{ doctor.area_de_trabajo }}</td>
+                        <td class="table-cell">{{ doctor.horario }}</td>
+                        <td class="table-cell">{{ doctor.anos_experiencia }} años</td>
+                        <td class="table-cell">{{ doctor.numero_carnet }}</td>
+                        <td class="table-cell">{{ doctor.persona ? doctor.persona.telefono.codigo + doctor.persona.telefono.numero : 'N/A' }}</td>
+                        <td class="table-cell">{{ doctor.persona ? doctor.persona.correo.correo : 'N/A' }}</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
 
         <div v-else class="info-section">
-            <div class="section-title">PACIENTES (0)</div>
-            <div class="compact-table">
-                <div class="table-header">
-                    <div class="header-cell">No hay pacientes asignados</div>
-                </div>
-            </div>
+            <div class="section-title">DOCTORES (0)</div>
+            <table class="compact-table">
+                <tbody>
+                    <tr>
+                        <td class="table-cell text-center">No hay doctores asignados</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
 
         <!-- PACIENTES DEL CDI -->
         <div v-if="data.pacientes && data.pacientes.length > 0" class="info-section">
             <div class="section-title">PACIENTES ({{ data.pacientes.length }})</div>
-            <div class="compact-table">
-                <div class="table-header">
-                    <div class="header-cell">Nombre</div>
-                    <div class="header-cell">Nacionalidad</div>
-                    <div class="header-cell">Cédula</div>
-                    <div class="header-cell">Edad</div>
-                    <div class="header-cell">Estado Civil</div>
-                </div>
-                <div v-for="paciente in data.pacientes" :key="paciente.id_paciente" class="table-row">
-                    <div class="table-cell">{{ paciente.persona.nombre1 }}</div>
-                    <div class="table-cell">{{ paciente.persona.nacionalidad }}</div>
-                    <div class="table-cell">{{ paciente.persona.cedula_identidad }}</div>
-                    <div class="table-cell">{{ paciente.persona.edad }}</div>
-                    <div class="table-cell">{{ paciente.persona.estado_civil }}</div>
-                </div>
-            </div>
+            <table class="compact-table">
+                <thead>
+                    <tr>
+                        <th class="header-cell">Nombre</th>
+                        <th class="header-cell">Nac.</th>
+                        <th class="header-cell">Cédula</th>
+                        <th class="header-cell">Céd. Rep.</th>
+                        <th class="header-cell">Edad</th>
+                        <th class="header-cell">Estado Civil</th>
+                        <th class="header-cell">F. Ingreso</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="paciente in data.pacientes" :key="paciente.id_paciente" class="table-row">
+                        <td class="table-cell">{{ paciente.persona ? paciente.persona.nombre1 : 'N/A' }}</td>
+                        <td class="table-cell">{{ paciente.persona ? paciente.persona.nacionalidad : 'N/A' }}</td>
+                        <td class="table-cell">
+                            {{ (paciente.persona && paciente.persona.cedula_identidad) ? paciente.persona.cedula_identidad : 'N/A' }}
+                        </td>
+                        <td class="table-cell">
+                            {{ (paciente.persona && paciente.persona.cedula_identidad) ? 'N/A' : (paciente.documento_identidad_representante || 'N/A') }}
+                        </td>
+                        <td class="table-cell">{{ paciente.persona ? paciente.persona.edad : 'N/A' }}</td>
+                        <td class="table-cell">{{ paciente.persona ? paciente.persona.estado_civil : 'N/A' }}</td>
+                        <td class="table-cell">{{ paciente.persona ? entradaFecha(paciente.createdAt) : 'N/A' }}</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
 
         <div v-else class="info-section">
             <div class="section-title">PACIENTES (0)</div>
-            <div class="compact-table">
-                <div class="table-header">
-                    <div class="header-cell">No hay pacientes asignados</div>
-                </div>
-            </div>
+            <table class="compact-table">
+                <tbody>
+                    <tr>
+                        <td class="table-cell text-center">No hay pacientes asignados</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
 
 
@@ -112,7 +138,7 @@ export default {
             return moment(salida).format('DD-MM-YYYY')
         },
         entradaFecha(entrada) {
-            return moment(entrada).format('DD-MM-YYYY')
+            return moment(entrada).format('DD-MM-YYYY HH:mm:ss')
         },
         fechaActual() {
             return moment().format('DD-MM-YYYY HH:mm:ss')
@@ -175,36 +201,27 @@ export default {
 }
 
 .compact-table {
+    width: 100%;
+    border-collapse: collapse;
     border: 1px solid #ddd;
     border-radius: 3px;
     overflow: hidden;
     margin-top: 5px;
 }
 
-.table-header {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+.header-cell {
     background-color: #1976d2;
     font-weight: bold;
     font-size: 9px;
-}
-
-.header-cell {
     padding: 3px 4px;
-    border-right: 1px solid #ddd;
+    border: 1px solid #ddd;
     text-align: center;
     color: white;
 }
 
-.header-cell:last-child {
-    border-right: none;
-}
-
 .table-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-    border-top: 1px solid #ddd;
     font-size: 9px;
+    page-break-inside: avoid;
 }
 
 .table-row:nth-child(even) {
@@ -213,14 +230,8 @@ export default {
 
 .table-cell {
     padding: 3px 4px;
-    border-right: 1px solid #ddd;
+    border: 1px solid #ddd;
     word-break: break-word;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.table-cell:last-child {
-    border-right: none;
 }
 
 /* Responsive adjustments for printing */
@@ -247,13 +258,9 @@ export default {
         padding: 1px 3px;
     }
 
-    .table-header,
-    .table-row {
-        font-size: 8px;
-    }
-
     .header-cell,
     .table-cell {
+        font-size: 8px;
         padding: 2px 3px;
     }
 }
