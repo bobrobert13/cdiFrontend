@@ -610,7 +610,7 @@
                     <q-input v-model="emergencia_procesamientoRealizado" filled label="Procesamiento realizado" />
                   </div>
                   <div class="col-12 q-mt-xs">
-                    <q-input v-model="emergencia_tiempoAtencion" type="number" filled label="Tiempo de atención" />
+                    <q-input v-model="emergencia_tiempoAtencion" type="number" filled label="Tiempo de atención (en minutos)" />
                   </div>
                   <div class="col-12 q-mt-xs">
                     <q-input v-model="emergencia_destino" filled label="Destino" />
