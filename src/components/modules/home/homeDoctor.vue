@@ -3344,7 +3344,7 @@ export default {
           this.diagnostico_descripcion = '';
           this.AllPacientes()
           this.$q.notify({
-            message: "Nueva consulta añadida",
+            message: "Diagnostico actualizado",
             color: "positive",
           });
         })
@@ -3355,6 +3355,46 @@ export default {
             color: "negative",
           });
         });
+    },
+    añadirDiagnostico() {
+      this.loader = true;
+      this.$apollo
+        .mutate({
+          mutation: ADDDIAGNOSTICO_MUTATION,
+          variables: {
+            input: {
+              condicion: this.diagnostico_condicion,
+              descripcion: this.diagnostico_descripcion,
+              gravedad: this.diagnostico_nivel_gravedad,
+              fk_doctor_id: this.$store.state.user.doctor_id,
+              fk_cdi_id: this.$store.state.user.cdi_id,
+              fk_paciente_id: this.dataUser.id_paciente
+            },
+          },
+        })
+        .then((response) => {
+          this.AllPacientes()
+          this.$q.notify({
+            message: "Diagnostico añadido",
+            color: "positive",
+          });
+        })
+        .catch((err) => {
+          this.loader = false;
+          this.$q.notify({
+            message: err.message.split("GraphQL error:"),
+            color: "negative",
+          });
+        }).finally(() => {
+          this.modalAddDiagnostico = false;
+          this.modalDetailUser = false;
+          this.modalDiagnosticos = false;
+          this.diagnostico_condicion = '';
+          this.diagnostico_nivel_gravedad = '';
+          this.diagnostico_descripcion = '';
+          this.loader = false;
+          this.AllPacientes();
+        })
     },
     añadirConsul() {
 
@@ -3411,44 +3451,6 @@ export default {
           this.AllPacientes()
           this.$q.notify({
             message: "Nueva consulta añadida",
-            color: "positive",
-          });
-        })
-        .catch((err) => {
-          this.loader = false;
-          this.$q.notify({
-            message: err.message.split("GraphQL error:"),
-            color: "negative",
-          });
-        });
-    },
-    añadirDiagnostico() {
-      this.loader = true;
-      this.$apollo
-        .mutate({
-          mutation: ADDDIAGNOSTICO_MUTATION,
-          variables: {
-            input: {
-              condicion: this.diagnostico_condicion,
-              descripcion: this.diagnostico_descripcion,
-              gravedad: this.diagnostico_nivel_gravedad,
-              fk_doctor_id: this.$store.state.user.doctor_id,
-              fk_cdi_id: this.$store.state.user.cdi_id,
-              fk_paciente_id: this.dataUser.id_paciente
-            },
-          },
-        })
-        .then((response) => {
-          this.loader = false;
-          this.modalAddDiagnostico = false;
-          this.modalDetailUser = false;
-          this.modalDiagnosticos = false;
-          this.diagnostico_condicion = '';
-          this.diagnostico_nivel_gravedad = '';
-          this.diagnostico_descripcion = '';
-          this.AllPacientes()
-          this.$q.notify({
-            message: "Has hecho un diagnostico nuevo",
             color: "positive",
           });
         })
