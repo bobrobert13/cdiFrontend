@@ -656,13 +656,14 @@
 
           <!-- DETALLES DE EMERGENCIAS -->
           <q-dialog v-model="modalDetallesEmergencias" position="right">
-            <q-card class="my-card full-width" flat bordered>
+            <q-card class="my-card full-width" :style="this.$q.screen.lt.md ? 'min-width: 100%;' : 'min-width: 500px;'"
+              flat bordered>
               <q-card-section>
                 <q-card-section class="col-5 no-padding no-margin flex flex-center">
                   <q-avatar>
                     <q-icon size="lg" name="mdi-text-box-search"></q-icon>
                   </q-avatar>
-                </q-card-section>
+                </q-card-section> 
                 <q-card-section class="col-12 no-margin flex flex-center no-padding">
                   <div class="text-overline text-h6 text-grey-9">Historial de emergencias</div>
                 </q-card-section>
@@ -740,7 +741,7 @@
 
           <!-- PACIENTE A HOSPITALIZACION -->
           <q-dialog v-model="modalHospitalizacion">
-            <q-card class="my-card" flat bordered style="min-width: 350px">
+            <q-card class="my-card" flat bordered >
               <q-card-section>
                 Nueva hospitalización
               </q-card-section>
@@ -815,7 +816,8 @@
 
           <!-- DETALLES DE HOSPITALIZACION -->
           <q-dialog v-model="modalDetallesHospitalizacion" position="right">
-            <q-card class="my-card full-width" flat bordered>
+            <q-card class="my-card full-width" :style="this.$q.screen.lt.md ? 'min-width: 100%;' : 'min-width: 500px;'"
+              flat bordered>
               <q-card-section>
                 <q-card-section class="col-5 no-padding no-margin flex flex-center">
                   <q-avatar>
@@ -1490,7 +1492,8 @@
           <!-- FIN ACTUALIZAR CONSULTA -->
 
           <q-dialog v-model="modalDiagnosticos" position="left">
-            <q-card class="my-card full-width" flat bordered>
+            <q-card class="my-card full-width" :style="this.$q.screen.lt.md ? 'min-width: 100%;' : 'min-width: 500px;'"
+              flat bordered>
               <q-card-section>
                 <q-card-section class="col-5 no-padding no-margin flex flex-center">
                   <q-avatar>
@@ -1556,7 +1559,8 @@
           </q-dialog>
 
           <q-dialog v-model="modalExamenes" position="right">
-            <q-card class="my-card full-width" flat bordered>
+            <q-card class="my-card full-width" :style="this.$q.screen.lt.md ? 'min-width: 100%;' : 'min-width: 500px;'"
+              flat bordered>
               <q-card-section>
                 <q-card-section class="col-5 no-padding no-margin flex flex-center">
                   <q-avatar>
@@ -1636,7 +1640,8 @@
           </q-dialog>
 
           <q-dialog v-model="modalTratamientos" position="right">
-            <q-card class="my-card full-width" flat bordered>
+            <q-card class="my-card full-width" :style="this.$q.screen.lt.md ? 'min-width: 100%;' : 'min-width: 500px;'"
+              flat bordered>
               <q-card-section>
                 <q-card-section class="col-5 no-padding no-margin flex flex-center">
                   <q-avatar>
@@ -1711,7 +1716,8 @@
           </q-dialog>
 
           <q-dialog v-model="modalMedicamentos" position="right">
-            <q-card class="my-card full-width" flat bordered>
+            <q-card class="my-card full-width" :style="this.$q.screen.lt.md ? 'min-width: 100%;' : 'min-width: 500px;'"
+              flat bordered>
               <q-card-section>
                 <q-card-section class="col-5 no-padding no-margin flex flex-center">
                   <q-avatar>
