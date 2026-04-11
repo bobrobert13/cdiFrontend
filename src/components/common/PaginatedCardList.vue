@@ -8,7 +8,7 @@
     :row-key="rowKey"
     rows-per-page-label="Elementos por página"
     hide-header
-    class="bg-transparent no-shadow"
+    class=" no-shadow"
   >
     <template v-slot:item="props">
       <div class="col-12 q-mb-sm">

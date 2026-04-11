@@ -1,1 +1,120 @@
 // app global css in Stylus form
+
+// ===================================
+// DARK MODE OVERRIDES
+// ===================================
+// Quasar components (q-card, q-input, q-dialog) auto-adapt.
+// These overrides handle hardcoded utility classes and
+// elements that don't contrast well in dark mode.
+
+// --- Background overrides ---
+body.body--dark .bg-secondary
+  background-color #1a1a2e !important
+
+body.body--dark .bg-white
+  background-color #1e293b !important
+
+body.body--dark .bg-grey-2
+  background-color #263249 !important
+
+// --- Tab panels: remove black background ---
+body.body--dark .q-tab-panel
+  background-color #1e293b !important
+
+body.body--dark .q-tab-panels
+  background-color #1e293b !important
+
+// --- Text contrast overrides ---
+// text-primary (#015958) is too dark on dark backgrounds
+body.body--dark .text-primary
+  color #26a69a !important
+
+// q-icon with primary color should be white in dark mode
+body.body--dark .q-icon.text-primary,
+body.body--dark .text-primary > .q-icon,
+body.body--dark .q-icon[class*="text-primary"]
+  color #ffffff !important
+
+// text-accent (#69696b) is too dark on dark backgrounds
+body.body--dark .text-accent
+  color #b0bec5 !important
+
+body.body--dark .text-grey-8
+  color #b0b0b0 !important
+
+body.body--dark .text-grey-9
+  color #cfd8dc !important
+
+body.body--dark .text-black
+  color #e0e0e0 !important
+
+// --- Navigation sidebar & bottom bar ---
+// Keep nav avatars white with primary icons in dark mode
+body.body--dark .q-drawer .q-avatar
+  background-color #ffffff !important
+
+body.body--dark .q-drawer .q-avatar .q-icon
+  color #015958 !important
+
+// Bottom mobile navbar
+body.body--dark .menu-bottom
+  background-color #0f3460 !important
+
+body.body--dark .menu-bottom .q-avatar
+  background-color #ffffff !important
+
+body.body--dark .menu-bottom .q-avatar .q-icon
+  color #015958 !important
+
+// Fixed bottom navbar component
+body.body--dark navbar
+  background-color #0f3460 !important
+
+body.body--dark navbar .q-avatar
+  background-color #ffffff !important
+
+body.body--dark navbar .q-avatar .q-icon
+  color #015958 !important
+
+// --- Buttons with bg-primary keep proper contrast ---
+body.body--dark .bg-primary
+  background-color #015958 !important
+
+body.body--dark .bg-primary .text-white
+  color #ffffff !important
+
+// Ensure text-primary on bg-primary buttons stays white
+body.body--dark .bg-primary.text-primary
+  color #ffffff !important
+
+// q-btn with color="primary" — white text in dark mode
+body.body--dark .q-btn--flat.text-primary,
+body.body--dark .q-btn--outline.text-primary,
+body.body--dark .q-btn.text-primary
+  color #ffffff !important
+
+body.body--dark .q-btn--flat.text-primary .q-btn__content,
+body.body--dark .q-btn--outline.text-primary .q-btn__content,
+body.body--dark .q-btn.text-primary .q-btn__content
+  color #ffffff !important
+
+// --- q-tabs indicator and labels in dark mode ---
+body.body--dark .q-tabs--not-scrollable .q-tabs__content
+  background-color transparent !important
+
+body.body--dark .q-tab__label
+  color #b0bec5 !important
+
+body.body--dark .q-tab--active .q-tab__label
+  color #26a69a !important
+
+body.body--dark .q-tab__indicator
+  background-color #26a69a !important
+
+// --- Separator lines ---
+body.body--dark .q-separator
+  background-color #37474f !important
+
+// --- Misc hardcoded bg items ---
+body.body--dark .bg-blue-grey-9
+  background-color #37474f !important

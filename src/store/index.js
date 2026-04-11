@@ -36,7 +36,8 @@ export default new Vuex.Store({
       cdi_id: '',
       doctor_id: '',
     },
-    url_base: config.api.url
+    url_base: config.api.url,
+    darkMode: false
   },
   mutations: {
     setUser(state, user) {
@@ -56,6 +57,9 @@ export default new Vuex.Store({
     },
     logout(state) {
       state.user = userVoid;
+    },
+    setDarkMode(state, val) {
+      state.darkMode = val;
     }
   },
   getters: {

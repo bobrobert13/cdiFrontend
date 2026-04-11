@@ -208,6 +208,27 @@
 						<q-item
 							clickable
 							v-ripple
+							class="q-mb-md"
+							@click="toggleDarkMode()"
+						>
+							<q-item-section
+								avatar
+							>
+								<q-avatar
+									color="white"
+									style="
+										cursor: pointer;
+									"
+									:icon="$q.dark.isActive ? 'mdi-weather-sunny' : 'mdi-weather-night'"
+									text-color="primary"
+								>
+								</q-avatar>
+							</q-item-section>
+						</q-item>
+
+						<q-item
+							clickable
+							v-ripple
 							style="
 								position: fixed;
 								bottom: 0;
@@ -433,6 +454,21 @@
 							@click="
 								myInfo()
 							"
+						>
+						</q-avatar>
+					</div>
+
+					<div
+						class="col-1"
+					>
+						<q-avatar
+							color="white"
+							style="
+								cursor: pointer;
+							"
+							:icon="$q.dark.isActive ? 'mdi-weather-sunny' : 'mdi-weather-night'"
+							text-color="primary"
+							@click="toggleDarkMode()"
 						>
 						</q-avatar>
 					</div>
@@ -1536,6 +1572,7 @@ export default {
 	},
 	created() {
 		this.infoUser();
+		this.$q.dark.set(this.$store.state.darkMode);
 	},
 	watch: {
 		myInfoD(
@@ -1607,6 +1644,10 @@ export default {
 		},
 	methods:
 		{
+			toggleDarkMode() {
+				this.$q.dark.toggle();
+				this.$store.commit('setDarkMode', this.$q.dark.isActive);
+			},
 			guardarPreguntasSeguridad() {
 				this.$apollo
 					.mutate(
