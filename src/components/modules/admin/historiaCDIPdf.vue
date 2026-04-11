@@ -56,7 +56,8 @@
                         <td class="table-cell">{{ doctor.horario }}</td>
                         <td class="table-cell">{{ doctor.anos_experiencia }} años</td>
                         <td class="table-cell">{{ doctor.numero_carnet }}</td>
-                        <td class="table-cell">{{ doctor.persona ? doctor.persona.telefono.codigo + doctor.persona.telefono.numero : 'N/A' }}</td>
+                        <td class="table-cell" v-if="doctor.persona && doctor.persona.telefono">{{ doctor.persona.telefono.codigo + doctor.persona.telefono.numero }}</td>
+                        <td class="table-cell" v-else>N/A</td>
                         <td class="table-cell">{{ doctor.persona ? doctor.persona.correo.correo : 'N/A' }}</td>
                     </tr>
                 </tbody>

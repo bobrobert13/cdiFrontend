@@ -3,10 +3,10 @@
 
 		<slot></slot>
 
-		<div class="col-12 full-width q-pa-sm" v-if="viewType === 'userList'">
+		<div class="col-12 q-pa-sm" v-if="viewType === 'userList'">
 				<p class="text-accent text-subtitle1 text-bold">Listado de usuarios CDIs</p>
-			<div class="row justify-center ">
-				<div class=" self-center text-right  ">
+			<div class="row justify-center q-my-sm ">
+				<div class=" self-center q-gutter-x-md text-right  ">
 					<q-icon style="cursor: pointer" @click="workerView('searchUser')" name="mdi-account-search"
 						class="text-primary" size="md"></q-icon>
 					<q-icon style="cursor: pointer" @click="workerView('addWorker')" name="mdi-plus"
@@ -30,55 +30,71 @@
 						<paginated-card-list :items="cdiActivosList"  row-key="id_cdi"
 							:initial-rows-per-page="10">
 							<template v-slot:default="{ user }">
-								<q-list class="rounded-borders bg-secondary" @click="cdiDetails(user)"
-									style="border-radius: 15px">
-									<q-item>
-										<q-item-section avatar style="cursor: pointer">
-											<q-avatar color="primary" icon="mdi-hospital-building" text-color="white">
-											</q-avatar>
-										</q-item-section>
+								<q-list class="rounded-borders q-pa-md bg-white shadow-1 q-mb-md" style="border-radius: 15px">
+                  <div class="row items-center q-my-sm q-mb-lg">
+                    <q-avatar class="q-mr-xs" size="30px" font-size="22px" color="teal" text-color="white" icon="mdi-hospital-building" />
+                    <q-item-label class="text-left text-subtitle1" lines="1">
+                      <span class="text-weight-bold text-primary">CDI:</span>
+                      <span class="text-weight-medium"> {{ user.nombre }}</span>
+                    </q-item-label>
+                  </div>
 
-										<q-item-section top style="cursor: pointer">
-											<q-item-label class="text-left" lines="1">
-												<span class="text-weight-medium">Nombre de CDI: {{ user.nombre }}</span>
-											</q-item-label>
-											<q-item-label class="text-left" lines="1">
-												<span class="text-weight-medium">Número de CDI: {{ user.numero_cdi
-												}}</span>
-											</q-item-label>
-											<q-item-label class="text-left" lines="1">
-												<span class="text-weight-medium">Encargado: {{ user.encargado }}</span>
-											</q-item-label>
-											<q-item-label class="text-left" lines="1">
-												<span class="text-weight-medium">Cuadrante: {{ user.cuadrante }}</span>
-											</q-item-label>
-											<q-item-label class="text-left" lines="1">
-												<span class="text-weight-medium">F. Registrado: {{ entradaFecha(user.createdAt) }}</span>
-											</q-item-label>
+                  <q-item class="column q-pa-none">
+                    <div class="row q-col-gutter-md">
+                      <div class="col-12 col-md-4" @click="cdiDetails(user)" style="cursor: pointer">
+                        <q-item-label class="text-left text-weight-bold q-mb-sm text-grey-8" style="font-size: 11px; letter-spacing: 1px">
+                          INFORMACIÓN GENERAL
+                        </q-item-label>
+                        <div class="column q-gutter-y-xs">
+                          <div class="row q-gutter-x-xs">
+                            <span class="text-weight-medium text-primary">Número:</span>
+                            <span>{{ user.numero_cdi }}</span>
+                          </div>
+                          <div class="row q-gutter-x-xs">
+                            <span class="text-weight-medium text-primary">Cuadrante:</span>
+                            <span>{{ user.cuadrante }}</span>
+                          </div>
+                          <div v-if="user.createdAt" class="row q-gutter-x-xs">
+                            <span class="text-weight-medium text-primary">F. Registrado:</span>
+                            <span>{{ entradaFecha(user.createdAt) }}</span>
+                          </div>
+                        </div>
+                      </div>
 
-											<div class="text-grey-8 row no-wrap q-mt-sm ">
+                      <div class="col-md-8 col-lg-8 col-xl-8" @click="cdiDetails(user)" style="cursor: pointer">
+                        <q-item-label class="text-left text-weight-bold q-mb-sm text-grey-8" style="font-size: 11px; letter-spacing: 1px">
+                          ADMINISTRACIÓN
+                        </q-item-label>
+                        <div class="column q-gutter-y-xs">
+                          <div class="row q-gutter-x-xs">
+                            <span class="text-weight-medium text-primary">Encargado:</span>
+                            <span>{{ user.encargado }}</span>
+                          </div>
+                          <div class="row q-gutter-x-xs">
+                            <span class="text-weight-medium text-primary">Estado:</span>
+                            <span class="text-weight-bold">{{ user.estado }}</span>
+                          </div>
+                        </div>
+                      </div>
 
-												<div class="text-grey-8 q-gutter-xs-md row items-center ">
-													<button @click.stop="generatePDF(user)" type="button" lines="2"
-														class="  cursor-pointer text-primary text-bold"
-														style="cursor: pointer">
-														<q-icon name="mdi-printer-pos" /> Descargar información
-													</button>
-
-													<q-btn
-														@click.stop="actualizarUsuario({ ...user, estado: user.estado === 'activo' ? 'inactivo' : 'activo' })"
-														class=" text-negative" size="12px" flat dense
-														:label="user.estado === 'activo' ? 'Inhabilitar' : 'Habilitar'" />
-
-													<q-btn @click.stop="() => workerView('userDetailEdit')"
-														class="  text-primary" size="12px" flat dense
-														label="Editar" />
-												</div>
-											</div>
-										</q-item-section>
-
-									</q-item>
-								</q-list>
+                      <div class=" column col-12 full-width q-mt-sm">
+                        <q-separator spaced />
+                        <div class="row items-center justify-between q-pt-sm"
+													style="width: 100%">
+                       <div class=" col-xs-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 ">
+                            <!-- Helper spacing -->
+                          </div>
+						  				<div
+														class=" col-xs-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 q-mt-xs-sm q-mt-sm-sm q-mt-md-none q-mt-lg-none q-mt-xl-none row items-center justify-md-center justify-lg-end justify-xl-end justify-sm-center justify-xs-center q-gutter-x-md">
+                            <q-btn @click.stop="generatePDF(user)" class="text-primary text-bold" size="12px" flat dense icon="mdi-printer-pos" label="Descargar" />
+                            <q-btn @click.stop="actualizarUsuario({ ...user, estado: user.estado === 'activo' ? 'inactivo' : 'activo' })" class="text-negative" size="12px" flat dense :label="user.estado === 'activo' ? 'Inhabilitar' : 'Habilitar'" />
+                            <q-btn @click.stop="() => workerView('userDetailEdit', user)" class="text-primary" size="12px" flat dense label="Editar" />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </q-item>
+                </q-list>
 							</template>
 						</paginated-card-list>
 					</div>
@@ -96,51 +112,71 @@
 						<paginated-card-list :items="cdiInactivosList" class="col-12" row-key="id_cdi"
 							:initial-rows-per-page="10">
 							<template v-slot:default="{ user }">
-								<q-list class="rounded-borders bg-secondary" v-on:click="cdiDetails(user)"
-									style="border-radius: 15px">
-									<q-item>
-										<q-item-section avatar style="cursor: pointer">
-											<q-avatar color="primary" icon="mdi-hospital-building" text-color="white">
-											</q-avatar>
-										</q-item-section>
+								<q-list class="rounded-borders q-pa-md bg-white shadow-1 q-mb-md" style="border-radius: 15px">
+                  <div class="row items-center q-my-sm q-mb-lg">
+                    <q-avatar class="q-mr-xs" size="30px" font-size="22px" color="teal" text-color="white" icon="mdi-hospital-building" />
+                    <q-item-label class="text-left text-subtitle1" lines="1">
+                      <span class="text-weight-bold text-primary">CDI:</span>
+                      <span class="text-weight-medium"> {{ user.nombre }}</span>
+                    </q-item-label>
+                  </div>
 
-										<q-item-section top style="cursor: pointer">
-											<q-item-label class="text-left" lines="1">
-												<span class="text-weight-medium">Nombre de CDI: {{ user.nombre }}</span>
-											</q-item-label>
-											<q-item-label class="text-left" lines="1">
-												<span class="text-weight-medium">Número de CDI: {{ user.numero_cdi
-												}}</span>
-											</q-item-label>
-											<q-item-label class="text-left" lines="1">
-												<span class="text-weight-medium">Encargado: {{ user.encargado }}</span>
-											</q-item-label>
-											<q-item-label class="text-left" lines="1">
-												<span class="text-weight-medium">Cuadrante: {{ user.cuadrante }}</span>
-											</q-item-label>
+                  <q-item class="column q-pa-none">
+                    <div class="row q-col-gutter-md">
+                      <div class="col-12 col-md-4" @click="cdiDetails(user)" style="cursor: pointer">
+                        <q-item-label class="text-left text-weight-bold q-mb-sm text-grey-8" style="font-size: 11px; letter-spacing: 1px">
+                          INFORMACIÓN GENERAL
+                        </q-item-label>
+                        <div class="column q-gutter-y-xs">
+                          <div class="row q-gutter-x-xs">
+                            <span class="text-weight-medium text-primary">Número:</span>
+                            <span>{{ user.numero_cdi }}</span>
+                          </div>
+                          <div class="row q-gutter-x-xs">
+                            <span class="text-weight-medium text-primary">Cuadrante:</span>
+                            <span>{{ user.cuadrante }}</span>
+                          </div>
+                          <div v-if="user.createdAt" class="row q-gutter-x-xs">
+                            <span class="text-weight-medium text-primary">F. Registrado:</span>
+                            <span>{{ entradaFecha(user.createdAt) }}</span>
+                          </div>
+                        </div>
+                      </div>
 
-											<div class="text-grey-8  row no-wrap q-mt-sm ">
+                      <div class="col-md-8 col-lg-8 col-xl-8" @click="cdiDetails(user)" style="cursor: pointer">
+                        <q-item-label class="text-left text-weight-bold q-mb-sm text-grey-8" style="font-size: 11px; letter-spacing: 1px">
+                          ADMINISTRACIÓN
+                        </q-item-label>
+                        <div class="column q-gutter-y-xs">
+                          <div class="row q-gutter-x-xs">
+                            <span class="text-weight-medium text-primary">Encargado:</span>
+                            <span>{{ user.encargado }}</span>
+                          </div>
+                          <div class="row q-gutter-x-xs">
+                            <span class="text-weight-medium text-primary">Estado:</span>
+                            <span class="text-weight-bold">{{ user.estado }}</span>
+                          </div>
+                        </div>
+                      </div>
 
-												<div class="text-grey-8 q-gutter-xs-md row items-center ">
-													<button @click.stop="generatePDF(user)" type="button" lines="2"
-														class="  cursor-pointer text-primary text-bold"
-														style="cursor: pointer">
-														<q-icon name="mdi-printer-pos" /> Descargar información
-													</button>
-
-													<q-btn
-														@click.stop="actualizarUsuario({ ...user, estado: user.estado === 'activo' ? 'inactivo' : 'activo' })"
-														class=" text-negative" size="12px" flat dense
-														:label="user.estado === 'activo' ? 'Inhabilitar' : 'Habilitar'" />
-
-													<q-btn @click.stop="() => workerView('userDetailEdit')"
-														class=" text-primary" size="12px" flat dense
-														label="Editar" />
-												</div>
-											</div>
-										</q-item-section>
-									</q-item>
-								</q-list>
+                    <div class=" column col-12 full-width q-mt-sm">
+                        <q-separator spaced />
+                       <div class="row items-center justify-between q-pt-sm"
+													style="width: 100%">
+                          <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                            <!-- Helper spacing -->
+                          </div>
+                          <div
+							class=" col-xs-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 q-mt-xs-sm q-mt-sm-sm q-mt-md-none q-mt-lg-none q-mt-xl-none row items-center justify-md-center justify-lg-end justify-xl-end justify-sm-center justify-xs-center q-gutter-x-md">
+                            <q-btn @click.stop="generatePDF(user)" class="text-primary text-bold" size="12px" flat dense icon="mdi-printer-pos" label="Descargar" />
+                            <q-btn @click.stop="actualizarUsuario({ ...user, estado: user.estado === 'activo' ? 'inactivo' : 'activo' })" class="text-negative" size="12px" flat dense :label="user.estado === 'activo' ? 'Inhabilitar' : 'Habilitar'" />
+                            <q-btn @click.stop="() => workerView('userDetailEdit', user)" class="text-primary" size="12px" flat dense label="Editar" />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </q-item>
+                </q-list>
 							</template>
 						</paginated-card-list>
 					</div>
@@ -353,9 +389,9 @@
 										}}</b></q-item-label>
 										<q-item-label>Fecha de registro: <b>{{ entradaFecha(paciente.createdAt) || 'No especificado'
 										}}</b></q-item-label>
-										<q-item-label>Teléfono: <b>{{ paciente.persona.telefono.numero ||
-											'Noespecificado'
+										<q-item-label v-if="paciente.persona && paciente.persona.telefono && paciente.persona.telefono.numero">Teléfono: <b>{{ paciente.persona.telefono.codigo + paciente.persona.telefono.numero
 												}}</b></q-item-label>
+										<q-item-label v-else>Teléfono: <b>No especificado</b></q-item-label>
 										<q-item-label>Correo: <b>{{ paciente.persona.correo.correo || 'No especificado'
 										}}</b></q-item-label>
 									</q-item-section>
@@ -844,8 +880,6 @@ export default {
 			return moment(entrada).format('DD-MM-YYYY HH:mm:ss')
 		},
 		cdiDetails(user) {
-			console.log('mostrando el cdi', user);
-
 			this.dataUser = user;
 			this.modalDetailUser = true;
 			// this.workerView("userDetail");
@@ -918,7 +952,6 @@ export default {
 		validarCuadrante() {
 			if (!this.dataUser) return false;
 			const val = this.dataUser.cuadrante;
-
 			const rules = [
 				(val) => !!val || 'Este campo es obligatorio',
 				(val) => val.length >= 3 || 'Mínimo 3 caracteres',
@@ -928,14 +961,15 @@ export default {
 			this.isValidInfoCDI = rules.every(rule => rule(val) === true);
 		},
 
-		workerView(typeView) {
+		workerView(typeView, user = null) {
 			if (typeView === 'searchUser') return this.modals.searchUser = true;
+			if (typeView === 'userDetailEdit' && user) this.dataUser = user;
 			this.viewType = typeView;
 		},
 		generatePDF(user) {
+			console.log("user", user);
 			this.dataUser = user;
 			if (this.modalDetailUser) this.modalDetailUser = false;
-			console.log("dataUser", this.dataUser);
 			this.$refs.cdihtml2Pdf.generatePdf();
 		},
 		GenerateCdisStatusPDF() {

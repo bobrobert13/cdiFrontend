@@ -321,7 +321,7 @@
 									.state
 									.user
 									.isAuthenticated
-							? 'margin-left: 15px; border-radius: 30px 0px 0px 30px'
+							? 'margin-left: 15px; width: calc(100% - 15px); border-radius: 30px 0px 0px 30px'
 							: ''
 					"
 				>

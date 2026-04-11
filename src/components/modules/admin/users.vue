@@ -5,7 +5,7 @@
     <div class="col-12 q-pa-sm" v-if="viewType === 'userList'">
       <div class=" column ">
         <span class="text-accent text-subtitle1 text-bold">Todos los pacientes</span>
-        <span class="text-accent text-subtitle2 text-center">Hay <b class="  text-red">{{ users.length }}</b> pacientes registrados en total</span>
+        <p class="text-accent text-subtitle2 text-center">Hay <b class="  text-red">{{ users.length }}</b> pacientes registrados en total</p>
       </div>
 
 
@@ -24,7 +24,7 @@
           <template v-slot:default="{ user }">
             <q-list class="rounded-borders q-pa-md bg-white shadow-1 q-mb-md" style="border-radius: 15px">
               <!-- Nombre del paciente encabezado -->
-              <div class="row items-center q-my-sm  q-mb-md q-mx-md">
+              <div class="row items-center q-my-sm  q-mb-lg ">
                 <q-avatar class=" q-mr-xs" size="30px" font-size="22px" color="teal" text-color="white" icon="mdi-human-male" />
                 <q-item-label class="text-left text-subtitle1" lines="1">
                   <span class="text-weight-bold text-primary">Paciente:</span>
@@ -32,8 +32,8 @@
                 </q-item-label>
               </div>
 
-              <q-item class="full-width q-pa-none">
-                <div class="row full-width q-col-gutter-md">
+              <q-item class=" column q-pa-none">
+                <div class="row q-col-gutter-md">
                   <!-- Información Personal -->
                   <div class="col-12 col-md-4" @click="userDetail(user)" style="cursor: pointer">
                     <q-item-label class="text-left text-weight-bold q-mb-sm text-grey-8" style="font-size: 11px; letter-spacing: 1px">
@@ -56,7 +56,7 @@
                   </div>
 
                   <!-- Información del Médico -->
-                  <div class="col-12 col-md-8" @click="userDetail(user)" style="cursor: pointer">
+                  <div class=" col-md-8 col-lg-8 col-xl-8" @click="userDetail(user)" style="cursor: pointer">
                     <q-item-label class="text-left text-weight-bold q-mb-sm text-grey-8" style="font-size: 11px; letter-spacing: 1px">
                       REGISTRO MÉDICO
                     </q-item-label>
@@ -78,10 +78,10 @@
                   </div>
 
                   <!-- Pie de tarjeta: CDI y Botones -->
-                  <div class=" full-width column q-mt-sm">
-                    <q-separator spaced />
-                    <div class="col-xs col-sm row-md row-lg row-xl items-center justify-between q-col-gutter-sm">
-                      <div class=" col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                  <div class=" column col-12 full-width q-mt-sm">
+                    <q-separator  spaced />
+                    <div class="row items-center justify-between q-pt-sm" style="width: 100%">
+                      <div class=" col-xs-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 ">
                         <div v-if="user.cdi" class="column">
                           <div class="">
                             Registrado en: <span class="text-primary text-weight-bold">{{ user.cdi.nombre }}</span>
@@ -91,7 +91,7 @@
                           </div>
                         </div>
                       </div>
-                      <div class="q-mt-xs-sm q-mt-sm-sm q-mt-md-none q-mt-lg-none q-mt-xl-none row items-center justify-md-end justify-lg-end justify-xl-end justify-sm-center justify-xs-center q-gutter-x-md">
+                      <div class=" col-xs-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 q-mt-xs-sm q-mt-sm-sm q-mt-md-none q-mt-lg-none q-mt-xl-none row items-center justify-md-center justify-lg-end justify-xl-end justify-sm-center justify-xs-center q-gutter-x-md">
                         <div @click.stop="userDetail(user)" class="row items-center cursor-pointer text-primary text-weight-bold">
                           <span>Ver detalles</span>
                           <q-icon name="mdi-eye" size="20px" class="q-ml-xs" />

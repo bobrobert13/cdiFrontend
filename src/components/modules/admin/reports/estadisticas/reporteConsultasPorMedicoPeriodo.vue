@@ -98,7 +98,6 @@ export default {
     }
   },
   created() {
-    console.log('reporteConsultasPorMedicoPeriodo:', this.data);
     moment.locale('es')
   },
   computed: {
