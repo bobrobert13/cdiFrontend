@@ -59,11 +59,6 @@
                                 user.documento_identidad_representante || 'No especificado' }}
                             </q-item-label>
 
-                            <q-item-label v-if="user.telefono_representante" class="text-left" lines="1">
-                              <span class="text-weight-medium">Telefono representante:</span> {{
-                                user.telefono_representante || 'No especificado' }}
-                            </q-item-label>
-
                             <q-item-label v-if="user.persona.edad < 18" class="text-left q-mt-xs">
                               <q-icon name="mdi-human-child" /> <span class="text-weight-medium text-green">Este
                                 paciente es menor de edad</span>
@@ -74,9 +69,13 @@
                             <q-item-label class="text-right" lines="1">
                               <span class="text-weight-medium">Sexo:</span> {{ user.persona.sexo }}
                             </q-item-label>
-                            <q-item-label class="text-right" lines="1">
+                            <q-item-label class="text-right" lines="1" v-if="user.persona.telefono">
                               <span class="text-weight-medium">Telefono:</span> {{ user.persona.telefono.codigo }}-{{
                                 user.persona.telefono.numero }}
+                            </q-item-label>
+                            <q-item-label v-if="user.telefono_representante" class="text-right" lines="1">
+                              <span class="text-weight-medium">Telefono representante:</span> {{
+                                user.telefono_representante || 'No especificado' }}
                             </q-item-label>
                           </div>
                         </div>
@@ -274,7 +273,7 @@
                   </div>
 
 
-                  <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-pb-xs">
+                  <div v-if="edad >= 18" class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 q-pb-xs">
                     <div class="row">
                       <div class="col-4">
                         <q-select filled v-model="codigo" :options="codigoTel" label="Codigo*" option-label="label"
@@ -2094,7 +2093,9 @@ export default {
           numero_orden_representante: useOrderNumberValidation(),
           telefono_representante: usePhoneValidation(),
         }),
-        telefono: usePhoneValidation(),
+        ...(this.edad >= 18 && {
+          telefono: usePhoneValidation(),
+        }),
         vacunasSeleccionadas: useRequiredSelectValidation(),
         sangreSeleccionada: useRequiredSelectValidation(),
         enfermedades_cronicas: useChronicDiseasesValidation(),
@@ -2964,10 +2965,12 @@ export default {
                 sexo: this.sexo,
                 edad: parseInt(this.edad),
                 cedula_identidad: this.dni || null,
-                telefonoInput: {
-                  codigo: this.codigo,
-                  numero: this.telefono
-                },
+                ...(this.telefono && {
+                  telefonoInput: {
+                    codigo: this.codigo,
+                    numero: this.telefono
+                  }
+                }),
                 correoInput: {
                   correo: this.correo || ''
                 },
@@ -3861,7 +3864,7 @@ export default {
         });
     },
     buscarUsuario(dni) {
-      const cedula = parseInt(dni);
+      const cedula = dni;
       const pacientes = this.users.filter(
         (p) =>
           p.persona.cedula_identidad === cedula ||

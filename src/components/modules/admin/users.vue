@@ -150,8 +150,9 @@
             <div class="text-caption q-mt-sm q-mb-xs">Ocupación: {{ dataUser.persona.ocupacion }}</div>
             <div class="text-caption q-mt-sm q-mb-xs">Sexo: {{ dataUser.persona.sexo }}</div>
             <div class="text-caption q-mt-sm q-mb-xs">Estado civil: {{ dataUser.persona.estado_civil }}</div>
-            <div class="text-caption q-mt-sm q-mb-xs">Número de teléfono: {{ dataUser.persona.telefono.codigo }}{{
+            <div class="text-caption q-mt-sm q-mb-xs" v-if="dataUser.persona.telefono">Número de teléfono: {{ dataUser.persona.telefono.codigo }}{{
               dataUser.persona.telefono.numero }}</div>
+            <div class="text-caption q-mt-sm q-mb-xs" v-else>Número de teléfono: No registrado</div>
             <div class="text-caption q-mt-sm q-mb-xs" v-if="dataUser.persona.direccion">Dirección: {{
               dataUser.persona.direccion.sector }} - {{
                 dataUser.persona.direccion.calle }} - {{ dataUser.persona.direccion.parroquia }} - {{
@@ -422,7 +423,7 @@ export default {
         });
     },
     buscarUsuario(dni) {
-      const pacientes = this.users.filter((paciente) => paciente.persona.cedula_identidad === parseInt(dni) || paciente.documento_identidad_representante === parseInt(dni))
+      const pacientes = this.users.filter((paciente) => paciente.persona.cedula_identidad === dni || paciente.documento_identidad_representante === dni)
       if (pacientes.length !== 0) {
         this.users = pacientes;
         this.modals.searchUser = false;

@@ -1567,7 +1567,7 @@ export default {
         });
     },
     buscarUsuario(dni) {
-      const usuario = this.users.filter((usuario) => usuario.persona.cedula_identidad === parseInt(dni))
+      const usuario = this.users.filter((usuario) => usuario.persona.cedula_identidad === dni)
       if (usuario.length !== 0) {
         this.dataUser = usuario[0];
         this.modalDetailUser = true;

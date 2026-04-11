@@ -217,8 +217,11 @@
                                   <q-item-label class="text-right" lines="1">
                                     <span class="text-weight-medium">Sexo:</span> {{ userPaciente.persona.sexo }}
                                   </q-item-label>
-                                  <q-item-label class="text-right" lines="1">
+                                  <q-item-label class="text-right" lines="1" v-if="userPaciente.persona.telefono">
                                     <span class="text-weight-medium">Telefono:</span> {{ userPaciente.persona.telefono.codigo }}-{{ userPaciente.persona.telefono.numero }}
+                                  </q-item-label>
+                                  <q-item-label class="text-right" lines="1" v-else>
+                                    <span class="text-weight-medium">Telefono:</span> No disponible
                                   </q-item-label>
                                 </div>
                               </div>
@@ -1362,7 +1365,7 @@ export default {
     },
     buscarUsuario(dni) {
 
-      const usuario = this.users.filter((usuario) => usuario.persona.cedula_identidad === parseInt(dni));
+      const usuario = this.users.filter((usuario) => usuario.persona.cedula_identidad === dni);
       if (usuario.length !== 0) {
         this.dataUser = usuario[0];
         this.workerView('userDetail');
@@ -1377,7 +1380,7 @@ export default {
     },
 
     buscarPaciente(dni) {
-      const pacientes = this.usersPacientes.filter((paciente) => paciente.persona.cedula_identidad === parseInt(dni) || paciente.documento_identidad_representante === parseInt(dni));
+      const pacientes = this.usersPacientes.filter((paciente) => paciente.persona.cedula_identidad === dni || paciente.documento_identidad_representante === dni);
       if (pacientes.length !== 0) {
         this.usersPacientes = pacientes;
         // this.dataUser = paciente[0];
